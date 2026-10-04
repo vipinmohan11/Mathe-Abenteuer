@@ -1,0 +1,11 @@
+{
+  "name": "mathe-abenteuer",
+  "version": "2.0.0",
+  "description": "Offline math practice app for German Klasse 4 (Division durch Zehnerzahlen, Geld)",
+  "private": true,
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "python3 build.py && cd tests && node gen_test.js && node extra_test.js && node flow_test.js"
+  },
+  "devDependencies": { "jsdom": "^29.1.1" }
+}

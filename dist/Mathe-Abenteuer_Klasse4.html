@@ -1,0 +1,2337 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#FFB703">
+<title>Mathe-Abenteuer · Klasse 4</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== base ===== */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:"Nunito","Quicksand","Segoe UI","Trebuchet MS",system-ui,-apple-system,sans-serif;
+  font-size:18px;line-height:1.35;color:var(--ink);background:var(--bg);background-attachment:fixed;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;
+}
+body[data-theme="sonne"],body:not([data-theme]){--bg:linear-gradient(160deg,#FFF6CF,#FFE3A6 60%,#FFD28F);--card:#fff;--ink:#3a2f1c;--mute:#7b6a4d;--pri:#E36F00;--pri2:#F59E0B;--priInk:#fff;--soft:#FFF3D6;--line:#F1DDB0;--head:#FFE9B0}
+body[data-theme="ocean"]{--bg:linear-gradient(160deg,#E0F3FF,#C4E6FB 60%,#A9D8F5);--card:#fff;--ink:#12304a;--mute:#4f6f8a;--pri:#1565C0;--pri2:#2D9CDB;--priInk:#fff;--soft:#E8F5FF;--line:#BFE0F5;--head:#CFEAFB}
+body[data-theme="wald"]{--bg:linear-gradient(160deg,#E8F8DD,#D0EDBC 60%,#B9E3A0);--card:#fff;--ink:#1d3b1f;--mute:#547456;--pri:#2E7D32;--pri2:#4CAF50;--priInk:#fff;--soft:#EEF9E6;--line:#CDE8B8;--head:#D8F0C6}
+body[data-theme="sunset"]{--bg:linear-gradient(160deg,#FFE3E8,#FFD0DC 50%,#E7D2F7);--card:#fff;--ink:#402040;--mute:#7d5a7d;--pri:#C2255C;--pri2:#8E44AD;--priInk:#fff;--soft:#FFF0F4;--line:#F3CFDD;--head:#FAD7E4}
+body[data-theme="nacht"]{--bg:linear-gradient(160deg,#171B3D,#222859 60%,#2B3170);--card:#2E356B;--ink:#F1F2FF;--mute:#AEB4EA;--pri:#5961E8;--pri2:#7C83FF;--priInk:#fff;--soft:#232955;--line:#4A5398;--head:#3A4283;--ok:#4be08d;--okBg:#1f5a45;--bad:#ff8a8a;--badBg:#5f2b3c}
+body[data-theme="regen"]{--bg:linear-gradient(135deg,#FFD6E8,#FFF1C2 30%,#D4F7E1 62%,#D3E6FF);--card:#fff;--ink:#2d2a4a;--mute:#6a6890;--pri:#6B4EF0;--pri2:#2CC9A0;--priInk:#fff;--soft:#F4F0FF;--line:#DDD5F7;--head:#E9E1FF}
+body[data-theme="tuerkis"]{--bg:linear-gradient(160deg,#DDFAF6,#B5F0E8 55%,#8FE3DA);--card:#fff;--ink:#0b3b40;--mute:#3f7479;--pri:#0E8C9A;--pri2:#19B7C2;--priInk:#fff;--soft:#E6FBF8;--line:#A9E6E0;--head:#C8F3EE}
+body{--ok:#1e9e57;--okBg:#dff7e8;--bad:#d93a3a;--badBg:#fde4e4;--gold:#F5B400}
+body[data-theme="nacht"]{--ok:#4be08d;--okBg:#1f5a45;--bad:#ff8a8a;--badBg:#5f2b3c}
+
+#app{max-width:1080px;margin:0 auto;padding:12px 14px 40px}
+h1,h2,h3{margin:0}
+h2{font-size:1.5rem}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.hide{display:none!important}
+.row{display:flex;align-items:center;gap:10px}
+.wrap{flex-wrap:wrap}
+.sp{flex:1}
+.mute{color:var(--mute)}
+.center{text-align:center}
+
+/* ===== buttons / cards ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:10px 22px;border-radius:16px;font-weight:800;font-size:1.05rem;color:var(--priInk);background:linear-gradient(180deg,var(--pri2),var(--pri));box-shadow:0 4px 0 rgba(0,0,0,.18);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
+.btn.sec{background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+.btn.ghost{background:transparent;box-shadow:none;border:2px solid var(--line);color:var(--ink)}
+.btn.big{min-height:62px;font-size:1.25rem;padding:12px 30px;border-radius:20px}
+.btn.sm{min-height:40px;padding:6px 14px;font-size:.95rem;border-radius:12px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn.red{background:linear-gradient(180deg,#f06a6a,#d33)}
+.card{background:var(--card);border-radius:22px;padding:16px;box-shadow:0 6px 0 rgba(0,0,0,.07),0 8px 24px rgba(0,0,0,.06);border:2px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--card);border:2px solid var(--line);font-weight:800;white-space:nowrap}
+.chip b{font-size:1.1rem}
+
+/* ===== top bar ===== */
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.top .back{min-width:50px;padding:10px 14px}
+.top h2{flex:1;min-width:140px}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ===== avatar + frames ===== */
+.avatar{position:relative;border-radius:50%;overflow:hidden;background:linear-gradient(180deg,var(--head),var(--soft));flex:none}
+.avwrap{display:inline-block;padding:0;border-radius:50%;flex:none;width:var(--s,96px);height:var(--s,96px)}
+.avwrap>.avatar{width:100%;height:100%}
+.avwrap.fr-gold{padding:6px;background:conic-gradient(#fff0a0,#f5b400,#fff0a0,#d89500,#fff0a0)}
+.avwrap.fr-regen{padding:6px;background:conic-gradient(#ff5d73,#ffb703,#7ed957,#2d9cdb,#8c7bff,#ff5d73)}
+.avwrap.fr-sterne{padding:6px;background:conic-gradient(#2a2f7a,#8c9bff,#2a2f7a,#ffe27a,#2a2f7a,#8c9bff,#2a2f7a)}
+.avwrap:not([class*="fr-"]){padding:4px;background:var(--line)}
+.avatar svg,.mascot{display:block;width:100%;height:100%}
+.m-cheer .mbody{animation:hop .55s ease-in-out 3;transform-origin:50% 100%}
+.m-sad .mbody{animation:sway 1.1s ease-in-out 2;transform-origin:50% 100%}
+.m-think .mbody{animation:sway 2.2s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-14px)}}
+@keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(2.5deg)}}
+
+/* ===== home ===== */
+.hero{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:14px 16px}
+.hero .info{flex:1;min-width:220px}
+.hello{font-size:1.6rem;font-weight:900}
+.bar{height:16px;border-radius:99px;background:var(--soft);border:2px solid var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pri2),var(--pri));transition:width .5s}
+.small{font-size:.9rem}
+.bubble{position:relative;background:var(--soft);border:2px solid var(--line);border-radius:18px;padding:8px 14px;margin-top:8px;font-weight:700}
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:14px 0}
+.mod{display:flex;gap:14px;align-items:center;text-align:left;width:100%;padding:18px;border-radius:24px;background:var(--card);border:2px solid var(--line);box-shadow:0 6px 0 rgba(0,0,0,.08);transition:transform .1s}
+.mod:active{transform:translateY(3px)}
+.mod .ic{font-size:2.8rem;width:78px;height:78px;border-radius:22px;background:linear-gradient(135deg,var(--pri2),var(--pri));display:flex;align-items:center;justify-content:center;flex:none;color:#fff}
+.mod h3{font-size:1.35rem}
+.mod .bar{margin-top:8px;height:12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 8px;border-radius:20px;background:var(--card);border:2px solid var(--line);box-shadow:0 5px 0 rgba(0,0,0,.07);font-weight:800;position:relative}
+.tile .ic{font-size:2.2rem}
+.tile:active{transform:translateY(3px)}
+.badge{position:absolute;top:8px;right:10px;min-width:26px;height:26px;border-radius:99px;background:#e8454f;color:#fff;font-size:.85rem;display:flex;align-items:center;justify-content:center;padding:0 7px}
+.ring{--p:0;width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--pri) calc(var(--p)*1%),var(--soft) 0);display:flex;align-items:center;justify-content:center;flex:none}
+.ring span{width:48px;height:48px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem}
+
+/* ===== topics ===== */
+.topic{display:flex;flex-direction:column;gap:8px;text-align:left;padding:16px;border-radius:22px;background:var(--card);border:2px solid var(--line);box-shadow:0 6px 0 rgba(0,0,0,.08);width:100%;position:relative}
+.topic:active{transform:translateY(3px)}
+.topic .ic{font-size:2rem}
+.topic h3{font-size:1.15rem}
+.pips{display:flex;gap:5px}
+.pips i{width:22px;height:9px;border-radius:9px;background:var(--line)}
+.pips i.on{background:var(--pri)}
+.medal{position:absolute;top:12px;right:12px;font-size:1.9rem}
+.lvsel{display:flex;gap:8px;margin:6px 0 14px}
+.lvsel button{flex:1;min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-weight:800}
+.lvsel button.on{background:linear-gradient(180deg,var(--pri2),var(--pri));color:var(--priInk);border-color:transparent}
+
+/* ===== play ===== */
+.dots{display:flex;gap:6px;flex:1;min-width:150px}
+.dots i{flex:1;height:12px;border-radius:9px;background:var(--line);transition:background .2s}
+.dots i.cur{background:var(--pri2);box-shadow:0 0 0 3px var(--soft),0 0 0 5px var(--pri2)}
+.dots i.ok{background:var(--ok)}
+.dots i.bad{background:var(--bad)}
+.dots i.done{background:var(--pri)}
+.play{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:880px){.play{grid-template-columns:minmax(0,1fr) 330px;align-items:start}}
+.qcard{padding:20px 22px;min-height:260px}
+.qtitle{font-size:1.2rem;font-weight:800;margin-bottom:14px}
+.qbody{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:1.9rem;font-weight:800}
+.eq{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:4px 10px;border-radius:14px;line-height:1.7;text-align:center}
+.eq.big{font-size:2.4rem}
+.eq.u{color:var(--mute)}
+.eq.done{opacity:.85}
+.eq.info{font-size:1.15rem;font-weight:700;background:var(--soft);border:2px dashed var(--line);display:block}
+.eq.sum{border-top:3px solid var(--line);border-radius:0;padding-top:8px}
+.eq.q{font-size:1.8rem}
+.story{font-size:1.3rem;font-weight:700;font-style:normal;background:var(--soft);border-radius:16px;padding:12px 16px;line-height:1.5;text-align:center}
+.fld{display:inline-flex;align-items:center;justify-content:center;min-width:2.6ch;height:1.6em;padding:0 .35em;border-radius:12px;border:3px solid var(--line);background:var(--soft);color:var(--ink);font-weight:900;cursor:pointer;vertical-align:middle;transition:background .15s,border-color .15s}
+.fld.dg{min-width:1.25em;padding:0}
+.fld.foc{border-color:var(--pri);background:var(--card);box-shadow:0 0 0 4px var(--soft)}
+.fld.ok{border-color:var(--ok);background:var(--okBg);color:var(--ok)}
+.fld.bad{border-color:var(--bad);background:var(--badBg);animation:shake .35s}
+.fld.show{border-color:var(--ok);background:var(--okBg);color:var(--ok)}
+.fld .cur{display:inline-block;width:2px;height:1.1em;background:var(--pri);margin-left:1px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.gt{border-collapse:separate;border-spacing:6px;font-size:1.5rem}
+.gt th{background:var(--head);border-radius:10px;padding:4px 14px;font-weight:900}
+.gt td{text-align:center}
+.chain{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;font-size:1.6rem}
+.chain .node{display:inline-flex;align-items:center;justify-content:center;min-width:64px;min-height:56px;padding:2px 10px;border-radius:50%/60%;background:var(--soft);border:3px solid var(--line);font-weight:900}
+.chain .node.s{background:var(--head);border-color:var(--pri)}
+.chain .node.z{background:#fff6c9;border-color:var(--gold);color:#6b4b00;font-size:1.15rem}
+.chain .arr{font-weight:900;color:var(--pri);font-size:1.3rem;background:var(--card);border:2px solid var(--line);border-radius:10px;padding:2px 8px}
+.cmp{display:flex;align-items:center;gap:18px;font-size:2.2rem;font-weight:900}
+.cmp .qm{width:72px;height:72px;border-radius:50%;background:var(--soft);border:3px dashed var(--pri);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--pri)}
+.cmp span:not(.qm){background:var(--head);border-radius:16px;padding:6px 16px}
+.col{display:inline-flex;flex-direction:column;align-items:flex-end;font-size:2rem;font-weight:900;font-variant-numeric:tabular-nums;padding:8px 14px;background:var(--soft);border-radius:18px}
+.crow{display:flex;align-items:center}
+.col .cell{display:inline-flex;align-items:center;justify-content:center;width:1.25em;height:1.55em}
+.col .sg{width:1.1em;text-align:center;color:var(--pri)}
+.col .cu{width:1.6em;text-align:left;padding-left:.2em;color:var(--mute);font-size:.8em}
+.col .cline{align-self:stretch;height:4px;background:var(--ink);border-radius:4px;margin:3px 0}
+.col .fld{width:1.15em;min-width:0;height:1.4em;padding:0;border-radius:9px;font-size:.95em}
+.choices{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px;width:100%}
+.ch{flex:1;min-width:130px;max-width:360px;min-height:62px;padding:10px 16px;border-radius:18px;background:var(--card);border:3px solid var(--line);box-shadow:0 4px 0 var(--line);font-weight:800;font-size:1.25rem}
+.ch.sel{border-color:var(--pri);background:var(--head)}
+.ch.bad{border-color:var(--bad);background:var(--badBg);animation:shake .35s;pointer-events:none}
+.ch.ok{border-color:var(--ok);background:var(--okBg)}
+.ch:active{transform:translateY(3px);box-shadow:none}
+.side{display:flex;flex-direction:column;gap:12px}
+.coach{display:flex;gap:10px;align-items:center}
+.coach .avwrap{width:92px;height:92px}
+.coach .avatar{width:100%;height:100%}
+.coach .bubble{margin:0;flex:1;font-size:1rem;line-height:1.3}
+.fb{border-radius:18px;padding:12px 14px;font-weight:700;font-size:1rem;line-height:1.4}
+.fb.ok{background:var(--okBg);color:var(--ok)}
+.fb.bad{background:var(--badBg);color:var(--bad)}
+.fb.hint{background:#fff6c9;color:#5a4300;border:2px solid #f5d76e}
+.fb .ex{color:var(--ink);font-weight:600;display:block;margin-top:4px}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.key{min-height:62px;border-radius:16px;background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);font-size:1.7rem;font-weight:900}
+.key:active{transform:translateY(3px);box-shadow:none}
+.key.fn{background:var(--soft);font-size:1.3rem}
+.key[disabled]{opacity:.25}
+.coinpop{position:fixed;pointer-events:none;font-size:2rem;font-weight:900;color:#c68a00;animation:pop 1s ease-out forwards;z-index:50}
+@keyframes pop{0%{opacity:0;transform:translateY(0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translateY(-70px) scale(1.2)}}
+
+/* ===== result ===== */
+.result{text-align:center;padding:24px 16px}
+.stars{font-size:3.4rem;letter-spacing:6px}
+.stars span{display:inline-block;filter:grayscale(1);opacity:.35}
+.stars span.on{filter:none;opacity:1;animation:starin .5s ease backwards}
+@keyframes starin{0%{transform:scale(0) rotate(-60deg)}70%{transform:scale(1.35) rotate(10deg)}100%{transform:scale(1)}}
+.bigav{width:190px;height:190px;margin:6px auto}
+.bigav .avwrap,.bigav .avatar{width:100%;height:100%}
+.rewards{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.list{display:flex;flex-direction:column;gap:10px;text-align:left}
+.li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--soft);border:2px solid var(--line)}
+.li.ok{border-color:var(--ok)}
+.li.bad{border-color:var(--bad)}
+.li .n{width:34px;height:34px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-weight:900;flex:none}
+.li .t{font-size:.95rem;font-weight:700}
+.li .e{font-size:.95rem;color:var(--mute);font-weight:600}
+.li .mini{font-size:1rem;margin-top:6px}
+
+/* ===== test ===== */
+.timer{display:flex;align-items:center;gap:10px;flex:1;min-width:200px}
+.timer .bar{flex:1;height:18px}
+.timer .bar>i{background:linear-gradient(90deg,#43c76b,#f5b400)}
+.timer.low .bar>i{background:linear-gradient(90deg,#f5b400,#e53)}
+.timer b{font-size:1.4rem;min-width:70px;text-align:right;font-variant-numeric:tabular-nums}
+.qnav{display:flex;gap:6px;flex-wrap:wrap}
+.qnav button{width:42px;height:42px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-weight:800}
+.qnav button.cur{border-color:var(--pri);background:var(--head)}
+.qnav button.has{background:var(--pri);color:var(--priInk);border-color:transparent}
+
+/* ===== shop ===== */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px}
+.tabs button{flex:none;min-height:48px;padding:6px 16px;border-radius:99px;border:2px solid var(--line);background:var(--card);font-weight:800}
+.tabs button.on{background:linear-gradient(180deg,var(--pri2),var(--pri));color:var(--priInk);border-color:transparent}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;text-align:center}
+.item .pv{width:112px;height:112px}
+.item .pv .avwrap,.item .pv .avatar{width:100%;height:100%}
+.item.eq{border-color:var(--ok)}
+.item .nm{font-weight:800;font-size:.95rem}
+.swatch{width:112px;height:112px;border-radius:50%;display:flex;overflow:hidden;border:4px solid var(--line)}
+.swatch i{flex:1}
+.price{font-weight:900;color:#a77700}
+body[data-theme="nacht"] .price{color:#ffd166}
+.preview{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.preview .pavatar{width:150px;height:150px}
+.preview .pavatar .avwrap,.preview .pavatar .avatar{width:100%;height:100%}
+.nonepv{width:112px;height:112px;border-radius:50%;border:4px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:2.4rem;color:var(--mute)}
+
+/* ===== trophies ===== */
+.tro{display:flex;gap:12px;align-items:center;padding:14px}
+.tro .ic{font-size:2.6rem;width:64px;text-align:center}
+.tro.lock .ic{filter:grayscale(1);opacity:.35}
+.tro.lock{opacity:.8}
+.tro b{display:block}
+.tro .d{font-size:.9rem;color:var(--mute)}
+
+/* ===== parent ===== */
+table.tbl{width:100%;border-collapse:collapse;font-size:.95rem}
+table.tbl th,table.tbl td{padding:8px 8px;border-bottom:2px solid var(--line);text-align:left}
+table.tbl th{background:var(--soft)}
+.pct{display:inline-block;min-width:48px;padding:2px 8px;border-radius:99px;font-weight:800;text-align:center}
+.pct.g{background:var(--okBg);color:var(--ok)}
+.pct.y{background:#fff3c4;color:#8a6500}
+.pct.r{background:var(--badBg);color:var(--bad)}
+.pct.n{background:var(--soft);color:var(--mute)}
+input.txt{font:inherit;padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);min-width:180px;-webkit-user-select:text;user-select:text}
+textarea.txt{width:100%;min-height:90px;font:12px monospace;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:8px;-webkit-user-select:text;user-select:text}
+
+/* ===== v2: Gruppen, Review, Album, PIN, Einstellungen ===== */
+.dots i.half{background:#f5c542}
+.stars.sm{font-size:1.25rem;letter-spacing:2px}
+.blocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.blk{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border-radius:18px;background:var(--soft);border:2px solid var(--line);text-align:center}
+.blk.done{border-color:var(--ok);background:var(--okBg)}
+.dotsm{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.dotsm i{width:14px;height:14px;border-radius:50%;background:var(--line);display:inline-block}
+.dotsm i.ok{background:var(--ok)}.dotsm i.half{background:#f5c542}.dotsm i.bad{background:var(--bad)}.dotsm i.cur{box-shadow:0 0 0 3px var(--pri2)}
+.rv{margin:8px 0 4px;font-weight:900;font-size:1.1rem}
+.tile .sub{font-size:.75rem;font-weight:700;color:var(--mute);text-align:center}
+.cardx{display:flex;flex-direction:column;gap:8px;min-height:130px}
+.cardx .ct{font-weight:900;color:var(--pri)}
+.cardx .cq{font-weight:700}
+.cardx .ca{font-weight:600;background:var(--soft);border-radius:12px;padding:8px 10px}
+.cardx.hot{border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,180,0,.35),0 6px 0 rgba(0,0,0,.07)}
+.cardx.lock{opacity:.55;border-style:dashed;align-items:center;justify-content:center;text-align:center}
+.pindots{display:flex;gap:12px;justify-content:center;margin:12px 0}
+.pindots i{width:20px;height:20px;border-radius:50%;border:3px solid var(--pri);display:inline-block}
+.pindots i.on{background:var(--pri)}
+.pinpad{max-width:300px;margin:0 auto 12px}
+.reccode{font-size:2.2rem;font-weight:900;letter-spacing:4px;background:var(--soft);border:3px dashed var(--pri);border-radius:16px;padding:12px;margin:12px 0;-webkit-user-select:text;user-select:text}
+.cfg{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 0;border-bottom:2px solid var(--line)}
+select.txt{font:inherit;padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.fb.sp{flex:1}
+
+/* ===== overlays ===== */
+.toasts{pointer-events:none;position:fixed;top:12px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:60;width:min(92vw,420px)}
+.toast{background:var(--card);border:3px solid var(--gold);border-radius:18px;padding:10px 14px;font-weight:800;display:flex;gap:12px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:tin .4s ease}
+.toast .ic{font-size:2rem}
+@keyframes tin{from{transform:translateY(-30px);opacity:0}}
+.modal{position:fixed;inset:0;background:rgba(20,20,40,.55);display:flex;align-items:center;justify-content:center;z-index:70;padding:16px}
+.modal .card{max-width:440px;width:100%;text-align:center}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:55;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+@media (max-width:560px){
+  body{font-size:16px}
+  .qbody{font-size:1.5rem}.eq.big{font-size:2rem}.col{font-size:1.6rem}.chain{font-size:1.3rem}
+  .cmp{font-size:1.7rem;gap:10px}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+
+/* ===== print (Eltern-Ansicht) ===== */
+@media print{
+  body{background:#fff!important;color:#000;font-size:12px}
+  .noprint,.toasts,.top .back,.btn{display:none!important}
+  .card{box-shadow:none;border:1px solid #bbb;break-inside:avoid}
+  #app{max-width:none;padding:0}
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<noscript>Bitte JavaScript aktivieren.</noscript>
+<script>
+/* =====================================================================
+   QUESTION GENERATORS + MODULE REGISTRY
+   ---------------------------------------------------------------------
+   A question is a plain object (JSON-safe, so it can be stored in the
+   Fehler-Heft):
+     { title, html, fields:[{a, digit?, strict?, money?, next?}], hint, explain }
+        html uses [[0]], [[1]] ... as placeholders for answer fields
+     { title, prompt, choices:[html...], correct:int, hint, explain }
+
+   TO ADD A NEW BOOK MODULE (A1, A6 ...):
+     1. write generator functions  g_xyz(level)  (level 1..3)
+     2. add an entry to MODULES at the bottom of this file
+   Home screen, topic screens, trophies, parent view, Mini-Test and
+   progress saving all pick the new module up automatically.
+   ===================================================================== */
+
+/* ---------- utils ---------- */
+const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pad2 = n => String(n).padStart(2, '0');
+const eur = c => Math.floor(c / 100) + ',' + pad2(c % 100);      // cents -> "12,05"
+const E = c => eur(c) + ' €';
+const F = (a, o) => Object.assign({ a: String(a) }, o || {});
+const FM = c => F(eur(c), { money: true });                      // money, lenient format
+const FS = a => F(a, { strict: true });                          // exact format required
+const T10 = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+const gcd = (x, y) => y ? gcd(y, x % y) : x;
+const lcm = (a, b) => a * b / gcd(a, b);
+const eqLine = (txt, cls) => `<div class="eq${cls ? ' ' + cls : ''}">${txt}</div>`;
+
+/* =====================================================================
+   A4  DIVISION
+   ===================================================================== */
+
+function g_umkehr(L) {
+  const a = ri(2, 9), b = pick(L === 1 ? T10 : [...T10, 100]);
+  const p = a * b, swap = L >= 2 && Math.random() < .5;
+  const first = swap ? `${b} · ${a}` : `${a} · ${b}`;
+  let html = eqLine(`${first} = [[0]]`) + eqLine(`U: [[1]] : ${b} = ${a}`, 'u');
+  const fields = [F(p), F(p)];
+  if (L >= 2) { html += eqLine(`U: [[2]] : ${a} = ${b}`, 'u'); fields.push(F(p)); }
+  return {
+    title: 'Rechne aus. Schreibe die passende Umkehraufgabe.',
+    html, fields,
+    hint: `Denke an die kleine Aufgabe: ${a} · ${b / 10} = ${a * b / 10}. Das Ergebnis wird zehnmal so groß.`,
+    explain: `${first} = ${p}  →  ${p} : ${b} = ${a}` + (L >= 2 ? `  und  ${p} : ${a} = ${b}` : '')
+  };
+}
+
+function g_kleine(L) {
+  const typeB = L >= 2 && Math.random() < (L === 2 ? .4 : .55);
+  if (!typeB) {
+    let q, d, D;
+    do { q = ri(2, L === 1 ? 5 : 9); d = ri(1, 9) * 10; D = q * d; } while (D > 1000);
+    return {
+      title: 'Rechne erst die kleine Geteiltaufgabe, dann die große.',
+      html: eqLine(`${D / 10} : ${d / 10} = [[0]]`) + eqLine(`${D} : ${d} = [[1]]`),
+      fields: [F(q), F(q)],
+      hint: `Streiche bei beiden Zahlen eine Null: ${D / 10} : ${d / 10}.`,
+      explain: `${D / 10} : ${d / 10} = ${q}  →  ${D} : ${d} = ${q}`
+    };
+  }
+  const d = ri(2, 9), q = ri(2, 9), small = q * d, D = small * 10;
+  return {
+    title: 'Rechne erst die kleine Geteiltaufgabe, dann die große.',
+    html: eqLine(`${small} : ${d} = [[0]]`) + eqLine(`${D} : ${d} = [[1]]`),
+    fields: [F(q), F(q * 10)],
+    hint: `Rechne zuerst ${small} : ${d}. Bei ${D} : ${d} wird das Ergebnis zehnmal so groß.`,
+    explain: `${small} : ${d} = ${q}  →  ${D} : ${d} = ${q * 10}`
+  };
+}
+
+function g_divtens(L) {
+  let q, d, D;
+  do { q = ri(1, L === 1 ? 5 : L === 2 ? 9 : 10); d = ri(1, L === 3 ? 10 : 9) * 10; D = q * d; } while (D > 1000);
+  return {
+    title: 'Rechne aus.',
+    html: eqLine(`${D} : ${d} = [[0]]`, 'big'),
+    fields: [F(q)],
+    hint: `Streiche bei beiden Zahlen eine Null: ${D / 10} : ${d / 10}. Oder frage: ${d} mal wie viel ist ${D}?`,
+    explain: `${D} : ${d} = ${q}, denn ${q} · ${d} = ${D}`
+  };
+}
+
+const GT_SETS = {
+  1: [[1, 10, 100], [2, 20, 200], [5, 50, 500]],
+  2: [[10, 50, 100], [20, 40, 80], [10, 100, 200], [25, 50, 100], [10, 50, 500]],
+  3: [[30, 60, 90], [40, 80, 160], [20, 50, 100], [15, 30, 60], [12, 60, 120]]
+};
+function g_geteilt(L) {
+  const cols = pick(GT_SETS[L]), m = cols.reduce(lcm, 1);
+  const mult = []; for (let x = m; x <= 1000; x += m) mult.push(x);
+  const rows = shuffle(mult).slice(0, 2).sort((a, b) => b - a);
+  let k = 0; const fields = [], ex = [];
+  let html = '<table class="gt"><tr><th>:</th>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr>';
+  rows.forEach(r => {
+    html += `<tr><th>${r}</th>`;
+    cols.forEach(c => { html += `<td>[[${k++}]]</td>`; fields.push(F(r / c)); ex.push(`${r} : ${c} = ${r / c}`); });
+    html += '</tr>';
+  });
+  html += '</table>';
+  return {
+    title: 'Rechne die Geteilttabelle aus.',
+    html, fields,
+    hint: 'Teile die Zahl in der Zeile durch die Zahl oben in der Spalte. Die kleine Geteiltaufgabe hilft dir.',
+    explain: ex.join('; ')
+  };
+}
+
+function g_paeckchen(L) {
+  const r = Math.random();
+  const v = L === 1 ? (r < .45 ? 1 : r < .9 ? 2 : 3) : (r < .3 ? 1 : r < .55 ? 2 : 3);
+  if (v === 1) {                       // gleiches Ergebnis
+    let q, s;
+    do { q = ri(2, 9); s = L === 1 ? 10 : pick([10, 20, 30]); } while (q * s * 4 > 1000);
+    const rows = [1, 2, 3, 4].map(k => [q * s * k, s * k]);
+    return {
+      title: 'Rechne das Päckchen. Was fällt dir auf?',
+      html: rows.map((x, i) => eqLine(`${x[0]} : ${x[1]} = [[${i}]]`)).join(''),
+      fields: rows.map(() => F(q)),
+      hint: `Teile zuerst beide Zahlen durch ${s}: ${q * s} : ${s} = ${q}.`,
+      explain: `Alle Ergebnisse sind ${q}. Beide Zahlen werden gleich oft größer, darum bleibt das Ergebnis gleich.`
+    };
+  }
+  if (v === 2) {                       // gleicher Teiler, Ergebnis wächst
+    let d, s0, g = 0;
+    do { d = pick(L === 1 ? [10, 20, 30, 40, 50] : T10); s0 = L === 1 ? 1 : ri(1, 5); g++; } while (d * (s0 + 3) > 1000 && g < 50);
+    const rows = [0, 1, 2, 3].map(i => [d * (s0 + i), s0 + i]);
+    return {
+      title: 'Rechne das Päckchen. Was fällt dir auf?',
+      html: rows.map((x, i) => eqLine(`${x[0]} : ${d} = [[${i}]]`)).join(''),
+      fields: rows.map(x => F(x[1])),
+      hint: `Rechne mit der kleinen Geteiltaufgabe: ${rows[0][0] / 10} : ${d / 10}.`,
+      explain: `Die erste Zahl wird immer um ${d} größer, darum wird das Ergebnis immer um 1 größer.`
+    };
+  }
+  let d, s, st, dir, seq, g = 0;        // Päckchen fortsetzen
+  do {
+    d = pick(T10); st = L === 1 ? 1 : pick([1, 2]); dir = (L >= 2 && Math.random() < .5) ? -1 : 1; s = ri(1, 10);
+    seq = [0, 1, 2, 3, 4].map(i => s + dir * st * i); g++;
+  } while (!(seq.every(x => x >= 1 && x <= 10) && d * Math.max(...seq) <= 1000) && g < 500);
+  if (!seq.every(x => x >= 1 && x <= 10)) { d = 30; st = 1; dir = 1; s = 1; seq = [1, 2, 3, 4, 5]; }
+  const shown = [0, 1, 2].map(i => eqLine(`${d * seq[i]} : ${d} = ${seq[i]}`, 'done')).join('');
+  return {
+    title: 'Setze das Päckchen fort.',
+    html: shown + eqLine(`${d * seq[3]} : ${d} = [[0]]`) + eqLine(`${d * seq[4]} : ${d} = [[1]]`),
+    fields: [F(seq[3]), F(seq[4])],
+    hint: `Schau, wie sich die Ergebnisse verändern: immer um ${st} ${dir > 0 ? 'größer' : 'kleiner'}.`,
+    explain: `${d * seq[3]} : ${d} = ${seq[3]}  und  ${d * seq[4]} : ${d} = ${seq[4]}`
+  };
+}
+
+function g_vergleich(L) {
+  const mk = kind => {
+    if (kind === 'm') { const a = ri(2, 9), b = pick(T10); return { t: Math.random() < .5 ? `${a} · ${b}` : `${b} · ${a}`, v: a * b }; }
+    const q = ri(1, 9), d = pick(T10); return { t: `${q * d} : ${d}`, v: q };
+  };
+  let left, right;
+  if (L < 3) {
+    const kind = (L === 1 || Math.random() < .6) ? 'm' : 'd';
+    left = mk(kind);
+    const base = kind === 'm' ? [0, 0, 10, -10, 20, -20, 30, -30, 50, -50] : [0, 0, 1, -1, 2, -2];
+    let tv, g = 0; do { tv = left.v + pick(base); g++; } while (tv <= 0 && g < 30);
+    if (tv <= 0) tv = left.v;
+    right = { t: String(tv), v: tv };
+    if (Math.random() < .5) [left, right] = [right, left];
+  } else {
+    const kind = Math.random() < .65 ? 'm' : 'd'; let g = 0;
+    do { left = mk(kind); right = mk(kind); g++; }
+    while (!(Math.abs(left.v - right.v) <= (kind === 'm' ? 40 : 2) && left.t !== right.t) && g < 800);
+  }
+  const c = left.v < right.v ? 0 : left.v === right.v ? 1 : 2;
+  return {
+    title: 'Rechne im Kopf und vergleiche.',
+    prompt: `<div class="cmp"><span>${left.t}</span><span class="qm">?</span><span>${right.t}</span></div>`,
+    choices: ['&lt;', '=', '&gt;'], correct: c,
+    hint: 'Rechne zuerst jede Seite aus. Denke an die kleine Mal- oder Geteiltaufgabe.',
+    explain: `${left.t} = ${left.v} und ${right.t} = ${right.v}, also ${left.v} ${'<=>'[c]} ${right.v}.`
+  };
+}
+
+function buildOps(n, L) {
+  for (let t = 0; t < 600; t++) {
+    let v = L === 1 ? ri(1, 12) * 10 : ri(2, 30) * 10;
+    const start = v, ops = [], vals = [v]; let ok = true;
+    for (let i = 0; i < n && ok; i++) {
+      const k = pick(['·', '+', '−', ':']); let x;
+      if (k === '·') { x = ri(2, L === 1 ? 5 : 10); v *= x; }
+      else if (k === ':') { const ds = [2, 3, 4, 5, 6, 8, 10].filter(d => v % d === 0 && v / d >= 1); if (!ds.length) { ok = false; break; } x = pick(ds); v /= x; }
+      else if (k === '+') { x = ri(1, L === 1 ? 5 : 10) * 10; v += x; }
+      else { x = ri(1, L === 1 ? 5 : 10) * 10; if (v - x < 10) { ok = false; break; } v -= x; }
+      if (v > 1000) { ok = false; break; }
+      ops.push({ k, x }); vals.push(v);
+    }
+    if (ok) return { start, ops, vals };
+  }
+  const fo = [{ k: ':', x: 10 }, { k: '·', x: 5 }, { k: '−', x: 20 }, { k: '+', x: 10 }, { k: '·', x: 2 }];
+  return { start: 100, ops: fo.slice(0, n), vals: [100, 10, 50, 30, 40, 80].slice(0, n + 1) };
+}
+
+function g_kette(L) {
+  const n = L === 1 ? 2 : L === 2 ? 3 : 5;
+  const { start, ops, vals } = buildOps(n, L);
+  let html = `<div class="chain"><span class="node s">${start}</span>`;
+  const fields = [];
+  ops.forEach((o, i) => {
+    html += `<span class="arr">${o.k} ${o.x}</span>`;
+    if (L === 3 && i === n - 1) html += `<span class="node z">Ziel ${vals[n]}</span>`;
+    else { html += `<span class="node">[[${fields.length}]]</span>`; fields.push(F(vals[i + 1])); }
+  });
+  html += '</div>';
+  return {
+    title: L === 3 ? `Hüpfe im Päckchen! Rechne immer mit dem Ergebnis weiter. Das Ziel ist die ${vals[n]}.`
+      : 'Rechne die Rechenkette. Nimm immer das Ergebnis weiter.',
+    html, fields,
+    hint: `Fang bei ${start} an: ${start} ${ops[0].k} ${ops[0].x} = ${vals[1]}. Dann rechne mit diesem Ergebnis weiter.`,
+    explain: ops.map((o, i) => `${vals[i]} ${o.k} ${o.x} = ${vals[i + 1]}`).join('; ')
+  };
+}
+
+function g_raetsel(L) {
+  const n = L === 1 ? 2 : L === 2 ? 3 : 4;
+  const { start, ops, vals } = buildOps(n, L);
+  const ph = o => o.k === '·' ? `multipliziere sie mit ${o.x}` : o.k === ':' ? `dividiere sie durch ${o.x}` : o.k === '+' ? `addiere ${o.x}` : `subtrahiere ${o.x}`;
+  const ps = ops.map(ph);
+  const txt = ps.slice(0, -1).join(', ') + ' und ' + ps[ps.length - 1];
+  const inv = { '·': ':', ':': '·', '+': '−', '−': '+' };
+  const back = [];
+  for (let i = n - 1; i >= 0; i--) back.push(`${vals[i + 1]} ${inv[ops[i].k]} ${ops[i].x} = ${vals[i]}`);
+  return {
+    title: 'Zahlenrätsel: Wie heißt die gedachte Zahl?',
+    html: `<div class="story">Ich denke mir eine Zahl, ${txt} und erhalte die Zahl <b>${vals[n]}</b>.</div>` + eqLine('Gedachte Zahl: [[0]]'),
+    fields: [F(start)],
+    hint: 'Rechne rückwärts mit Umkehraufgaben: aus + wird −, aus · wird : und umgekehrt. Fang bei der letzten Zahl an.',
+    explain: 'Rückwärts rechnen: ' + back.join('; ')
+  };
+}
+
+/* =====================================================================
+   A5  GELD
+   ===================================================================== */
+
+function g_schreib(L) {
+  const dir = pick(L === 1 ? [0, 1, 2] : [0, 1, 2, 3, 4]);
+  let e, c;
+  if (L === 1) { e = ri(1, 20); c = pick([10, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90]); }
+  else if (L === 2) { e = ri(0, 30); c = Math.random() < .45 ? ri(1, 9) : ri(10, 99); }
+  else { e = pick([0, 0, ri(1, 99), ri(1, 99)]); c = Math.random() < .6 ? ri(1, 9) : ri(10, 99); }
+  const t = e * 100 + c, komma = `${e},${pad2(c)}`;
+  let html, fields;
+  if (dir === 0) { html = eqLine(`${e} € ${c} ct = [[0]] €`); fields = [FS(komma)]; }
+  else if (dir === 1) { html = eqLine(`${e} € ${c} ct = [[0]] ct`); fields = [F(t)]; }
+  else if (dir === 2) { html = eqLine(`${komma} € = [[0]] € [[1]] ct`); fields = [F(e), F(c)]; }
+  else if (dir === 3) { html = eqLine(`${t} ct = [[0]] €`); fields = [FS(komma)]; }
+  else { html = eqLine(`${t} ct = [[0]] € [[1]] ct`); fields = [F(e), F(c)]; }
+  const zero = (dir === 0 || dir === 3) && c < 10;
+  return {
+    title: 'Wandle den Geldbetrag um.',
+    html, fields,
+    hint: zero ? `Cent haben immer zwei Stellen nach dem Komma: ${c} ct = ${pad2(c)} → ${komma} €. Hier musst du eine 0 ergänzen!`
+      : '1 € = 100 ct. Vor dem Komma stehen die Euro, nach dem Komma die Cent.',
+    explain: `${e} € ${c} ct = ${komma} € = ${t} ct`
+  };
+}
+
+function colQ(nums, op) {
+  const res = op === '+' ? nums.reduce((a, b) => a + b, 0) : nums[0] - nums[1];
+  const strs = nums.map(eur), rs = eur(res);
+  const W = Math.max(rs.length, ...strs.map(s => s.length));
+  const cellsOf = s => [...(' '.repeat(W - s.length) + s)].map(ch => `<span class="cell">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
+  let html = '<div class="col">';
+  strs.forEach((s, i) => { html += `<div class="crow"><span class="sg">${i === 0 ? '' : op}</span>${cellsOf(s)}<span class="cu">€</span></div>`; });
+  html += '<div class="cline"></div>';
+  const rsPad = ' '.repeat(W - rs.length) + rs;
+  const D = [...rs].filter(ch => ch !== ',').length;
+  let seen = 0; const fields = [], cells = [];
+  for (let p = W - 1; p >= 0; p--) {
+    const ch = rsPad[p];
+    if (ch === ' ') cells.unshift('<span class="cell">&nbsp;</span>');
+    else if (ch === ',') cells.unshift('<span class="cell">,</span>');
+    else { cells.unshift(`<span class="cell">[[${seen}]]</span>`); fields.push(F(ch, { digit: true, next: seen + 1 < D ? seen + 1 : null })); seen++; }
+  }
+  html += `<div class="crow"><span class="sg"></span>${cells.join('')}<span class="cu">€</span></div></div>`;
+  return {
+    title: 'Rechne schriftlich. Komma unter Komma!',
+    html, fields,
+    hint: op === '+' ? 'Rechne von rechts nach links: erst die Cent, dann die Euro. Denke an den Übertrag.'
+      : 'Rechne von rechts nach links. Reicht die obere Ziffer nicht aus, borge dir einen Zehner von links (entbündeln).',
+    explain: `${strs.join(` ${op} `)} = ${rs}`
+  };
+}
+
+function g_column(L) {
+  if (L === 1) {
+    if (Math.random() < .75) return colQ([ri(20, 300) * 5, ri(20, 300) * 5], '+');
+    const a = ri(200, 400) * 5, b = ri(20, 150) * 5; return colQ([a, b], '−');
+  }
+  if (L === 2) {
+    if (Math.random() < .5) return colQ([ri(50, 800) * 5, ri(50, 800) * 5, ri(50, 800) * 5], '+');
+    const a = ri(400, 1500), b = ri(50, Math.floor(a / 5) - 20) * 5; return colQ([a, b], '−');
+  }
+  if (Math.random() < .5) {
+    let a, b, g = 0;
+    do { a = ri(1500, 9000); b = ri(300, a - 200); g++; } while (!(a % 100 < b % 100) && g < 500);
+    return colQ([a, b], '−');
+  }
+  return colQ(Array.from({ length: ri(3, 4) }, () => ri(300, 3000)), '+');
+}
+
+const round1 = c => Math.floor((c + 50) / 100);                       // whole euros, half up
+const round10 = c => Math.floor((c / 100 + 5) / 10) * 10;             // tens of euros, half up
+const ITEMS_U = ['Fahrradhelm', 'Ball', 'Rucksack', 'Trinkflasche', 'Buch', 'Federmäppchen', 'Spiel', 'Mütze', 'Schal', 'Puzzle'];
+
+function g_ueber(L) {
+  if (L >= 2 && Math.random() < (L === 2 ? .35 : .5)) {          // choice: which result fits?
+    const a = ri(500, L === 2 ? 4500 : 9000), b = ri(300, L === 2 ? 3500 : 6000), sub = L === 3 && Math.random() < .5;
+    const [x, y] = sub && a < b ? [b, a] : [a, b];
+    const right = sub ? x - y : x + y;
+    const offs = shuffle([1000, -1000, 2000, -2000]).filter(o => right + o > 0).slice(0, 3);
+    const opts = shuffle([right, ...offs.map(o => right + o)]);
+    return {
+      title: 'Überschlage. Welches Ergebnis passt?',
+      prompt: eqLine(`${E(x)} ${sub ? '−' : '+'} ${E(y)} = ?`),
+      choices: opts.map(E), correct: opts.indexOf(right),
+      hint: `Runde jeden Preis auf ganze Euro: ${E(x)} ≈ ${round1(x)} €, ${E(y)} ≈ ${round1(y)} €.`,
+      explain: `Überschlag: ${round1(x)} ${sub ? '−' : '+'} ${round1(y)} = ${sub ? round1(x) - round1(y) : round1(x) + round1(y)} €. Genau: ${E(right)}.`
+    };
+  }
+  if (L === 1) {
+    const ps = [ri(101, 2999), ri(101, 2999), ri(101, 2999)];
+    return {
+      title: 'Runde auf ganze Euro.',
+      html: ps.map((p, i) => eqLine(`${E(p)} ≈ [[${i}]] €`)).join(''),
+      fields: ps.map(p => F(round1(p))),
+      hint: 'Schau auf die Cent: 50 oder mehr → aufrunden, weniger als 50 → abrunden.',
+      explain: ps.map(p => `${E(p)} ≈ ${round1(p)} €`).join('; ')
+    };
+  }
+  const names = shuffle(ITEMS_U).slice(0, 3); let ps;
+  if (L === 2) ps = names.map(() => ri(150, 4999));
+  else { do { ps = names.map(() => ri(1500, 25000)); } while (ps.some(p => p % 100 === 0 && (p / 100) % 10 === 5)); }
+  const rf = L === 2 ? round1 : round10, rr = ps.map(rf), tot = rr.reduce((a, b) => a + b, 0);
+  return {
+    title: L === 2 ? 'Überschlage die Kosten. Runde auf ganze Euro.' : 'Überschlage die Kosten. Runde auf volle 10 Euro.',
+    html: names.map((n, i) => eqLine(`${n}: ${E(ps[i])} ≈ [[${i}]] €`)).join('') + eqLine('Insgesamt ungefähr: [[3]] €', 'sum'),
+    fields: [...rr.map(x => F(x)), F(tot)],
+    hint: L === 2 ? 'Cent ab 50 → aufrunden. Dann addiere die gerundeten Preise.'
+      : 'Schau auf die Einer-Stelle: 5 oder mehr → aufrunden, sonst abrunden. Dann addiere.',
+    explain: ps.map((p, i) => `${E(p)} ≈ ${rr[i]} €`).join('; ') + `; zusammen ≈ ${tot} €`
+  };
+}
+
+const OFFERS = [
+  { n: 'Brötchen', s: 32, k: 10, p: 295 }, { n: 'Donuts', s: 145, k: 5, p: 600 }, { n: 'Muffins', s: 170, k: 5, p: 750 },
+  { n: 'Hefte', s: 60, k: 10, p: 549 }, { n: 'Bleistifte', s: 35, k: 5, p: 150 }, { n: 'Klebestifte', s: 145, k: 3, p: 399 },
+  { n: 'Radiergummis', s: 90, k: 5, p: 399 }, { n: 'Äpfel', s: 50, k: 6, p: 250 }, { n: 'Stücke Käsekuchen', s: 240, k: 12, p: 2500 },
+  { n: 'Stücke Erdbeertorte', s: 290, k: 12, p: 3000 }
+];
+function g_angebot(L) {
+  const o = pick(OFFERS);
+  if (L === 1 || (L === 2 && Math.random() < .5)) {
+    const single = o.k * o.s, save = single - o.p;
+    return {
+      title: `Einzeln oder Angebot? Ein Stück kostet ${E(o.s)}.`,
+      html: eqLine(`${o.k} ${o.n} einzeln: ${o.k} · ${E(o.s)} = [[0]] €`) + eqLine(`Angebot (${o.k} ${o.n}): ${E(o.p)}`, 'info') + eqLine('Du sparst: [[1]] €'),
+      fields: [FM(single), FM(save)],
+      hint: `Rechne ${o.k} · ${eur(o.s)} €. Dann: Einzelpreis minus Angebotspreis.`,
+      explain: `${o.k} · ${eur(o.s)} € = ${eur(single)} €; ${eur(single)} € − ${eur(o.p)} € = ${eur(save)} € gespart`
+    };
+  }
+  const extra = ri(1, o.k - 1), need = o.k + extra;
+  const A = o.p + extra * o.s, B = need * o.s;
+  return {
+    title: `Du brauchst ${need} ${o.n}. Ein Stück kostet ${E(o.s)}, das Angebot (${o.k} Stück) ${E(o.p)}.`,
+    html: eqLine(`Angebot + ${extra} einzeln: [[0]] €`) + eqLine(`Alles einzeln: [[1]] €`) + eqLine('So viel sparst du: [[2]] €'),
+    fields: [FM(A), FM(B), FM(B - A)],
+    hint: `Angebot: ${eur(o.p)} € + ${extra} · ${eur(o.s)} €. Alles einzeln: ${need} · ${eur(o.s)} €.`,
+    explain: `${eur(o.p)} + ${extra} · ${eur(o.s)} = ${eur(A)} €; ${need} · ${eur(o.s)} = ${eur(B)} €; Ersparnis ${eur(B - A)} €`
+  };
+}
+
+const BAK = [
+  { s: 'Brötchen', pl: 'Brötchen', p: 32 }, { s: 'Brezel', pl: 'Brezeln', p: 85 }, { s: 'Donut', pl: 'Donuts', p: 145 },
+  { s: 'Muffin', pl: 'Muffins', p: 170 }, { s: 'Stück Käsekuchen', pl: 'Stück Käsekuchen', p: 240 },
+  { s: 'Stück Erdbeertorte', pl: 'Stück Erdbeertorte', p: 290 }, { s: 'Brot (500 g)', pl: 'Brote (500 g)', p: 220 }
+];
+const nm = (it, k) => k === 1 ? it.s : it.pl;
+const shopList = (count, maxQ) => shuffle(BAK).slice(0, count).map(it => ({ it, k: ri(1, maxQ) }));
+
+function g_sach(L) {
+  const kind = pick(L === 1 ? ['s1', 's3'] : L === 2 ? ['s1', 's2', 's3'] : ['s2', 's4', 's5', 's1b']);
+  if (kind === 's1' || kind === 's1b') {
+    const list = shopList(kind === 's1' ? 2 : 3, L === 1 ? 3 : 4);
+    const text = list.map(x => `${x.k} ${nm(x.it, x.k)}`).join(', ').replace(/, ([^,]*)$/, ' und $1');
+    const tot = list.reduce((a, x) => a + x.k * x.it.p, 0);
+    return {
+      title: `Du kaufst ${text} in der Bäckerei. Wie viel kostet das zusammen?`,
+      html: list.map((x, i) => eqLine(`${x.k} · ${E(x.it.p)} = [[${i}]] €`)).join('') + eqLine(`Zusammen: [[${list.length}]] €`, 'sum'),
+      fields: [...list.map(x => FM(x.k * x.it.p)), FM(tot)],
+      hint: 'Rechne zuerst jede Sorte einzeln (Anzahl mal Preis). Dann addiere alles.',
+      explain: list.map(x => `${x.k} · ${eur(x.it.p)} € = ${eur(x.k * x.it.p)} €`).join('; ') + `; zusammen ${eur(tot)} €`
+    };
+  }
+  if (kind === 's2') {
+    const list = shopList(2, L === 2 ? 3 : 5), tot = list.reduce((a, x) => a + x.k * x.it.p, 0);
+    const pay = [500, 1000, 2000, 5000].find(x => x > tot);
+    const text = list.map(x => `${x.k} ${nm(x.it, x.k)}`).join(' und ');
+    return {
+      title: `Du kaufst ${text} und bezahlst mit ${pay / 100} €. Wie viel Rückgeld bekommst du?`,
+      html: eqLine('Gesamtpreis: [[0]] €') + eqLine('Rückgeld: [[1]] €', 'sum'),
+      fields: [FM(tot), FM(pay - tot)],
+      hint: `Berechne zuerst den Gesamtpreis. Dann: ${pay / 100},00 € minus Gesamtpreis.`,
+      explain: list.map(x => `${x.k} · ${eur(x.it.p)} €`).join(' + ') + ` = ${eur(tot)} €; ${eur(pay)} € − ${eur(tot)} € = ${eur(pay - tot)} €`
+    };
+  }
+  if (kind === 's3') {
+    const x = ri(1, 2), y = ri(1, 3), pe = pick([400, 450, 500]), pk = pick([250, 300, 350]);
+    const a = x * pe, b = y * pk, tot = a + b;
+    let html = eqLine(`${x} · ${E(pe)} = [[0]] €`) + eqLine(`${y} · ${E(pk)} = [[1]] €`) + eqLine('Zusammen: [[2]] €', 'sum');
+    const fields = [FM(a), FM(b), FM(tot)]; let extra = '';
+    if (L >= 2) { html += eqLine('Rest von 50 €: [[3]] €'); fields.push(FM(5000 - tot)); extra = ' Sie nehmen 50 € mit. Wie viel Geld bleibt übrig?'; }
+    return {
+      title: `Auf dem Jahrmarkt: Eintritt Erwachsene ${E(pe)}, Kinder ${E(pk)}. Es kommen ${x} ${x === 1 ? 'Erwachsener' : 'Erwachsene'} und ${y} ${y === 1 ? 'Kind' : 'Kinder'}.${extra}`,
+      html, fields,
+      hint: 'Rechne erst die Erwachsenen, dann die Kinder. Dann addiere (und ziehe ab).',
+      explain: `${x} · ${eur(pe)} = ${eur(a)} €; ${y} · ${eur(pk)} = ${eur(b)} €; zusammen ${eur(tot)} €` + (L >= 2 ? `; 50,00 € − ${eur(tot)} € = ${eur(5000 - tot)} €` : '')
+    };
+  }
+  if (kind === 's4') {
+    const T = pick([300, 400, 500, 600, 700]), d = pick([20, 30, 40, 50, 60]);
+    const dd = d % 2 ? d + 1 : d, small = (T - dd) / 2, large = small + dd;
+    return {
+      title: `Ein Vater kauft ein kleines und ein großes Fahrrad. Das große ist ${dd} € teurer als das kleine. Zusammen kosten sie ${T} €.`,
+      html: eqLine('Kleines Fahrrad: [[0]] €') + eqLine('Großes Fahrrad: [[1]] €'),
+      fields: [F(small), F(large)],
+      hint: `${T} − ${dd} = ${T - dd}. Das ist doppelt so viel wie das kleine Fahrrad. Teile durch 2.`,
+      explain: `${T} − ${dd} = ${T - dd}; ${T - dd} : 2 = ${small} (klein); ${small} + ${dd} = ${large} (groß)`
+    };
+  }
+  const T = pick([150, 240, 300, 360, 450, 540, 600]);
+  return {
+    title: `Eine Mutter und ihr Sohn fahren mit der Bahn. Kinder zahlen die Hälfte. Zusammen kostet die Fahrt ${T} €.`,
+    html: eqLine('Kind zahlt: [[0]] €') + eqLine('Mutter zahlt: [[1]] €'),
+    fields: [F(T / 3), F(T * 2 / 3)],
+    hint: 'Die Mutter zahlt 2 Teile, das Kind 1 Teil. Zusammen sind das 3 Teile.',
+    explain: `${T} : 3 = ${T / 3} € (Kind); 2 · ${T / 3} = ${T * 2 / 3} € (Mutter)`
+  };
+}
+
+const RANGES = ['weniger als 10 ct', '10 ct – 1 €', '1 € – 5 €', '5 € – 10 €', '10 € – 50 €', '50 € – 100 €', '100 € – 500 €', '500 € – 1.000 €', '1.000 € – 10.000 €', '10.000 € – 100.000 €'];
+const PRICEQ = [
+  ['ein Bonbon', 0], ['ein Radiergummi', 1], ['ein weißes Brötchen', 1], ['ein Schulheft', 1], ['ein Kugelschreiber', 1],
+  ['1 Liter Milch', 2], ['eine Kugel Eis', 2], ['ein Taschenbuch', 3], ['ein Fußball', 4], ['ein Fahrradhelm', 4],
+  ['ein Paar Turnschuhe', 5], ['ein Kinderfahrrad', 6], ['ein einfaches Handy', 6], ['ein Laptop', 7],
+  ['eine Familienreise in den Urlaub', 8], ['ein neues Auto', 9],
+  ['ein Kaugummi', 0], ['ein Bleistift', 1], ['ein Apfel', 1], ['eine Banane', 1], ['ein Päckchen Taschentücher', 1],
+  ['eine Tafel Schokolade', 2], ['1 Liter Benzin', 2], ['ein Eis am Stiel', 2], ['1 Kilo Kartoffeln', 2], ['ein Laib Brot', 2],
+  ['ein Eisbecher in der Eisdiele', 3], ['ein Brettspiel', 4], ['ein Paar Gummistiefel', 4], ['ein Schulranzen', 6],
+  ['ein Flugticket nach Spanien', 6], ['ein Fernseher', 7]
+];
+function g_schaetzen(L) {
+  const [name, idx] = pick(PRICEQ);
+  const others = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter(i => i !== idx);
+  const near = others.filter(i => Math.abs(i - idx) === 1);
+  let opts;
+  if (L === 1) opts = shuffle(others.filter(i => Math.abs(i - idx) >= 2)).slice(0, 3);
+  else opts = [...shuffle(near).slice(0, L === 2 ? 1 : 2), ...shuffle(others.filter(i => Math.abs(i - idx) >= 2)).slice(0, L === 2 ? 2 : 1)];
+  const all = shuffle([idx, ...opts]);
+  return {
+    title: 'Preise schätzen: Was ist ungefähr so teuer?',
+    prompt: eqLine(`Wie viel kostet ${name} ungefähr?`, 'q'),
+    choices: all.map(i => RANGES[i]), correct: all.indexOf(idx),
+    hint: 'Überlege: Hast du so etwas schon einmal gekauft? War es eher ein paar Cent, ein paar Euro oder mehr?',
+    explain: `${name[0].toUpperCase() + name.slice(1)} kostet ungefähr ${RANGES[idx]}.`
+  };
+}
+
+function g_ticket(L) {
+  const a = ri(1, 2), k = L === 1 ? ri(1, 2) : ri(1, 3);
+  const pa = pick([3600, 3800, 4200, 4500, 4800]), pk = Math.round(pa / 2 / 50) * 50;
+  const singles = a * pa + k * pk;
+  const disc = pick([300, 350, 400, 500, 600, 750, 800, 1000, 1200].filter(x => x < singles));
+  const fam = singles - disc;
+  return {
+    title: `Familie mit ${a} ${a === 1 ? 'Erwachsenem' : 'Erwachsenen'} und ${k} ${k === 1 ? 'Kind' : 'Kindern'}: Einzeltickets oder Familienticket?`,
+    html: eqLine(`Einzelticket Erwachsene: ${E(pa)} · Kinder: ${E(pk)}<br>Familienticket: ${E(fam)}`, 'info') +
+      eqLine('Einzeltickets zusammen: [[0]] €') + eqLine('Unterschied: [[1]] €', 'sum'),
+    fields: [FM(singles), FM(disc)],
+    hint: `Rechne ${a} · ${eur(pa)} € + ${k} · ${eur(pk)} €. Dann: Einzeltickets minus Familienticket.`,
+    explain: `${a} · ${eur(pa)} + ${k} · ${eur(pk)} = ${eur(singles)} €; ${eur(singles)} − ${eur(fam)} = ${eur(disc)} € Unterschied (Familienticket ist günstiger).`
+  };
+}
+
+/* =====================================================================
+   MODULE REGISTRY
+   ===================================================================== */
+const MODULES = [
+  {
+    id: 'A4', title: 'Division', sub: 'Durch Zehnerzahlen teilen', icon: '➗', topics: [
+      { id: 'umkehr', t: 'Umkehraufgaben', d: '3 · 40 = 120 → 120 : 40 = 3', icon: '🔁', gen: g_umkehr },
+      { id: 'kleine', t: 'Kleine Geteiltaufgabe', d: '150 : 50 → 15 : 5', icon: '🧩', gen: g_kleine },
+      { id: 'divtens', t: 'Durch Zehner teilen', d: 'Schnell rechnen: 240 : 80', icon: '⚡', gen: g_divtens },
+      { id: 'geteilt', t: 'Geteilttabellen', d: 'Tabellen ausfüllen', icon: '📊', gen: g_geteilt },
+      { id: 'paeck', t: 'Schöne Päckchen', d: 'Muster entdecken', icon: '🎁', gen: g_paeckchen },
+      { id: 'vergl', t: 'Vergleichen', d: '< = >', icon: '⚖️', gen: g_vergleich },
+      { id: 'kette', t: 'Rechenketten', d: 'Hüpfe im Päckchen', icon: '⛓️', gen: g_kette },
+      { id: 'raetsel', t: 'Zahlenrätsel', d: 'Ich denke mir eine Zahl …', icon: '🤔', gen: g_raetsel }
+    ]
+  },
+  {
+    id: 'A5', title: 'Geld', sub: 'Rechnen mit Euro und Cent', icon: '💶', topics: [
+      { id: 'schreib', t: 'Schreibweisen', d: '2 € 9 ct = 2,09 €', icon: '✍️', gen: g_schreib },
+      { id: 'column', t: 'Schriftlich rechnen', d: 'Geld addieren und subtrahieren', icon: '🧮', gen: g_column },
+      { id: 'ueber', t: 'Überschlagen', d: 'Runden und schätzen', icon: '🎯', gen: g_ueber },
+      { id: 'angebot', t: 'Angebote', d: 'Einzeln oder im Paket?', icon: '🏷️', gen: g_angebot },
+      { id: 'sach', t: 'Sachrechnen', d: 'Einkaufen, Rückgeld, Rätsel', icon: '🛒', gen: g_sach },
+      { id: 'schaetz', t: 'Preise schätzen', d: 'Was kostet ungefähr …?', icon: '🔎', gen: g_schaetzen },
+      { id: 'ticket', t: 'Tickets', d: 'Einzel- oder Familienticket', icon: '🎟️', gen: g_ticket }
+    ]
+  }
+];
+
+/* =====================================================================
+   MASCOT "FINO" – original inline-SVG characters, hats, extras,
+   backgrounds and the SHOP catalog.
+   ===================================================================== */
+
+const INK = '#2b2233';
+
+function eyes(m, x1, x2, y, r, col) {
+  col = col || INK;
+  const sw = r * .55;
+  if (m === 'cheer') {
+    const arc = x => `<path d="M${x - r} ${y + r * .4} Q${x} ${y - r * 1.5} ${x + r} ${y + r * .4}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"/>`;
+    return arc(x1) + arc(x2);
+  }
+  const dot = (x, ox, oy) => `<circle cx="${x + ox}" cy="${y + oy}" r="${r}" fill="${col}"/><circle cx="${x + ox + r * .35}" cy="${y + oy - r * .35}" r="${r * .32}" fill="#fff"/>`;
+  const brow = (xa, ya, xb, yb) => `<path d="M${xa} ${ya} L${xb} ${yb}" stroke="${col}" stroke-width="${sw * .8}" stroke-linecap="round"/>`;
+  if (m === 'sad') {
+    return dot(x1, 0, 0) + dot(x2, 0, 0) +
+      brow(x1 - r, y - r * 1.5, x1 + r, y - r * 2.2) + brow(x2 - r, y - r * 2.2, x2 + r, y - r * 1.5) +
+      `<path d="M${x2 + r * 1.3} ${y + r * 1.1} q${-r * .8} ${r * 1.4} 0 ${r * 1.8} q${r * .8} ${-r * .4} 0 ${-r * 1.8}z" fill="#7cc7ff"/>`;
+  }
+  if (m === 'think') {
+    return dot(x1, r * .3, -r * .3) + dot(x2, r * .3, -r * .3) +
+      brow(x1 - r, y - r * 1.7, x1 + r, y - r * 1.7) + brow(x2 - r, y - r * 2.3, x2 + r, y - r * 1.8);
+  }
+  return dot(x1, 0, 0) + dot(x2, 0, 0);
+}
+function mouth(m, x, y, w, col) {
+  col = col || INK;
+  if (m === 'cheer') return `<path d="M${x - w} ${y - w * .2} Q${x} ${y + w * 1.6} ${x + w} ${y - w * .2} Z" fill="#7a2e3a"/><ellipse cx="${x}" cy="${y + w * .75}" rx="${w * .5}" ry="${w * .3}" fill="#ff8fa3"/>`;
+  if (m === 'sad') return `<path d="M${x - w * .8} ${y + w * .6} Q${x} ${y - w * .4} ${x + w * .8} ${y + w * .6}" fill="none" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/>`;
+  if (m === 'think') return `<path d="M${x - w * .6} ${y + 2} q${w * .3} ${-w * .35} ${w * .6} 0 t${w * .6} 0" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/>`;
+  return `<path d="M${x - w} ${y} Q${x} ${y + w * 1.0} ${x + w} ${y}" fill="none" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/>`;
+}
+const blush = (x1, x2, y, c) => `<ellipse cx="${x1}" cy="${y}" rx="9" ry="5.5" fill="${c || '#ff9aa8'}" opacity=".55"/><ellipse cx="${x2}" cy="${y}" rx="9" ry="5.5" fill="${c || '#ff9aa8'}" opacity=".55"/>`;
+const arms = (m, col, y) => m === 'cheer'
+  ? `<ellipse cx="58" cy="${y - 28}" rx="10" ry="17" transform="rotate(30 58 ${y - 28})" fill="${col}"/><ellipse cx="142" cy="${y - 28}" rx="10" ry="17" transform="rotate(-30 142 ${y - 28})" fill="${col}"/>`
+  : `<ellipse cx="62" cy="${y}" rx="10" ry="17" transform="rotate(14 62 ${y})" fill="${col}"/><ellipse cx="138" cy="${y}" rx="10" ry="17" transform="rotate(-14 138 ${y})" fill="${col}"/>`;
+const feet = col => `<ellipse cx="80" cy="177" rx="15" ry="9" fill="${col}"/><ellipse cx="120" cy="177" rx="15" ry="9" fill="${col}"/>`;
+
+const SKINS = {
+  fuchs: {
+    name: 'Fuchs', headTop: 44, ex: [78, 122], ey: 88, er: 6, neckY: 128,
+    draw(m) {
+      const o = '#F28C28', d = '#D9701A', w = '#FFF4E4';
+      return `
+      <path d="M132 168 C182 176 202 128 178 98 C176 130 160 146 130 150Z" fill="${o}"/>
+      <path d="M178 98 C190 116 194 140 182 156 C190 140 188 118 178 98Z" fill="#fff"/>
+      ${feet(d)}
+      <ellipse cx="100" cy="142" rx="40" ry="36" fill="${o}"/>
+      <ellipse cx="100" cy="150" rx="25" ry="25" fill="${w}"/>
+      ${arms(m, o, 142)}
+      <path d="M52 70 L56 18 L92 50Z" fill="${o}"/><path d="M148 70 L144 18 L108 50Z" fill="${o}"/>
+      <path d="M60 58 L62 32 L82 50Z" fill="#7a3b1c"/><path d="M140 58 L138 32 L118 50Z" fill="#7a3b1c"/>
+      <ellipse cx="100" cy="88" rx="53" ry="46" fill="${o}"/>
+      <path d="M47 96 L70 112 L52 118Z" fill="${w}"/><path d="M153 96 L130 112 L148 118Z" fill="${w}"/>
+      <ellipse cx="100" cy="106" rx="32" ry="21" fill="${w}"/>
+      ${eyes(m, 78, 122, 86, 6)}
+      <ellipse cx="100" cy="97" rx="7" ry="5" fill="#3a2a22"/>
+      ${mouth(m, 100, 106, 10)}
+      ${blush(66, 134, 102)}`;
+    }
+  },
+  igel: {
+    name: 'Igel', headTop: 46, ex: [80, 120], ey: 92, er: 5.5, neckY: 130,
+    draw(m) {
+      const sp = '#7b5a3c', sk = '#EBCB9E', bd = '#D9B07E';
+      let spikes = '';
+      for (let i = 0; i <= 14; i++) {              // spikes around the head/back
+        const a = Math.PI * (1.0 + i / 14 * 1.0);
+        const cx = 100 + Math.cos(a) * 56, cy = 92 + Math.sin(a) * 50;
+        const ox = 100 + Math.cos(a) * 76, oy = 92 + Math.sin(a) * 70;
+        const px = Math.cos(a + Math.PI / 2) * 9, py = Math.sin(a + Math.PI / 2) * 9;
+        spikes += `<path d="M${cx - px} ${cy - py} L${ox} ${oy} L${cx + px} ${cy + py}Z" fill="${sp}"/>`;
+      }
+      return `
+      ${feet('#b88f5e')}
+      <ellipse cx="100" cy="140" rx="46" ry="38" fill="${sp}"/>
+      ${spikes}
+      <ellipse cx="100" cy="146" rx="36" ry="32" fill="${bd}"/>
+      ${arms(m, sk, 142)}
+      <circle cx="58" cy="62" r="11" fill="${sk}"/><circle cx="142" cy="62" r="11" fill="${sk}"/>
+      <circle cx="58" cy="62" r="5.5" fill="#f4a6a6"/><circle cx="142" cy="62" r="5.5" fill="#f4a6a6"/>
+      <ellipse cx="100" cy="90" rx="50" ry="44" fill="${sk}"/>
+      <path d="M52 78 Q100 40 148 78 Q130 62 100 62 Q70 62 52 78Z" fill="${sp}"/>
+      <ellipse cx="100" cy="104" rx="26" ry="18" fill="#fff4de"/>
+      ${eyes(m, 80, 120, 90, 5.5)}
+      <ellipse cx="100" cy="99" rx="7" ry="5.5" fill="#3a2a22"/>
+      ${mouth(m, 100, 108, 9)}
+      ${blush(68, 132, 104)}`;
+    }
+  },
+  katze: {
+    name: 'Katze', headTop: 44, ex: [78, 122], ey: 90, er: 6.5, neckY: 130,
+    draw(m) {
+      const c = '#8FA8C8', d = '#6F89AE', w = '#EEF3FA';
+      return `
+      <path d="M134 160 C180 166 196 120 172 92 C170 122 160 138 132 144Z" fill="${c}"/>
+      <path d="M170 106 l14 -3 M172 120 l14 -2 M168 134 l12 0" stroke="${d}" stroke-width="5" stroke-linecap="round"/>
+      ${feet(d)}
+      <ellipse cx="100" cy="142" rx="40" ry="36" fill="${c}"/>
+      <ellipse cx="100" cy="150" rx="24" ry="24" fill="${w}"/>
+      ${arms(m, c, 142)}
+      <path d="M54 72 L52 22 L94 52Z" fill="${c}"/><path d="M146 72 L148 22 L106 52Z" fill="${c}"/>
+      <path d="M62 60 L62 36 L82 52Z" fill="#ffb3c1"/><path d="M138 60 L138 36 L118 52Z" fill="#ffb3c1"/>
+      <ellipse cx="100" cy="90" rx="52" ry="45" fill="${c}"/>
+      <path d="M100 46 v14 M86 48 l3 12 M114 48 l-3 12" stroke="${d}" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="100" cy="106" rx="26" ry="17" fill="${w}"/>
+      ${eyes(m, 78, 122, 88, 6.5)}
+      <path d="M94 98 L106 98 L100 105Z" fill="#ff8fa3" stroke="#ff8fa3" stroke-width="2" stroke-linejoin="round"/>
+      ${mouth(m, 100, 108, 8)}
+      <path d="M60 100 L36 94 M60 108 L36 110 M140 100 L164 94 M140 108 L164 110" stroke="${d}" stroke-width="2.5" stroke-linecap="round"/>
+      ${blush(66, 134, 104)}`;
+    }
+  },
+  roboter: {
+    name: 'Roboter', headTop: 40, ex: [78, 122], ey: 86, er: 7, neckY: 130,
+    draw(m) {
+      const b = '#AEBBCB', d = '#7F90A5', s = '#1c2a3a', g = m === 'sad' ? '#7ab8ff' : m === 'think' ? '#ffd166' : '#5dffc4';
+      let face;
+      if (m === 'cheer') face = `<path d="M70 88 Q78 72 86 88 M114 88 Q122 72 130 88" fill="none" stroke="${g}" stroke-width="5" stroke-linecap="round"/><path d="M80 102 Q100 126 120 102Z" fill="${g}"/>`;
+      else if (m === 'sad') face = `<circle cx="78" cy="88" r="7" fill="${g}"/><circle cx="122" cy="88" r="7" fill="${g}"/><path d="M82 112 Q100 100 118 112" fill="none" stroke="${g}" stroke-width="5" stroke-linecap="round"/><path d="M130 98 q-4 8 0 11 q4 -3 0 -11z" fill="#7cc7ff"/>`;
+      else if (m === 'think') face = `<circle cx="80" cy="84" r="7" fill="${g}"/><circle cx="124" cy="84" r="7" fill="${g}"/><path d="M84 108 h32" stroke="${g}" stroke-width="5" stroke-linecap="round"/>`;
+      else face = `<circle cx="78" cy="88" r="7" fill="${g}"/><circle cx="122" cy="88" r="7" fill="${g}"/><path d="M80 104 Q100 120 120 104" fill="none" stroke="${g}" stroke-width="5" stroke-linecap="round"/>`;
+      return `
+      ${feet(d)}
+      <rect x="62" y="116" width="76" height="58" rx="18" fill="${b}"/>
+      <rect x="80" y="130" width="40" height="26" rx="8" fill="${s}"/>
+      <circle cx="92" cy="143" r="5" fill="#ff6b6b"/><circle cx="108" cy="143" r="5" fill="#ffd166"/>
+      ${m === 'cheer'
+        ? `<rect x="40" y="96" width="16" height="42" rx="8" transform="rotate(25 48 117)" fill="${d}"/><rect x="144" y="96" width="16" height="42" rx="8" transform="rotate(-25 152 117)" fill="${d}"/>`
+        : `<rect x="44" y="120" width="16" height="42" rx="8" transform="rotate(12 52 141)" fill="${d}"/><rect x="140" y="120" width="16" height="42" rx="8" transform="rotate(-12 148 141)" fill="${d}"/>`}
+      <path d="M100 40 V22" stroke="${d}" stroke-width="5" stroke-linecap="round"/><circle cx="100" cy="19" r="7" fill="#ff6b6b"/>
+      <rect x="44" y="60" width="112" height="76" rx="26" fill="${b}"/>
+      <rect x="36" y="82" width="12" height="26" rx="6" fill="${d}"/><rect x="152" y="82" width="12" height="26" rx="6" fill="${d}"/>
+      <rect x="56" y="70" width="88" height="56" rx="18" fill="${s}"/>
+      ${face}
+      <circle cx="62" cy="116" r="3" fill="#ff9aa8"/><circle cx="138" cy="116" r="3" fill="#ff9aa8"/>`;
+    }
+  },
+  drache: {
+    name: 'Drache', headTop: 44, ex: [78, 122], ey: 88, er: 6, neckY: 130,
+    draw(m) {
+      const g = '#5DBB63', d = '#3F9A4B', y = '#FFE08A';
+      return `
+      <path d="M70 118 C30 90 24 124 44 142 C48 126 58 124 74 132Z" fill="#8fd694"/>
+      <path d="M130 118 C170 90 176 124 156 142 C152 126 142 124 126 132Z" fill="#8fd694"/>
+      <path d="M134 164 C178 172 194 138 184 118 L170 134 L172 122 C168 140 156 150 132 152Z" fill="${g}"/>
+      <path d="M184 118 l10 -8 l-2 14z" fill="${d}"/>
+      ${feet(d)}
+      <ellipse cx="100" cy="142" rx="40" ry="36" fill="${g}"/>
+      <ellipse cx="100" cy="150" rx="25" ry="25" fill="${y}"/>
+      <path d="M86 140 h28 M84 152 h32 M88 164 h24" stroke="#f3c75a" stroke-width="3" stroke-linecap="round"/>
+      ${arms(m, g, 142)}
+      <path d="M72 50 L66 22 L90 44Z" fill="#f7e3b5"/><path d="M128 50 L134 22 L110 44Z" fill="#f7e3b5"/>
+      <path d="M90 44 L96 30 L102 44 L108 30 L112 44Z" fill="${d}"/>
+      <ellipse cx="100" cy="88" rx="52" ry="45" fill="${g}"/>
+      <ellipse cx="100" cy="108" rx="30" ry="19" fill="#8fd694"/>
+      <circle cx="90" cy="104" r="3.2" fill="${d}"/><circle cx="110" cy="104" r="3.2" fill="${d}"/>
+      ${eyes(m, 78, 122, 86, 6)}
+      ${mouth(m, 100, 112, 10)}
+      ${blush(64, 136, 100, '#ffb08a')}`;
+    }
+  },
+  pinguin: {
+    name: 'Pinguin', headTop: 44, ex: [82, 118], ey: 84, er: 5.5, neckY: 128,
+    draw(m) {
+      const n = '#2f4560', w = '#FFFFFF', o = '#FF9F1C';
+      return `
+      <ellipse cx="80" cy="177" rx="17" ry="8" fill="${o}"/><ellipse cx="120" cy="177" rx="17" ry="8" fill="${o}"/>
+      <ellipse cx="100" cy="138" rx="46" ry="42" fill="${n}"/>
+      <ellipse cx="100" cy="146" rx="31" ry="32" fill="${w}"/>
+      ${m === 'cheer'
+        ? `<ellipse cx="52" cy="112" rx="11" ry="24" transform="rotate(35 52 112)" fill="${n}"/><ellipse cx="148" cy="112" rx="11" ry="24" transform="rotate(-35 148 112)" fill="${n}"/>`
+        : `<ellipse cx="55" cy="142" rx="11" ry="25" transform="rotate(14 55 142)" fill="${n}"/><ellipse cx="145" cy="142" rx="11" ry="25" transform="rotate(-14 145 142)" fill="${n}"/>`}
+      <ellipse cx="100" cy="84" rx="50" ry="44" fill="${n}"/>
+      <path d="M100 66 C70 60 56 84 66 104 C80 112 90 100 100 96 C110 100 120 112 134 104 C144 84 130 60 100 66Z" fill="${w}"/>
+      ${eyes(m, 82, 118, 84, 5.5)}
+      <path d="M90 96 Q100 90 110 96 Q100 108 90 96Z" fill="${o}"/>
+      ${m === 'cheer' ? `<path d="M92 101 Q100 114 108 101Z" fill="#7a2e3a"/>` : m === 'sad' ? '' : ''}
+      ${blush(70, 130, 98)}`;
+    }
+  },
+  maus: {
+    name: 'Maus', headTop: 46, ex: [80, 120], ey: 86, er: 6.5, neckY: 130,
+    draw(m) {
+      const g = '#B9BCCB', d = '#9498AD', p = '#FFB3C7', w = '#F6F2F9';
+      return `
+      <path d="M136 164 C182 178 200 142 184 110" fill="none" stroke="#E7A3B8" stroke-width="6" stroke-linecap="round"/>
+      ${feet(d)}
+      <ellipse cx="100" cy="142" rx="38" ry="36" fill="${g}"/>
+      <ellipse cx="100" cy="150" rx="24" ry="25" fill="${w}"/>
+      ${arms(m, g, 142)}
+      <circle cx="54" cy="56" r="26" fill="${g}"/><circle cx="54" cy="56" r="16" fill="${p}"/>
+      <circle cx="146" cy="56" r="26" fill="${g}"/><circle cx="146" cy="56" r="16" fill="${p}"/>
+      <ellipse cx="100" cy="88" rx="50" ry="44" fill="${g}"/>
+      <ellipse cx="100" cy="106" rx="24" ry="17" fill="${w}"/>
+      <ellipse cx="100" cy="97" rx="6" ry="4.5" fill="#ff8fa9"/>
+      <path d="M72 100 L46 94 M72 108 L46 110 M128 100 L154 94 M128 108 L154 110" stroke="${d}" stroke-width="2.5" stroke-linecap="round"/>
+      ${m === 'sad' ? '' : '<rect x="95" y="109" width="10" height="9" rx="2.5" fill="#fff" stroke="#d3cfdc" stroke-width="1.5"/>'}
+      ${eyes(m, 80, 120, 86, 6.5)}
+      ${mouth(m, 100, 108, 8)}
+      ${blush(68, 132, 102)}`;
+    }
+  },
+  hase: {
+    name: 'Hase', headTop: 46, ex: [78, 122], ey: 88, er: 6.5, neckY: 130,
+    draw(m) {
+      const c = '#D8A86C', d = '#BF8B4F', w = '#FFF0DA', p = '#FFB3C7';
+      return `
+      <circle cx="146" cy="162" r="14" fill="${w}"/>
+      ${feet(d)}
+      <ellipse cx="100" cy="142" rx="38" ry="36" fill="${c}"/>
+      <ellipse cx="100" cy="150" rx="24" ry="25" fill="${w}"/>
+      ${arms(m, c, 142)}
+      <g transform="rotate(-9 68 40)"><ellipse cx="68" cy="38" rx="14" ry="36" fill="${c}"/><ellipse cx="68" cy="40" rx="7" ry="26" fill="${p}"/></g>
+      <g transform="rotate(9 132 40)"><ellipse cx="132" cy="38" rx="14" ry="36" fill="${c}"/><ellipse cx="132" cy="40" rx="7" ry="26" fill="${p}"/></g>
+      <ellipse cx="100" cy="88" rx="50" ry="44" fill="${c}"/>
+      <ellipse cx="88" cy="107" rx="16" ry="12" fill="${w}"/><ellipse cx="112" cy="107" rx="16" ry="12" fill="${w}"/>
+      <path d="M94 96 L106 96 L100 103Z" fill="#ff8fa9" stroke="#ff8fa9" stroke-width="2" stroke-linejoin="round"/>
+      ${m === 'sad' ? '' : '<rect x="94" y="110" width="6" height="9" rx="2" fill="#fff" stroke="#d9cdbd" stroke-width="1.4"/><rect x="100" y="110" width="6" height="9" rx="2" fill="#fff" stroke="#d9cdbd" stroke-width="1.4"/>'}
+      ${eyes(m, 78, 122, 86, 6.5)}
+      ${mouth(m, 100, 108, 8)}
+      ${blush(64, 136, 100)}`;
+    }
+  },
+  pferd: {
+    name: 'Pony', headTop: 44, ex: [76, 124], ey: 84, er: 6.5, neckY: 130,
+    draw(m) {
+      const c = '#B96A2E', d = '#4E2E17', b = '#D9965A', mz = '#E6B882', bl = '#FFF4E0';
+      return `
+      <path d="M134 150 C190 146 202 198 160 192 C178 178 152 170 132 166Z" fill="${d}"/>
+      ${feet(d)}
+      <ellipse cx="100" cy="142" rx="40" ry="36" fill="${c}"/>
+      <ellipse cx="100" cy="152" rx="26" ry="24" fill="${b}"/>
+      ${arms(m, c, 142)}
+      <path d="M56 70 C36 92 40 122 58 130 L72 100Z" fill="${d}"/>
+      <path d="M62 62 L64 22 L90 52Z" fill="${c}"/><path d="M138 62 L136 22 L110 52Z" fill="${c}"/>
+      <path d="M68 56 L68 34 L82 50Z" fill="#8a4a1f"/><path d="M132 56 L132 34 L118 50Z" fill="#8a4a1f"/>
+      <ellipse cx="100" cy="86" rx="48" ry="46" fill="${c}"/>
+      <path d="M96 52 L104 52 L108 104 L92 104Z" fill="${bl}" opacity=".92"/>
+      <path d="M68 58 C78 36 114 34 132 58 C120 52 110 66 100 76 C90 64 80 62 68 58Z" fill="${d}"/>
+      <ellipse cx="100" cy="112" rx="28" ry="20" fill="${mz}"/>
+      <circle cx="90" cy="111" r="3.2" fill="#7a4a28"/><circle cx="110" cy="111" r="3.2" fill="#7a4a28"/>
+      ${eyes(m, 76, 124, 84, 6.5)}
+      ${mouth(m, 100, 122, 8)}
+      ${blush(64, 136, 100)}`;
+    }
+  }
+};
+
+/* ---------- accessories ---------- */
+const HATS = {
+  krone: (x, y) => `<g transform="translate(${x} ${y})"><path d="M-27 4 L-31 -22 L-14 -10 L0 -28 L14 -10 L31 -22 L27 4Z" fill="#FFC93C" stroke="#E0A100" stroke-width="2.5" stroke-linejoin="round"/><circle cx="-31" cy="-24" r="4" fill="#ff5d73"/><circle cx="0" cy="-30" r="4.5" fill="#5dc7ff"/><circle cx="31" cy="-24" r="4" fill="#ff5d73"/><rect x="-27" y="-2" width="54" height="8" rx="3" fill="#E0A100"/></g>`,
+  zylinder: (x, y) => `<g transform="translate(${x} ${y})"><ellipse cx="0" cy="3" rx="38" ry="8" fill="#2b2b3a"/><rect x="-24" y="-38" width="48" height="42" rx="5" fill="#33334a"/><rect x="-24" y="-12" width="48" height="9" fill="#ff5d73"/></g>`,
+  zauber: (x, y) => `<g transform="translate(${x} ${y})"><path d="M-34 6 Q0 -4 34 6 L8 -52 Q4 -58 -2 -50Z" fill="#7b5cd6"/><path d="M-36 8 Q0 -4 36 8 Q0 14 -36 8Z" fill="#5a3fb0"/><path d="M-4 -22 l3 7 7 .5 -5.5 4.5 2 7 -6.5 -4 -6.5 4 2 -7 -5.5 -4.5 7 -.5z" fill="#FFE066"/><circle cx="14" cy="-4" r="2.6" fill="#FFE066"/></g>`,
+  schleife: (x, y) => `<g transform="translate(${x + 30} ${y + 8}) rotate(18)"><path d="M0 0 L-24 -15 Q-30 0 -24 15Z" fill="#ff6fa5"/><path d="M0 0 L24 -15 Q30 0 24 15Z" fill="#ff6fa5"/><circle cx="0" cy="0" r="7" fill="#e84a86"/></g>`
+};
+const EXTRAS = {
+  brille: (s) => {
+    const [x1, x2] = s.ex, y = s.ey, r = s.er + 7;
+    return `<g fill="rgba(255,255,255,.25)" stroke="#2b2233" stroke-width="3.5"><circle cx="${x1}" cy="${y}" r="${r}"/><circle cx="${x2}" cy="${y}" r="${r}"/><path d="M${x1 + r} ${y} Q100 ${y - 6} ${x2 - r} ${y}" fill="none"/><path d="M${x1 - r} ${y} l-10 -3 M${x2 + r} ${y} l10 -3" fill="none"/></g>`;
+  },
+  schal: (s) => {
+    const y = s.neckY;
+    return `<g><path d="M62 ${y - 4} Q100 ${y + 14} 138 ${y - 4} L140 ${y + 10} Q100 ${y + 28} 60 ${y + 10}Z" fill="#e8454f"/><path d="M118 ${y + 14} l12 36 l16 -6 l-8 -34Z" fill="#e8454f"/><path d="M70 ${y} Q100 ${y + 14} 130 ${y}" stroke="#fff" stroke-width="3" fill="none" stroke-dasharray="6 7" opacity=".8"/></g>`;
+  }
+};
+
+/* ---------- scene backgrounds (inside the avatar circle) ---------- */
+const BGS = {
+  none: '',
+  wolken: `<defs><linearGradient id="gW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd3ff"/><stop offset="1" stop-color="#e6f7ff"/></linearGradient></defs><rect width="200" height="200" fill="url(#gW)"/>
+    <g fill="#fff"><ellipse cx="46" cy="52" rx="28" ry="12"/><ellipse cx="64" cy="44" rx="18" ry="12"/><ellipse cx="150" cy="86" rx="30" ry="12"/><ellipse cx="168" cy="78" rx="16" ry="11"/><ellipse cx="120" cy="30" rx="20" ry="9"/></g>`,
+  wiese: `<defs><linearGradient id="gM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8e0ff"/><stop offset="1" stop-color="#e8f9ff"/></linearGradient></defs><rect width="200" height="200" fill="url(#gM)"/>
+    <circle cx="156" cy="40" r="16" fill="#ffe066"/><ellipse cx="60" cy="210" rx="150" ry="70" fill="#7ed56f"/><ellipse cx="170" cy="215" rx="110" ry="60" fill="#5cc25a"/>
+    <g><circle cx="30" cy="162" r="4" fill="#ff7aa2"/><circle cx="52" cy="176" r="4" fill="#fff"/><circle cx="170" cy="168" r="4" fill="#ffd166"/><circle cx="150" cy="184" r="4" fill="#ff7aa2"/></g>`,
+  meer: `<defs><linearGradient id="gS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".55" stop-color="#9fe0ff"/><stop offset="1" stop-color="#3aa0e0"/></linearGradient></defs><rect width="200" height="200" fill="url(#gS)"/>
+    <circle cx="44" cy="46" r="20" fill="#ffd54a"/><path d="M0 150 Q25 138 50 150 T100 150 T150 150 T200 150 V200 H0Z" fill="#2f8fd6" opacity=".85"/><path d="M0 172 Q25 160 50 172 T100 172 T150 172 T200 172 V200 H0Z" fill="#1f78c0"/>`,
+  sterne: `<defs><linearGradient id="gN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f4b"/><stop offset="1" stop-color="#4b3b8f"/></linearGradient></defs><rect width="200" height="200" fill="url(#gN)"/>
+    <g fill="#fff6b0"><circle cx="30" cy="40" r="2.5"/><circle cx="170" cy="30" r="2"/><circle cx="150" cy="70" r="3"/><circle cx="52" cy="90" r="2"/><circle cx="180" cy="120" r="2.4"/><circle cx="20" cy="140" r="2.4"/><circle cx="90" cy="24" r="2"/><circle cx="120" cy="50" r="1.6"/></g>
+    <path d="M150 28 a22 22 0 1 0 22 30 a17 17 0 1 1 -22 -30z" fill="#ffe27a"/>`,
+  stadt: `<defs><linearGradient id="gC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd8ff"/><stop offset="1" stop-color="#fff1c9"/></linearGradient></defs><rect width="200" height="200" fill="url(#gC)"/>
+    <circle cx="164" cy="34" r="14" fill="#ffe066"/>
+    ${[[8, 92, 36, 110, '#8aa0c8'], [46, 56, 32, 146, '#6f86b3'], [82, 98, 38, 104, '#9bb0d6'], [122, 70, 34, 132, '#7a92c0'], [158, 94, 36, 108, '#8aa0c8']].map(([x, y, w, h, c]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>` + [0, 1, 2, 3, 4, 5].map(r => [0, 1].map(k => `<rect x="${x + 6 + k * (w / 2 - 2)}" y="${y + 8 + r * 16}" width="8" height="9" fill="${(r + k + x) % 3 ? '#ffe9a0' : '#5a6b92'}"/>`).join('')).join('')).join('')}
+    <rect y="170" width="200" height="30" fill="#5b6272"/><path d="M0 186 H200" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/>`,
+  schule: `<rect width="200" height="200" fill="#FFF1C9"/><rect y="150" width="200" height="50" fill="#C99A62"/><path d="M0 150 H200" stroke="#a97a45" stroke-width="3"/>
+    <rect x="12" y="12" width="176" height="72" rx="6" fill="#2f6b4f" stroke="#b07a3c" stroke-width="6"/>
+    <g fill="#fff" font-family="'Comic Sans MS','Segoe UI',sans-serif" font-weight="700" font-size="15"><text x="46" y="42" text-anchor="middle">7 · 3 = 21</text><text x="154" y="42" text-anchor="middle">60 : 10 = 6</text><text x="46" y="68" text-anchor="middle">2,50 € + 1 €</text><text x="154" y="68" text-anchor="middle">★ ★ ★</text></g>
+    <rect x="12" y="86" width="176" height="5" fill="#b07a3c"/>`,
+  unterwasser: `<defs><linearGradient id="gU" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fe9ee"/><stop offset=".6" stop-color="#2d9cc9"/><stop offset="1" stop-color="#1b5fa3"/></linearGradient></defs><rect width="200" height="200" fill="url(#gU)"/>
+    <g fill="none" stroke="#fff" stroke-width="2" opacity=".7"><circle cx="36" cy="40" r="6"/><circle cx="48" cy="22" r="4"/><circle cx="160" cy="50" r="7"/><circle cx="174" cy="30" r="4"/><circle cx="150" cy="22" r="3"/></g>
+    <g><ellipse cx="38" cy="84" rx="14" ry="8" fill="#ff9a3c"/><path d="M50 84 L62 76 L62 92Z" fill="#ff9a3c"/><circle cx="31" cy="82" r="2" fill="#fff"/></g>
+    <g transform="scale(-1 1) translate(-200 0)"><ellipse cx="38" cy="116" rx="12" ry="7" fill="#ffd23c"/><path d="M48 116 L58 109 L58 123Z" fill="#ffd23c"/><circle cx="32" cy="114" r="2" fill="#fff"/></g>
+    <path d="M22 200 C10 172 34 164 22 136" stroke="#2fa86a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M178 200 C192 170 168 162 180 130" stroke="#2fa86a" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="100" cy="206" rx="130" ry="26" fill="#f0d9a0"/><path d="M150 188 l4 -9 4 9 -9 -5.5 10 0z" fill="#ff7a7a"/>`,
+  kuchen: `<rect width="200" height="200" fill="#ffe3ee"/>
+    <g>${[[34, 150], [100, 168], [166, 148], [40, 52], [164, 56], [100, 36]].map(([x, y], i) => `<g transform="translate(${x} ${y}) scale(.9)"><path d="M-14 4 L-10 24 H10 L14 4Z" fill="${i % 2 ? '#f2b27a' : '#e8a066'}"/><path d="M-16 6 Q-16 -14 0 -14 Q16 -14 16 6Q8 0 0 6Q-8 0 -16 6Z" fill="${i % 2 ? '#fff' : '#ff9ec4'}"/><circle cx="0" cy="-16" r="3.5" fill="#e8454f"/></g>`).join('')}</g>`
+};
+
+/* ---------- renderers ---------- */
+function mascotSVG(o) {
+  o = o || {};
+  const s = SKINS[o.skin] || SKINS.fuchs, m = o.mood || 'happy';
+  let hat = '', ex = '';
+  if (o.hat && HATS[o.hat]) hat = HATS[o.hat](100, s.headTop + 2);
+  if (o.extra && EXTRAS[o.extra]) ex = EXTRAS[o.extra](s);
+  const bg = o.bg && BGS[o.bg] ? BGS[o.bg] : '';
+  const shadow = o.noShadow ? '' : '<ellipse cx="100" cy="184" rx="52" ry="8" fill="rgba(0,0,0,.14)"/>';
+  const thinkBubble = m === 'think' ? '<g fill="#fff" stroke="#c9c2dd" stroke-width="2"><circle cx="160" cy="46" r="3.5"/><circle cx="170" cy="32" r="5.5"/><ellipse cx="178" cy="14" rx="14" ry="10"/></g><text x="178" y="19" font-size="14" font-weight="800" text-anchor="middle" fill="#7b5cd6" font-family="sans-serif">?</text>' : '';
+  const stars = m === 'cheer' ? '<g fill="#FFC93C"><path d="M30 40 l3 7 7 .6 -5.4 4.6 1.7 7 -6.3 -3.8 -6.3 3.8 1.7 -7 -5.4 -4.6 7 -.6z"/><path d="M168 56 l2.4 5.6 5.6 .5 -4.3 3.7 1.4 5.6 -5.1 -3 -5.1 3 1.4 -5.6 -4.3 -3.7 5.6 -.5z"/></g>' : '';
+  return `<svg class="mascot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${bg}${shadow}<g class="mbody">${s.draw(m)}${ex}${hat}</g>${stars}${thinkBubble}</svg>`;
+}
+
+/* ---------- SHOP catalog ----------
+   cur: 'c' = Münzen, 's' = Sterne, 'f' = Flammen                         */
+const CUR = { c: { ic: '🪙', n: 'Münzen' }, s: { ic: '⭐', n: 'Sterne' }, f: { ic: '🔥', n: 'Flammen' } };
+const SHOP = {
+  theme: {
+    label: 'Farben', icon: '🎨', none: false, items: [
+      { id: 'sonne', name: 'Sonnenschein', cur: 'c', price: 0, c: ['#FFF3C4', '#FFB703', '#FB8500'] },
+      { id: 'ocean', name: 'Ozean', cur: 'c', price: 40, c: ['#D9F0FF', '#2D9CDB', '#1565C0'] },
+      { id: 'wald', name: 'Wald', cur: 'c', price: 60, c: ['#E3F6D8', '#43A047', '#2E7D32'] },
+      { id: 'sunset', name: 'Sonnenuntergang', cur: 'c', price: 90, c: ['#FFE0E6', '#F25C7A', '#8E44AD'] },
+      { id: 'nacht', name: 'Sternennacht', cur: 'c', price: 120, c: ['#1E2447', '#7C83FF', '#FFD166'] },
+      { id: 'regen', name: 'Regenbogen', cur: 'c', price: 160, c: ['#FFD6E8', '#8C7BFF', '#3DD6A6'] },
+      { id: 'tuerkis', name: 'Türkis-Blau (Finale Farbe)', cur: 'f', price: 15, c: ['#D8FAF6', '#19B7C2', '#0E8C9A'] }
+    ]
+  },
+  skin: {
+    label: 'Figuren', icon: '🦊', none: false, items: [
+      { id: 'fuchs', name: 'Fino der Fuchs', cur: 'c', price: 0 },
+      { id: 'igel', name: 'Fino der Igel', cur: 'c', price: 80 },
+      { id: 'maus', name: 'Fino die Maus', cur: 'c', price: 100 },
+      { id: 'katze', name: 'Fino die Katze', cur: 'c', price: 120 },
+      { id: 'hase', name: 'Fino der Hase', cur: 'c', price: 150 },
+      { id: 'roboter', name: 'Fino der Roboter', cur: 's', price: 25 },
+      { id: 'pinguin', name: 'Fino der Pinguin', cur: 's', price: 30 },
+      { id: 'drache', name: 'Fino der Drache', cur: 'f', price: 8 },
+      { id: 'pferd', name: 'Fino das Pony', cur: 'f', price: 10 }
+    ]
+  },
+  hat: {
+    label: 'Hüte', icon: '👑', none: true, items: [
+      { id: 'schleife', name: 'Schleife', cur: 's', price: 6 }, { id: 'zylinder', name: 'Zylinder', cur: 's', price: 8 },
+      { id: 'zauber', name: 'Zauberhut', cur: 's', price: 12 }, { id: 'krone', name: 'Krone', cur: 's', price: 15 }
+    ]
+  },
+  extra: {
+    label: 'Extras', icon: '🕶️', none: true, items: [
+      { id: 'brille', name: 'Brille', cur: 's', price: 6 }, { id: 'schal', name: 'Schal', cur: 's', price: 8 }
+    ]
+  },
+  bg: {
+    label: 'Hintergründe', icon: '🌄', none: true, items: [
+      { id: 'wolken', name: 'Wolken', cur: 'c', price: 40 }, { id: 'wiese', name: 'Blumenwiese', cur: 'c', price: 60 },
+      { id: 'meer', name: 'Strand', cur: 'c', price: 80 }, { id: 'stadt', name: 'Stadt', cur: 'c', price: 90 },
+      { id: 'schule', name: 'Schule', cur: 'c', price: 90 }, { id: 'kuchen', name: 'Törtchen', cur: 'c', price: 120 },
+      { id: 'unterwasser', name: 'Unterwasser', cur: 's', price: 20 }, { id: 'sterne', name: 'Sternenhimmel', cur: 's', price: 25 }
+    ]
+  },
+  frame: {
+    label: 'Rahmen', icon: '🖼️', none: true, items: [
+      { id: 'gold', name: 'Goldrahmen', cur: 'f', price: 3 }, { id: 'regen', name: 'Regenbogen', cur: 'f', price: 6 }, { id: 'sterne', name: 'Sternenrahmen', cur: 'f', price: 10 }
+    ]
+  }
+};
+
+/* =====================================================================
+   SAMMELALBUM – lustige Fakten, Witze und Denkfragen.
+   Karten werden aus Schatztruhen gezogen (Truhen gibt es für echte
+   Leistungen). t: 'fakt' | 'witz' | 'frage'   a = Antwort (nur bei Frage/Witz)
+   Neue Karten einfach unten anhängen – die ids dürfen sich nie ändern.
+   ===================================================================== */
+const CARD_TYPES = {
+  fakt: { ic: '💡', n: 'Lustiger Fakt' },
+  witz: { ic: '😄', n: 'Witz' },
+  frage: { ic: '🤔', n: 'Knobelfrage' }
+};
+const CARDS = [
+  { id: 'f01', t: 'fakt', q: 'Ein Krake hat drei Herzen und blaues Blut.' },
+  { id: 'f02', t: 'fakt', q: 'Flamingos können im Stehen auf nur einem Bein schlafen.' },
+  { id: 'f03', t: 'fakt', q: 'Giraffen haben genauso viele Halswirbel wie du: sieben. Bei ihnen sind die nur riesig lang.' },
+  { id: 'f04', t: 'fakt', q: 'Pferde können im Stehen schlafen. Dabei rasten ihre Beine ein, damit sie nicht umfallen.' },
+  { id: 'f05', t: 'fakt', q: 'Delfine schlafen mit nur einer Gehirnhälfte. Die andere bleibt wach.' },
+  { id: 'f06', t: 'fakt', q: 'Beim Seepferdchen bekommt der Papa die Babys: Er trägt sie in einer Bauchtasche aus.' },
+  { id: 'f07', t: 'fakt', q: 'Auf der Venus dauert ein Tag länger als ein ganzes Jahr.' },
+  { id: 'f08', t: 'fakt', q: 'In die Sonne würden mehr als eine Million Erden hineinpassen.' },
+  { id: 'f09', t: 'fakt', q: 'Bananen sind für Pflanzenforscher Beeren – Erdbeeren dagegen nicht.' },
+  { id: 'f10', t: 'fakt', q: 'Der Eiffelturm wird im Sommer ein paar Zentimeter höher, weil sich das Metall in der Wärme ausdehnt.' },
+  { id: 'f11', t: 'fakt', q: 'Das Gleichheitszeichen „=“ hat 1557 Robert Recorde erfunden. Sein Grund: Nichts ist gleicher als zwei gleich lange, parallele Striche.' },
+  { id: 'f12', t: 'fakt', q: 'Unsere Ziffern 0 bis 9 heißen „arabische Ziffern“. Ursprünglich stammen sie aber aus Indien.' },
+  { id: 'f13', t: 'fakt', q: 'Eine Million Sekunden sind etwa 11 Tage und 14 Stunden. Eine Milliarde Sekunden sind sogar mehr als 31 Jahre!' },
+  { id: 'f14', t: 'fakt', q: 'Den Euro gibt es als Bargeld seit 2002. Davor hat man in Deutschland mit D-Mark bezahlt.' },
+  { id: 'f15', t: 'fakt', q: 'Es gibt 8 verschiedene Euromünzen: 1, 2, 5, 10, 20 und 50 Cent sowie 1 und 2 Euro.' },
+  { id: 'f16', t: 'fakt', q: 'Das erste Papiergeld der Welt gab es in China – vor mehr als 1000 Jahren.' },
+  { id: 'f17', t: 'fakt', q: 'In manchen Ländern haben Menschen früher mit Muscheln bezahlt.' },
+  { id: 'f18', t: 'fakt', q: 'Das Wort „Dollar“ kommt vom deutschen „Taler“.' },
+  { id: 'f19', t: 'fakt', q: 'Dein Herz schlägt etwa 100.000-mal an einem einzigen Tag.' },
+  { id: 'f20', t: 'fakt', q: 'Ein Blitz ist etwa fünfmal so heiß wie die Oberfläche der Sonne.' },
+  { id: 'f21', t: 'fakt', q: 'Eine kleine Schäfchenwolke kann so viel wiegen wie ungefähr 100 Elefanten.' },
+  { id: 'f22', t: 'fakt', q: 'Pinguine können nicht fliegen, dafür aber super schwimmen und tauchen.' },
+  { id: 'f23', t: 'fakt', q: 'Spinnen haben acht Beine, Insekten sechs. Deshalb sind Spinnen gar keine Insekten.' },
+  { id: 'f24', t: 'fakt', q: 'Honig verdirbt fast nie. Er kann unglaublich lange essbar bleiben.' },
+  { id: 'f25', t: 'fakt', q: 'Das Wort „vier“ hat vier Buchstaben. Im Deutschen ist das die einzige Zahl, bei der das stimmt.' },
+  { id: 'f26', t: 'fakt', q: '111.111.111 · 111.111.111 = 12.345.678.987.654.321. Das ist ein richtig schönes Zahlenmuster!' },
+  { id: 'f27', t: 'fakt', q: 'Die Rechenzeichen + und − gibt es gedruckt seit über 500 Jahren.' },
+  { id: 'f28', t: 'fakt', q: 'Kolibris können rückwärts fliegen. Das schafft sonst kein anderer Vogel.' },
+  { id: 'f29', t: 'fakt', q: 'Eine Gartenschnecke hat mehrere tausend winzige Zähnchen auf ihrer Zunge.' },
+  { id: 'f30', t: 'fakt', q: 'Kängurus können kaum rückwärts gehen.' },
+  { id: 'f31', t: 'fakt', q: 'Elefanten können nicht springen.' },
+  { id: 'f32', t: 'fakt', q: 'Der Mond entfernt sich jedes Jahr ein paar Zentimeter von der Erde.' },
+
+  { id: 'w01', t: 'witz', q: 'Was ist grün und klopft an die Tür?', a: 'Ein Klopfsalat!' },
+  { id: 'w02', t: 'witz', q: 'Was sagt die Null zur Acht?', a: '„Schicker Gürtel!“' },
+  { id: 'w03', t: 'witz', q: 'Warum ist das Mathebuch so traurig?', a: 'Es hat so viele Probleme.' },
+  { id: 'w04', t: 'witz', q: 'Was macht ein Pirat am Computer?', a: 'Er drückt die Enter-Taste.' },
+  { id: 'w05', t: 'witz', q: 'Was sagt der große Stift zum kleinen Stift?', a: '„Wachs-mal-stift!“' },
+  { id: 'w06', t: 'witz', q: 'Was ist ein Keks unter einem Baum?', a: 'Ein schattiges Plätzchen.' },
+  { id: 'w07', t: 'witz', q: 'Wie nennt man ein Pferd, das im Wasser lebt?', a: 'Seepferdchen!' },
+  { id: 'w08', t: 'witz', q: 'Was ist schlimmer als ein Wurm im Apfel?', a: 'Ein halber Wurm.' },
+  { id: 'w09', t: 'witz', q: 'Warum können Geister so schlecht lügen?', a: 'Man kann einfach durch sie hindurchschauen.' },
+  { id: 'w10', t: 'witz', q: 'Was macht ein Clown im Büro?', a: 'Faxen!' },
+  { id: 'w11', t: 'witz', q: 'Wie nennt man einen Bumerang, der nicht zurückkommt?', a: 'Stock.' },
+  { id: 'w12', t: 'witz', q: 'Was ist gelb und kann nicht schwimmen?', a: 'Ein Bagger.' },
+  { id: 'w13', t: 'witz', q: 'Zwei Magnete treffen sich. Sagt der eine zum anderen …', a: '„Was soll ich nur anziehen?“' },
+  { id: 'w14', t: 'witz', q: 'Wie viele Kekse kann man auf nüchternen Magen essen?', a: 'Nur einen. Danach ist der Magen nicht mehr nüchtern.' },
+  { id: 'w15', t: 'witz', q: 'Was sagt ein Taschenrechner zum anderen?', a: '„Du kannst auf mich zählen!“' },
+
+  { id: 'q01', t: 'frage', q: 'Wie viele Beine haben 3 Pferde und 2 Enten zusammen?', a: '16 Beine: 3 · 4 + 2 · 2 = 12 + 4 = 16.' },
+  { id: 'q02', t: 'frage', q: 'Du hast 5 Äpfel und nimmst 3 weg. Wie viele Äpfel hast du dann?', a: 'Du hast 3 – nämlich die, die du genommen hast!' },
+  { id: 'q03', t: 'frage', q: 'Wie viele Monate haben 28 Tage?', a: 'Alle 12! Jeder Monat hat mindestens 28 Tage.' },
+  { id: 'q04', t: 'frage', q: 'Was ist schwerer: ein Kilo Federn oder ein Kilo Steine?', a: 'Beides wiegt gleich viel: ein Kilo.' },
+  { id: 'q05', t: 'frage', q: 'Wie oft kannst du 10 von 100 abziehen?', a: 'Nur einmal. Danach hast du 90 und nicht mehr 100.' },
+  { id: 'q06', t: 'frage', q: 'Welche Zahl wird größer, wenn du sie auf den Kopf stellst?', a: 'Die 6: Auf den Kopf gestellt wird sie zur 9.' },
+  { id: 'q07', t: 'frage', q: 'Wie viele 50-Cent-Münzen brauchst du für 10 Euro?', a: '20 Münzen, denn 2 Münzen sind schon 1 Euro.' },
+  { id: 'q08', t: 'frage', q: 'Welche drei Münzen ergeben zusammen genau 35 Cent?', a: '20 ct + 10 ct + 5 ct.' },
+  { id: 'q09', t: 'frage', q: 'Wie viele Zehner stecken in 240?', a: '24 Zehner, denn 240 : 10 = 24.' },
+  { id: 'q10', t: 'frage', q: 'Ich denke an eine Zahl. Teile ich sie durch 10, kommt 7 heraus. Welche Zahl ist es?', a: '70, denn 70 : 10 = 7.' },
+  { id: 'q11', t: 'frage', q: 'Wie oft passt die 20 in die 100?', a: '5-mal, denn 5 · 20 = 100.' },
+  { id: 'q12', t: 'frage', q: 'Du teilst 120 Bonbons gerecht unter 40 Kindern auf. Wie viele bekommt jedes Kind?', a: '3 Bonbons, denn 120 : 40 = 3.' },
+  { id: 'q13', t: 'frage', q: 'Ein Eis kostet 1,50 €. Wie viel kosten 4 Eis?', a: '6,00 €, denn 4 · 1,50 € = 6,00 €.' },
+  { id: 'q14', t: 'frage', q: 'Was ist mehr wert: eine Million Cent oder eine Million Euro?', a: 'Eine Million Euro! Eine Million Cent sind nur 10.000 €.' },
+  { id: 'q15', t: 'frage', q: 'Ein Pony frisst am Tag 2 kg Heu. Wie viel Heu braucht es in einer Woche?', a: '14 kg, denn 7 · 2 kg = 14 kg.' },
+  { id: 'q16', t: 'frage', q: 'Ein Hase hat 2 Ohren. Wie viele Ohren haben 10 Hasen?', a: '20 Ohren.' },
+  { id: 'q17', t: 'frage', q: 'Du bezahlst etwas für 3,20 € mit einem 5-Euro-Schein. Wie viel Rückgeld bekommst du?', a: '1,80 €.' },
+  { id: 'q18', t: 'frage', q: 'Wie viele Beine haben 5 Spinnen zusammen?', a: '40 Beine, denn 5 · 8 = 40.' },
+  { id: 'q19', t: 'frage', q: 'Du hast 10 Münzen zu je 10 Cent. Wie viel Geld ist das?', a: '100 Cent, also 1 Euro.' },
+  { id: 'q20', t: 'frage', q: 'Wenn 3 Mäuse in 3 Minuten 3 Stück Käse fressen: Wie viele Mäuse brauchen 100 Minuten für 100 Stück Käse?', a: 'Auch nur 3 Mäuse! Jede Maus frisst alle 3 Minuten ein Stück.' }
+];
+
+/* =====================================================================
+   STORE: state, permanent storage, decks, rewards, trophies
+   ---------------------------------------------------------------------
+   Daten gehen NIE durch die App verloren. Es gibt absichtlich keine
+   „Alles löschen“-Funktion. Verloren gehen sie nur, wenn der Browser
+   seine Website-Daten (Cookies/Websitedaten) löscht.
+   Schutz dagegen:  1) localStorage  2) IndexedDB (zweite Kopie)
+   3) automatische Schnappschüsse  4) persistent-storage-Anfrage
+   5) Sicherungsdatei (Eltern-Bereich)
+   ===================================================================== */
+
+/* ---------- tiny helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ymd = (d = new Date()) => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return ymd(d); };
+const daysBetween = (a, b) => Math.round((new Date(a + 'T12:00:00') - new Date(b + 'T12:00:00')) / 864e5);
+const rnd = a => a[Math.floor(Math.random() * a.length)];
+const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+
+const TEST_N = 15, TEST_SECS = 720;
+const DECK_N = 30, BLOCK = 10, BLOCKS = 3, PTS_BLOCK = 20, PTS_MAX = 60, STARS_MAX = 9;
+const WALLET = { c: 'coins', s: 'stars', f: 'flames' };
+
+/* ---------- state ---------- */
+const KEY = 'mathe_abenteuer_v1';                 // bleibt gleich, damit alter Fortschritt erhalten bleibt
+const BKUP = ['mathe_abenteuer_bak1', 'mathe_abenteuer_bak2'];
+let memStore = null, persistOK = true, lastSaveErr = '';
+const DEF = () => ({
+  v: 2, name: '', saved: 0,
+  coins: 0, life: 0, stars: 0, starsLife: 0, flames: 0, flamesLife: 0, chests: 0,
+  owned: { theme: ['sonne'], skin: ['fuchs'], hat: [], extra: [], bg: [], frame: [] },
+  eq: { theme: 'sonne', skin: 'fuchs', hat: null, extra: null, bg: null, frame: null },
+  topics: {}, decks: {}, mistakes: [], trophies: {}, cards: {},
+  streak: { n: 0, last: '', best: 0 }, tests: [],
+  stats: { q: 0, c: 0, fixed: 0, bought: 0, goalDays: 0, blocks: 0, perfect: 0, decks: 0, rounds: 0 },
+  daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false },
+  cfg: { goal: 20, limitMin: 0 }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
+});
+function mergeState(raw) {
+  const d = DEF();
+  if (!raw || typeof raw !== 'object') return d;
+  for (const k of Object.keys(raw)) {                // unbekannte Felder bleiben erhalten
+    const v = raw[k]; if (v === undefined || v === null) continue;
+    if (isObj(d[k]) && isObj(v)) d[k] = Object.assign(d[k], v); else d[k] = v;
+  }
+  for (const s of Object.keys(d.owned)) if (!Array.isArray(d.owned[s])) d.owned[s] = [];
+  if (!d.owned.theme.includes('sonne')) d.owned.theme.push('sonne');
+  if (!d.owned.skin.includes('fuchs')) d.owned.skin.push('fuchs');
+  if (!isObj(d.decks)) d.decks = {};
+  if ((raw.v || 1) < 2) {                            // Übernahme von Version 1
+    d.starsLife = Math.max(d.starsLife, raw.stars || 0);
+    for (const k of Object.keys(d.topics)) {
+      const t = d.topics[k]; if (t.medal === undefined) t.medal = !t.rounds ? 0 : t.best3 >= 10 ? 4 : t.best3 >= 7 ? 3 : (t.maxLvl >= 2 ? 2 : 1);
+    }
+  }
+  d.v = 2;
+  return d;
+}
+function load() {
+  let best = null;
+  try {
+    for (const k of [KEY, ...BKUP]) {
+      const r = localStorage.getItem(k); if (!r) continue;
+      try { const o = JSON.parse(r); if (o && (!best || (o.saved || 0) > (best.saved || 0))) best = o; if (k === KEY && o) break; } catch (e) { }
+    }
+  } catch (e) { persistOK = false; }
+  if (!best && memStore) best = memStore;
+  return mergeState(best);
+}
+let idbTimer = null, bakTimer = 0;
+function idbOpen() {
+  return new Promise((res, rej) => {
+    try { const r = indexedDB.open('mathe_abenteuer', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); }
+  });
+}
+function idbPut(j) { idbOpen().then(db => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(j, 'state'); tx.oncomplete = () => db.close(); }).catch(() => { }); }
+function idbGet() {
+  return idbOpen().then(db => new Promise(res => { const q = db.transaction('kv').objectStore('kv').get('state'); q.onsuccess = () => { res(q.result); db.close(); }; q.onerror = () => res(null); })).catch(() => null);
+}
+function save() {
+  S.saved = Date.now();
+  const j = JSON.stringify(S);
+  try { localStorage.setItem(KEY, j); persistOK = true; }
+  catch (e) { persistOK = false; lastSaveErr = String(e && e.name || e); memStore = JSON.parse(j); }
+  clearTimeout(idbTimer); idbTimer = setTimeout(() => idbPut(j), 700);
+  if (persistOK && Date.now() - bakTimer > 30 * 60 * 1000) {          // rollende Schnappschüsse (alle 30 Min.)
+    bakTimer = Date.now();
+    try { const old = localStorage.getItem(BKUP[0]); if (old) localStorage.setItem(BKUP[1], old); localStorage.setItem(BKUP[0], j); } catch (e) { }
+  }
+}
+let S = load();
+
+/* ---------- levels / medals / topics ---------- */
+const cumNeed = n => 15 * n * (n - 1) / 2;
+const LV_TITLES = ['Rechen-Starter', 'Zahlen-Entdecker', 'Mathe-Maus', 'Rechen-Profi', 'Zehner-Held', 'Euro-Experte', 'Mathe-Meister', 'Rechen-Champion', 'Mathe-Legende'];
+function levelInfo() {
+  let n = 1; while (cumNeed(n + 1) <= S.life) n++;
+  const a = cumNeed(n), b = cumNeed(n + 1);
+  return { n, title: LV_TITLES[Math.min(n - 1, LV_TITLES.length - 1)], badge: n >= 10 ? '💎' : n >= 7 ? '🥇' : n >= 4 ? '🥈' : '🥉', pct: Math.round((S.life - a) / (b - a) * 100), need: b - S.life };
+}
+const MEDALS = ['', '🥉', '🥈', '🥇', '💎'];
+const MEDAL_NAMES = ['noch keine', 'Bronze', 'Silber', 'Gold', 'Diamant'];
+const tk = (m, t) => m + '.' + t;
+function topicRec(key) {
+  const t = S.topics[key] || (S.topics[key] = {});
+  if (t.q === undefined) t.q = 0; if (t.c === undefined) t.c = 0; if (t.medal === undefined) t.medal = 0;
+  if (!Array.isArray(t.cb)) t.cb = [0, 0, 0]; if (!Array.isArray(t.sb)) t.sb = [0, 0, 0];
+  if (!isObj(t.fl)) t.fl = {}; if (t.resets === undefined) t.resets = 0;
+  return t;
+}
+const medalOf = key => (S.topics[key] && S.topics[key].medal) || 0;
+function findTopic(key) {
+  const [m, t] = key.split('.'); const mod = MODULES.find(x => x.id === m); if (!mod) return null;
+  const topic = mod.topics.find(x => x.id === t); return topic ? { mod, topic } : null;
+}
+function allTopics() { const a = []; MODULES.forEach(m => m.topics.forEach(t => a.push({ m, t, key: tk(m.id, t.id) }))); return a; }
+
+/* ---------- decks: feste Aufgabenreihen pro Gruppe ---------- */
+const mKey = (tid, q) => tid + '|' + (q.html || q.prompt || '') + '|' + q.title;
+function makeQ(tid, lvl, seen) {
+  const f = findTopic(tid); let q, g = 0;
+  do { q = f.topic.gen(lvl); g++; } while (seen && seen.has(mKey(tid, q)) && g < 80);
+  if (seen) seen.add(mKey(tid, q));
+  return q;
+}
+function newDeck(key) {
+  const qs = [], seen = new Set();
+  for (let L = 1; L <= BLOCKS; L++) for (let i = 0; i < BLOCK; i++) qs.push(makeQ(key, L, seen));
+  return { qs, res: Array(DECK_N).fill(null), ans: Array(DECK_N).fill(null), i: 0, ts: Date.now() };
+}
+function getDeck(key) {
+  let d = S.decks[key];
+  if (!d || !Array.isArray(d.qs) || d.qs.length !== DECK_N) { d = S.decks[key] = newDeck(key); save(); }
+  return d;
+}
+const ptsOf = r => r === 'first' ? 2 : r === 'second' ? 1 : 0;
+const deckPts = d => d ? d.res.reduce((a, r) => a + ptsOf(r), 0) : 0;
+const blockRange = b => [b * BLOCK, b * BLOCK + BLOCK];
+const blockPts = (d, b) => d ? d.res.slice(...blockRange(b)).reduce((a, r) => a + ptsOf(r), 0) : 0;
+const blockDone = (d, b) => !!d && d.res.slice(...blockRange(b)).every(r => r !== null);
+const blockStarsOf = p => p >= 18 ? 3 : p >= 14 ? 2 : p >= 10 ? 1 : 0;
+const deckWrong = (d, b) => {                          // Indizes der nicht auf Anhieb richtigen Aufgaben
+  const out = []; if (!d) return out;
+  const [a, z] = b == null ? [0, DECK_N] : blockRange(b);
+  for (let i = a; i < z; i++) if (d.res[i] === 'second' || d.res[i] === 'fail') out.push(i);
+  return out;
+};
+function resetDeck(key) { S.decks[key] = newDeck(key); topicRec(key).resets++; save(); }
+
+/* ---------- rewards ---------- */
+function touchDay() {
+  const t = ymd();
+  if (S.daily.d !== t) S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false };
+}
+const streakNow = () => (S.streak.last === ymd() || S.streak.last === yesterday()) ? S.streak.n : 0;
+function giveCoins(n) {
+  if (!n) return;
+  S.coins += n; S.life += n;
+  const L = levelInfo();
+  if (L.n > S.lastLevel) { S.lastLevel = L.n; toast(L.badge, `Neue Stufe: ${L.n} – ${L.title}!`); confetti(90); }
+}
+function giveStars(n) { if (n > 0) { S.stars += n; S.starsLife += n; } }
+function giveFlames(n) { if (n > 0) { S.flames += n; S.flamesLife += n; } }
+function giveChest() {
+  if (S.chests + Object.keys(S.cards).length >= CARDS.length) return false;
+  S.chests++; toast('📦', 'Neue Schatztruhe! Öffne sie im Sammelalbum.'); return true;
+}
+function addLog(correct) {
+  const t = ymd(); const e = S.log[t] || (S.log[t] = { n: 0, c: 0 });
+  e.n++; if (correct) e.c++;
+  const keys = Object.keys(S.log).sort(); while (keys.length > 120) delete S.log[keys.shift()];
+}
+function dailyCheck() {
+  touchDay(); S.daily.n++;
+  if (S.daily.n >= 40) S.stats.marathon = 1;
+  if (S.daily.n >= S.cfg.goal && !S.daily.got) {
+    S.daily.got = true; S.stats.goalDays++;
+    S.streak.n = S.streak.last === yesterday() ? S.streak.n + 1 : 1; S.streak.last = ymd(); S.streak.best = Math.max(S.streak.best || 0, S.streak.n);
+    const n = S.streak.n; let fl = 1; if (n === 3) fl += 1; else if (n === 7) fl += 3; else if (n === 14) fl += 5; else if (n % 30 === 0) fl += 10;
+    giveFlames(fl); giveChest();
+    toast('🎯', `Tagesziel geschafft! +${fl} 🔥${n > 1 ? ' · Serie: ' + n + ' Tage' : ''}`); confetti(70);
+  }
+}
+function addMistake(tid, q, ans) {
+  const k = mKey(tid, q), e = S.mistakes.find(m => mKey(m.tid, m.q) === k);
+  if (e) { if (ans) e.ans = ans; return; }
+  S.mistakes.unshift({ tid, q, ans: ans || null, ts: Date.now() }); if (S.mistakes.length > 150) S.mistakes.length = 150;
+}
+function removeMistake(tid, q) {
+  const k = mKey(tid, q); const i = S.mistakes.findIndex(m => mKey(m.tid, m.q) === k);
+  if (i >= 0) { S.mistakes.splice(i, 1); S.stats.fixed++; }
+}
+function noteAnswer(tid, firstTry) {
+  const t = topicRec(tid); t.q++; if (firstTry) t.c++;
+  S.stats.q++; if (firstTry) S.stats.c++; addLog(firstTry);
+  const now = new Date(), h = now.getHours() + now.getMinutes() / 60, today = ymd();
+  if (h >= 19.5) S.stats.night = 1; if (h < 8) S.stats.early = 1; if (now.getDay() === 0 || now.getDay() === 6) S.stats.weekend = 1;
+  if (S.lastActive && S.lastActive !== today && daysBetween(today, S.lastActive) >= 3) S.stats.comeback = 1;
+  S.lastActive = today;
+}
+
+/* credit points of one answered deck question (max. 20 per block, 60 per group – fest!) */
+function creditDeckAnswer(key, d, i) {
+  const t = topicRec(key), b = Math.floor(i / BLOCK), now = blockPts(d, b);
+  const delta = Math.max(0, now - (t.cb[b] || 0));
+  if (delta > 0) { t.cb[b] = now; giveCoins(delta); }
+  return delta;
+}
+function completeBlock(key, d, b) {
+  const t = topicRec(key), pts = blockPts(d, b), stars = blockStarsOf(pts);
+  const dStars = Math.max(0, stars - (t.sb[b] || 0)); if (dStars) { t.sb[b] = stars; giveStars(dStars); }
+  let chest = false;
+  if (!t.fl['d' + b]) { t.fl['d' + b] = 1; S.stats.blocks++; }
+  if (pts === PTS_BLOCK && !t.fl['p' + b]) { t.fl['p' + b] = 1; S.stats.perfect++; }
+  if (stars >= 2 && !t.fl['c' + b]) { t.fl['c' + b] = 1; chest = giveChest(); }
+  t.medal = Math.max(t.medal, b + 1);
+  let deckDone = false;
+  if (d.i >= DECK_N && d.res.every(r => r !== null)) {
+    deckDone = true;
+    if (!t.fl.deck) { t.fl.deck = 1; S.stats.decks++; if (giveChest()) chest = true; }
+    if (deckPts(d) >= 54) t.medal = 4;
+  }
+  return { b, pts, stars, dStars, chest, deckDone, firsts: d.res.slice(...blockRange(b)).filter(r => r === 'first').length, medal: t.medal };
+}
+
+/* ---------- trophies ---------- */
+const sumTopic = f => allTopics().reduce((a, x) => a + f(x), 0);
+function trophyList() {
+  const st = () => S.stats;
+  const L = [
+    { id: 'blk1', i: '🌱', n: 'Erste Stufe geschafft', d: 'Eine Stufe (10 Aufgaben) beendet', t: s => s.stats.blocks >= 1 },
+    { id: 'blk10', i: '🐝', n: 'Fleißbiene', d: '10 Stufen beendet', t: s => s.stats.blocks >= 10 },
+    { id: 'blk30', i: '🏃', n: 'Stufen-Sammler', d: '30 Stufen beendet', t: s => s.stats.blocks >= 30 },
+    { id: 'deck1', i: '🧩', n: 'Gruppe gemeistert', d: 'Alle 30 Aufgaben einer Gruppe gelöst', t: s => s.stats.decks >= 1 },
+    { id: 'deck5', i: '🗺️', n: 'Fünf Gruppen gemeistert', d: '5 Gruppen komplett gelöst', t: s => s.stats.decks >= 5 },
+    { id: 'perf1', i: '🎯', n: 'Volltreffer', d: 'Eine Stufe mit 10 von 10 gleich richtig', t: s => s.stats.perfect >= 1 },
+    { id: 'perf5', i: '🏹', n: 'Scharfschütze', d: '5 Stufen mit 10 von 10', t: s => s.stats.perfect >= 5 },
+    { id: 'perf15', i: '🦅', n: 'Adlerauge', d: '15 Stufen mit 10 von 10', t: s => s.stats.perfect >= 15 },
+    { id: 'q100', i: '💯', n: '100 Aufgaben', d: '100 Aufgaben gelöst', t: s => s.stats.q >= 100 },
+    { id: 'q500', i: '🚀', n: '500 Aufgaben', d: '500 Aufgaben gelöst', t: s => s.stats.q >= 500 },
+    { id: 'q1000', i: '🌋', n: '1000 Aufgaben', d: '1000 Aufgaben gelöst', t: s => s.stats.q >= 1000 },
+    { id: 'st3', i: '🔥', n: 'Drei Tage am Ball', d: 'Tagesziel an 3 Tagen in Folge', t: s => (s.streak.best || 0) >= 3 },
+    { id: 'st7', i: '🌟', n: 'Wochen-Held', d: 'Tagesziel an 7 Tagen in Folge', t: s => (s.streak.best || 0) >= 7 },
+    { id: 'st14', i: '☄️', n: 'Zwei-Wochen-Profi', d: 'Tagesziel an 14 Tagen in Folge', t: s => (s.streak.best || 0) >= 14 },
+    { id: 'st30', i: '🏔️', n: 'Monats-Legende', d: 'Tagesziel an 30 Tagen in Folge', t: s => (s.streak.best || 0) >= 30 },
+    { id: 'goal5', i: '🗓️', n: 'Tagesziel-Profi', d: 'Tagesziel an 5 verschiedenen Tagen', t: s => s.stats.goalDays >= 5 },
+    { id: 'c150', i: '🪙', n: 'Münzsammler', d: '150 Münzen verdient', t: s => s.life >= 150 },
+    { id: 'c400', i: '💰', n: 'Goldschatz', d: '400 Münzen verdient', t: s => s.life >= 400 },
+    { id: 'c800', i: '🏦', n: 'Münzkönig', d: '800 Münzen verdient', t: s => s.life >= 800 },
+    { id: 's30', i: '⭐', n: 'Sternenfänger', d: '30 Sterne verdient', t: s => s.starsLife >= 30 },
+    { id: 's100', i: '🌠', n: 'Sternenregen', d: '100 Sterne verdient', t: s => s.starsLife >= 100 },
+    { id: 'f10', i: '🔥', n: 'Flammenmeister', d: '10 Flammen verdient', t: s => s.flamesLife >= 10 },
+    { id: 'test1', i: '⏱️', n: 'Mini-Test geschafft', d: 'Einen Mini-Test abgegeben', t: s => s.tests.length >= 1 },
+    { id: 'test5', i: '📝', n: 'Test-Routine', d: '5 Mini-Tests abgegeben', t: s => s.tests.length >= 5 },
+    { id: 'test13', i: '🎓', n: 'Test-Profi', d: 'Mini-Test mit mindestens 13 von 15', t: s => s.tests.some(x => x.score >= 13) },
+    { id: 'test15', i: '🏆', n: 'Perfekter Test', d: 'Mini-Test mit 15 von 15', t: s => s.tests.some(x => x.score >= x.total) },
+    { id: 'gold', i: '🥇', n: 'Goldmedaille', d: 'Gold in einer Gruppe', t: () => allTopics().some(x => medalOf(x.key) >= 3) },
+    { id: 'dia', i: '💎', n: 'Diamant', d: 'Diamant in einer Gruppe (mindestens 54 von 60 Punkten)', t: () => allTopics().some(x => medalOf(x.key) >= 4) },
+    { id: 'shop1', i: '🛍️', n: 'Erster Einkauf', d: 'Etwas im Shop gekauft', t: s => s.stats.bought >= 1 },
+    { id: 'shop6', i: '🎁', n: 'Großeinkauf', d: '6 Dinge im Shop gekauft', t: s => s.stats.bought >= 6 },
+    { id: 'shop12', i: '👑', n: 'Shop-König', d: '12 Dinge im Shop gekauft', t: s => s.stats.bought >= 12 },
+    { id: 'card10', i: '📚', n: 'Kleiner Sammler', d: '10 Karten im Sammelalbum', t: s => Object.keys(s.cards).length >= 10 },
+    { id: 'card30', i: '📖', n: 'Großer Sammler', d: '30 Karten im Sammelalbum', t: s => Object.keys(s.cards).length >= 30 },
+    { id: 'cardall', i: '🏛️', n: 'Albumkönig', d: 'Das ganze Sammelalbum voll', t: s => Object.keys(s.cards).length >= CARDS.length },
+    { id: 'fix10', i: '🔍', n: 'Fehler-Detektiv', d: '10 Aufgaben aus dem Fehler-Heft gelöst', t: s => s.stats.fixed >= 10 },
+    { id: 'fix30', i: '🕵️', n: 'Meisterdetektiv', d: '30 Aufgaben aus dem Fehler-Heft gelöst', t: s => s.stats.fixed >= 30 },
+    { id: 'owl', s: 1, i: '🦉', n: 'Nachteule', d: 'Am späten Abend geübt (nach 19:30 Uhr)', t: s => !!s.stats.night },
+    { id: 'early', s: 1, i: '🐓', n: 'Frühaufsteher', d: 'Vor 8 Uhr morgens geübt', t: s => !!s.stats.early },
+    { id: 'wknd', s: 1, i: '🏖️', n: 'Wochenend-Held', d: 'Am Samstag oder Sonntag geübt', t: s => !!s.stats.weekend },
+    { id: 'comeb', s: 1, i: '🦸', n: 'Comeback', d: 'Nach mindestens 3 Tagen Pause wieder geübt', t: s => !!s.stats.comeback },
+    { id: 'mara', s: 1, i: '🏅', n: 'Marathon', d: '40 Aufgaben an einem Tag', t: s => !!s.stats.marathon },
+    { id: 'blitz', s: 1, i: '⚡', n: 'Blitzschnell', d: 'Mini-Test mit mindestens 13 richtigen und mehr als 6 Minuten übrig', t: s => !!s.stats.blitz }
+  ];
+  MODULES.forEach(m => {
+    L.push({ id: m.id + '_e', i: m.icon, n: `${m.id}-Entdecker`, d: `In allen Gruppen von ${m.id} angefangen`, t: () => m.topics.every(t => (S.decks[tk(m.id, t.id)] || { i: 0 }).i > 0) });
+    L.push({ id: m.id + '_m', i: '🏰', n: `${m.id}-Meister`, d: `Alle Gruppen von ${m.id} mit Gold`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 3) });
+    L.push({ id: m.id + '_d', i: '💠', n: `${m.id}-Diamant`, d: `Alle Gruppen von ${m.id} mit Diamant`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 4) });
+  });
+  return L;
+}
+function checkTrophies() {
+  let any = false;
+  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; toast(t.i, `Neuer Pokal: ${t.n}`); } });
+  if (any) confetti(60);
+}
+
+/* ---------- answer checking ---------- */
+const normIn = s => String(s || '').trim().replace(/\s+/g, '').replace(/\./g, ',');
+function fieldOK(f, v) {
+  v = normIn(v); if (v === '') return false;
+  if (f.digit || f.strict) return v === f.a;
+  if (f.money) {
+    const p = x => { const m = /^(\d+)(?:,(\d{1,2}))?$/.exec(x); return m ? (+m[1]) * 100 + (m[2] ? +(m[2] + '0').slice(0, 2) : 0) : null; };
+    const a = p(v), b = p(f.a); return a !== null && a === b;
+  }
+  return /^\d+$/.test(v) && +v === +f.a;
+}
+function newCtx(q) {
+  const n = q.fields ? q.fields.length : 0;
+  return { q, vals: Array(n).fill(''), locked: Array(n).fill(false), marks: Array(n).fill(null), focus: 0, sel: null, badCh: [], tries: 0, hinted: false, state: 'ask', res: null, firstAns: null };
+}
+const isCorrect = c => c.q.fields ? c.q.fields.every((f, i) => fieldOK(f, c.vals[i])) : c.sel === c.q.correct;
+
+/* ---------- PIN ---------- */
+function hashStr(s) { let h = 5381; const t = 'fino|' + s; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) >>> 0; return h.toString(36); }
+const pinOk = p => !!S.pin && hashStr(p) === S.pin.h;
+const recOk = p => !!S.pin && hashStr(p) === S.pin.r;
+
+/* ---------- Tageslimit ---------- */
+const limitHit = () => S.cfg.limitMin > 0 && S.daily.d === ymd() && S.daily.sec >= S.cfg.limitMin * 60 && !S.daily.unlocked;
+
+/* =====================================================================
+   APP: screens, practice engine, shop, album, PIN, events
+   (state & rules live in store.js, questions in gen.js)
+   ===================================================================== */
+
+/* ---------- toasts / confetti / modal ---------- */
+function toast(icon, text) {
+  let box = $('.toasts'); if (!box) { box = document.createElement('div'); box.className = 'toasts'; document.body.appendChild(box); }
+  const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = `<span class="ic">${icon}</span><span>${text}</span>`;
+  box.appendChild(t); while (box.children.length > 3) box.firstChild.remove(); setTimeout(() => { t.remove(); }, 3600);
+}
+function confetti(n = 80) {
+  const c = document.createElement('div'); c.className = 'confetti'; const cols = ['#ff5d73', '#ffb703', '#7ed957', '#2d9cdb', '#8c7bff', '#ff8fd0'];
+  for (let i = 0; i < n; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + '%'; p.style.background = rnd(cols); p.style.animationDuration = (2 + Math.random() * 2.2) + 's'; p.style.animationDelay = (Math.random() * .6) + 's'; p.style.transform = `rotate(${Math.random() * 360}deg)`; c.appendChild(p); }
+  document.body.appendChild(c); setTimeout(() => c.remove(), 5200);
+}
+function coinPop(txt) {
+  const el = document.createElement('div'); el.className = 'coinpop'; el.textContent = txt;
+  const r = ($('.qcard') || document.body).getBoundingClientRect();
+  el.style.left = (r.left + r.width / 2 - 30) + 'px'; el.style.top = (r.top + 40) + 'px';
+  document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
+}
+function modal(title, text, yesLabel, yesAct, yesArg, noLabel, noAct) {
+  closeModal();
+  const m = document.createElement('div'); m.className = 'modal'; m.id = 'modal';
+  m.innerHTML = `<div class="card"><h2>${title}</h2><p>${text}</p><div class="row wrap" style="justify-content:center;margin-top:14px">
+    <button class="btn sec" data-act="${noAct || 'closeModal'}">${noLabel || 'Abbrechen'}</button>
+    ${yesLabel ? `<button class="btn" data-act="${yesAct}" data-arg="${esc(yesArg == null ? '' : yesArg)}">${yesLabel}</button>` : ''}</div></div>`;
+  document.body.appendChild(m);
+}
+function closeModal() { const m = $('#modal'); if (m) m.remove(); }
+
+/* ---------- avatar ---------- */
+const eqAvatar = () => ({ skin: S.eq.skin, hat: S.eq.hat, extra: S.eq.extra, bg: S.eq.bg, frame: S.eq.frame });
+function avatarHTML(o, size, mood) {
+  mood = mood || 'happy';
+  return `<div class="avwrap${o.frame ? ' fr-' + o.frame : ''} m-${mood}" style="--s:${size}px"><div class="avatar">${mascotSVG({ skin: o.skin, hat: o.hat, extra: o.extra, bg: o.bg, mood })}</div></div>`;
+}
+
+/* ---------- Fino speech ---------- */
+const SAY = {
+  ok1: ['Super!', 'Genau richtig!', 'Toll gemacht!', 'Das sitzt!', 'Spitze!', 'Richtig! Du rechnest wie ein Profi.'],
+  ok2: ['Geschafft! Beim zweiten Mal richtig.', 'Gut, dass du drangeblieben bist!', 'Stark! Dranbleiben lohnt sich.'],
+  w1: ['Fast! Schau dir den Tipp an.', 'Hm, noch nicht ganz. Versuch es noch mal!', 'Kein Problem – mit dem Tipp schaffst du das.'],
+  w2: ['Nicht schlimm! Schau dir die Lösung an. Die Aufgabe liegt jetzt im Fehler-Heft.', 'Fehler helfen beim Lernen. Wir üben das später noch mal.'],
+  ask: ['Du schaffst das!', 'Lass dir Zeit.', 'Denk an die kleine Aufgabe.', 'Ich glaube an dich!', 'Rechne in Ruhe.'],
+  r3: ['Wahnsinn! Das war fast perfekt!', 'Du bist ein Rechenstar!'],
+  r2: ['Sehr gut gemacht!', 'Das war richtig stark!'],
+  r1: ['Gut gemacht! Beim Fehler-Heft kannst du noch Punkte retten.', 'Weiter so!'],
+  r0: ['Üben macht den Meister. Schau dir die Fehler an – dann klappt es beim nächsten Mal!', 'Das war eine harte Stufe. Ich bin trotzdem stolz auf dich!']
+};
+
+/* =====================================================================
+   VIEW STATE
+   ===================================================================== */
+let view = 'home', R = null, T = null, lastView = '', PIN = null;
+const UI = { mod: null, key: null, shopTab: 'theme', scope: 'all', say: '', ans: {}, reveal: null, review: null, reviewBack: 'topic', pinUntil: 0, pending: null };
+
+function go(v, extra) { Object.assign(UI, extra || {}); view = v; render(); }
+function render() {
+  document.body.dataset.theme = S.eq.theme;
+  const f = VIEWS[view] || VIEWS.home;
+  $('#app').innerHTML = f();
+  if (lastView !== view) { window.scrollTo(0, 0); lastView = view; }
+}
+
+/* =====================================================================
+   VIEWS
+   ===================================================================== */
+const chip = (ic, v, t) => `<span class="chip" title="${t || ''}">${ic} <b>${v}</b></span>`;
+const statChips = () => `<div class="stats">${chip('🪙', S.coins, 'Münzen')}${chip('⭐', S.stars, 'Sterne')}${chip('🔥', S.flames, 'Flammen')}</div>`;
+const topBar = (title, back = 'home', extra = '') => `<div class="top"><button class="btn sec back" data-act="${back}" aria-label="Zurück">←</button><h2>${title}</h2>${extra}${statChips()}</div>`;
+const greeting = () => { const h = new Date().getHours(); return h < 11 ? 'Guten Morgen' : h < 17 ? 'Hallo' : 'Guten Abend'; };
+const pctCls = p => p === null ? 'n' : p >= 80 ? 'g' : p >= 55 ? 'y' : 'r';
+
+function modProgress(m) {
+  let pts = 0, tried = 0, done = 0;
+  m.topics.forEach(t => { const d = S.decks[tk(m.id, t.id)]; if (d) { pts += deckPts(d); if (d.i > 0) tried++; if (d.i >= DECK_N) done++; } });
+  return { pts, max: m.topics.length * PTS_MAX, pct: Math.round(pts / (m.topics.length * PTS_MAX) * 100), tried, done, total: m.topics.length };
+}
+const usedMin = () => Math.floor((S.daily.d === ymd() ? S.daily.sec : 0) / 60);
+
+const VIEWS = {};
+
+VIEWS.home = () => {
+  const L = levelInfo(), n = S.daily.d === ymd() ? S.daily.n : 0, goal = S.cfg.goal, gp = Math.min(100, Math.round(n / goal * 100)), sn = streakNow();
+  let say = UI.say;
+  if (!say) {
+    if (S.chests > 0) say = `Du hast ${S.chests} Schatztruhe${S.chests > 1 ? 'n' : ''}! Öffne sie im Sammelalbum.`;
+    else if (S.mistakes.length >= 5) say = `Im Fehler-Heft liegen ${S.mistakes.length} Aufgaben zum Üben. Wollen wir sie zusammen knacken?`;
+    else if (n >= goal) say = 'Tagesziel geschafft! Alles, was jetzt kommt, ist Bonus.';
+    else if (sn >= 2) say = `Schon ${sn} Tage in Folge das Tagesziel geschafft – wow!`;
+    else say = rnd(['Wähle ein Heft – ich rechne mit dir!', 'Heute schaffen wir bestimmt ein paar Sterne!', 'Los geht’s! Welche Aufgaben magst du heute?', 'Kleine Schritte, große Erfolge!']);
+    UI.say = say;
+  }
+  const dueBackup = S.stats.q >= 50 && Date.now() - (S.lastBackup || 0) > 14 * 864e5;
+  return `
+  <div class="card hero">
+    ${avatarHTML(eqAvatar(), 150, 'happy')}
+    <div class="info">
+      <div class="hello">${greeting()}${S.name ? ', ' + esc(S.name) : ''}!</div>
+      <div style="margin:8px 0">${statChips()}${sn ? `<span class="chip" title="Tage in Folge">📅 <b>${sn}</b> Tage Serie</span>` : ''}</div>
+      <div class="small mute" style="margin-bottom:4px">${L.badge} Stufe ${L.n} · ${L.title} <span style="float:right">noch ${L.need} 🪙</span></div>
+      <div class="bar"><i style="width:${L.pct}%"></i></div>
+      <div class="bubble">💬 ${esc(say)}</div>
+    </div>
+    <div class="center"><div class="ring" style="--p:${gp}"><span>${Math.min(n, goal)}/${goal}</span></div><div class="small mute">Tagesziel</div>${S.cfg.limitMin ? `<div class="small mute">⏳ ${usedMin()}/${S.cfg.limitMin} Min</div>` : ''}</div>
+  </div>
+  <div class="mods">${MODULES.map(m => { const p = modProgress(m); return `
+    <button class="mod" data-act="mod" data-arg="${m.id}">
+      <span class="ic">${m.icon}</span>
+      <span style="flex:1"><h3>${m.id} · ${m.title}</h3><span class="mute small">${m.sub}</span>
+      <div class="bar"><i style="width:${p.pct}%"></i></div><span class="small mute">${p.done} von ${p.total} Gruppen geschafft · ${p.pts}/${p.max} 🪙</span></span>
+    </button>`; }).join('')}</div>
+  <div class="tiles">
+    <button class="tile" data-act="testSetup"><span class="ic">⏱️</span>Mini-Test<span class="sub">12 Minuten</span></button>
+    <button class="tile" data-act="mistakes"><span class="ic">📒</span>Fehler-Heft<span class="sub">Aufgaben nochmal üben</span>${S.mistakes.length ? `<span class="badge">${S.mistakes.length}</span>` : ''}</button>
+    <button class="tile" data-act="album"><span class="ic">📚</span>Sammelalbum<span class="sub">Fakten, Witze, Rätsel</span>${S.chests ? `<span class="badge">📦 ${S.chests}</span>` : ''}</button>
+    <button class="tile" data-act="shop"><span class="ic">🛍️</span>Shop<span class="sub">Münzen, Sterne, Flammen</span></button>
+    <button class="tile" data-act="trophies"><span class="ic">🏆</span>Pokale<span class="sub">${Object.keys(S.trophies).length} gesammelt</span></button>
+    <button class="tile" data-act="parent"><span class="ic">👨‍👩‍👧</span>Eltern<span class="sub">mit PIN</span></button>
+  </div>
+  ${dueBackup ? '<p class="small mute center">💾 Tipp für Eltern: Im Eltern-Bereich gibt es „Sichern“ – so geht nie etwas verloren.</p>' : ''}
+  ${persistOK ? '' : '<p class="small center" style="color:var(--bad)">Achtung: In diesem Browser kann gerade nichts gespeichert werden (privater Modus?). Der Fortschritt bleibt nur, solange die Seite offen ist.</p>'}`;
+};
+
+VIEWS.module = () => {
+  const m = MODULES.find(x => x.id === UI.mod), p = modProgress(m);
+  return `${topBar(`${m.icon} ${m.id} · ${m.title}`)}
+  <p class="mute small" style="margin:0 4px 10px">Jede Gruppe hat <b>30 feste Aufgaben</b> in 3 Stufen. Du kannst jederzeit aufhören und später genau dort weitermachen. · Punkte in ${m.id}: <b>${p.pts}/${p.max}</b></p>
+  <div class="grid">${m.topics.map(t => {
+    const key = tk(m.id, t.id), d = S.decks[key], i = d ? d.i : 0, md = medalOf(key);
+    return `<button class="topic" data-act="topic" data-arg="${t.id}">
+      <span class="ic">${t.icon}</span><h3>${t.t}</h3><span class="small mute">${t.d}</span>
+      <div class="bar" style="height:10px"><i style="width:${Math.round(i / DECK_N * 100)}%"></i></div>
+      <span class="small mute">${i >= DECK_N ? '✔ alle geschafft' : i ? i + ' von ' + DECK_N + ' Aufgaben' : 'noch nicht angefangen'} · ${deckPts(d)}/${PTS_MAX} 🪙</span>
+      ${md ? `<span class="medal" title="${MEDAL_NAMES[md]}">${MEDALS[md]}</span>` : ''}</button>`; }).join('')}</div>`;
+};
+
+/* ----- group screen ----- */
+const resDot = r => `<i class="${r === 'first' ? 'ok' : r === 'second' ? 'half' : r === 'fail' ? 'bad' : ''}"></i>`;
+VIEWS.topic = () => {
+  const key = UI.key, f = findTopic(key), d = S.decks[key], i = d ? d.i : 0, t = topicRec(key), md = medalOf(key);
+  const pts = deckPts(d), wrong = deckWrong(d).length, done = i >= DECK_N;
+  const earned = t.cb.reduce((a, b) => a + b, 0), starsE = t.sb.reduce((a, b) => a + b, 0);
+  const blocks = [0, 1, 2].map(b => {
+    const bd = d && blockDone(d, b), bp = blockPts(d, b), st = bd ? blockStarsOf(bp) : 0, cnt = d ? d.res.slice(...blockRange(b)).filter(r => r !== null).length : 0;
+    return `<div class="blk ${bd ? 'done' : ''}"><b>Stufe ${b + 1}</b><div class="stars sm">${[1, 2, 3].map(k => `<span class="${k <= st ? 'on' : ''}">⭐</span>`).join('')}</div>
+      <div class="dotsm">${(d ? d.res.slice(...blockRange(b)) : Array(BLOCK).fill(null)).map(resDot).join('')}</div>
+      <span class="small mute">${cnt}/${BLOCK} · ${bp}/${PTS_BLOCK} Punkte</span></div>`;
+  }).join('');
+  return `${topBar(`${f.topic.icon} ${f.topic.t}`, 'backMod')}
+  <div class="card">
+    <p style="margin:0 0 8px"><b>${f.topic.d}</b></p>
+    <div class="row wrap"><div style="flex:1;min-width:220px">
+      <div class="bar"><i style="width:${Math.round(i / DECK_N * 100)}%"></i></div>
+      <div class="small mute" style="margin-top:4px">${i} von ${DECK_N} Aufgaben · Punkte in dieser Gruppe: <b>${pts}/${PTS_MAX}</b> ${md ? '· Medaille: ' + MEDALS[md] + ' ' + MEDAL_NAMES[md] : ''}</div></div>
+    </div>
+    <div class="blocks">${blocks}</div>
+    <div class="row wrap" style="margin-top:14px;justify-content:center">
+      ${done ? '<div class="fb ok sp" style="text-align:center">🎉 Alle 30 Aufgaben geschafft!</div>' : `<button class="btn big" data-act="practice">${i ? '▶ Weiter üben (Aufgabe ' + (i + 1) + ')' : '▶ Los geht’s'}</button>`}
+      ${wrong ? `<button class="btn sec big" data-act="reviewDeck">📝 Fehler ansehen (${wrong})</button>` : ''}
+    </div>
+    <p class="small mute" style="margin:12px 0 0">In dieser Gruppe gibt es höchstens <b>${PTS_MAX} 🪙</b> und <b>${STARS_MAX} ⭐</b>. ${earned || starsE ? `Bisher verdient: ${earned}/${PTS_MAX} 🪙 und ${starsE}/${STARS_MAX} ⭐.` : ''}</p>
+  </div>
+  <div class="center" style="margin-top:14px"><button class="btn ghost sm" data-act="resetTopic">🔄 Gruppe zurücksetzen (Eltern-PIN)</button></div>`;
+};
+
+/* ----- question rendering ----- */
+function fieldHTML(c, i) {
+  const f = c.q.fields[i], cls = ['fld'];
+  if (f.digit) cls.push('dg');
+  const foc = c.focus === i && c.state === 'ask' && !c.locked[i] && !c.review;
+  if (foc) cls.push('foc'); if (c.marks[i]) cls.push(c.marks[i]);
+  return `<span class="${cls.join(' ')}" data-act="foc" data-arg="${i}">${esc(c.vals[i])}${foc ? '<i class="cur"></i>' : ''}</span>`;
+}
+function qInner(c) {
+  const q = c.q; let h = '<div class="qbody">';
+  if (q.fields) h += q.html.replace(/\[\[(\d+)\]\]/g, (m, i) => fieldHTML(c, +i));
+  else h += q.prompt + '<div class="choices">' + q.choices.map((t, i) => {
+    let cl = 'ch'; if (c.badCh.includes(i)) cl += ' bad'; else if (c.sel === i && c.state === 'ask') cl += ' sel';
+    if (c.state !== 'ask' && c.sel === i && !c.review) cl += ' ok';
+    if (c.review) { if (i === q.correct) cl += ' ok'; else if (c.sel === i) cl += ' bad'; }
+    return `<button class="ch ${cl}" data-act="pick" data-arg="${i}">${t}</button>`;
+  }).join('') + '</div>';
+  return h + '</div>';
+}
+const qBody = c => `<div class="qtitle">${c.q.title}</div>` + qInner(c);
+function keypad(c) {
+  const f = c.q.fields[c.focus], comma = f && /,/.test(f.a) && !f.digit;
+  const k = (v, l, cls) => `<button class="key ${cls || ''}" data-act="key" data-arg="${v}"${(v === ',' && !comma) ? ' disabled' : ''}>${l || v}</button>`;
+  return `<div class="keypad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => k(n)).join('')}${k(',', ',', 'fn')}${k(0)}${k('back', '⌫', 'fn')}</div>`;
+}
+
+/* ----- review: eigene Antwort + richtige Lösung ----- */
+function reviewCtx(q, vals, sel) {
+  const n = q.fields ? q.fields.length : 0;
+  return { q, vals, locked: [], marks: q.fields ? q.fields.map((f, i) => vals ? (fieldOK(f, vals[i]) ? 'ok' : (normIn(vals[i]) ? 'bad' : null)) : 'show') : [], focus: -1, badCh: [], sel: sel == null ? null : sel, state: 'review', review: true };
+}
+function reviewItem(q, ans, head, cls) {
+  let h = `<div class="li ${cls || ''}"><span class="n">${head.n}</span><div style="flex:1;min-width:0"><div class="t">${head.t}${q.title}</div>`;
+  if (q.fields) {
+    if (ans && ans.vals) h += `<div class="rv"><div class="small mute">Deine Antwort</div><div class="mini">${qInner(reviewCtx(q, ans.vals))}</div></div>`;
+    h += `<div class="rv"><div class="small mute">Richtig</div><div class="mini">${qInner(Object.assign(reviewCtx(q, q.fields.map(f => f.a)), { marks: q.fields.map(() => 'show') }))}</div></div>`;
+  } else {
+    h += `<div class="rv"><div class="small mute">${ans && ans.sel != null ? 'Rot = deine Antwort, grün = richtig' : 'Richtig ist grün'}</div><div class="mini">${qInner(reviewCtx(q, null, ans ? ans.sel : null))}</div></div>`;
+  }
+  return h + `<div class="e" style="margin-top:6px">So geht’s: ${q.explain}</div></div></div>`;
+}
+VIEWS.review = () => {
+  const { key, b } = UI.review, d = S.decks[key], f = findTopic(key), idx = deckWrong(d, b);
+  const title = b == null ? 'Alle Fehler dieser Gruppe' : `Fehler in Stufe ${b + 1}`;
+  return `${topBar('📝 ' + title, UI.reviewBack)}
+  <p class="mute small" style="margin:0 4px 10px">${f.topic.icon} ${f.topic.t} · Diese Aufgaben waren nicht gleich beim 1. Versuch richtig. Sie liegen auch im Fehler-Heft zum Üben.</p>
+  ${idx.length ? `<div class="list">${idx.map(i => reviewItem(d.qs[i], d.ans[i], { n: i + 1, t: '' }, d.res[i] === 'fail' ? 'bad' : '')).join('')}</div>` : '<div class="card result"><h2>Keine Fehler! 🎉</h2></div>'}`;
+};
+
+/* ----- play ----- */
+VIEWS.play = () => {
+  const c = R.ctx, q = c.q, deck = R.kind === 'deck';
+  let dots, label, pchip;
+  if (deck) {
+    const d = S.decks[R.key], b = Math.floor(R.idx / BLOCK), f = findTopic(R.key);
+    dots = d.res.slice(...blockRange(b)).map((r, k) => `<i class="${b * BLOCK + k === R.idx ? 'cur' : r === 'first' ? 'ok' : r === 'second' ? 'half' : r === 'fail' ? 'bad' : ''}"></i>`).join('');
+    label = `${f.topic.icon} ${f.topic.t} · Aufgabe ${R.idx + 1} von ${DECK_N} · Stufe ${b + 1}`; pchip = chip('🪙', `${deckPts(d)}/${PTS_MAX}`, 'Punkte in dieser Gruppe');
+  } else {
+    dots = R.items.map((x, k) => `<i class="${k === R.idx ? 'cur' : k < R.idx ? 'done' : ''}"></i>`).join('');
+    label = `📒 Fehler-Heft · Aufgabe ${R.idx + 1} von ${R.n}`; pchip = chip('✔', R.first, 'gleich richtig');
+  }
+  let mood = 'happy', say = c.say || rnd(SAY.ask), fb = '';
+  if (c.state === 'ask') {
+    if (c.tries > 0) mood = 'think';
+    if (c.showHint) fb = `<div class="fb hint">💡 ${q.hint}</div>`;
+  } else if (c.state === 'right') {
+    mood = c.res === 'first' ? 'cheer' : 'happy';
+    const pt = c.res === 'first' ? 2 : 1;
+    let pts = '';
+    if (deck) pts = R.lastDelta ? ` <b>+${R.lastDelta} 🪙</b>` : ` <span class="small">(${pt} Punkt${pt > 1 ? 'e' : ''} – Münzen-Bestwert dieser Stufe schon erreicht)</span>`;
+    else pts = c.res === 'first' ? ' Die Aufgabe verschwindet aus dem Fehler-Heft.' : ' Noch einmal gleich richtig – dann verschwindet sie.';
+    fb = `<div class="fb ok">✔ Richtig!${pts}<span class="ex">${q.explain}</span></div>`;
+  } else {
+    mood = 'sad'; fb = `<div class="fb bad">So geht’s:<span class="ex">${q.explain}</span></div>`;
+  }
+  c.say = say;
+  const last = deck ? false : R.idx === R.items.length - 1;
+  const act = c.state === 'ask'
+    ? (q.fields ? `<button class="btn big" data-act="check">Prüfen ✔</button>` : '')
+    : `<button class="btn big" data-act="next">${R.blockPending ? 'Stufe fertig 🏁' : last ? 'Fertig 🏁' : 'Weiter →'}</button>`;
+  const hintBtn = c.state === 'ask' && !c.showHint ? `<button class="btn sec sm" data-act="hint">💡 Tipp (−1 Punkt)</button>` : '';
+  return `<div class="top"><button class="btn sec back" data-act="quit" aria-label="Pause">← Pause</button><div class="dots">${dots}</div>${pchip}</div>
+  <div class="small mute" style="margin:-4px 0 8px 4px">${label}</div>
+  <div class="play">
+    <div class="card qcard">${qBody(c)}</div>
+    <div class="side">
+      <div class="coach">${avatarHTML(eqAvatar(), 92, mood)}<div class="bubble">${esc(say)}</div></div>
+      ${fb}${c.state === 'ask' && q.fields ? keypad(c) : ''}${hintBtn}${act}
+    </div>
+  </div>`;
+};
+
+/* ----- engine ----- */
+function startDeck(key) {
+  if (limitHit()) return go('limit');
+  const d = getDeck(key);
+  if (d.i >= DECK_N) { toast('✔', 'Diese Gruppe ist komplett geschafft.'); return go('topic', { key }); }
+  R = { kind: 'deck', key, mod: key.split('.')[0], idx: d.i, ctx: newCtx(d.qs[d.i]), coins: 0, bc: {}, lastDelta: 0, blockPending: false };
+  go('play', { key });
+}
+function startMistakes() {
+  if (limitHit()) return go('limit');
+  const items = shuffle(S.mistakes).slice(0, 10).map(m => ({ tid: m.tid, q: m.q }));
+  if (!items.length) return;
+  R = { kind: 'mistakes', items, idx: 0, ctx: newCtx(items[0].q), first: 0, n: items.length, fixed: 0 };
+  go('play');
+}
+function settle(res) {
+  const c = R.ctx; c.res = res; const first = res === 'first'; R.lastDelta = 0;
+  if (R.kind === 'deck') {
+    const key = R.key, d = S.decks[key], i = R.idx, b = Math.floor(i / BLOCK);
+    d.res[i] = res; d.ans[i] = first ? null : c.firstAns; d.i = Math.max(d.i, i + 1);
+    noteAnswer(key, first);
+    if (!first) addMistake(key, c.q, c.firstAns);
+    R.lastDelta = creditDeckAnswer(key, d, i); R.coins += R.lastDelta; R.bc[b] = (R.bc[b] || 0) + R.lastDelta;
+    if (R.lastDelta) coinPop('+' + R.lastDelta + ' 🪙');
+    if (blockDone(d, b)) { R.blockInfo = completeBlock(key, d, b); R.blockInfo.coins = R.bc[b] || 0; R.blockPending = true; }
+  } else {
+    const tid = R.items[R.idx].tid; noteAnswer(tid, first);
+    if (first) { R.first++; removeMistake(tid, c.q); R.fixed++; } else addMistake(tid, c.q, c.firstAns);
+  }
+  dailyCheck(); checkTrophies(); save();
+}
+function check() {
+  if (view !== 'play') return;
+  const c = R.ctx, q = c.q;
+  if (c.state !== 'ask' || !q.fields) return;
+  const empty = c.vals.findIndex((v, i) => !c.locked[i] && normIn(v) === '');
+  if (empty >= 0) { c.focus = empty; render(); return; }
+  const ok = q.fields.map((f, i) => fieldOK(f, c.vals[i]));
+  c.tries++;
+  if (c.tries === 1 && !ok.every(Boolean)) c.firstAns = { vals: c.vals.slice() };
+  if (ok.every(Boolean)) { ok.forEach((_, i) => c.marks[i] = 'ok'); c.state = 'right'; const f1 = c.tries === 1 && !c.hinted; c.say = rnd(f1 ? SAY.ok1 : SAY.ok2); settle(f1 ? 'first' : 'second'); }
+  else if (c.tries === 1) { ok.forEach((o, i) => { c.marks[i] = o ? 'ok' : 'bad'; c.locked[i] = o; }); c.showHint = true; c.say = rnd(SAY.w1); c.focus = ok.findIndex(o => !o); }
+  else { q.fields.forEach((f, i) => { if (!ok[i]) c.vals[i] = f.a; c.marks[i] = 'show'; }); c.state = 'revealed'; c.say = rnd(SAY.w2); settle('fail'); }
+  render();
+}
+function pickChoice(i) {
+  if (view === 'test') { const c = T.qs[T.i].c; c.sel = i; render(); return; }
+  if (view !== 'play') return;
+  const c = R.ctx, q = c.q;
+  if (c.state !== 'ask' || q.fields || c.badCh.includes(i)) return;
+  c.tries++; c.sel = i;
+  if (c.tries === 1 && i !== q.correct) c.firstAns = { sel: i };
+  if (i === q.correct) { c.state = 'right'; const f1 = c.tries === 1 && !c.hinted; c.say = rnd(f1 ? SAY.ok1 : SAY.ok2); settle(f1 ? 'first' : 'second'); }
+  else if (c.tries === 1) { c.badCh.push(i); c.showHint = true; c.say = rnd(SAY.w1); c.sel = null; }
+  else { c.badCh.push(i); c.sel = q.correct; c.state = 'revealed'; c.say = rnd(SAY.w2); settle('fail'); }
+  render();
+}
+function next() {
+  if (view !== 'play') return;
+  if (R.kind === 'deck') {
+    if (R.blockPending) { R.blockPending = false; return go('block'); }
+    if (limitHit()) return go('limit');
+    const d = S.decks[R.key]; R.idx = d.i; R.ctx = newCtx(d.qs[R.idx]); render();
+  } else if (R.idx < R.items.length - 1) { R.idx++; R.ctx = newCtx(R.items[R.idx].q); render(); }
+  else { checkTrophies(); save(); go('result'); if (R.first >= R.n - 1) confetti(60); }
+}
+
+/* ----- Stufe fertig ----- */
+VIEWS.block = () => {
+  const bi = R.blockInfo, mood = bi.stars >= 2 ? 'cheer' : bi.stars === 1 ? 'happy' : 'sad', d = S.decks[R.key], wrong = deckWrong(d, bi.b).length, f = findTopic(R.key);
+  const line = rnd(SAY['r' + bi.stars]);
+  return `<div class="card result">
+    <div class="small mute">${f.topic.icon} ${f.topic.t}</div>
+    <h2>Stufe ${bi.b + 1} geschafft!</h2>
+    <div class="stars">${[1, 2, 3].map(i => `<span class="${i <= bi.stars ? 'on' : ''}" style="animation-delay:${i * .25}s">⭐</span>`).join('')}</div>
+    <div class="bigav">${avatarHTML(eqAvatar(), 170, mood)}</div>
+    <h3>${bi.firsts} von ${BLOCK} gleich richtig · ${bi.pts} von ${PTS_BLOCK} Punkten</h3>
+    <p style="font-weight:700">${esc(line)}</p>
+    <div class="rewards">${bi.coins ? chip('🪙', '+' + bi.coins) : ''}${bi.dStars ? chip('⭐', '+' + bi.dStars) : ''}${bi.chest ? chip('📦', 'Schatztruhe!') : ''}${!bi.coins && !bi.dStars ? '<span class="small mute">Für diese Stufe gab es schon früher Belohnungen – mehr als der Bestwert wird nicht gezählt.</span>' : ''}</div>
+    ${bi.stars < 2 && !bi.chest ? '<p class="small mute">Ab 2 ⭐ (14 Punkte) gibt es eine Schatztruhe.</p>' : ''}
+    ${bi.deckDone ? `<div class="fb ok" style="margin:8px 0">🎉 Alle 30 Aufgaben dieser Gruppe sind geschafft! Medaille: ${MEDALS[bi.medal]} ${MEDAL_NAMES[bi.medal]}${bi.medal < 4 ? ' · Diamant gibt es ab 54 von 60 Punkten.' : ''}</div>` : ''}
+    <div class="row wrap" style="justify-content:center;margin-top:10px">
+      ${wrong ? `<button class="btn sec big" data-act="reviewBlock">📝 Fehler ansehen (${wrong})</button>` : ''}
+      ${bi.deckDone ? '' : `<button class="btn big" data-act="blockNext">Weiter ▶</button>`}
+      <button class="btn ${bi.deckDone ? '' : 'sec'} big" data-act="toGroup">Zur Gruppe</button>
+    </div></div>`;
+};
+
+/* ----- Fehler-Heft ----- */
+VIEWS.mistakes = () => {
+  const list = S.mistakes;
+  const intro = `<div class="card" style="margin-bottom:12px"><b>Was ist das Fehler-Heft?</b><p style="margin:6px 0 0">Hier sammeln sich alle Aufgaben, die <b>nicht gleich beim 1. Versuch</b> richtig waren – auch wenn du es danach geschafft hast. Du kannst sie hier üben. Löst du eine Aufgabe gleich beim 1. Versuch, verschwindet sie aus dem Heft. Es gibt dafür keine Münzen, aber du wirst Fehler-Detektiv!</p></div>`;
+  if (!list.length) return topBar('📒 Fehler-Heft') + intro + `<div class="card result"><div style="margin:auto;width:170px">${avatarHTML(eqAvatar(), 170, 'cheer')}</div><h2>Noch nichts drin – super!</h2><p>Sobald eine Aufgabe nicht gleich klappt, landet sie hier.</p></div>`;
+  return topBar('📒 Fehler-Heft') + intro + `<div class="card"><div class="row wrap"><div style="flex:1"><b>${list.length} Aufgabe${list.length === 1 ? '' : 'n'}</b> zum Üben.</div><button class="btn big" data-act="mistakeRound">Üben (${Math.min(10, list.length)})</button></div></div>
+  <div class="list" style="margin-top:14px">${list.slice(0, 40).map(m => { const f = findTopic(m.tid); return reviewItem(m.q, m.ans, { n: f ? f.topic.icon : '?', t: '' }, ''); }).join('')}</div>`;
+};
+VIEWS.result = () => {
+  const mood = R.first >= R.n - 1 ? 'cheer' : R.first >= R.n / 2 ? 'happy' : 'sad';
+  return `<div class="card result"><h2>Fehler-Heft geübt</h2><div class="bigav">${avatarHTML(eqAvatar(), 170, mood)}</div>
+    <h3>${R.first} von ${R.n} gleich richtig</h3>
+    <p>${R.first ? `${R.first} Aufgabe${R.first > 1 ? 'n sind' : ' ist'} aus dem Heft verschwunden.` : 'Alle bleiben im Heft, bis sie beim 1. Versuch klappen.'} ${S.mistakes.length ? `Noch ${S.mistakes.length} im Heft.` : 'Das Heft ist leer – Wahnsinn!'}</p>
+    <div class="row wrap" style="justify-content:center">${S.mistakes.length ? '<button class="btn big" data-act="mistakeRound">Weiter üben</button>' : ''}<button class="btn sec big" data-act="home">Fertig</button></div></div>`;
+};
+
+/* ----- Mini-Test ----- */
+VIEWS.testSetup = () => {
+  const opts = [['all', 'Alles gemischt']].concat(MODULES.map(m => [m.id, `${m.icon} ${m.id} ${m.title}`]));
+  const best = S.tests.length ? Math.max(...S.tests.map(t => t.score)) : null, rew = !(S.daily.d === ymd() && S.daily.testRewarded);
+  return topBar('⏱️ Mini-Test', 'home') + `<div class="card result"><div style="margin:auto;width:160px">${avatarHTML(eqAvatar(), 160, 'think')}</div>
+  <h2>${TEST_N} Aufgaben · ${TEST_SECS / 60} Minuten</h2>
+  <p>Wie in der Schule: keine Tipps und keine Rückmeldung, bis du fertig bist. Du kannst zwischen den Aufgaben springen. Die Aufgaben sind jedes Mal neu.</p>
+  <p class="small mute">${rew ? 'Belohnung (1× pro Tag): ab 7 richtigen Münzen und Sterne, ab 12 eine Schatztruhe.' : 'Heute gab es schon die Test-Belohnung. Üben darfst du trotzdem!'}</p>
+  <div class="row wrap" style="justify-content:center;margin:12px 0">${opts.map(o => `<button class="btn ${UI.scope === o[0] ? '' : 'sec'} sm" data-act="scope" data-arg="${o[0]}">${o[1]}</button>`).join('')}</div>
+  ${best !== null ? `<p class="small mute">Bestes Ergebnis bisher: ${best} von ${TEST_N}</p>` : ''}
+  <button class="btn big" data-act="testStart">Los geht’s! ▶</button></div>`;
+};
+function startTest() {
+  if (limitHit()) return go('limit');
+  const mods = UI.scope === 'all' ? MODULES : MODULES.filter(m => m.id === UI.scope);
+  const tops = []; mods.forEach(m => m.topics.forEach(t => tops.push(tk(m.id, t.id))));
+  const qs = [], seen = new Set(); let pool = [];
+  for (let i = 0; i < TEST_N; i++) {
+    if (!pool.length) pool = shuffle(tops);
+    const key = pool.pop(), d = S.decks[key], lvl = d ? Math.min(3, Math.floor(Math.min(d.i, DECK_N - 1) / BLOCK) + 1) : 1;
+    qs.push({ tid: key, lvl, q: makeQ(key, lvl, seen) });
+  }
+  qs.forEach(x => x.c = newCtx(x.q));
+  T = { qs, i: 0, start: Date.now(), dur: TEST_SECS, timer: null, scope: UI.scope };
+  T.timer = setInterval(testTick, 1000);
+  go('test');
+}
+const remaining = () => Math.max(0, T.dur - Math.floor((Date.now() - T.start) / 1000));
+const fmtT = s => Math.floor(s / 60) + ':' + pad2(s % 60);
+function testTick() {
+  if (!T || view !== 'test') return;
+  const r = remaining(), el = $('#tmr');
+  if (el) { el.textContent = fmtT(r); const b = $('#tbar'); if (b) b.style.width = (r / T.dur * 100) + '%'; const w = $('#twrap'); if (w) w.classList.toggle('low', r <= 120); }
+  if (r <= 0) finishTest(true);
+}
+const answered = c => c.q.fields ? c.vals.some(v => normIn(v) !== '') : c.sel !== null;
+VIEWS.test = () => {
+  const c = T.qs[T.i].c, r = remaining(), last = T.i === T.qs.length - 1;
+  return `<div class="top"><button class="btn sec back" data-act="quit" aria-label="Abbrechen">✕</button>
+    <div class="timer ${r <= 120 ? 'low' : ''}" id="twrap">⏱️<div class="bar"><i id="tbar" style="width:${r / T.dur * 100}%"></i></div><b id="tmr">${fmtT(r)}</b></div>
+    <button class="btn sm" data-act="testAsk">Abgeben</button></div>
+  <div class="qnav" style="margin-bottom:12px">${T.qs.map((x, i) => `<button class="${i === T.i ? 'cur' : ''} ${answered(x.c) ? 'has' : ''}" data-act="goQ" data-arg="${i}">${i + 1}</button>`).join('')}</div>
+  <div class="play"><div class="card qcard"><div class="small mute" style="margin-bottom:6px">Aufgabe ${T.i + 1} von ${T.qs.length}</div>${qBody(c)}</div>
+  <div class="side">${c.q.fields ? keypad(c) : '<div class="fb hint">Tippe die richtige Antwort an. Du kannst sie noch ändern.</div>'}
+  <div class="row"><button class="btn sec sp" data-act="prevQ" ${T.i === 0 ? 'disabled' : ''}>← Zurück</button>${last ? `<button class="btn sp" data-act="testAsk">Abgeben ✔</button>` : `<button class="btn sp" data-act="nextQ">Weiter →</button>`}</div></div></div>`;
+};
+function testAsk() {
+  const open = T.qs.filter(x => !answered(x.c)).length;
+  modal('Test abgeben?', open ? `Du hast noch <b>${open}</b> Aufgabe${open === 1 ? '' : 'n'} ohne Antwort.` : 'Alle Aufgaben sind beantwortet.', 'Ja, abgeben', 'testFinish', '', 'Weiter rechnen');
+}
+function finishTest(timeUp) {
+  if (!T || T.done) return; T.done = true; clearInterval(T.timer); closeModal();
+  let score = 0; const secs = Math.min(T.dur, Math.floor((Date.now() - T.start) / 1000)), left = T.dur - secs;
+  T.qs.forEach(x => {
+    const c = x.c, ok = isCorrect(c); x.ok = ok; if (ok) score++;
+    noteAnswer(x.tid, ok); dailyCheck();
+    x.ans = c.q.fields ? { vals: c.vals.slice() } : { sel: c.sel };
+    if (!ok) addMistake(x.tid, x.q, x.ans);
+  });
+  touchDay();
+  const rewarded = !S.daily.testRewarded, stars = score >= 13 ? 3 : score >= 10 ? 2 : score >= 7 ? 1 : 0, coins = score >= 13 ? 10 : score >= 10 ? 6 : score >= 7 ? 3 : 0;
+  let chest = false;
+  if (rewarded) { S.daily.testRewarded = true; giveCoins(coins); giveStars(stars); if (score >= 12) chest = giveChest(); }
+  if (score >= 13 && left > 360) S.stats.blitz = 1;
+  S.tests.push({ ts: Date.now(), score, total: T.qs.length, secs, scope: T.scope }); if (S.tests.length > 60) S.tests.shift();
+  T.res = { score, stars, coins: rewarded ? coins : 0, stars2: rewarded ? stars : 0, secs, timeUp, rewarded, chest };
+  checkTrophies(); save(); go('testResult');
+  if (stars >= 2) confetti(stars === 3 ? 110 : 60);
+}
+VIEWS.testResult = () => {
+  const r = T.res, mood = r.stars >= 2 ? 'cheer' : r.stars === 1 ? 'happy' : 'sad';
+  return `<div class="card result"><div class="stars">${[1, 2, 3].map(i => `<span class="${i <= r.stars ? 'on' : ''}" style="animation-delay:${i * .25}s">⭐</span>`).join('')}</div>
+  <div style="margin:6px auto;width:170px">${avatarHTML(eqAvatar(), 170, mood)}</div>
+  <h2>${r.score} von ${T.qs.length} richtig</h2>
+  <p style="font-weight:700">${r.timeUp ? 'Die Zeit ist um! ' : ''}${esc(rnd(SAY['r' + r.stars]))}</p>
+  <div class="rewards">${r.coins ? chip('🪙', '+' + r.coins) : ''}${r.stars2 ? chip('⭐', '+' + r.stars2) : ''}${r.chest ? chip('📦', 'Schatztruhe!') : ''}${chip('⏱️', fmtT(r.secs))}</div>
+  ${r.rewarded ? '' : '<p class="small mute">Die Test-Belohnung gibt es nur beim ersten Test eines Tages.</p>'}
+  <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="testSetup">Neuer Test</button><button class="btn sec big" data-act="home">Fertig</button></div></div>
+  <h3 style="margin:18px 4px 8px">So war dein Test</h3>
+  <div class="list">${T.qs.map((x, i) => x.ok
+    ? `<div class="li ok"><span class="n">✔</span><div class="t">${i + 1}. ${x.q.title}</div></div>`
+    : reviewItem(x.q, x.ans, { n: '✘', t: (i + 1) + '. ' }, 'bad')).join('')}</div>`;
+};
+
+/* ----- shop ----- */
+function itemPreview(slot, it) {
+  const e = S.eq;
+  if (slot === 'theme') return `<div class="swatch">${it.c.map(c => `<i style="background:${c}"></i>`).join('')}</div>`;
+  if (slot === 'skin') return avatarHTML({ skin: it.id, hat: e.hat, extra: e.extra }, 112);
+  if (slot === 'hat') return avatarHTML({ skin: e.skin, hat: it.id }, 112);
+  if (slot === 'extra') return avatarHTML({ skin: e.skin, extra: it.id }, 112);
+  if (slot === 'bg') return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, bg: it.id }, 112);
+  return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, frame: it.id }, 112);
+}
+VIEWS.shop = () => {
+  const slot = UI.shopTab, cat = SHOP[slot], owned = S.owned[slot];
+  const tabs = Object.keys(SHOP).map(k => `<button class="${k === slot ? 'on' : ''}" data-act="shopTab" data-arg="${k}">${SHOP[k].icon} ${SHOP[k].label}</button>`).join('');
+  const none = cat.none ? `<div class="card item ${S.eq[slot] === null ? 'eq' : ''}"><div class="nonepv">✕</div><div class="nm">Ohne</div><button class="btn sm ${S.eq[slot] === null ? 'sec' : ''}" data-act="equip" data-arg="${slot}|">${S.eq[slot] === null ? 'Aktiv ✔' : 'Auswählen'}</button></div>` : '';
+  const items = cat.items.map(it => {
+    const has = owned.includes(it.id), on = S.eq[slot] === it.id, W = S[WALLET[it.cur]], can = W >= it.price, cu = CUR[it.cur];
+    const btn = has ? `<button class="btn sm ${on ? 'sec' : ''}" data-act="equip" data-arg="${slot}|${it.id}">${on ? 'Aktiv ✔' : 'Benutzen'}</button>`
+      : `<button class="btn sm" data-act="buy" data-arg="${slot}|${it.id}" ${can ? '' : 'disabled'}>${can ? 'Kaufen' : 'Noch ' + (it.price - W) + ' ' + cu.ic}</button>`;
+    return `<div class="card item ${on ? 'eq' : ''}"><div class="pv">${itemPreview(slot, it)}</div><div class="nm">${it.name}</div>${has ? '<div class="small mute">Gehört dir ✔</div>' : `<div class="price">${cu.ic} ${it.price}</div>`}${btn}</div>`;
+  }).join('');
+  return topBar('🛍️ Shop') + `<div class="preview card">${avatarHTML(eqAvatar(), 150, 'cheer')}<div style="flex:1;min-width:220px"><h3>So sieht Fino gerade aus</h3>
+    <p class="mute small" style="margin:6px 0 0"><b>🪙 Münzen</b>: für richtige Aufgaben (2 beim 1. Versuch).<br><b>⭐ Sterne</b>: für gut gelöste Stufen und Mini-Tests.<br><b>🔥 Flammen</b>: fürs Tagesziel – mehr bei langen Serien.</p></div></div>
+  <div class="tabs">${tabs}</div><div class="items">${none}${items}</div>`;
+};
+function buy(slot, id) {
+  const it = SHOP[slot].items.find(x => x.id === id), k = WALLET[it && it.cur];
+  if (!it || S.owned[slot].includes(id) || S[k] < it.price) return;
+  S[k] -= it.price; S.owned[slot].push(id); S.stats.bought++; S.eq[slot] = id;
+  checkTrophies(); save(); closeModal(); render(); confetti(40); toast('🎉', `${it.name} gehört jetzt dir!`);
+}
+function equip(slot, id) { if (id && !S.owned[slot].includes(id)) return; S.eq[slot] = id || null; save(); render(); }
+
+/* ----- Sammelalbum ----- */
+VIEWS.album = () => {
+  const found = Object.keys(S.cards).length, total = CARDS.length;
+  const card = (c, hot) => {
+    const ty = CARD_TYPES[c.t], shown = UI.ans[c.id];
+    return `<div class="card cardx ${hot ? 'hot' : ''}"><div class="ct">${ty.ic} ${ty.n}</div><div class="cq">${c.q}</div>
+      ${c.a ? (shown ? `<div class="ca">➜ ${c.a}</div>` : `<button class="btn sm sec" data-act="showAns" data-arg="${c.id}">Antwort zeigen</button>`) : ''}</div>`;
+  };
+  const hot = UI.reveal && S.cards[UI.reveal] ? CARDS.find(c => c.id === UI.reveal) : null;
+  const sorted = CARDS.filter(c => S.cards[c.id]).sort((a, b) => S.cards[b.id] - S.cards[a.id]);
+  const miss = total - found;
+  return topBar('📚 Sammelalbum') + `<div class="card" style="margin-bottom:12px"><b>${found} von ${total} Karten gefunden</b><div class="bar" style="margin:6px 0"><i style="width:${Math.round(found / total * 100)}%"></i></div>
+    ${S.chests ? `<div class="center"><button class="btn big" data-act="openChest">📦 Schatztruhe öffnen (${S.chests})</button></div>`
+      : `<p class="small mute" style="margin:6px 0 0">Schatztruhen gibt es für echte Leistungen: eine Stufe mit mindestens 2 ⭐, eine ganze Gruppe, das Tagesziel und gute Mini-Tests. Darin sind lustige Fakten, Witze und Knobelfragen.</p>`}</div>
+  ${hot ? `<h3 style="margin:6px 4px">🎉 Neu gefunden!</h3>${card(hot, true)}<div style="height:12px"></div>` : ''}
+  <div class="grid">${sorted.filter(c => !hot || c.id !== hot.id).map(c => card(c)).join('')}${Array.from({ length: Math.min(miss - (hot ? 0 : 0), 6) }, () => '<div class="card cardx lock"><div class="ct">❓</div><div class="cq">Noch nicht gefunden</div></div>').join('')}</div>
+  ${miss > 6 ? `<p class="small mute center">… und noch ${miss - 6} weitere Überraschungen.</p>` : ''}`;
+};
+function openChest() {
+  const left = CARDS.filter(c => !S.cards[c.id]);
+  if (!S.chests || !left.length) return;
+  const c = rnd(left); S.chests--; S.cards[c.id] = Date.now(); UI.reveal = c.id; delete UI.ans[c.id];
+  checkTrophies(); save(); render(); confetti(70);
+}
+
+/* ----- Pokale ----- */
+VIEWS.trophies = () => {
+  const L = trophyList(), got = L.filter(t => S.trophies[t.id]).length;
+  const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0));
+  const mp = MODULES.map(m => `<div class="card tro"><span class="ic">${m.icon}</span><div style="flex:1"><b>${m.id} · ${m.title}</b><div class="d">${m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '▫️').join(' ')}</div></div></div>`).join('');
+  return topBar('🏆 Pokale') + `<div class="card" style="margin-bottom:12px"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
+  <div class="small mute" style="margin-top:8px">Medaillen pro Gruppe: 🥉 Stufe 1 fertig · 🥈 Stufe 2 fertig · 🥇 alle 30 Aufgaben · 💎 alle 30 mit mindestens 54 von 60 Punkten. Pokale mit ❓ sind geheim – findest du sie?</div></div>
+  <div class="grid" style="margin-bottom:14px">${mp}</div>
+  <div class="grid">${sorted.map(t => { const has = S.trophies[t.id]; return (t.s && !has)
+    ? `<div class="card tro lock"><span class="ic">❓</span><div><b>Geheimer Pokal</b><div class="d">Finde heraus, wie man ihn bekommt!</div></div></div>`
+    : `<div class="card tro ${has ? '' : 'lock'}"><span class="ic">${t.i}</span><div><b>${t.n}</b><div class="d">${t.d}</div></div></div>`; }).join('')}</div>`;
+};
+
+/* ----- limit ----- */
+VIEWS.limit = () => `<div class="card result"><div style="margin:auto;width:170px">${avatarHTML(eqAvatar(), 170, 'think')}</div>
+  <h2>Für heute reicht’s!</h2><p>Du hast heute schon <b>${usedMin()} Minuten</b> geübt. Pausen sind wichtig – morgen geht es weiter. Dein Fortschritt ist gespeichert.</p>
+  <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="home">Zum Start</button><button class="btn sec big" data-act="limitUnlock">Eltern: heute weiter üben</button></div></div>`;
+
+/* ----- Eltern ----- */
+VIEWS.parent = () => {
+  const L = levelInfo(), rows = [], weak = [];
+  MODULES.forEach(m => {
+    rows.push(`<tr><th colspan="5">${m.icon} ${m.id} · ${m.title}</th></tr>`);
+    m.topics.forEach(t => {
+      const key = tk(m.id, t.id), r = S.topics[key], d = S.decks[key], p = r && r.q ? Math.round(r.c / r.q * 100) : null;
+      if (r && r.q >= 10 && p < 60) weak.push(`${t.icon} ${t.t} (${p} %)`);
+      rows.push(`<tr><td>${t.icon} ${t.t}</td><td>${d ? d.i : 0}/${DECK_N}</td><td>${deckPts(d)}/${PTS_MAX}</td><td><span class="pct ${pctCls(p)}">${p === null ? '–' : p + ' %'}</span></td><td>${MEDALS[medalOf(key)] || '–'}</td></tr>`);
+    });
+  });
+  const days = Object.keys(S.log).sort().slice(-7).reverse(), tests = S.tests.slice(-6).reverse();
+  const sel = (id, opts, val) => `<select id="${id}" class="txt noprint">${opts.map(o => `<option value="${o[0]}" ${+o[0] === +val ? 'selected' : ''}>${o[1]}</option>`).join('')}</select>`;
+  return topBar('👨‍👩‍👧 Eltern', 'home', '<button class="btn sm noprint" data-act="print">🖨️ Drucken</button>') + `
+  <div class="card noprint"><h3>Einstellungen</h3>
+    <div class="cfg"><div><b>Name des Kindes</b><br><span class="small mute">Wird auf dem Startbildschirm angezeigt.</span></div><div class="row"><input class="txt" id="nameIn" maxlength="20" value="${esc(S.name)}" placeholder="Name"><button class="btn sm" data-act="saveName">Speichern</button></div></div>
+    <div class="cfg"><div><b>Tagesziel</b><br><span class="small mute">So viele Aufgaben pro Tag für 🔥 Flamme, Serie und Schatztruhe.</span></div>${sel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, n + ' Aufgaben']), S.cfg.goal)}</div>
+    <div class="cfg"><div><b>Tageslimit</b><br><span class="small mute">Nach dieser Übungszeit pro Tag gibt es eine Pause. Heute: ${usedMin()} Min · ${S.daily.d === ymd() ? S.daily.n : 0} Aufgaben.</span></div>${sel('cfgLimit', [[0, 'Kein Limit'], [15, '15 Minuten'], [20, '20 Minuten'], [30, '30 Minuten'], [45, '45 Minuten'], [60, '60 Minuten'], [90, '90 Minuten']], S.cfg.limitMin)}</div>
+    <div class="cfg"><div><b>Eltern-PIN</b><br><span class="small mute">Schützt diesen Bereich, das Zurücksetzen von Gruppen und das Verlängern des Tageslimits.</span></div><button class="btn sm sec" data-act="pinChange">PIN ändern</button></div>
+  </div>
+  <div class="card" style="margin-top:12px"><h3>Überblick</h3><p>Stufe ${L.n} (${L.title}) · ${S.stats.q} Aufgaben · ${S.stats.q ? Math.round(S.stats.c / S.stats.q * 100) : 0} % gleich richtig · Serie ${streakNow()} Tag(e) · ${S.mistakes.length} im Fehler-Heft · ${Object.keys(S.cards).length}/${CARDS.length} Karten</p>
+  ${weak.length ? `<p><b>Das sollte noch geübt werden:</b> ${weak.join(', ')}</p>` : '<p class="mute small">Schwache Themen werden angezeigt, sobald genug Aufgaben gelöst wurden.</p>'}</div>
+  <div class="card" style="margin-top:12px"><h3>Gruppen</h3><div style="overflow-x:auto"><table class="tbl"><tr><th>Gruppe</th><th>Fortschritt</th><th>Punkte</th><th>1. Versuch</th><th>Medaille</th></tr>${rows.join('')}</table></div></div>
+  <div class="grid" style="margin-top:12px"><div class="card"><h3>Letzte Tage</h3>${days.length ? `<table class="tbl">${days.map(d => `<tr><td>${d}</td><td>${S.log[d].n} Aufgaben</td><td>${S.log[d].c} gleich richtig</td></tr>`).join('')}</table>` : '<p class="mute">Noch nichts.</p>'}</div>
+  <div class="card"><h3>Mini-Tests</h3>${tests.length ? `<table class="tbl">${tests.map(t => `<tr><td>${new Date(t.ts).toLocaleDateString('de-DE')}</td><td>${t.score} / ${t.total}</td><td>${fmtT(t.secs)} min</td></tr>`).join('')}</table>` : '<p class="mute">Noch kein Test.</p>'}</div></div>
+  <div class="card noprint" style="margin-top:12px"><h3>Daten &amp; Sicherung</h3>
+    <p class="small">Der Fortschritt wird <b>nie von der App gelöscht</b>. Er geht nur verloren, wenn die Browserdaten (Cookies / Websitedaten) gelöscht werden. Er liegt doppelt im Browser. Zusätzlich kann man hier eine Sicherungsdatei speichern (z. B. in die Cloud) und später wieder laden. Die Datei immer im selben Browser öffnen und nicht im privaten Modus.</p>
+    <p class="small mute">Letzte Sicherung: ${S.lastBackup ? new Date(S.lastBackup).toLocaleDateString('de-DE') : 'noch nie'}</p>
+    <div class="row wrap"><button class="btn sm" data-act="export">💾 Sichern</button><label class="btn sm sec" style="cursor:pointer">📂 Laden<input type="file" id="impFile" accept=".json,application/json" class="hide"></label></div>
+    <textarea class="txt hide" id="expTxt" readonly style="margin-top:10px"></textarea>
+    ${persistOK ? '' : '<p class="small" style="color:var(--bad)">In diesem Browser kann gerade nichts dauerhaft gespeichert werden (privater Modus?).</p>'}</div>`;
+};
+function exportData() {
+  const j = JSON.stringify(S, null, 1);
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([j], { type: 'application/json' })); a.download = 'mathe-abenteuer-' + ymd() + '.json'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { }
+  S.lastBackup = Date.now(); save();
+  const t = $('#expTxt'); if (t) { t.value = j; t.classList.remove('hide'); }
+  toast('💾', 'Sicherung erstellt');
+}
+function importData(txt, force) {
+  try {
+    const o = JSON.parse(txt); if (!o || typeof o.coins !== 'number') throw 0;
+    if (!force) { UI.pending = txt; modal('Sicherung laden?', `Der Stand in der Datei hat ${o.stats ? o.stats.q || 0 : 0} gelöste Aufgaben. Aktuell sind es ${S.stats.q}. Der jetzige Stand wird ersetzt.`, 'Ja, laden', 'importYes', '', 'Nein'); return; }
+    S = mergeState(o); save(); toast('✅', 'Fortschritt geladen'); go('home', { say: '' });
+  } catch (e) { toast('⚠️', 'Die Datei konnte nicht gelesen werden.'); }
+}
+
+/* ----- PIN ----- */
+function requirePin(act, arg) {
+  if (Date.now() < UI.pinUntil) { ACT[act](arg); return; }
+  PIN = S.pin ? { act, arg, buf: '', mode: 'enter', msg: 'Eltern-PIN eingeben' }
+    : { act, arg, buf: '', mode: 'create1', msg: 'Lege eine PIN für den Eltern-Bereich fest (4 Ziffern).' };
+  pinDraw();
+}
+function pinDraw() {
+  const P = PIN; closeModal();
+  const m = document.createElement('div'); m.className = 'modal'; m.id = 'modal';
+  let body;
+  if (P.mode === 'recshow') body = `<h2>Notfall-Code</h2><p>Falls die PIN vergessen wird, hilft dieser Code. <b>Bitte jetzt aufschreiben!</b> Er wird nicht noch einmal angezeigt.</p><div class="reccode">${P.rec.replace(/(\d{4})(\d{4})/, '$1 $2')}</div><button class="btn big" data-act="pinDone">Ich habe ihn notiert</button>`;
+  else {
+    const max = P.mode === 'recover' ? 8 : 4;
+    body = `<h2>🔒 Eltern</h2><p>${P.msg}</p><div class="pindots">${Array.from({ length: max }, (_, i) => `<i class="${i < P.buf.length ? 'on' : ''}"></i>`).join('')}</div>
+    <div class="keypad pinpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="key" data-act="pinKey" data-arg="${n}">${n}</button>`).join('')}<span></span><button class="key" data-act="pinKey" data-arg="0">0</button><button class="key fn" data-act="pinKey" data-arg="back">⌫</button></div>
+    <div class="row wrap" style="justify-content:center;margin-top:12px"><button class="btn ghost sm" data-act="pinCancel">Abbrechen</button>${P.mode === 'enter' ? '<button class="btn ghost sm" data-act="pinForgot">PIN vergessen?</button>' : ''}</div>`;
+  }
+  m.innerHTML = `<div class="card">${body}</div>`; document.body.appendChild(m);
+}
+function pinKey(k) {
+  const P = PIN; if (!P || P.mode === 'recshow') return;
+  const max = P.mode === 'recover' ? 8 : 4;
+  if (k === 'back') P.buf = P.buf.slice(0, -1); else if (/^\d$/.test(k) && P.buf.length < max) P.buf += k;
+  if (P.buf.length === max) {
+    if (P.mode === 'enter') { if (pinOk(P.buf)) return pinSucceed(); P.buf = ''; P.msg = 'Falsche PIN – bitte noch einmal.'; }
+    else if (P.mode === 'create1') { P.first = P.buf; P.buf = ''; P.mode = 'create2'; P.msg = 'Zur Sicherheit noch einmal eingeben.'; }
+    else if (P.mode === 'create2') {
+      if (P.buf === P.first) { const rec = String(Math.floor(Math.random() * 1e8)).padStart(8, '0'); S.pin = { h: hashStr(P.first), r: hashStr(rec) }; save(); P.mode = 'recshow'; P.rec = rec; }
+      else { P.buf = ''; P.first = ''; P.mode = 'create1'; P.msg = 'Die PINs waren verschieden. Bitte neu festlegen.'; }
+    } else if (P.mode === 'recover') {
+      if (recOk(P.buf)) { P.buf = ''; P.mode = 'create1'; P.msg = 'Code stimmt. Lege eine neue PIN fest.'; } else { P.buf = ''; P.msg = 'Der Code stimmt nicht.'; }
+    }
+  }
+  pinDraw();
+}
+function pinSucceed() { const { act, arg } = PIN; PIN = null; closeModal(); UI.pinUntil = Date.now() + 3 * 60000; ACT[act](arg); }
+
+/* =====================================================================
+   ACTIONS + EVENTS
+   ===================================================================== */
+function press(k) {
+  let c;
+  if (view === 'play') { c = R.ctx; if (c.state !== 'ask') { if (k === 'enter') next(); return; } }
+  else if (view === 'test') c = T.qs[T.i].c;
+  else return;
+  const q = c.q; if (!q.fields) { if (k === 'enter' && view === 'test') ACT.nextQ(); return; }
+  const fs = q.fields;
+  if (k === 'enter') { if (view === 'play') check(); else ACT.nextQ(); return; }
+  if (k === 'tab') { move(c, 1); render(); return; }
+  if (k === 'shifttab') { move(c, -1); render(); return; }
+  if (c.locked[c.focus]) { move(c, 1); if (c.locked[c.focus]) return; }
+  const fo = fs[c.focus];
+  if (k === 'back') {
+    if (c.vals[c.focus] !== '') { c.vals[c.focus] = c.vals[c.focus].slice(0, -1); c.marks[c.focus] = null; }
+    else { const j = fs.findIndex((x, i) => x.next === c.focus && !c.locked[i]); if (j >= 0) { c.focus = j; c.vals[j] = ''; c.marks[j] = null; } }
+  } else if (k === ',') {
+    if (/,/.test(fo.a) && !fo.digit && c.vals[c.focus] !== '' && !c.vals[c.focus].includes(',')) { c.vals[c.focus] += ','; c.marks[c.focus] = null; }
+  } else if (/^\d$/.test(k)) {
+    if (fo.digit) { c.vals[c.focus] = k; c.marks[c.focus] = null; if (fo.next != null) c.focus = fo.next; }
+    else if (c.vals[c.focus].replace(',', '').length < 8) { c.vals[c.focus] += k; c.marks[c.focus] = null; }
+  }
+  render();
+}
+function move(c, d) {
+  const n = c.q.fields.length; let i = c.focus;
+  for (let t = 0; t < n; t++) { i = (i + d + n) % n; if (!c.locked[i]) break; }
+  c.focus = i;
+}
+const curCtx = () => view === 'play' ? R.ctx : view === 'test' ? T.qs[T.i].c : null;
+
+const ACT = {
+  home: () => { if (T && T.timer) clearInterval(T.timer); go('home', { say: '' }); },
+  mod: id => go('module', { mod: id }),
+  backMod: () => go('module', { mod: UI.key ? UI.key.split('.')[0] : UI.mod }),
+  topic: id => go('topic', { key: tk(UI.mod, id) }),
+  toGroup: () => go('topic', { key: R.key }),
+  practice: () => startDeck(UI.key),
+  blockNext: () => {
+    const d = S.decks[R.key]; if (d.i >= DECK_N) return go('topic', { key: R.key });
+    if (limitHit()) return go('limit');
+    R.idx = d.i; R.ctx = newCtx(d.qs[R.idx]); R.bc = {}; go('play');
+  },
+  reviewDeck: () => go('review', { review: { key: UI.key, b: null }, reviewBack: 'toTopic' }),
+  reviewBlock: () => go('review', { review: { key: R.key, b: R.blockInfo.b }, reviewBack: 'toBlock' }),
+  toTopic: () => go('topic', { key: UI.review ? UI.review.key : UI.key }),
+  toBlock: () => go('block'),
+  resetTopic: () => requirePin('resetTopicAsk', UI.key),
+  resetTopicAsk: key => {
+    const f = findTopic(key);
+    modal('Gruppe zurücksetzen?', `<b>${f.topic.t}</b>: Alle 30 Aufgaben werden durch <b>neue Aufgaben</b> ersetzt. Fortschritt und Punkte dieser Gruppe gehen auf 0.<br><br>Münzen und Sterne im Geldbeutel bleiben. Pro Gruppe gibt es aber nie mehr als ${PTS_MAX} 🪙 und ${STARS_MAX} ⭐ – wer die Gruppe nochmal löst, bekommt nur Belohnungen über dem bisherigen Bestwert.`, 'Ja, zurücksetzen', 'resetTopicYes', key, 'Nein, behalten');
+  },
+  resetTopicYes: key => { closeModal(); resetDeck(key); toast('🔄', 'Gruppe zurückgesetzt – neue Aufgaben!'); go('topic', { key }); },
+  mistakes: () => go('mistakes'), mistakeRound: startMistakes,
+  key: k => press(k), check, next, pick: i => pickChoice(+i),
+  hint: () => { const c = curCtx(); if (c && c.state === 'ask') { c.showHint = true; c.hinted = true; render(); } },
+  foc: i => { const c = curCtx(); if (c && c.state === 'ask' && c.q.fields && !c.locked[+i]) { c.focus = +i; render(); } },
+  quit: () => view === 'test'
+    ? modal('Test abbrechen?', 'Dein Test wird nicht gewertet.', 'Ja, abbrechen', 'quitYes', '', 'Weiter rechnen')
+    : modal('Pause machen?', 'Alles ist gespeichert. Du kannst jederzeit genau hier weitermachen.', 'Ja, Pause', 'quitYes', '', 'Weiter üben'),
+  quitYes: () => { closeModal(); if (view === 'test') { if (T && T.timer) clearInterval(T.timer); go('home', { say: '' }); } else if (R && R.kind === 'deck') go('topic', { key: R.key }); else go('mistakes'); },
+  testSetup: () => go('testSetup'), scope: s => { UI.scope = s; render(); }, testStart: startTest,
+  testAsk, testFinish: () => finishTest(false),
+  goQ: i => { T.i = +i; render(); }, nextQ: () => { if (T.i < T.qs.length - 1) { T.i++; render(); } }, prevQ: () => { if (T.i > 0) { T.i--; render(); } },
+  shop: () => go('shop'), shopTab: s => { UI.shopTab = s; render(); },
+  buy: a => {
+    const [s, id] = a.split('|'), it = SHOP[s].items.find(x => x.id === id), cu = CUR[it.cur], W = S[WALLET[it.cur]];
+    modal('Bist du ganz sicher?', `${itemPreview(s, it)}<br><b>${it.name}</b> kostet <b>${cu.ic} ${it.price}</b>. Danach hast du noch ${W - it.price} ${cu.ic}.<br><br><b>Ein Kauf kann nicht rückgängig gemacht werden.</b> Du bekommst das Geld nicht zurück.`, 'Ja, kaufen', 'buyYes', a, 'Nein, noch nicht');
+  },
+  buyYes: a => { const [s, id] = a.split('|'); buy(s, id); },
+  equip: a => { const [s, id] = a.split('|'); equip(s, id); },
+  album: () => go('album', { reveal: null }), openChest, showAns: id => { UI.ans[id] = 1; render(); },
+  trophies: () => go('trophies'),
+  parent: () => requirePin('parentGo'), parentGo: () => go('parent'), print: () => window.print(),
+  saveName: () => { S.name = ($('#nameIn').value || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); },
+  export: exportData, importYes: () => { closeModal(); importData(UI.pending, true); },
+  limitUnlock: () => requirePin('limitUnlockYes'), limitUnlockYes: () => { touchDay(); S.daily.unlocked = true; save(); toast('✅', 'Heute ohne Limit'); go('home', { say: '' }); },
+  pinKey, pinDone: () => pinSucceed(), pinCancel: () => { PIN = null; closeModal(); },
+  pinForgot: () => { PIN.mode = 'recover'; PIN.buf = ''; PIN.msg = 'Gib den 8-stelligen Notfall-Code ein.'; pinDraw(); },
+  pinChange: () => { PIN = { act: 'pinChanged', arg: '', buf: '', mode: 'create1', msg: 'Neue PIN festlegen (4 Ziffern).' }; pinDraw(); },
+  pinChanged: () => { toast('✅', 'PIN geändert'); render(); },
+  closeModal
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  const a = ACT[el.dataset.act]; if (a) a(el.dataset.arg);
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'impFile' && t.files[0]) { const r = new FileReader(); r.onload = () => importData(r.result); r.readAsText(t.files[0]); t.value = ''; }
+  else if (t.id === 'cfgGoal') { S.cfg.goal = +t.value; save(); toast('✅', 'Tagesziel: ' + t.value + ' Aufgaben'); }
+  else if (t.id === 'cfgLimit') { S.cfg.limitMin = +t.value; save(); toast('✅', +t.value ? 'Tageslimit: ' + t.value + ' Minuten' : 'Kein Tageslimit'); }
+});
+document.addEventListener('keydown', e => {
+  if (/INPUT|TEXTAREA|SELECT/.test((e.target.tagName || ''))) return;
+  if (PIN) {
+    if (/^\d$/.test(e.key)) pinKey(e.key); else if (e.key === 'Backspace') pinKey('back'); else if (e.key === 'Escape') ACT.pinCancel();
+    return;
+  }
+  if ($('#modal')) { if (e.key === 'Escape') closeModal(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  let k = null;
+  if (/^\d$/.test(e.key)) k = e.key; else if (e.key === ',' || e.key === '.') k = ','; else if (e.key === 'Backspace') k = 'back'; else if (e.key === 'Enter') k = 'enter';
+  else if (e.key === 'Tab') k = e.shiftKey ? 'shifttab' : 'tab';
+  if (k && (view === 'play' || view === 'test')) { e.preventDefault(); press(k); }
+});
+
+/* Übungszeit für das Tageslimit (zählt nur bei Aktivität, nie im Hintergrund) */
+let lastInput = Date.now();
+['click', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, () => { lastInput = Date.now(); }, true));
+setInterval(() => {
+  if (document.hidden || !['play', 'test', 'block', 'review'].includes(view) || Date.now() - lastInput > 90000) return;
+  touchDay(); S.daily.sec += 5; if (S.daily.sec % 60 < 5) save();
+}, 5000);
+document.addEventListener('visibilitychange', () => { if (document.hidden) { try { save(); } catch (e) { } } });
+
+/* ---------- boot ---------- */
+window.__app = {
+  get S() { return S; }, set S(v) { S = v; }, get R() { return R; }, get T() { return T; }, get view() { return view; }, get PIN() { return PIN; }, UI, MODULES, SHOP, CARDS, ACT,
+  startDeck, startMistakes, startTest, press, check, pickChoice, next, fieldOK, newCtx, isCorrect, levelInfo, medalOf, trophyList, checkTrophies, finishTest, remaining,
+  mergeState, render, go, giveCoins, buy, equip, topicRec, importData, tk, qBody, mascotSVG, getDeck, deckPts, deckWrong, blockPts, resetDeck, requirePin, pinKey, limitHit, openChest, save, load, dailyCheck, touchDay
+};
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { }
+touchDay(); render();
+idbGet().then(j => {                                // zweite Kopie: falls der Hauptspeicher leer/älter ist
+  try {
+    const o = j ? JSON.parse(j) : null;
+    if (o && (o.saved || 0) > (S.saved || 0) + 1000) { S = mergeState(o); touchDay(); toast('♻️', 'Fortschritt wiederhergestellt'); render(); }
+  } catch (e) { }
+  save();
+});
+
+</script>
+</body>
+</html>
