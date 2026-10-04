@@ -1,0 +1,11 @@
+/* ===== Insel (Lern-Rückblick) ===== */
+.insnx{display:flex;flex-direction:column;gap:2px;margin-bottom:12px}
+.inswrap{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#EAF3F4}
+.insvg{display:block;width:100%;height:auto}
+.insp{cursor:pointer}
+.insp .hit{fill:transparent}
+.insp.got text{paint-order:stroke}
+.insp.on .hit{fill:rgba(255,255,255,.45);stroke:var(--pri);stroke-width:3}
+.insp .ph{fill:rgba(255,255,255,.35);stroke:#8A9AA0;stroke-width:2.5;stroke-dasharray:7 6}
+.insp .gh{opacity:.22;filter:grayscale(1)}
+.insinfo{margin:10px 4px 0;min-height:1.4em}

@@ -1,5 +1,5 @@
 /* =====================================================================
-   APP: screens, practice engine, shop, album, PIN, events
+   APP: Startbildschirm, Üben, Test, Shop, PIN, Ereignisse (Funktionen wie Avatar/Insel/Heft … liegen in feat_*.js)
    (state & rules live in store.js, questions in gen.js)
    ===================================================================== */
 
@@ -10,7 +10,8 @@ function toast(icon, text) {
   box.appendChild(t); while (box.children.length > 3) box.firstChild.remove(); setTimeout(() => { t.remove(); }, 3600);
 }
 function confetti(n = 80) {
-  const c = document.createElement('div'); c.className = 'confetti'; const cols = ['#ff5d73', '#ffb703', '#7ed957', '#2d9cdb', '#8c7bff', '#ff8fd0'];
+  if (S.cfg && S.cfg.calm) return;
+  const c = document.createElement('div'); c.className = 'confetti'; const cols = ['#8C7BFF', '#FFB86B', '#5ED3A8', '#6AB0FF', '#FFD65A', '#FF8A6B'];
   for (let i = 0; i < n; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + '%'; p.style.background = rnd(cols); p.style.animationDuration = (2 + Math.random() * 2.2) + 's'; p.style.animationDelay = (Math.random() * .6) + 's'; p.style.transform = `rotate(${Math.random() * 360}deg)`; c.appendChild(p); }
   document.body.appendChild(c); setTimeout(() => c.remove(), 5200);
 }
@@ -31,9 +32,12 @@ function modal(title, text, yesLabel, yesAct, yesArg, noLabel, noAct) {
 function closeModal() { const m = $('#modal'); if (m) m.remove(); }
 
 /* ---------- avatar ---------- */
-const eqAvatar = () => ({ skin: S.eq.skin, hat: S.eq.hat, extra: S.eq.extra, bg: S.eq.bg, frame: S.eq.frame });
+const finoLook = () => ({ skin: S.eq.skin, hat: S.eq.hat, extra: S.eq.extra, bg: S.eq.bg, frame: S.eq.frame });
+const useMe = () => !!(S.av && S.av.use && S.av.look && typeof meSVG === 'function');
+const eqAvatar = () => useMe() ? { me: true } : finoLook();          // das Bild, das sie überall sieht: ihr eigener Avatar oder Fino
 function avatarHTML(o, size, mood) {
   mood = mood || 'happy';
+  if (o.me && useMe()) return `<div class="avwrap m-${mood}" style="--s:${size}px"><div class="avatar">${meSVG(S.av.look, mood)}</div></div>`;
   return `<div class="avwrap${o.frame ? ' fr-' + o.frame : ''} m-${mood}" style="--s:${size}px"><div class="avatar">${mascotSVG({ skin: o.skin, hat: o.hat, extra: o.extra, bg: o.bg, mood })}</div></div>`;
 }
 
@@ -56,11 +60,13 @@ const SAY = {
 let view = 'home', R = null, T = null, lastView = '', PIN = null;
 const UI = { mod: null, key: null, shopTab: 'theme', scope: 'all', say: '', ans: {}, reveal: null, review: null, reviewBack: 'topic', pinUntil: 0, pending: null };
 
-function go(v, extra) { Object.assign(UI, extra || {}); view = v; render(); }
+function go(v, extra) { if (view !== v && typeof leaveHook === 'function') leaveHook(view); Object.assign(UI, extra || {}); view = v; render(); }
 function render() {
   document.body.dataset.theme = S.eq.theme;
   const f = VIEWS[view] || VIEWS.home;
-  $('#app').innerHTML = f();
+  $('#app').innerHTML = typeof shellRender === 'function' ? shellRender(view, f) : f();
+  $('#app').classList.toggle('wide', !!WIDEV[view]);
+  if (AFTER[view]) { try { AFTER[view](); } catch (e) { console.error(e); } }
   if (lastView !== view) { window.scrollTo(0, 0); lastView = view; }
 }
 
@@ -68,100 +74,57 @@ function render() {
    VIEWS
    ===================================================================== */
 const chip = (ic, v, t) => `<span class="chip" title="${t || ''}">${ic} <b>${v}</b></span>`;
-const statChips = () => `<div class="stats">${chip('🪙', S.coins, 'Münzen')}${chip('⭐', S.stars, 'Sterne')}${chip('🔥', S.flames, 'Flammen')}</div>`;
+const statChips = () => `<div class="stats"><button class="chip cb" data-act="shop" title="Münzen – im Shop ausgeben">🪙 <b>${S.coins}</b></button>${chip('⭐', S.starsLife, 'Sterne – dein Beleg, werden nie ausgegeben')}</div>`;
 const topBar = (title, back = 'home', extra = '') => `<div class="top"><button class="btn sec back" data-act="${back}" aria-label="Zurück">←</button><h2>${title}</h2>${extra}${statChips()}</div>`;
 const greeting = () => { const h = new Date().getHours(); return h < 11 ? 'Guten Morgen' : h < 17 ? 'Hallo' : 'Guten Abend'; };
 const pctCls = p => p === null ? 'n' : p >= 80 ? 'g' : p >= 55 ? 'y' : 'r';
 
 function modProgress(m) {
-  let pts = 0, tried = 0, done = 0;
-  m.topics.forEach(t => { const d = S.decks[tk(m.id, t.id)]; if (d) { pts += deckPts(d); if (d.i > 0) tried++; if (d.i >= DECK_N) done++; } });
-  return { pts, max: m.topics.length * PTS_MAX, pct: Math.round(pts / (m.topics.length * PTS_MAX) * 100), tried, done, total: m.topics.length };
+  let pts = 0, max = 0, tried = 0, done = 0;
+  m.topics.forEach(t => { const d = S.decks[tk(m.id, t.id)]; max += d ? deckMax(d) : NEW_DECK_MAX; if (d) { pts += deckPts(d); if (d.i > 0) tried++; if (d.i >= DECK_N) done++; } });
+  return { pts, max, pct: Math.round(pts / max * 100), tried, done, total: m.topics.length };
 }
 const usedMin = () => Math.floor((S.daily.d === ymd() ? S.daily.sec : 0) / 60);
 
-const VIEWS = {};
+const VIEWS = {}, AFTER = {}, WIDEV = {};                      // AFTER[view]: läuft nach jedem Zeichnen (z. B. Animationen)
 
-VIEWS.home = () => {
-  const L = levelInfo(), n = S.daily.d === ymd() ? S.daily.n : 0, goal = S.cfg.goal, gp = Math.min(100, Math.round(n / goal * 100)), sn = streakNow();
-  let say = UI.say;
-  if (!say) {
-    if (S.chests > 0) say = `Du hast ${S.chests} Schatztruhe${S.chests > 1 ? 'n' : ''}! Öffne sie im Sammelalbum.`;
-    else if (S.mistakes.length >= 5) say = `Im Fehler-Heft liegen ${S.mistakes.length} Aufgaben zum Üben. Wollen wir sie zusammen knacken?`;
-    else if (n >= goal) say = 'Tagesziel geschafft! Alles, was jetzt kommt, ist Bonus.';
-    else if (sn >= 2) say = `Schon ${sn} Tage in Folge das Tagesziel geschafft – wow!`;
-    else say = rnd(['Wähle ein Heft – ich rechne mit dir!', 'Heute schaffen wir bestimmt ein paar Sterne!', 'Los geht’s! Welche Aufgaben magst du heute?', 'Kleine Schritte, große Erfolge!']);
-    UI.say = say;
-  }
-  const dueBackup = S.stats.q >= 50 && Date.now() - (S.lastBackup || 0) > 14 * 864e5;
-  return `
-  <div class="card hero">
-    ${avatarHTML(eqAvatar(), 150, 'happy')}
-    <div class="info">
-      <div class="hello">${greeting()}${S.name ? ', ' + esc(S.name) : ''}!</div>
-      <div style="margin:8px 0">${statChips()}${sn ? `<span class="chip" title="Tage in Folge">📅 <b>${sn}</b> Tage Serie</span>` : ''}</div>
-      <div class="small mute" style="margin-bottom:4px">${L.badge} Stufe ${L.n} · ${L.title} <span style="float:right">noch ${L.need} 🪙</span></div>
-      <div class="bar"><i style="width:${L.pct}%"></i></div>
-      <div class="bubble">💬 ${esc(say)}</div>
-    </div>
-    <div class="center"><div class="ring" style="--p:${gp}"><span>${Math.min(n, goal)}/${goal}</span></div><div class="small mute">Tagesziel</div>${S.cfg.limitMin ? `<div class="small mute">⏳ ${usedMin()}/${S.cfg.limitMin} Min</div>` : ''}</div>
-  </div>
-  <div class="mods">${MODULES.map(m => { const p = modProgress(m); return `
-    <button class="mod" data-act="mod" data-arg="${m.id}">
-      <span class="ic">${m.icon}</span>
-      <span style="flex:1"><h3>${m.id} · ${m.title}</h3><span class="mute small">${m.sub}</span>
-      <div class="bar"><i style="width:${p.pct}%"></i></div><span class="small mute">${p.done} von ${p.total} Gruppen geschafft · ${p.pts}/${p.max} 🪙</span></span>
-    </button>`; }).join('')}</div>
-  <div class="tiles">
-    <button class="tile" data-act="testSetup"><span class="ic">⏱️</span>Mini-Test<span class="sub">12 Minuten</span></button>
-    <button class="tile" data-act="mistakes"><span class="ic">📒</span>Fehler-Heft<span class="sub">Aufgaben nochmal üben</span>${S.mistakes.length ? `<span class="badge">${S.mistakes.length}</span>` : ''}</button>
-    <button class="tile" data-act="album"><span class="ic">📚</span>Sammelalbum<span class="sub">Fakten, Witze, Rätsel</span>${S.chests ? `<span class="badge">📦 ${S.chests}</span>` : ''}</button>
-    <button class="tile" data-act="shop"><span class="ic">🛍️</span>Shop<span class="sub">Münzen, Sterne, Flammen</span></button>
-    <button class="tile" data-act="trophies"><span class="ic">🏆</span>Pokale<span class="sub">${Object.keys(S.trophies).length} gesammelt</span></button>
-    <button class="tile" data-act="parent"><span class="ic">👨‍👩‍👧</span>Eltern<span class="sub">mit PIN</span></button>
-  </div>
-  ${dueBackup ? '<p class="small mute center">💾 Tipp für Eltern: Im Eltern-Bereich gibt es „Sichern“ – so geht nie etwas verloren.</p>' : ''}
-  ${persistOK ? '' : '<p class="small center" style="color:var(--bad)">Achtung: In diesem Browser kann gerade nichts gespeichert werden (privater Modus?). Der Fortschritt bleibt nur, solange die Seite offen ist.</p>'}`;
-};
+const TINTS = ['lav', 'mint', 'peach', 'sky', 'butter', 'sage'];
+/* Startseite, Hefte, Belohnungen, Darstellung: siehe shell.js */
 
 VIEWS.module = () => {
-  const m = MODULES.find(x => x.id === UI.mod), p = modProgress(m);
-  return `${topBar(`${m.icon} ${m.id} · ${m.title}`)}
-  <p class="mute small" style="margin:0 4px 10px">Jede Gruppe hat <b>30 feste Aufgaben</b> in 3 Stufen. Du kannst jederzeit aufhören und später genau dort weitermachen. · Punkte in ${m.id}: <b>${p.pts}/${p.max}</b></p>
-  <div class="grid">${m.topics.map(t => {
+  const m = MODULES.find(x => x.id === UI.mod);
+  return topBar(esc(m.title), 'hefte') + `<p class="rh-section-note">Heft ${esc(m.id)} · Wähle deine nächste Übung.</p><div class="grid rh-topics">${m.topics.map((t, index) => {
     const key = tk(m.id, t.id), d = S.decks[key], i = d ? d.i : 0, md = medalOf(key);
-    return `<button class="topic" data-act="topic" data-arg="${t.id}">
-      <span class="ic">${t.icon}</span><h3>${t.t}</h3><span class="small mute">${t.d}</span>
-      <div class="bar" style="height:10px"><i style="width:${Math.round(i / DECK_N * 100)}%"></i></div>
-      <span class="small mute">${i >= DECK_N ? '✔ alle geschafft' : i ? i + ' von ' + DECK_N + ' Aufgaben' : 'noch nicht angefangen'} · ${deckPts(d)}/${PTS_MAX} 🪙</span>
-      ${md ? `<span class="medal" title="${MEDAL_NAMES[md]}">${MEDALS[md]}</span>` : ''}</button>`; }).join('')}</div>`;
+    return `<button class="topic" data-act="topic" data-arg="${esc(t.id)}"><span class="rh-topic-icon" aria-hidden="true">${t.icon}</span><span class="small mute">Übung ${index + 1}</span><h3>${esc(t.t)}</h3><div class="bar"><i style="width:${Math.round(i / DECK_N * 100)}%"></i></div><span class="small mute">${i >= DECK_N ? 'Geschafft!' : `${i} / ${DECK_N} Aufgaben`}${md ? ` · ${MEDALS[md]}` : ''}</span></button>`;
+  }).join('')}</div>`;
 };
 
 /* ----- group screen ----- */
 const resDot = r => `<i class="${r === 'first' ? 'ok' : r === 'second' ? 'half' : r === 'fail' ? 'bad' : ''}"></i>`;
+const LEGEND = '🟢 = 1 Punkt · 🔵 = 2 Punkte · 🔥 = 3 Punkte · 👑 = 4 Punkte';
 VIEWS.topic = () => {
   const key = UI.key, f = findTopic(key), d = S.decks[key], i = d ? d.i : 0, t = topicRec(key), md = medalOf(key);
-  const pts = deckPts(d), wrong = deckWrong(d).length, done = i >= DECK_N;
+  const pts = deckPts(d), max = d ? deckMax(d) : NEW_DECK_MAX, wrong = deckWrong(d).length, done = i >= DECK_N;
   const earned = t.cb.reduce((a, b) => a + b, 0), starsE = t.sb.reduce((a, b) => a + b, 0);
   const blocks = [0, 1, 2].map(b => {
-    const bd = d && blockDone(d, b), bp = blockPts(d, b), st = bd ? blockStarsOf(bp) : 0, cnt = d ? d.res.slice(...blockRange(b)).filter(r => r !== null).length : 0;
+    const bd = d && blockDone(d, b), bp = blockPts(d, b), bm = blockMax(d, b), st = bd ? blockStarsOf(bp, bm) : 0, cnt = d ? d.res.slice(...blockRange(b)).filter(r => r !== null).length : 0;
     return `<div class="blk ${bd ? 'done' : ''}"><b>Stufe ${b + 1}</b><div class="stars sm">${[1, 2, 3].map(k => `<span class="${k <= st ? 'on' : ''}">⭐</span>`).join('')}</div>
       <div class="dotsm">${(d ? d.res.slice(...blockRange(b)) : Array(BLOCK).fill(null)).map(resDot).join('')}</div>
-      <span class="small mute">${cnt}/${BLOCK} · ${bp}/${PTS_BLOCK} Punkte</span></div>`;
+      <span class="small mute">${cnt}/${BLOCK} · ${bp}/${bm} Punkte</span></div>`;
   }).join('');
   return `${topBar(`${f.topic.icon} ${f.topic.t}`, 'backMod')}
   <div class="card">
     <p style="margin:0 0 8px"><b>${f.topic.d}</b></p>
     <div class="row wrap"><div style="flex:1;min-width:220px">
       <div class="bar"><i style="width:${Math.round(i / DECK_N * 100)}%"></i></div>
-      <div class="small mute" style="margin-top:4px">${i} von ${DECK_N} Aufgaben · Punkte in dieser Gruppe: <b>${pts}/${PTS_MAX}</b> ${md ? '· Medaille: ' + MEDALS[md] + ' ' + MEDAL_NAMES[md] : ''}</div></div>
+      <div class="small mute" style="margin-top:4px">${i} von ${DECK_N} Aufgaben · Punkte in dieser Gruppe: <b>${pts}/${max}</b> ${md ? '· Medaille: ' + MEDALS[md] + ' ' + MEDAL_NAMES[md] : ''}</div></div>
     </div>
     <div class="blocks">${blocks}</div>
     <div class="row wrap" style="margin-top:14px;justify-content:center">
-      ${done ? '<div class="fb ok sp" style="text-align:center">🎉 Alle 30 Aufgaben geschafft!</div>' : `<button class="btn big" data-act="practice">${i ? '▶ Weiter üben (Aufgabe ' + (i + 1) + ')' : '▶ Los geht’s'}</button>`}
+      ${done ? `<div class="fb ok sp" style="text-align:center">🎉 Alle 30 Aufgaben geschafft!${t.hist && t.hist.length ? ` Beste Runde: ${bestRound(key)}/${max}` : ''}</div><button class="btn big" data-act="newRound">🔁 Neue Runde</button>` : `<button class="btn big" data-act="practice">${i ? '▶ Weiter üben (Aufgabe ' + (i + 1) + ')' : '▶ Los geht’s'}</button>`}
       ${wrong ? `<button class="btn sec big" data-act="reviewDeck">📝 Fehler ansehen (${wrong})</button>` : ''}
     </div>
-    <p class="small mute" style="margin:12px 0 0">In dieser Gruppe gibt es höchstens <b>${PTS_MAX} 🪙</b> und <b>${STARS_MAX} ⭐</b>. ${earned || starsE ? `Bisher verdient: ${earned}/${PTS_MAX} 🪙 und ${starsE}/${STARS_MAX} ⭐.` : ''}</p>
+    <p class="small mute" style="margin:12px 0 0">In dieser Gruppe gibt es höchstens <b>${max} 🪙</b> und <b>${STARS_MAX} ⭐</b>.<br>${LEGEND} ${earned || starsE ? `Bisher verdient: ${earned}/${max} 🪙 und ${starsE}/${STARS_MAX} ⭐.` : ''}</p>
   </div>
   <div class="center" style="margin-top:14px"><button class="btn ghost sm" data-act="resetTopic">🔄 Gruppe zurücksetzen (Eltern-PIN)</button></div>`;
 };
@@ -189,7 +152,8 @@ const qBody = c => `<div class="qtitle">${c.q.title}</div>` + qInner(c);
 function keypad(c) {
   const f = c.q.fields[c.focus], comma = f && /,/.test(f.a) && !f.digit;
   const k = (v, l, cls) => `<button class="key ${cls || ''}" data-act="key" data-arg="${v}"${(v === ',' && !comma) ? ' disabled' : ''}>${l || v}</button>`;
-  return `<div class="keypad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => k(n)).join('')}${k(',', ',', 'fn')}${k(0)}${k('back', '⌫', 'fn')}</div>`;
+  const multi = c.q.fields.length > 1;
+  return `<div class="keypad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => k(n)).join('')}${k(',', ',', 'fn')}${k(0)}${k('back', '⌫', 'fn')}${multi ? k('tab', '➜ Nächstes Feld', 'fn wide') : ''}</div>`;
 }
 
 /* ----- review: eigene Antwort + richtige Lösung ----- */
@@ -212,17 +176,18 @@ VIEWS.review = () => {
   const title = b == null ? 'Alle Fehler dieser Gruppe' : `Fehler in Stufe ${b + 1}`;
   return `${topBar('📝 ' + title, UI.reviewBack)}
   <p class="mute small" style="margin:0 4px 10px">${f.topic.icon} ${f.topic.t} · Diese Aufgaben waren nicht gleich beim 1. Versuch richtig. Sie liegen auch im Fehler-Heft zum Üben.</p>
-  ${idx.length ? `<div class="list">${idx.map(i => reviewItem(d.qs[i], d.ans[i], { n: i + 1, t: '' }, d.res[i] === 'fail' ? 'bad' : '')).join('')}</div>` : '<div class="card result"><h2>Keine Fehler! 🎉</h2></div>'}`;
+  ${idx.length ? `<div class="list">${idx.map(i => reviewItem(d.qs[i], d.ans[i], { n: i + 1, t: `<span class="ptb t${qPts(d, i)}">${TIER[qPts(d, i)] || ''}</span> ` }, d.res[i] === 'fail' ? 'bad' : '')).join('')}</div>` : '<div class="card result"><h2>Keine Fehler! 🎉</h2></div>'}`;
 };
 
 /* ----- play ----- */
+const ptBadge = p => { const k = Math.min(4, Math.max(1, p)); return `<div class="ptbadge t${k}" aria-label="${k} Punkt${k > 1 ? 'e' : ''}">${TIER[k]}</div>`; };
 VIEWS.play = () => {
   const c = R.ctx, q = c.q, deck = R.kind === 'deck';
   let dots, label, pchip;
   if (deck) {
     const d = S.decks[R.key], b = Math.floor(R.idx / BLOCK), f = findTopic(R.key);
     dots = d.res.slice(...blockRange(b)).map((r, k) => `<i class="${b * BLOCK + k === R.idx ? 'cur' : r === 'first' ? 'ok' : r === 'second' ? 'half' : r === 'fail' ? 'bad' : ''}"></i>`).join('');
-    label = `${f.topic.icon} ${f.topic.t} · Aufgabe ${R.idx + 1} von ${DECK_N} · Stufe ${b + 1}`; pchip = chip('🪙', `${deckPts(d)}/${PTS_MAX}`, 'Punkte in dieser Gruppe');
+    label = `${f.topic.icon} ${f.topic.t} · Aufgabe ${R.idx + 1} von ${DECK_N} · Stufe ${b + 1}`; pchip = chip('🪙', `${deckPts(d)}/${deckMax(d)}`, 'Punkte in dieser Gruppe');
   } else {
     dots = R.items.map((x, k) => `<i class="${k === R.idx ? 'cur' : k < R.idx ? 'done' : ''}"></i>`).join('');
     label = `📒 Fehler-Heft · Aufgabe ${R.idx + 1} von ${R.n}`; pchip = chip('✔', R.first, 'gleich richtig');
@@ -233,29 +198,48 @@ VIEWS.play = () => {
     if (c.showHint) fb = `<div class="fb hint">💡 ${q.hint}</div>`;
   } else if (c.state === 'right') {
     mood = c.res === 'first' ? 'cheer' : 'happy';
-    const pt = c.res === 'first' ? 2 : 1;
+    const pt = deck ? ptsOf(c.res, qPts(S.decks[R.key], R.idx)) : 0;
     let pts = '';
-    if (deck) pts = R.lastDelta ? ` <b>+${R.lastDelta} 🪙</b>` : ` <span class="small">(${pt} Punkt${pt > 1 ? 'e' : ''} – Münzen-Bestwert dieser Stufe schon erreicht)</span>`;
+    if (deck) pts = R.lastDelta ? ` <b>+${R.lastDelta} 🪙</b>` : pt ? ` <span class="small">(${pt} Punkt${pt > 1 ? 'e' : ''} – Münzen-Bestwert dieser Stufe schon erreicht)</span>` : ` <span class="small">(Beim 2. Versuch zählt eine 1-Punkt-Aufgabe nicht mehr.)</span>`;
     else pts = c.res === 'first' ? ' Die Aufgabe verschwindet aus dem Fehler-Heft.' : ' Noch einmal gleich richtig – dann verschwindet sie.';
-    fb = `<div class="fb ok">✔ Richtig!${pts}<span class="ex">${q.explain}</span></div>`;
+    fb = `<div class="fb ok" role="status"><strong class="ad-feedback-title">${ico('check', 23)} ${c.res === 'first' ? 'Ja! Richtig gerechnet!' : 'Jetzt stimmt’s! Gut verbessert.'}</strong>${pts}<span class="ex">${q.explain}</span></div>`;
   } else {
-    mood = 'sad'; fb = `<div class="fb bad">So geht’s:<span class="ex">${q.explain}</span></div>`;
+    mood = 'sad'; fb = `<div class="fb bad" role="status"><strong class="ad-feedback-title">${XMARK} Noch nicht richtig. Schau mal:</strong><span class="ex">${q.explain}</span></div>`;
   }
+  // Falsch beim 1. Versuch: deutlich (rot + Kreuz), aber ermutigend
+  if (c.state === 'ask' && c.tries > 0) fb = `<div class="fb bad ad-retry" role="status"><strong class="ad-feedback-title">${XMARK} Noch nicht ganz.</strong><span>Probier’s noch mal. Wir schaffen das!</span></div>` + fb;
+  const st = c.state === 'right' ? 'right' : c.state === 'revealed' ? 'revealed' : c.tries > 0 ? 'retry' : 'ask';
   c.say = say;
   const last = deck ? false : R.idx === R.items.length - 1;
   const act = c.state === 'ask'
     ? (q.fields ? `<button class="btn big" data-act="check">Prüfen ✔</button>` : '')
     : `<button class="btn big" data-act="next">${R.blockPending ? 'Stufe fertig 🏁' : last ? 'Fertig 🏁' : 'Weiter →'}</button>`;
-  const hintBtn = c.state === 'ask' && !c.showHint ? `<button class="btn sec sm" data-act="hint">💡 Tipp (−1 Punkt)</button>` : '';
+  const hintBtn = c.state === 'ask' && !c.showHint ? `<button class="btn sec sm" data-act="hint">💡 Tipp (halbe Punkte)</button>` : '';
+  const pbadge = deck ? ptBadge(qPts(S.decks[R.key], R.idx)) : '';
   return `<div class="top"><button class="btn sec back" data-act="quit" aria-label="Pause">← Pause</button><div class="dots">${dots}</div>${pchip}</div>
   <div class="small mute" style="margin:-4px 0 8px 4px">${label}</div>
-  <div class="play">
-    <div class="card qcard">${qBody(c)}</div>
+  <div class="play ad-play ad-${st}">
+    <div class="card qcard ad-question">${pbadge}${qBody(c)}</div>
     <div class="side">
-      <div class="coach">${avatarHTML(eqAvatar(), 92, mood)}<div class="bubble">${esc(say)}</div></div>
+      <div class="coach">${avatarHTML(eqAvatar(), 92, c.state === 'right' ? 'cheer' : mood)}<div class="bubble">${esc(say)}</div></div>
       ${fb}${c.state === 'ask' && q.fields ? keypad(c) : ''}${hintBtn}${act}
     </div>
   </div>`;
+};
+
+/* Kleine Feier für jede richtige Antwort (auch verbessert). Keine Münzen extra. Kurz (≤ 0,9 s), aus bei „Ruhig“ / reduzierter Bewegung. */
+const XMARK = '<span class="ad-cross" aria-hidden="true" style="font-size:23px">✕</span>';
+const celebrated = new WeakSet();
+AFTER.play = () => {
+  if (!R || !R.ctx || R.ctx.state !== 'right' || celebrated.has(R.ctx)) return;
+  celebrated.add(R.ctx);
+  sfx('ok');
+  if (S.cfg.calm || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  const target = $('.ad-question'); if (!target) return;
+  const burst = document.createElement('div'); burst.className = 'ad-answer-stars'; burst.setAttribute('aria-hidden', 'true');
+  const n = R.ctx.res === 'first' ? 10 : 7;
+  burst.innerHTML = Array.from({ length: n }, (_, i) => `<i style="--dx:${Math.round(Math.cos(i * 2.4) * 150)}px;--dy:${Math.round(-40 - Math.abs(Math.sin(i * 2.4)) * 120)}px;--star:${['#ffcf32', '#58b947', '#2e96f1', '#ff942c'][i % 4]}">★</i>`).join('');
+  target.appendChild(burst); setTimeout(() => burst.remove(), 900);
 };
 
 /* ----- engine ----- */
@@ -263,6 +247,7 @@ function startDeck(key) {
   if (limitHit()) return go('limit');
   const d = getDeck(key);
   if (d.i >= DECK_N) { toast('✔', 'Diese Gruppe ist komplett geschafft.'); return go('topic', { key }); }
+  S.lastKey = key;
   R = { kind: 'deck', key, mod: key.split('.')[0], idx: d.i, ctx: newCtx(d.qs[d.i]), coins: 0, bc: {}, lastDelta: 0, blockPending: false };
   go('play', { key });
 }
@@ -334,11 +319,11 @@ VIEWS.block = () => {
     <h2>Stufe ${bi.b + 1} geschafft!</h2>
     <div class="stars">${[1, 2, 3].map(i => `<span class="${i <= bi.stars ? 'on' : ''}" style="animation-delay:${i * .25}s">⭐</span>`).join('')}</div>
     <div class="bigav">${avatarHTML(eqAvatar(), 170, mood)}</div>
-    <h3>${bi.firsts} von ${BLOCK} gleich richtig · ${bi.pts} von ${PTS_BLOCK} Punkten</h3>
+    <h3>${bi.firsts} von ${BLOCK} gleich richtig · ${bi.pts} von ${bi.max} Punkten</h3>
     <p style="font-weight:700">${esc(line)}</p>
     <div class="rewards">${bi.coins ? chip('🪙', '+' + bi.coins) : ''}${bi.dStars ? chip('⭐', '+' + bi.dStars) : ''}${bi.chest ? chip('📦', 'Schatztruhe!') : ''}${!bi.coins && !bi.dStars ? '<span class="small mute">Für diese Stufe gab es schon früher Belohnungen – mehr als der Bestwert wird nicht gezählt.</span>' : ''}</div>
-    ${bi.stars < 2 && !bi.chest ? '<p class="small mute">Ab 2 ⭐ (14 Punkte) gibt es eine Schatztruhe.</p>' : ''}
-    ${bi.deckDone ? `<div class="fb ok" style="margin:8px 0">🎉 Alle 30 Aufgaben dieser Gruppe sind geschafft! Medaille: ${MEDALS[bi.medal]} ${MEDAL_NAMES[bi.medal]}${bi.medal < 4 ? ' · Diamant gibt es ab 54 von 60 Punkten.' : ''}</div>` : ''}
+    ${bi.stars < 2 && !bi.chest ? '<p class="small mute">Ab 2 ⭐ (${starNeed(bi.max, 2)} Punkte) gibt es eine Schatztruhe.</p>' : ''}
+    ${bi.deckDone ? `<div class="fb ok" style="margin:8px 0">🎉 Alle 30 Aufgaben dieser Gruppe sind geschafft! Medaille: ${MEDALS[bi.medal]} ${MEDAL_NAMES[bi.medal]}${bi.medal < 4 ? ` · Diamant gibt es ab ${Math.ceil(deckMax(d) * .9)} von ${deckMax(d)} Punkten.` : ''}</div>` : ''}
     <div class="row wrap" style="justify-content:center;margin-top:10px">
       ${wrong ? `<button class="btn sec big" data-act="reviewBlock">📝 Fehler ansehen (${wrong})</button>` : ''}
       ${bi.deckDone ? '' : `<button class="btn big" data-act="blockNext">Weiter ▶</button>`}
@@ -350,8 +335,8 @@ VIEWS.block = () => {
 VIEWS.mistakes = () => {
   const list = S.mistakes;
   const intro = `<div class="card" style="margin-bottom:12px"><b>Was ist das Fehler-Heft?</b><p style="margin:6px 0 0">Hier sammeln sich alle Aufgaben, die <b>nicht gleich beim 1. Versuch</b> richtig waren – auch wenn du es danach geschafft hast. Du kannst sie hier üben. Löst du eine Aufgabe gleich beim 1. Versuch, verschwindet sie aus dem Heft. Es gibt dafür keine Münzen, aber du wirst Fehler-Detektiv!</p></div>`;
-  if (!list.length) return topBar('📒 Fehler-Heft') + intro + `<div class="card result"><div style="margin:auto;width:170px">${avatarHTML(eqAvatar(), 170, 'cheer')}</div><h2>Noch nichts drin – super!</h2><p>Sobald eine Aufgabe nicht gleich klappt, landet sie hier.</p></div>`;
-  return topBar('📒 Fehler-Heft') + intro + `<div class="card"><div class="row wrap"><div style="flex:1"><b>${list.length} Aufgabe${list.length === 1 ? '' : 'n'}</b> zum Üben.</div><button class="btn big" data-act="mistakeRound">Üben (${Math.min(10, list.length)})</button></div></div>
+  if (!list.length) return topBar(ico('notebook', 26) + ' Fehler-Heft') + intro + `<div class="card result"><div style="margin:auto;width:170px">${avatarHTML(eqAvatar(), 170, 'cheer')}</div><h2>Noch nichts drin – super!</h2><p>Sobald eine Aufgabe nicht gleich klappt, landet sie hier.</p></div>`;
+  return topBar(ico('notebook', 26) + ' Fehler-Heft') + intro + `<div class="card"><div class="row wrap"><div style="flex:1"><b>${list.length} Aufgabe${list.length === 1 ? '' : 'n'}</b> zum Üben.</div><button class="btn big" data-act="mistakeRound">Üben (${Math.min(10, list.length)})</button></div></div>
   <div class="list" style="margin-top:14px">${list.slice(0, 40).map(m => { const f = findTopic(m.tid); return reviewItem(m.q, m.ans, { n: f ? f.topic.icon : '?', t: '' }, ''); }).join('')}</div>`;
 };
 VIEWS.result = () => {
@@ -363,25 +348,32 @@ VIEWS.result = () => {
 };
 
 /* ----- Mini-Test ----- */
+/* Was der Mini-Test heute noch bringen kann (ehrlich, aus payTest-Regeln) */
+function testPrizeNote(r) {
+  const L = testLeft();
+  if (r && !r.rewarded) return L.c || L.s || L.ch ? 'Diesmal gab es nichts Neues. Heute zählt dein bestes Ergebnis – schaffst du mehr, gibt es den Unterschied.' : 'Heute hast du schon alles verdient, was der Mini-Test bringt.';
+  return L.c || L.s || L.ch ? `Heute noch möglich: ${L.c} Münzen, ${L.s} ${L.s === 1 ? 'Stern' : 'Sterne'}${L.ch ? ', eine Karte' : ''}.` : 'Für heute ist die Test-Belohnung komplett.';
+}
 VIEWS.testSetup = () => {
-  const opts = [['all', 'Alles gemischt']].concat(MODULES.map(m => [m.id, `${m.icon} ${m.id} ${m.title}`]));
-  const best = S.tests.length ? Math.max(...S.tests.map(t => t.score)) : null, rew = !(S.daily.d === ymd() && S.daily.testRewarded);
-  return topBar('⏱️ Mini-Test', 'home') + `<div class="card result"><div style="margin:auto;width:160px">${avatarHTML(eqAvatar(), 160, 'think')}</div>
+  const opts = [['all', 'Alle Hefte gemischt']].concat(MODULES.map(m => [m.id, `${m.icon} ${m.title}`]));
+  const best = S.tests.length ? Math.max(...S.tests.map(t => t.score)) : null, L = testLeft(), any = L.c || L.s || L.ch;
+  const prizes = `<div class="rh-test-prizes"><b>${any ? 'Das kannst du heute verdienen' : 'Heute schon alles verdient'}</b>${any ? `<div><span>7–9 richtig<strong>3 Münzen + 1 Stern</strong></span><span>10–12 richtig<strong>6 Münzen + 2 Sterne</strong></span><span>13–15 richtig<strong>10 Münzen + 3 Sterne</strong></span></div><p>Ab 12 richtigen gibt es eine Karte. Pro Tag zählt dein bestes Ergebnis: Ein besserer Test bringt den Unterschied. ${testPrizeNote()}</p>` : '<p>Du kannst trotzdem weiter üben und deinen Rekord verbessern.</p>'}</div>`;
+  return topBar(ico('stopwatch', 26) + ' Mini-Test', 'home') + `<div class="card result"><div style="margin:auto;width:160px">${avatarHTML(eqAvatar(), 160, 'think')}</div>
   <h2>${TEST_N} Aufgaben · ${TEST_SECS / 60} Minuten</h2>
   <p>Wie in der Schule: keine Tipps und keine Rückmeldung, bis du fertig bist. Du kannst zwischen den Aufgaben springen. Die Aufgaben sind jedes Mal neu.</p>
-  <p class="small mute">${rew ? 'Belohnung (1× pro Tag): ab 7 richtigen Münzen und Sterne, ab 12 eine Schatztruhe.' : 'Heute gab es schon die Test-Belohnung. Üben darfst du trotzdem!'}</p>
+  ${prizes}
   <div class="row wrap" style="justify-content:center;margin:12px 0">${opts.map(o => `<button class="btn ${UI.scope === o[0] ? '' : 'sec'} sm" data-act="scope" data-arg="${o[0]}">${o[1]}</button>`).join('')}</div>
   ${best !== null ? `<p class="small mute">Bestes Ergebnis bisher: ${best} von ${TEST_N}</p>` : ''}
   <button class="btn big" data-act="testStart">Los geht’s! ▶</button></div>`;
 };
 function startTest() {
   if (limitHit()) return go('limit');
-  const mods = UI.scope === 'all' ? MODULES : MODULES.filter(m => m.id === UI.scope);
+  const mods = UI.scope === 'all' ? MODULES.filter(m => !isExtra(m)) : MODULES.filter(m => m.id === UI.scope);   // „Alles gemischt“ = nur Arbeitsheft-Stoff
   const tops = []; mods.forEach(m => m.topics.forEach(t => tops.push(tk(m.id, t.id))));
   const qs = [], seen = new Set(); let pool = [];
   for (let i = 0; i < TEST_N; i++) {
     if (!pool.length) pool = shuffle(tops);
-    const key = pool.pop(), d = S.decks[key], lvl = d ? Math.min(3, Math.floor(Math.min(d.i, DECK_N - 1) / BLOCK) + 1) : 1;
+    const key = pool.pop(), d = S.decks[key], lvl = d ? Math.min(5, 2 + Math.floor(d.i / BLOCK)) : 2;
     qs.push({ tid: key, lvl, q: makeQ(key, lvl, seen) });
   }
   qs.forEach(x => x.c = newCtx(x.q));
@@ -422,12 +414,10 @@ function finishTest(timeUp) {
     if (!ok) addMistake(x.tid, x.q, x.ans);
   });
   touchDay();
-  const rewarded = !S.daily.testRewarded, stars = score >= 13 ? 3 : score >= 10 ? 2 : score >= 7 ? 1 : 0, coins = score >= 13 ? 10 : score >= 10 ? 6 : score >= 7 ? 3 : 0;
-  let chest = false;
-  if (rewarded) { S.daily.testRewarded = true; giveCoins(coins); giveStars(stars); if (score >= 12) chest = giveChest(); }
+  const stars = testTier(score).s, pay = payTest(score), rewarded = !!(pay.c || pay.s || pay.chest), chest = pay.chest;
   if (score >= 13 && left > 360) S.stats.blitz = 1;
   S.tests.push({ ts: Date.now(), score, total: T.qs.length, secs, scope: T.scope }); if (S.tests.length > 60) S.tests.shift();
-  T.res = { score, stars, coins: rewarded ? coins : 0, stars2: rewarded ? stars : 0, secs, timeUp, rewarded, chest };
+  T.res = { score, stars, coins: pay.c, stars2: pay.s, secs, timeUp, rewarded, chest };
   checkTrophies(); save(); go('testResult');
   if (stars >= 2) confetti(stars === 3 ? 110 : 60);
 }
@@ -438,7 +428,7 @@ VIEWS.testResult = () => {
   <h2>${r.score} von ${T.qs.length} richtig</h2>
   <p style="font-weight:700">${r.timeUp ? 'Die Zeit ist um! ' : ''}${esc(rnd(SAY['r' + r.stars]))}</p>
   <div class="rewards">${r.coins ? chip('🪙', '+' + r.coins) : ''}${r.stars2 ? chip('⭐', '+' + r.stars2) : ''}${r.chest ? chip('📦', 'Schatztruhe!') : ''}${chip('⏱️', fmtT(r.secs))}</div>
-  ${r.rewarded ? '' : '<p class="small mute">Die Test-Belohnung gibt es nur beim ersten Test eines Tages.</p>'}
+  <p class="small mute">${testPrizeNote(r)}</p>
   <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="testSetup">Neuer Test</button><button class="btn sec big" data-act="home">Fertig</button></div></div>
   <h3 style="margin:18px 4px 8px">So war dein Test</h3>
   <div class="list">${T.qs.map((x, i) => x.ok
@@ -456,59 +446,53 @@ function itemPreview(slot, it) {
   if (slot === 'bg') return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, bg: it.id }, 112);
   return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, frame: it.id }, 112);
 }
+const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (!g.includes(k.group)) g.push(k.group); }); return g; };
+const shopTimeHTML = () => { const L = shopLeft(); return L === Infinity ? '' : `<span class="mute small">Shop-Zeit heute: <b id="shopT">${fmtT(L)}</b> übrig</span>`; };
+function goalItem() { return S.goal && CATALOG[S.goal] && !hasItem(S.goal) ? CATALOG[S.goal] : null; }
+const goalCard = () => {
+  const g = goalItem(); if (!g) return `<div class="goalcard mute small">Wähle dir ein Sparziel: Tippe auf etwas, das dir gefällt, und lege es als Ziel fest.</div>`;
+  const p = Math.min(100, Math.round(S.coins / g.src.price * 100)), left = Math.max(0, g.src.price - S.coins);
+  return `<div class="goalcard"><span class="gth">${(KIND[g.kind] || { thumb: x => x.e }).thumb(g)}</span><div style="flex:1;min-width:0"><b>Dein Sparziel: ${esc(g.name)}</b><div class="bar"><i style="width:${p}%"></i></div><span class="small mute">${left ? `noch ${left} 🪙 (${g.src.price} 🪙 insgesamt)` : 'Du hast genug Münzen!'}</span></div></div>`;
+};
 VIEWS.shop = () => {
-  const slot = UI.shopTab, cat = SHOP[slot], owned = S.owned[slot];
+  const grp = UI.shopGrp || 'fino', groups = shopGroups(), lock = shopLeft() <= 0;
+  const gtabs = `<div class="tabs">${groups.map(g => `<button class="${g === grp ? 'on' : ''}" data-act="shopGrp" data-arg="${g}">${ico((SHOP_GROUPS[g] || {}).ic || 'sparkle', 18)} ${(SHOP_GROUPS[g] || { label: g }).label}</button>`).join('')}</div>`;
+  const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
+  if (grp !== 'fino') {
+    const kinds = Object.keys(KIND).filter(k => KIND[k].group === grp);
+    const kind = kinds.includes(UI.shopKind) ? UI.shopKind : kinds[0];
+    const ktabs = kinds.length > 1 ? `<div class="tabs">${kinds.map(k => `<button class="${k === kind ? 'on' : ''}" data-act="shopKind" data-arg="${k}">${KIND[k].label}</button>`).join('')}</div>` : '';
+    const all = itemsOf(kind).filter(it => it.src.t === 'shop'), mine = all.filter(it => hasItem(it.id)).length;
+    const open = all.filter(it => !hasItem(it.id)).sort((a, b) => a.src.price - b.src.price);
+    const show = UI.shopAll || UI.shopHi ? all.slice().sort((a, b) => ((b.id === UI.shopHi) - (a.id === UI.shopHi)) || (hasItem(a.id) - hasItem(b.id)) || (a.src.price - b.src.price)) : open.slice(0, 8);
+    const more = !UI.shopAll && !UI.shopHi && open.length > 8 ? `<div class="center" style="margin-top:12px"><button class="btn sec" data-act="shopAll">Alles ansehen (${open.length - 8} weitere)</button></div>` : '';
+    return head + gtabs + ktabs + `<p class="mute small" style="margin:6px 4px">${KIND[kind].label}: ${mine} von ${all.length} gesammelt. Dinge mit Schloss sind noch nicht deine – tippe darauf, dann siehst du, was sie kosten.</p><div class="itiles">${show.map(it => itemTile(it, { inShop: true })).join('')}</div>${more}`;
+  }
+  const slot = SHOP[UI.shopTab] ? UI.shopTab : 'theme', cat = SHOP[slot], owned = S.owned[slot];
   const tabs = Object.keys(SHOP).map(k => `<button class="${k === slot ? 'on' : ''}" data-act="shopTab" data-arg="${k}">${SHOP[k].icon} ${SHOP[k].label}</button>`).join('');
   const none = cat.none ? `<div class="card item ${S.eq[slot] === null ? 'eq' : ''}"><div class="nonepv">✕</div><div class="nm">Ohne</div><button class="btn sm ${S.eq[slot] === null ? 'sec' : ''}" data-act="equip" data-arg="${slot}|">${S.eq[slot] === null ? 'Aktiv ✔' : 'Auswählen'}</button></div>` : '';
   const items = cat.items.map(it => {
-    const has = owned.includes(it.id), on = S.eq[slot] === it.id, W = S[WALLET[it.cur]], can = W >= it.price, cu = CUR[it.cur];
+    const has = owned.includes(it.id), on = S.eq[slot] === it.id, can = S.coins >= it.price;
     const btn = has ? `<button class="btn sm ${on ? 'sec' : ''}" data-act="equip" data-arg="${slot}|${it.id}">${on ? 'Aktiv ✔' : 'Benutzen'}</button>`
-      : `<button class="btn sm" data-act="buy" data-arg="${slot}|${it.id}" ${can ? '' : 'disabled'}>${can ? 'Kaufen' : 'Noch ' + (it.price - W) + ' ' + cu.ic}</button>`;
-    return `<div class="card item ${on ? 'eq' : ''}"><div class="pv">${itemPreview(slot, it)}</div><div class="nm">${it.name}</div>${has ? '<div class="small mute">Gehört dir ✔</div>' : `<div class="price">${cu.ic} ${it.price}</div>`}${btn}</div>`;
+      : `<button class="btn sm ${can && !lock ? '' : 'sec'}" data-act="buy" data-arg="${slot}|${it.id}">${can ? 'Kaufen' : 'Noch ' + (it.price - S.coins) + ' 🪙'}</button>`;
+    return `<div class="card item ${on ? 'eq' : ''} ${has ? '' : 'lk'}">${has ? '' : LOCK}<div class="pv">${itemPreview(slot, it)}</div><div class="nm">${it.name}</div>${has ? '<div class="small mute">Gehört dir ✔</div>' : `<div class="price">🪙 ${it.price}</div>`}${btn}</div>`;
   }).join('');
-  return topBar('🛍️ Shop') + `<div class="preview card">${avatarHTML(eqAvatar(), 150, 'cheer')}<div style="flex:1;min-width:220px"><h3>So sieht Fino gerade aus</h3>
-    <p class="mute small" style="margin:6px 0 0"><b>🪙 Münzen</b>: für richtige Aufgaben (2 beim 1. Versuch).<br><b>⭐ Sterne</b>: für gut gelöste Stufen und Mini-Tests.<br><b>🔥 Flammen</b>: fürs Tagesziel – mehr bei langen Serien.</p></div></div>
-  <div class="tabs">${tabs}</div><div class="items">${none}${items}</div>`;
+  return head + `${gtabs}<div class="tabs">${tabs}</div><div class="items">${none}${items}</div>`;
 };
 function buy(slot, id) {
-  const it = SHOP[slot].items.find(x => x.id === id), k = WALLET[it && it.cur];
-  if (!it || S.owned[slot].includes(id) || S[k] < it.price) return;
-  S[k] -= it.price; S.owned[slot].push(id); S.stats.bought++; S.eq[slot] = id;
-  checkTrophies(); save(); closeModal(); render(); confetti(40); toast('🎉', `${it.name} gehört jetzt dir!`);
+  const it = SHOP[slot].items.find(x => x.id === id);
+  if (!it || S.owned[slot].includes(id) || S.coins < it.price || shopLeft() <= 0) return;
+  S.coins -= it.price; S.owned[slot].push(id); S.stats.bought++; S.eq[slot] = id;
+  checkTrophies(); save(); closeModal(); render(); sfx('magic'); toast('🎁', `${it.name} gehört jetzt dir!`);
 }
 function equip(slot, id) { if (id && !S.owned[slot].includes(id)) return; S.eq[slot] = id || null; save(); render(); }
-
-/* ----- Sammelalbum ----- */
-VIEWS.album = () => {
-  const found = Object.keys(S.cards).length, total = CARDS.length;
-  const card = (c, hot) => {
-    const ty = CARD_TYPES[c.t], shown = UI.ans[c.id];
-    return `<div class="card cardx ${hot ? 'hot' : ''}"><div class="ct">${ty.ic} ${ty.n}</div><div class="cq">${c.q}</div>
-      ${c.a ? (shown ? `<div class="ca">➜ ${c.a}</div>` : `<button class="btn sm sec" data-act="showAns" data-arg="${c.id}">Antwort zeigen</button>`) : ''}</div>`;
-  };
-  const hot = UI.reveal && S.cards[UI.reveal] ? CARDS.find(c => c.id === UI.reveal) : null;
-  const sorted = CARDS.filter(c => S.cards[c.id]).sort((a, b) => S.cards[b.id] - S.cards[a.id]);
-  const miss = total - found;
-  return topBar('📚 Sammelalbum') + `<div class="card" style="margin-bottom:12px"><b>${found} von ${total} Karten gefunden</b><div class="bar" style="margin:6px 0"><i style="width:${Math.round(found / total * 100)}%"></i></div>
-    ${S.chests ? `<div class="center"><button class="btn big" data-act="openChest">📦 Schatztruhe öffnen (${S.chests})</button></div>`
-      : `<p class="small mute" style="margin:6px 0 0">Schatztruhen gibt es für echte Leistungen: eine Stufe mit mindestens 2 ⭐, eine ganze Gruppe, das Tagesziel und gute Mini-Tests. Darin sind lustige Fakten, Witze und Knobelfragen.</p>`}</div>
-  ${hot ? `<h3 style="margin:6px 4px">🎉 Neu gefunden!</h3>${card(hot, true)}<div style="height:12px"></div>` : ''}
-  <div class="grid">${sorted.filter(c => !hot || c.id !== hot.id).map(c => card(c)).join('')}${Array.from({ length: Math.min(miss - (hot ? 0 : 0), 6) }, () => '<div class="card cardx lock"><div class="ct">❓</div><div class="cq">Noch nicht gefunden</div></div>').join('')}</div>
-  ${miss > 6 ? `<p class="small mute center">… und noch ${miss - 6} weitere Überraschungen.</p>` : ''}`;
-};
-function openChest() {
-  const left = CARDS.filter(c => !S.cards[c.id]);
-  if (!S.chests || !left.length) return;
-  const c = rnd(left); S.chests--; S.cards[c.id] = Date.now(); UI.reveal = c.id; delete UI.ans[c.id];
-  checkTrophies(); save(); render(); confetti(70);
-}
 
 /* ----- Pokale ----- */
 VIEWS.trophies = () => {
   const L = trophyList(), got = L.filter(t => S.trophies[t.id]).length;
   const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0));
-  const mp = MODULES.map(m => `<div class="card tro"><span class="ic">${m.icon}</span><div style="flex:1"><b>${m.id} · ${m.title}</b><div class="d">${m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '▫️').join(' ')}</div></div></div>`).join('');
-  return topBar('🏆 Pokale') + `<div class="card" style="margin-bottom:12px"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
+  const mp = MODULES.map(m => `<div class="card tro"><span class="ic">${m.icon}</span><div style="flex:1"><b>${m.title}</b><div class="d">${m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '▫️').join(' ')}</div></div></div>`).join('');
+  return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card" style="margin-bottom:12px"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
   <div class="small mute" style="margin-top:8px">Medaillen pro Gruppe: 🥉 Stufe 1 fertig · 🥈 Stufe 2 fertig · 🥇 alle 30 Aufgaben · 💎 alle 30 mit mindestens 54 von 60 Punkten. Pokale mit ❓ sind geheim – findest du sie?</div></div>
   <div class="grid" style="margin-bottom:14px">${mp}</div>
   <div class="grid">${sorted.map(t => { const has = S.trophies[t.id]; return (t.s && !has)
@@ -525,23 +509,30 @@ VIEWS.limit = () => `<div class="card result"><div style="margin:auto;width:170p
 VIEWS.parent = () => {
   const L = levelInfo(), rows = [], weak = [];
   MODULES.forEach(m => {
-    rows.push(`<tr><th colspan="5">${m.icon} ${m.id} · ${m.title}</th></tr>`);
+    rows.push(`<tr><th colspan="5">${m.icon} ${m.title} <span class="mute small">(Arbeitsheft ${m.id} · ${m.wb})</span></th></tr>`);
     m.topics.forEach(t => {
       const key = tk(m.id, t.id), r = S.topics[key], d = S.decks[key], p = r && r.q ? Math.round(r.c / r.q * 100) : null;
-      if (r && r.q >= 10 && p < 60) weak.push(`${t.icon} ${t.t} (${p} %)`);
-      rows.push(`<tr><td>${t.icon} ${t.t}</td><td>${d ? d.i : 0}/${DECK_N}</td><td>${deckPts(d)}/${PTS_MAX}</td><td><span class="pct ${pctCls(p)}">${p === null ? '–' : p + ' %'}</span></td><td>${MEDALS[medalOf(key)] || '–'}</td></tr>`);
+      if (r && r.q >= 10 && p < 60) weak.push(`${t.icon} ${t.t} – ${t.wb} (${p} %)`);
+      rows.push(`<tr><td>${t.icon} ${t.t} <span class="mute small">(${t.wb})</span></td><td>${d ? d.i : 0}/${DECK_N}</td><td>${deckPts(d)}/${d ? deckMax(d) : NEW_DECK_MAX}</td><td><span class="pct ${pctCls(p)}">${p === null ? '–' : p + ' %'}</span></td><td>${MEDALS[medalOf(key)] || '–'}</td></tr>`);
     });
   });
   const days = Object.keys(S.log).sort().slice(-7).reverse(), tests = S.tests.slice(-6).reverse();
   const sel = (id, opts, val) => `<select id="${id}" class="txt noprint">${opts.map(o => `<option value="${o[0]}" ${+o[0] === +val ? 'selected' : ''}>${o[1]}</option>`).join('')}</select>`;
-  return topBar('👨‍👩‍👧 Eltern', 'home', '<button class="btn sm noprint" data-act="print">🖨️ Drucken</button>') + `
+  return topBar(ico('gear', 26) + ' Eltern', 'home', '<button class="btn sm noprint" data-act="print">🖨️ Drucken</button>') + `
   <div class="card noprint"><h3>Einstellungen</h3>
     <div class="cfg"><div><b>Name des Kindes</b><br><span class="small mute">Wird auf dem Startbildschirm angezeigt.</span></div><div class="row"><input class="txt" id="nameIn" maxlength="20" value="${esc(S.name)}" placeholder="Name"><button class="btn sm" data-act="saveName">Speichern</button></div></div>
-    <div class="cfg"><div><b>Tagesziel</b><br><span class="small mute">So viele Aufgaben pro Tag für 🔥 Flamme, Serie und Schatztruhe.</span></div>${sel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, n + ' Aufgaben']), S.cfg.goal)}</div>
+    <div class="cfg"><div><b>Tagesziel</b><br><span class="small mute">So viele Aufgaben pro Tag für Serie, Karte und Kreativzeit.</span></div>${sel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, n + ' Aufgaben']), S.cfg.goal)}</div>
     <div class="cfg"><div><b>Tageslimit</b><br><span class="small mute">Nach dieser Übungszeit pro Tag gibt es eine Pause. Heute: ${usedMin()} Min · ${S.daily.d === ymd() ? S.daily.n : 0} Aufgaben.</span></div>${sel('cfgLimit', [[0, 'Kein Limit'], [15, '15 Minuten'], [20, '20 Minuten'], [30, '30 Minuten'], [45, '45 Minuten'], [60, '60 Minuten'], [90, '90 Minuten']], S.cfg.limitMin)}</div>
+    <div class="cfg"><div><b>Kreativzeit</b><br><span class="small mute">Avatar, Buch und Musik. „Nach dem Üben“: Tagesziel oder eine fertige Stufe öffnet ein kurzes Zeitfenster. „Gesperrt“ = Klassenmodus: nur ansehen, bis du sie freigibst.</span></div><select id="cfgCrMode" class="txt noprint">${[['after', 'Nach dem Üben'], ['always', 'Immer offen'], ['locked', 'Gesperrt']].map(o => `<option value="${o[0]}" ${o[0] === (S.cfg.creativeMode || 'after') ? 'selected' : ''}>${o[1]}</option>`).join('')}</select></div>
+    <div class="cfg"><div><b>Dauer pro Kreativzeit</b><br><span class="small mute">Wie lange eine Kreativzeit dauert, und wie oft pro Tag sie sich öffnet.</span></div><div class="row">${sel('cfgCrMin', [3, 5, 10, 15, 20].map(n => [n, n + ' Min']), S.cfg.creativeMin || 5)}${sel('cfgCrMax', [1, 2, 3].map(n => [n, n + '× pro Tag']), S.cfg.creativeMax || 2)}</div></div>
+    <div class="cfg"><div><b>Kreativzeit jetzt freigeben</b><br><span class="small mute">Heute extra: ${S.cfg.creativeMin || 5} Minuten. Heute noch ${fmtT(creativeLeft())} übrig.</span></div><button class="btn sm sec" data-act="crGrant">Freigeben</button></div>
+    <div class="cfg"><div><b>Shop-Zeit pro Tag</b><br><span class="small mute">So lange darf sie pro Tag im Shop stöbern und einkaufen. Heute: ${Math.floor((S.daily.shopSec || 0) / 60)} Min.</span></div>${sel('cfgShop', [[0, 'Unbegrenzt'], [3, '3 Minuten'], [5, '5 Minuten'], [10, '10 Minuten']], S.cfg.shopMin == null ? 5 : S.cfg.shopMin)}</div>
+    <div class="cfg" style="display:block"><b>Kapitel-Termine</b><br><span class="small mute">Bis wann soll das Kapitel vor den Ferien fertig sein? Erscheint in „Hefte“.</span>
+      <div class="row wrap" style="margin-top:8px">${CHAPTERS.map(c => `<label class="small">${c.id} (${c.season})<br><input type="date" class="txt" id="due_${c.id}" value="${(S.cfg.due || {})[c.id] || ''}"></label>`).join('')}</div></div>
+    <div class="cfg"><div><b>Töne &amp; Musik</b><br><span class="small mute">Schaltet alle Töne der App aus (auch die Musik-Werkstatt).</span></div><select id="cfgSound" class="txt noprint"><option value="1" ${S.cfg.sound !== false ? 'selected' : ''}>Töne an</option><option value="0" ${S.cfg.sound === false ? 'selected' : ''}>Töne aus</option></select></div>
     <div class="cfg"><div><b>Eltern-PIN</b><br><span class="small mute">Schützt diesen Bereich, das Zurücksetzen von Gruppen und das Verlängern des Tageslimits.</span></div><button class="btn sm sec" data-act="pinChange">PIN ändern</button></div>
   </div>
-  <div class="card" style="margin-top:12px"><h3>Überblick</h3><p>Stufe ${L.n} (${L.title}) · ${S.stats.q} Aufgaben · ${S.stats.q ? Math.round(S.stats.c / S.stats.q * 100) : 0} % gleich richtig · Serie ${streakNow()} Tag(e) · ${S.mistakes.length} im Fehler-Heft · ${Object.keys(S.cards).length}/${CARDS.length} Karten</p>
+  <div class="card" style="margin-top:12px"><h3>Überblick</h3><p>Stufe ${L.n} (${L.title}) · ${S.stats.q} Aufgaben · ${S.stats.q ? Math.round(S.stats.c / S.stats.q * 100) : 0} % gleich richtig · Serie ${streakNow()} Tag(e) · ${S.mistakes.length} im Fehler-Heft · ${Object.keys(S.cards).length} Karten · ${stampCount()} Stempel · ${(S.songs || []).length} Beats · Kreativzeit heute: ${Math.round((S.daily.cr.used || 0) / 60)} Min · Shop heute: ${Math.floor((S.daily.shopSec || 0) / 60)} Min</p>
   ${weak.length ? `<p><b>Das sollte noch geübt werden:</b> ${weak.join(', ')}</p>` : '<p class="mute small">Schwache Themen werden angezeigt, sobald genug Aufgaben gelöst wurden.</p>'}</div>
   <div class="card" style="margin-top:12px"><h3>Gruppen</h3><div style="overflow-x:auto"><table class="tbl"><tr><th>Gruppe</th><th>Fortschritt</th><th>Punkte</th><th>1. Versuch</th><th>Medaille</th></tr>${rows.join('')}</table></div></div>
   <div class="grid" style="margin-top:12px"><div class="card"><h3>Letzte Tage</h3>${days.length ? `<table class="tbl">${days.map(d => `<tr><td>${d}</td><td>${S.log[d].n} Aufgaben</td><td>${S.log[d].c} gleich richtig</td></tr>`).join('')}</table>` : '<p class="mute">Noch nichts.</p>'}</div>
@@ -555,17 +546,38 @@ VIEWS.parent = () => {
 };
 function exportData() {
   const j = JSON.stringify(S, null, 1);
-  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([j], { type: 'application/json' })); a.download = 'mathe-abenteuer-' + ymd() + '.json'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { }
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([j], { type: 'application/json' })); a.download = 'rechenhelden-sicherung-' + ymd() + '.json'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { }
   S.lastBackup = Date.now(); save();
   const t = $('#expTxt'); if (t) { t.value = j; t.classList.remove('hide'); }
   toast('💾', 'Sicherung erstellt');
 }
+/* Sicherung laden – mit Vorher/Nachher-Vergleich, damit Eltern sehen: nichts ist verloren gegangen.
+   Der bisherige Stand wird vor dem Ersetzen unter PREIMPORT_KEY aufgehoben (nur hinzufügen, nie löschen). */
+const PREIMPORT_KEY = 'mathe_abenteuer_preimport';
+function saveSummary(o) {
+  o = o || {};
+  const own = Object.values(o.owned || {}).reduce((n, a) => n + (Array.isArray(a) ? a.length : 0), 0) + Object.keys(o.unl || {}).length;
+  return { coins: o.coins || 0, stars: o.starsLife || 0, q: (o.stats && o.stats.q) || 0, decks: Object.values(o.decks || {}).filter(d => d && d.i >= DECK_N).length,
+    cards: Object.keys(o.cards || {}).length, chests: o.chests || 0, trophies: Object.keys(o.trophies || {}).length, items: own, songs: (o.songs || []).length };
+}
+const SUM_LABELS = [['coins', '🪙 Münzen'], ['stars', '⭐ Sterne gesammelt'], ['q', '✔ gelöste Aufgaben'], ['decks', '📗 fertige Übungen'], ['cards', '🃏 Karten'], ['chests', '📦 Karten zum Aufdecken'], ['trophies', '🏆 Pokale'], ['items', '🎁 Dinge im Besitz'], ['songs', '🎵 Beats']];
+const sumTable = (cols, rows) => `<table class="tbl sumtbl"><tr><th></th>${cols.map(c => `<th>${c}</th>`).join('')}</tr>${SUM_LABELS.map(([k, l]) => `<tr><td>${l}</td>${rows.map(r => `<td>${r[k]}</td>`).join('')}</tr>`).join('')}</table>`;
 function importData(txt, force) {
-  try {
-    const o = JSON.parse(txt); if (!o || typeof o.coins !== 'number') throw 0;
-    if (!force) { UI.pending = txt; modal('Sicherung laden?', `Der Stand in der Datei hat ${o.stats ? o.stats.q || 0 : 0} gelöste Aufgaben. Aktuell sind es ${S.stats.q}. Der jetzige Stand wird ersetzt.`, 'Ja, laden', 'importYes', '', 'Nein'); return; }
-    S = mergeState(o); save(); toast('✅', 'Fortschritt geladen'); go('home', { say: '' });
-  } catch (e) { toast('⚠️', 'Die Datei konnte nicht gelesen werden.'); }
+  let o;
+  try { o = JSON.parse(txt); if (!o || typeof o.coins !== 'number') throw 0; } catch (e) { toast('⚠️', 'Die Datei konnte nicht gelesen werden.'); return; }
+  const file = saveSummary(o);
+  if (!force) {
+    UI.pending = txt;
+    modal('Sicherung laden?', `So sieht der Stand in der Datei aus – und so der Stand hier:${sumTable(['Datei', 'Jetzt hier'], [file, saveSummary(S)])}<p class="small mute">Der jetzige Stand wird ersetzt (er wird vorher zusätzlich aufgehoben).</p>`, 'Ja, laden', 'importYes', '', 'Nein');
+    return;
+  }
+  try { localStorage.setItem(PREIMPORT_KEY, JSON.stringify(S)); } catch (e) { }
+  S = mergeState(o); save();
+  /* Prüfen: Münzen = Datei (+ einmalig 3 je alter Flamme), alles andere gleich (Besitz darf nur mehr werden) */
+  const now = saveSummary(S), exp = Object.assign({}, file, { coins: file.coins + (o.mig3 ? 0 : (o.flames || 0) * 3) });
+  const bad = SUM_LABELS.map(x => x[0]).filter(k => k === 'items' ? now[k] < exp[k] : now[k] !== exp[k]);
+  go('home', { say: '' });
+  modal(bad.length ? 'Bitte prüfen' : 'Geladen und geprüft ✓', `${bad.length ? 'Diese Werte weichen ab: ' + bad.map(k => SUM_LABELS.find(x => x[0] === k)[1]).join(', ') + '. Der vorherige Stand ist aufgehoben.' : 'Alles aus der Sicherung ist da.'}${sumTable(['Datei', 'Jetzt geladen'], [exp, now])}${o.flames && !o.mig3 ? `<p class="small mute">Alte Flammen wurden einmalig in Münzen umgerechnet (${o.flames} × 3).</p>` : ''}`, '', '', '', 'OK');
 }
 
 /* ----- PIN ----- */
@@ -623,14 +635,25 @@ function press(k) {
   const fo = fs[c.focus];
   if (k === 'back') {
     if (c.vals[c.focus] !== '') { c.vals[c.focus] = c.vals[c.focus].slice(0, -1); c.marks[c.focus] = null; }
-    else { const j = fs.findIndex((x, i) => x.next === c.focus && !c.locked[i]); if (j >= 0) { c.focus = j; c.vals[j] = ''; c.marks[j] = null; } }
+    else {
+      const j = fs.findIndex((x, i) => x.next === c.focus && !c.locked[i]);
+      if (j >= 0) { c.focus = j; c.vals[j] = ''; c.marks[j] = null; }
+      else { for (let t = 1; t < fs.length; t++) { const p = (c.focus - t + fs.length) % fs.length; if (!c.locked[p] && p < c.focus) { c.focus = p; break; } } }   // zurück zum vorigen Feld
+    }
   } else if (k === ',') {
     if (/,/.test(fo.a) && !fo.digit && c.vals[c.focus] !== '' && !c.vals[c.focus].includes(',')) { c.vals[c.focus] += ','; c.marks[c.focus] = null; }
   } else if (/^\d$/.test(k)) {
     if (fo.digit) { c.vals[c.focus] = k; c.marks[c.focus] = null; if (fo.next != null) c.focus = fo.next; }
-    else if (c.vals[c.focus].replace(',', '').length < 8) { c.vals[c.focus] += k; c.marks[c.focus] = null; }
+    else if (c.vals[c.focus].replace(',', '').length < 8) {
+      c.vals[c.focus] += k; c.marks[c.focus] = null;
+      if (fs.length > 1 && normIn(c.vals[c.focus]).length >= String(fo.a).length) autoNext(c);      // Zahl fertig getippt -> nächstes Feld
+    }
   }
   render();
+}
+function autoNext(c) {                                // springt zum nächsten freien Feld (nach rechts/unten)
+  const n = c.q.fields.length;
+  for (let t = 1; t < n; t++) { const j = (c.focus + t) % n; if (!c.locked[j] && normIn(c.vals[j]) === '') { c.focus = j; return; } }
 }
 function move(c, d) {
   const n = c.q.fields.length; let i = c.focus;
@@ -658,8 +681,13 @@ const ACT = {
   resetTopic: () => requirePin('resetTopicAsk', UI.key),
   resetTopicAsk: key => {
     const f = findTopic(key);
-    modal('Gruppe zurücksetzen?', `<b>${f.topic.t}</b>: Alle 30 Aufgaben werden durch <b>neue Aufgaben</b> ersetzt. Fortschritt und Punkte dieser Gruppe gehen auf 0.<br><br>Münzen und Sterne im Geldbeutel bleiben. Pro Gruppe gibt es aber nie mehr als ${PTS_MAX} 🪙 und ${STARS_MAX} ⭐ – wer die Gruppe nochmal löst, bekommt nur Belohnungen über dem bisherigen Bestwert.`, 'Ja, zurücksetzen', 'resetTopicYes', key, 'Nein, behalten');
+    modal('Gruppe zurücksetzen?', `<b>${f.topic.t}</b>: Alle 30 Aufgaben werden durch <b>neue Aufgaben</b> ersetzt. Fortschritt und Punkte dieser Gruppe gehen auf 0.<br><br>Münzen und Sterne im Geldbeutel bleiben. Pro Gruppe gibt es aber nie mehr als ${NEW_DECK_MAX} 🪙 und ${STARS_MAX} ⭐ – wer die Gruppe nochmal löst, bekommt nur Belohnungen über dem bisherigen Bestwert.`, 'Ja, zurücksetzen', 'resetTopicYes', key, 'Nein, behalten');
   },
+  newRound: () => {
+    const key = UI.key, f = findTopic(key);
+    modal('Neue Runde starten?', `<b>${f.topic.t}</b>: Du bekommst <b>30 ganz neue Aufgaben</b> – und kannst wieder Münzen und Sterne sammeln.<br><br>Deine Münzen, Sterne, Medaille und Pokale bleiben. Nur die Ergebnisse der alten Runde werden ersetzt (dein Rekord wird gemerkt).`, 'Ja, neue Runde', 'newRoundYes', key, 'Nein, später');
+  },
+  newRoundYes: key => { closeModal(); if (newRound(key)) { toast('🔁', 'Neue Runde – neue Aufgaben!'); } go('topic', { key }); },
   resetTopicYes: key => { closeModal(); resetDeck(key); toast('🔄', 'Gruppe zurückgesetzt – neue Aufgaben!'); go('topic', { key }); },
   mistakes: () => go('mistakes'), mistakeRound: startMistakes,
   key: k => press(k), check, next, pick: i => pickChoice(+i),
@@ -672,15 +700,26 @@ const ACT = {
   testSetup: () => go('testSetup'), scope: s => { UI.scope = s; render(); }, testStart: startTest,
   testAsk, testFinish: () => finishTest(false),
   goQ: i => { T.i = +i; render(); }, nextQ: () => { if (T.i < T.qs.length - 1) { T.i++; render(); } }, prevQ: () => { if (T.i > 0) { T.i--; render(); } },
-  shop: () => go('shop'), shopTab: s => { UI.shopTab = s; render(); },
+  shop: () => go('shop', { shopHi: null, shopAll: false }), shopTab: s => { UI.shopTab = s; render(); },
   buy: a => {
-    const [s, id] = a.split('|'), it = SHOP[s].items.find(x => x.id === id), cu = CUR[it.cur], W = S[WALLET[it.cur]];
-    modal('Bist du ganz sicher?', `${itemPreview(s, it)}<br><b>${it.name}</b> kostet <b>${cu.ic} ${it.price}</b>. Danach hast du noch ${W - it.price} ${cu.ic}.<br><br><b>Ein Kauf kann nicht rückgängig gemacht werden.</b> Du bekommst das Geld nicht zurück.`, 'Ja, kaufen', 'buyYes', a, 'Nein, noch nicht');
+    const [sl, id] = a.split('|'), it = SHOP[sl].items.find(x => x.id === id);
+    if (shopLeft() <= 0) return modal('Shop-Zeit vorbei', 'Für heute ist die Shop-Zeit aufgebraucht. Morgen kannst du wieder einkaufen.');
+    if (S.coins < it.price) return modal('Noch nicht genug Münzen', `<b>${it.name}</b> kostet <b>🪙 ${it.price}</b>. Dir fehlen noch <b>${it.price - S.coins} 🪙</b>. Beim Üben verdienst du sie.`, '', 'closeModal');
+    modal('Bist du ganz sicher?', `${itemPreview(sl, it)}<br><b>${it.name}</b> kostet <b>🪙 ${it.price}</b>. Danach hast du noch ${S.coins - it.price} 🪙.<br><br><b>Ein Kauf kann nicht rückgängig gemacht werden.</b> Du bekommst das Geld nicht zurück.`, 'Ja, kaufen', 'buyYes', a, 'Nein, noch nicht');
   },
   buyYes: a => { const [s, id] = a.split('|'); buy(s, id); },
   equip: a => { const [s, id] = a.split('|'); equip(s, id); },
-  album: () => go('album', { reveal: null }), openChest, showAns: id => { UI.ans[id] = 1; render(); },
+  shopGrp: g => { UI.shopGrp = g; UI.shopKind = null; UI.shopAll = false; UI.shopHi = null; render(); }, shopKind: k => { UI.shopKind = k; UI.shopAll = false; UI.shopHi = null; render(); },
+  buyItemAsk: id => { const it = CATALOG[id]; if (!it) return; const W = S.coins, P = it.src.price, th = (KIND[it.kind] || { thumb: x => x.e }).thumb(it);
+    const pv = `<div class="ith" style="margin:0 auto 8px;width:96px;height:96px;display:flex;align-items:center;justify-content:center;font-size:3rem">${th}</div><b>${esc(it.name)}</b> kostet <b>🪙 ${P}</b>. `;
+    if (shopLeft() <= 0) return modal('Shop-Zeit vorbei', 'Für heute ist die Shop-Zeit aufgebraucht. Morgen kannst du wieder einkaufen.');
+    if (W < P) return modal('Noch nicht genug Münzen', `${pv}Dir fehlen noch <b>${P - W} 🪙</b>. Das schaffst du beim Üben!`, S.goal === id ? '' : 'Als Sparziel merken', 'setGoal', id, 'Zurück');
+    modal('Bist du ganz sicher?', `${pv}Danach hast du noch ${W - P} 🪙.<br><br><b>Ein Kauf kann nicht rückgängig gemacht werden.</b> Du bekommst das Geld nicht zurück.`, 'Ja, kaufen', 'buyItemYes', id, 'Nein, noch nicht'); },
+  setGoal: id => { S.goal = id; save(); closeModal(); render(); toast('🎯', 'Sparziel gesetzt'); },
+  shopAt: id => shopAt(id), shopAll: () => { UI.shopAll = true; render(); },
+  buyItemYes: id => { closeModal(); const it = CATALOG[id]; if (buyItem(id)) { render(); sfx('magic'); toast('🎁', `${esc(it.name)} gehört jetzt dir!`); } },
   trophies: () => go('trophies'),
+  crGrant: () => { touchDay(); S.daily.cr.left += (S.cfg.creativeMin || 5) * 60; save(); toast('🎨', 'Kreativzeit freigegeben'); render(); },
   parent: () => requirePin('parentGo'), parentGo: () => go('parent'), print: () => window.print(),
   saveName: () => { S.name = ($('#nameIn').value || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); },
   export: exportData, importYes: () => { closeModal(); importData(UI.pending, true); },
@@ -700,6 +739,12 @@ document.addEventListener('change', e => {
   const t = e.target;
   if (t.id === 'impFile' && t.files[0]) { const r = new FileReader(); r.onload = () => importData(r.result); r.readAsText(t.files[0]); t.value = ''; }
   else if (t.id === 'cfgGoal') { S.cfg.goal = +t.value; save(); toast('✅', 'Tagesziel: ' + t.value + ' Aufgaben'); }
+  else if (t.id === 'cfgSound') { S.cfg.sound = t.value === '1'; save(); toast('✅', S.cfg.sound ? 'Töne an' : 'Töne aus'); }
+  else if (t.id === 'cfgCrMode') { S.cfg.creativeMode = t.value; save(); toast('✅', 'Kreativzeit: ' + t.options[t.selectedIndex].text); }
+  else if (t.id === 'cfgCrMin') { S.cfg.creativeMin = +t.value; save(); toast('✅', 'Kreativzeit: ' + t.value + ' Minuten'); }
+  else if (t.id === 'cfgCrMax') { S.cfg.creativeMax = +t.value; save(); toast('✅', 'Gespeichert'); }
+  else if (t.id === 'cfgShop') { S.cfg.shopMin = +t.value; save(); toast('✅', +t.value ? 'Shop-Zeit: ' + t.value + ' Minuten' : 'Shop-Zeit unbegrenzt'); }
+  else if (/^due_[A-D]$/.test(t.id)) { S.cfg.due = S.cfg.due || {}; if (t.value) S.cfg.due[t.id.slice(4)] = t.value; else delete S.cfg.due[t.id.slice(4)]; save(); toast('✅', 'Termin gespeichert'); }
   else if (t.id === 'cfgLimit') { S.cfg.limitMin = +t.value; save(); toast('✅', +t.value ? 'Tageslimit: ' + t.value + ' Minuten' : 'Kein Tageslimit'); }
 });
 document.addEventListener('keydown', e => {
@@ -725,18 +770,5 @@ setInterval(() => {
 }, 5000);
 document.addEventListener('visibilitychange', () => { if (document.hidden) { try { save(); } catch (e) { } } });
 
-/* ---------- boot ---------- */
-window.__app = {
-  get S() { return S; }, set S(v) { S = v; }, get R() { return R; }, get T() { return T; }, get view() { return view; }, get PIN() { return PIN; }, UI, MODULES, SHOP, CARDS, ACT,
-  startDeck, startMistakes, startTest, press, check, pickChoice, next, fieldOK, newCtx, isCorrect, levelInfo, medalOf, trophyList, checkTrophies, finishTest, remaining,
-  mergeState, render, go, giveCoins, buy, equip, topicRec, importData, tk, qBody, mascotSVG, getDeck, deckPts, deckWrong, blockPts, resetDeck, requirePin, pinKey, limitHit, openChest, save, load, dailyCheck, touchDay
-};
-try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { }
-touchDay(); render();
-idbGet().then(j => {                                // zweite Kopie: falls der Hauptspeicher leer/älter ist
-  try {
-    const o = j ? JSON.parse(j) : null;
-    if (o && (o.saved || 0) > (S.saved || 0) + 1000) { S = mergeState(o); touchDay(); toast('♻️', 'Fortschritt wiederhergestellt'); render(); }
-  } catch (e) { }
-  save();
-});
+registerFeature({ id: 'shop', title: 'Shop', icon: 'bag', tint: 'butter', group: 'earn', order: 20, sub: () => 'Hier gibst du Münzen aus', view: 'shop' });
+registerFeature({ id: 'trophies', title: 'Pokale', icon: 'trophy', tint: 'sage', group: 'earn', order: 30, sub: () => `${Object.keys(S.trophies).length} gesammelt`, view: 'trophies' });

@@ -19,7 +19,14 @@ const rnd = a => a[Math.floor(Math.random() * a.length)];
 const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
 
 const TEST_N = 15, TEST_SECS = 720;
-const DECK_N = 30, BLOCK = 10, BLOCKS = 3, PTS_BLOCK = 20, PTS_MAX = 60, STARS_MAX = 9;
+const DECK_N = 30, BLOCK = 10, BLOCKS = 3, STARS_MAX = 9;
+/* Jede Aufgabe ist 1–4 Punkte wert (Schwierigkeit). Generator-Level 2..5 -> 1..4 Punkte.
+   Pro Stufe: 5 leichtere + 5 schwerere Aufgaben, abwechselnd. Summe pro Gruppe fest: 15 + 25 + 35 = 75. */
+const BLOCK_LEVELS = [[2, 3], [3, 4], [4, 5]];
+const ptsForLevel = L => L - 1;
+const NEW_BLOCK_MAX = BLOCK_LEVELS.map(([lo, hi]) => 5 * ptsForLevel(lo) + 5 * ptsForLevel(hi));   // [15, 25, 35]
+const NEW_DECK_MAX = NEW_BLOCK_MAX.reduce((a, b) => a + b, 0);                                     // 75
+const TIER = { 1: '🟢', 2: '🔵', 3: '🔥', 4: '👑' };            // Das Kind sieht nur das Symbol – nie Wörter wie „leicht“ oder „schwer“
 const WALLET = { c: 'coins', s: 'stars', f: 'flames' };
 
 /* ---------- state ---------- */
@@ -27,15 +34,18 @@ const KEY = 'mathe_abenteuer_v1';                 // bleibt gleich, damit alter 
 const BKUP = ['mathe_abenteuer_bak1', 'mathe_abenteuer_bak2'];
 let memStore = null, persistOK = true, lastSaveErr = '';
 const DEF = () => ({
-  v: 2, name: '', saved: 0,
+  v: 2, name: '', avName: '', saved: 0,
   coins: 0, life: 0, stars: 0, starsLife: 0, flames: 0, flamesLife: 0, chests: 0,
-  owned: { theme: ['sonne'], skin: ['fuchs'], hat: [], extra: [], bg: [], frame: [] },
+  owned: { theme: ['sonne'], skin: ['fuchs'], hat: [], extra: [], bg: [], frame: [], insel: [] },
   eq: { theme: 'sonne', skin: 'fuchs', hat: null, extra: null, bg: null, frame: null },
   topics: {}, decks: {}, mistakes: [], trophies: {}, cards: {},
+  unl: {}, stamps: {}, av: { use: false, look: null, saved: [] }, ins: { items: [], env: { t: 'day', s: 'sommer' }, seeded: false },
+  buch: { st: {} }, wes: { eggs: [], list: [], warm: 0, given: 0 }, story: { read: {}, done: {}, choices: {} }, songs: [], mus: {},
   streak: { n: 0, last: '', best: 0 }, tests: [],
   stats: { q: 0, c: 0, fixed: 0, bought: 0, goalDays: 0, blocks: 0, perfect: 0, decks: 0, rounds: 0 },
-  daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false },
-  cfg: { goal: 20, limitMin: 0 }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
+  daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
+  goal: null, earned: [], mig3: 1,
+  cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {} }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
 });
 function mergeState(raw) {
   const d = DEF();
@@ -48,12 +58,23 @@ function mergeState(raw) {
   if (!d.owned.theme.includes('sonne')) d.owned.theme.push('sonne');
   if (!d.owned.skin.includes('fuchs')) d.owned.skin.push('fuchs');
   if (!isObj(d.decks)) d.decks = {};
+  /* Angefangene oder fertige Gruppen werden NIE angefasst (auch nicht alte ohne „pts“). Nur ganz unberührte alte Gruppen
+     (keine einzige Antwort) bekommen die neuen, kniffligeren Aufgaben – dabei geht nichts verloren. */
+  for (const k of Object.keys(d.decks)) {
+    const dk = d.decks[k];
+    const untouched = dk && Array.isArray(dk.qs) && Array.isArray(dk.res) && !(dk.i > 0) && dk.res.every(r => r === null || r === undefined) && !(dk.ans || []).some(a => a);
+    if (untouched && !dk.pts) delete d.decks[k];
+  }
   if ((raw.v || 1) < 2) {                            // Übernahme von Version 1
     d.starsLife = Math.max(d.starsLife, raw.stars || 0);
     for (const k of Object.keys(d.topics)) {
       const t = d.topics[k]; if (t.medal === undefined) t.medal = !t.rounds ? 0 : t.best3 >= 10 ? 4 : t.best3 >= 7 ? 3 : (t.maxLvl >= 2 ? 2 : 1);
     }
   }
+  /* Version 3: Flammen sind keine Währung mehr (1 Flamme = 3 Münzen). Einmalig umgerechnet, nichts geht verloren. */
+  if (!raw.mig3) { if (d.flames > 0) { d.coins += d.flames * 3; } d.flames = 0; d.mig3 = 1; }
+  if (!isObj(d.daily.cr)) d.daily.cr = { left: 0, grants: 0, used: 0, lvl: false, goal: false };
+  if (!Array.isArray(d.earned)) d.earned = [];
   d.v = 2;
   return d;
 }
@@ -125,47 +146,104 @@ function makeQ(tid, lvl, seen) {
   return q;
 }
 function newDeck(key) {
-  const qs = [], seen = new Set();
-  for (let L = 1; L <= BLOCKS; L++) for (let i = 0; i < BLOCK; i++) qs.push(makeQ(key, L, seen));
-  return { qs, res: Array(DECK_N).fill(null), ans: Array(DECK_N).fill(null), i: 0, ts: Date.now() };
+  const qs = [], lv = [], seen = new Set();
+  BLOCK_LEVELS.forEach(([lo, hi]) => {
+    const A = [], B = [];
+    for (let i = 0; i < BLOCK / 2; i++) { A.push(makeQ(key, lo, seen)); B.push(makeQ(key, hi, seen)); }
+    for (let i = 0; i < BLOCK / 2; i++) { qs.push(A[i], B[i]); lv.push(lo, hi); }          // leicht, schwer, leicht, schwer …
+  });
+  return { v: 2, qs, lv, pts: lv.map(ptsForLevel), res: Array(DECK_N).fill(null), ans: Array(DECK_N).fill(null), i: 0, ts: Date.now() };
+}
+function newScheme(key) {                              // einmalig beim Wechsel auf das neue Punktesystem: Bestwerte neu starten
+  const t = topicRec(key);
+  if (t.scheme !== 2) { t.scheme = 2; t.cb = [0, 0, 0]; t.sb = [0, 0, 0]; }
 }
 function getDeck(key) {
   let d = S.decks[key];
-  if (!d || !Array.isArray(d.qs) || d.qs.length !== DECK_N) { d = S.decks[key] = newDeck(key); save(); }
+  if (!d || !Array.isArray(d.qs) || d.qs.length !== DECK_N) { newScheme(key); d = S.decks[key] = newDeck(key); save(); }
   return d;
 }
-const ptsOf = r => r === 'first' ? 2 : r === 'second' ? 1 : 0;
-const deckPts = d => d ? d.res.reduce((a, r) => a + ptsOf(r), 0) : 0;
+/* Punkte: 1. Versuch = voll, 2. Versuch/Tipp = halb (abgerundet), Lösung gezeigt = 0. Alte Gruppen (ohne pts) zählen 2 je Aufgabe. */
+const qPts = (d, i) => (d && d.pts && d.pts[i] != null) ? d.pts[i] : 2;
+const ptsOf = (r, p) => r === 'first' ? p : r === 'second' ? Math.floor(p / 2) : 0;
+const deckPts = d => d ? d.res.reduce((a, r, i) => a + ptsOf(r, qPts(d, i)), 0) : 0;
 const blockRange = b => [b * BLOCK, b * BLOCK + BLOCK];
-const blockPts = (d, b) => d ? d.res.slice(...blockRange(b)).reduce((a, r) => a + ptsOf(r), 0) : 0;
+const blockPts = (d, b) => d ? d.res.slice(...blockRange(b)).reduce((a, r, k) => a + ptsOf(r, qPts(d, b * BLOCK + k)), 0) : 0;
+const blockMax = (d, b) => { if (!d) return NEW_BLOCK_MAX[b]; let m = 0; for (let k = 0; k < BLOCK; k++) m += qPts(d, b * BLOCK + k); return m; };
+const deckMax = d => [0, 1, 2].reduce((a, b) => a + blockMax(d, b), 0);
 const blockDone = (d, b) => !!d && d.res.slice(...blockRange(b)).every(r => r !== null);
-const blockStarsOf = p => p >= 18 ? 3 : p >= 14 ? 2 : p >= 10 ? 1 : 0;
+const starNeed = (max, n) => Math.ceil(max * (n === 3 ? .9 : n === 2 ? .7 : .5));              // 90 % / 70 % / 50 %
+const blockStarsOf = (p, max) => p >= starNeed(max, 3) ? 3 : p >= starNeed(max, 2) ? 2 : p >= starNeed(max, 1) ? 1 : 0;
 const deckWrong = (d, b) => {                          // Indizes der nicht auf Anhieb richtigen Aufgaben
   const out = []; if (!d) return out;
   const [a, z] = b == null ? [0, DECK_N] : blockRange(b);
   for (let i = a; i < z; i++) if (d.res[i] === 'second' || d.res[i] === 'fail') out.push(i);
   return out;
 };
-function resetDeck(key) { S.decks[key] = newDeck(key); topicRec(key).resets++; save(); }
+function resetDeck(key) { newScheme(key); S.decks[key] = newDeck(key); topicRec(key).resets++; save(); }
+/* Neue Runde: nur möglich, wenn alle 30 Aufgaben einer Gruppe geschafft sind (sonst könnte man die schweren Aufgaben
+   immer wieder umgehen). Medaille, Pokale, Sterne und Münzen im Geldbeutel bleiben. Neue Aufgaben = neue Belohnungen. */
+const deckFinished = d => !!d && d.i >= DECK_N && d.res.every(r => r !== null);
+function newRound(key) {
+  const d = S.decks[key]; if (!deckFinished(d)) return false;
+  const t = topicRec(key);
+  (t.hist = Array.isArray(t.hist) ? t.hist : []).push({ ts: Date.now(), done: t.doneTs || 0, pts: deckPts(d), max: deckMax(d) }); if (t.hist.length > 40) t.hist.shift();
+  t.doneTs = 0; t.round = (t.round || 1) + 1; t.scheme = 2; t.cb = [0, 0, 0]; t.sb = [0, 0, 0]; t.revPaid = 0;
+  ['c0', 'c1', 'c2'].forEach(f => delete t.fl[f]);     // Truhen für gute Stufen gibt es in jeder Runde neu
+  S.decks[key] = newDeck(key); save(); return true;
+}
+const bestRound = key => { const t = S.topics[key], d = S.decks[key]; let m = 0; ((t && t.hist) || []).forEach(h => { m = Math.max(m, h.pts); }); if (deckFinished(d)) m = Math.max(m, deckPts(d)); return m; };
 
 /* ---------- rewards ---------- */
 function touchDay() {
   const t = ymd();
-  if (S.daily.d !== t) S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false };
+  if (S.daily.d !== t) S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } };
+  if (!S.daily.cr) S.daily.cr = { left: 0, grants: 0, used: 0, lvl: false, goal: false };
 }
 const streakNow = () => (S.streak.last === ymd() || S.streak.last === yesterday()) ? S.streak.n : 0;
-function giveCoins(n) {
+/* Protokoll „Neu verdient“: jede Belohnung nennt ihren Grund */
+function noteEarn(ic, text) { S.earned.unshift({ ic, text, ts: Date.now() }); if (S.earned.length > 12) S.earned.length = 12; }
+function giveCoins(n, why) {
   if (!n) return;
+  if (why) noteEarn('🪙', `+${n} Münzen · ${why}`);
   S.coins += n; S.life += n;
   const L = levelInfo();
   if (L.n > S.lastLevel) { S.lastLevel = L.n; toast(L.badge, `Neue Stufe: ${L.n} – ${L.title}!`); confetti(90); }
 }
 function giveStars(n) { if (n > 0) { S.stars += n; S.starsLife += n; } }
-function giveFlames(n) { if (n > 0) { S.flames += n; S.flamesLife += n; } }
+function giveFlames(n, why) { if (n > 0) { S.flamesLife += n; giveCoins(n * 3, why); } }        // Flammen sind nur noch eine Anzeige (Serie); der Gegenwert kommt als Münzen
 function giveChest() {
-  if (S.chests + Object.keys(S.cards).length >= CARDS.length) return false;
-  S.chests++; toast('📦', 'Neue Schatztruhe! Öffne sie im Sammelalbum.'); return true;
+  S.chests++; noteEarn('🃏', 'Eine neue Karte wartet in der Schatzkammer'); return true;
 }
+/* ---------- Mini-Test: pro Tag zählt das BESTE Ergebnis ----------
+   Ein späterer, besserer Test zahlt nur die Differenz zur schon bezahlten Stufe (wie die Block-Gutschriften).
+   Max. pro Tag unverändert: 10 Münzen + 3 Sterne + 1 Karte. Ein schwacher erster Test verbraucht nichts mehr.
+   S.daily.tp = { c, s, ch } = heute schon bezahlt. Alter Stand (nur testRewarded) zählt als „alles bezahlt“. */
+const TEST_TIERS = [[13, 10, 3, true], [12, 6, 2, true], [10, 6, 2, false], [7, 3, 1, false]];
+const TEST_MAX = { c: 10, s: 3, ch: true };
+function testTier(score) { const t = TEST_TIERS.find(x => score >= x[0]); return t ? { c: t[1], s: t[2], ch: t[3] } : { c: 0, s: 0, ch: false }; }
+function testPaid() { touchDay(); const d = S.daily; if (!d.tp) d.tp = d.testRewarded ? Object.assign({}, TEST_MAX) : { c: 0, s: 0, ch: false }; return d.tp; }
+function testLeft() { const p = testPaid(); return { c: TEST_MAX.c - p.c, s: TEST_MAX.s - p.s, ch: !p.ch }; }
+function payTest(score) {
+  const p = testPaid(), t = testTier(score), r = { c: Math.max(0, t.c - p.c), s: Math.max(0, t.s - p.s), ch: t.ch && !p.ch };
+  p.c += r.c; p.s += r.s; p.ch = p.ch || r.ch;
+  giveCoins(r.c, 'Mini-Test'); giveStars(r.s); r.chest = r.ch ? giveChest() : false;
+  S.daily.testRewarded = p.c >= TEST_MAX.c && p.s >= TEST_MAX.s && p.ch;
+  return r;
+}
+/* ---------- Kreativzeit: nach dem Üben öffnet sich ein kurzes Zeitfenster ---------- */
+function creativeMode() { return (S.cfg && S.cfg.creativeMode) || 'after'; }
+function grantCreative(kind) {
+  touchDay(); const c = S.daily.cr, m = creativeMode();
+  if (m !== 'after' || c[kind]) return false;
+  if (c.grants >= (S.cfg.creativeMax || 2)) return false;
+  c[kind] = true; c.grants++; c.left += Math.max(1, S.cfg.creativeMin || 5) * 60;
+  noteEarn('🎨', `Kreativzeit: ${S.cfg.creativeMin || 5} Minuten`);
+  toast('🎨', `Geschafft! ${S.cfg.creativeMin || 5} Minuten Kreativzeit warten auf dich.`); return true;
+}
+const creativeLeft = () => { touchDay(); return S.daily.cr.left; };
+const creativeOK = () => { const m = creativeMode(); return m === 'always' || (m === 'after' && creativeLeft() > 0) || (UI.pinCreative && Date.now() < UI.pinCreative); };
+const shopLeft = () => { touchDay(); const lim = (S.cfg.shopMin || 0) * 60; return lim ? Math.max(0, lim - (S.daily.shopSec || 0)) : Infinity; };
 function addLog(correct) {
   const t = ymd(); const e = S.log[t] || (S.log[t] = { n: 0, c: 0 });
   e.n++; if (correct) e.c++;
@@ -178,8 +256,8 @@ function dailyCheck() {
     S.daily.got = true; S.stats.goalDays++;
     S.streak.n = S.streak.last === yesterday() ? S.streak.n + 1 : 1; S.streak.last = ymd(); S.streak.best = Math.max(S.streak.best || 0, S.streak.n);
     const n = S.streak.n; let fl = 1; if (n === 3) fl += 1; else if (n === 7) fl += 3; else if (n === 14) fl += 5; else if (n % 30 === 0) fl += 10;
-    giveFlames(fl); giveChest();
-    toast('🎯', `Tagesziel geschafft! +${fl} 🔥${n > 1 ? ' · Serie: ' + n + ' Tage' : ''}`); confetti(70);
+    giveFlames(fl, 'Tagesziel geschafft'); giveChest(); grantCreative('goal');
+    toast('🎯', `Tagesziel geschafft!${n > 1 ? ' Serie: ' + n + ' Tage' : ''}`); confetti(70);
   }
 }
 function addMistake(tid, q, ans) {
@@ -200,28 +278,38 @@ function noteAnswer(tid, firstTry) {
   S.lastActive = today;
 }
 
-/* credit points of one answered deck question (max. 20 per block, 60 per group – fest!) */
+/* credit points of one answered deck question (pro Runde nie mehr als der Block-Höchstwert) */
+const REV_DAYS = 7, REV_CAP = 15;                                        // Wiederholung einer fertigen Gruppe: frühestens nach 7 Tagen, höchstens 15 Münzen pro Runde
+function repeatState(t) {
+  const h = Array.isArray(t.hist) ? t.hist : []; if (!h.length) return null;                 // erste Runde: normal
+  const last = h[h.length - 1], days = (Date.now() - (last.done !== undefined ? last.done : last.ts)) / 864e5;
+  return { ok: days >= REV_DAYS, paid: t.revPaid || 0 };
+}
 function creditDeckAnswer(key, d, i) {
-  const t = topicRec(key), b = Math.floor(i / BLOCK), now = blockPts(d, b);
-  const delta = Math.max(0, now - (t.cb[b] || 0));
-  if (delta > 0) { t.cb[b] = now; giveCoins(delta); }
+  const t = topicRec(key), b = Math.floor(i / BLOCK), now = blockPts(d, b), rs = repeatState(t);
+  let delta = Math.max(0, now - (t.cb[b] || 0));
+  if (rs) { delta = rs.ok ? Math.min(delta, Math.max(0, REV_CAP - rs.paid)) : 0; if (delta > 0) t.revPaid = rs.paid + delta; t.cb[b] = now; }
+  else if (delta > 0) t.cb[b] = now;
+  if (delta > 0) giveCoins(delta, rs ? 'Wiederholt nach ein paar Tagen' : 'Gelöste Aufgaben');
   return delta;
 }
 function completeBlock(key, d, b) {
-  const t = topicRec(key), pts = blockPts(d, b), stars = blockStarsOf(pts);
-  const dStars = Math.max(0, stars - (t.sb[b] || 0)); if (dStars) { t.sb[b] = stars; giveStars(dStars); }
+  const t = topicRec(key), pts = blockPts(d, b), stars = blockStarsOf(pts, blockMax(d, b));
+  const rs0 = repeatState(t), dStars0 = Math.max(0, stars - (t.sb[b] || 0)), dStars = rs0 && !rs0.ok ? 0 : dStars0; if (dStars0) { t.sb[b] = stars; giveStars(dStars); }
+  if (!rs0 || rs0.ok) grantCreative('lvl');
   let chest = false;
   if (!t.fl['d' + b]) { t.fl['d' + b] = 1; S.stats.blocks++; }
-  if (pts === PTS_BLOCK && !t.fl['p' + b]) { t.fl['p' + b] = 1; S.stats.perfect++; }
-  if (stars >= 2 && !t.fl['c' + b]) { t.fl['c' + b] = 1; chest = giveChest(); }
+  if (pts === blockMax(d, b) && !t.fl['p' + b]) { t.fl['p' + b] = 1; S.stats.perfect++; }
+  if (stars >= 2 && !t.fl['c' + b] && (!rs0 || rs0.ok)) { t.fl['c' + b] = 1; chest = giveChest(); }
   t.medal = Math.max(t.medal, b + 1);
   let deckDone = false;
   if (d.i >= DECK_N && d.res.every(r => r !== null)) {
     deckDone = true;
+    t.doneTs = Date.now();
     if (!t.fl.deck) { t.fl.deck = 1; S.stats.decks++; if (giveChest()) chest = true; }
-    if (deckPts(d) >= 54) t.medal = 4;
+    if (deckPts(d) >= Math.ceil(deckMax(d) * .9)) t.medal = 4;
   }
-  return { b, pts, stars, dStars, chest, deckDone, firsts: d.res.slice(...blockRange(b)).filter(r => r === 'first').length, medal: t.medal };
+  return { b, pts, max: blockMax(d, b), stars, dStars, chest, deckDone, firsts: d.res.slice(...blockRange(b)).filter(r => r === 'first').length, medal: t.medal };
 }
 
 /* ---------- trophies ---------- */
@@ -256,13 +344,19 @@ function trophyList() {
     { id: 'test13', i: '🎓', n: 'Test-Profi', d: 'Mini-Test mit mindestens 13 von 15', t: s => s.tests.some(x => x.score >= 13) },
     { id: 'test15', i: '🏆', n: 'Perfekter Test', d: 'Mini-Test mit 15 von 15', t: s => s.tests.some(x => x.score >= x.total) },
     { id: 'gold', i: '🥇', n: 'Goldmedaille', d: 'Gold in einer Gruppe', t: () => allTopics().some(x => medalOf(x.key) >= 3) },
-    { id: 'dia', i: '💎', n: 'Diamant', d: 'Diamant in einer Gruppe (mindestens 54 von 60 Punkten)', t: () => allTopics().some(x => medalOf(x.key) >= 4) },
+    { id: 'dia', i: '💎', n: 'Diamant', d: 'Diamant in einer Gruppe (mindestens 90 % der Punkte)', t: () => allTopics().some(x => medalOf(x.key) >= 4) },
     { id: 'shop1', i: '🛍️', n: 'Erster Einkauf', d: 'Etwas im Shop gekauft', t: s => s.stats.bought >= 1 },
     { id: 'shop6', i: '🎁', n: 'Großeinkauf', d: '6 Dinge im Shop gekauft', t: s => s.stats.bought >= 6 },
     { id: 'shop12', i: '👑', n: 'Shop-König', d: '12 Dinge im Shop gekauft', t: s => s.stats.bought >= 12 },
-    { id: 'card10', i: '📚', n: 'Kleiner Sammler', d: '10 Karten im Sammelalbum', t: s => Object.keys(s.cards).length >= 10 },
-    { id: 'card30', i: '📖', n: 'Großer Sammler', d: '30 Karten im Sammelalbum', t: s => Object.keys(s.cards).length >= 30 },
-    { id: 'cardall', i: '🏛️', n: 'Albumkönig', d: 'Das ganze Sammelalbum voll', t: s => Object.keys(s.cards).length >= CARDS.length },
+    { id: 'card10', i: '📚', n: 'Kleiner Sammler', d: '10 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 10 },
+    { id: 'card30', i: '📖', n: 'Großer Sammler', d: '30 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 30 },
+    { id: 'cardall', i: '🏛️', n: 'Schatzkönig', d: '100 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 100 },
+    { id: 'card250', i: '🗝️', n: 'Schatzmeister', d: '250 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 250 },
+    { id: 'stp1', i: '🔖', n: 'Erster Stempel', d: 'Den ersten Stempel im Buch bekommen', t: s => Object.keys(s.stamps || {}).length >= 1 },
+    { id: 'stp10', i: '📔', n: 'Stempel-Sammler', d: '10 Stempel im Buch', t: s => Object.keys(s.stamps || {}).length >= 10 },
+    { id: 'wes1', i: '🥚', n: 'Erstes Wesen', d: 'Ein Ei ausgebrütet', t: s => s.starsLife >= 3 },
+    { id: 'wes5', i: '🐲', n: 'Wesen-Freundin', d: '5 Wesen ausgebrütet', t: s => s.starsLife >= 46 },
+    { id: 'ins10', i: '🏝️', n: 'Inselbaumeister', d: '10 Gruppen geschafft – deine Insel wächst', t: s => s.stats.decks >= 10 },
     { id: 'fix10', i: '🔍', n: 'Fehler-Detektiv', d: '10 Aufgaben aus dem Fehler-Heft gelöst', t: s => s.stats.fixed >= 10 },
     { id: 'fix30', i: '🕵️', n: 'Meisterdetektiv', d: '30 Aufgaben aus dem Fehler-Heft gelöst', t: s => s.stats.fixed >= 30 },
     { id: 'owl', s: 1, i: '🦉', n: 'Nachteule', d: 'Am späten Abend geübt (nach 19:30 Uhr)', t: s => !!s.stats.night },
@@ -273,9 +367,9 @@ function trophyList() {
     { id: 'blitz', s: 1, i: '⚡', n: 'Blitzschnell', d: 'Mini-Test mit mindestens 13 richtigen und mehr als 6 Minuten übrig', t: s => !!s.stats.blitz }
   ];
   MODULES.forEach(m => {
-    L.push({ id: m.id + '_e', i: m.icon, n: `${m.id}-Entdecker`, d: `In allen Gruppen von ${m.id} angefangen`, t: () => m.topics.every(t => (S.decks[tk(m.id, t.id)] || { i: 0 }).i > 0) });
-    L.push({ id: m.id + '_m', i: '🏰', n: `${m.id}-Meister`, d: `Alle Gruppen von ${m.id} mit Gold`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 3) });
-    L.push({ id: m.id + '_d', i: '💠', n: `${m.id}-Diamant`, d: `Alle Gruppen von ${m.id} mit Diamant`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 4) });
+    L.push({ id: m.id + '_e', i: m.icon, n: `${m.title}: Entdecker`, d: `In allen Gruppen von „${m.title}“ angefangen`, t: () => m.topics.every(t => (S.decks[tk(m.id, t.id)] || { i: 0 }).i > 0) });
+    L.push({ id: m.id + '_m', i: '🏰', n: `${m.title}: Meister`, d: `Alle Gruppen von „${m.title}“ mit Gold`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 3) });
+    L.push({ id: m.id + '_d', i: '💠', n: `${m.title}: Diamant`, d: `Alle Gruppen von „${m.title}“ mit Diamant`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 4) });
   });
   return L;
 }
@@ -283,6 +377,7 @@ function checkTrophies() {
   let any = false;
   trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; toast(t.i, `Neuer Pokal: ${t.n}`); } });
   if (any) confetti(60);
+  if (typeof checkUnlocks === 'function') checkUnlocks();
 }
 
 /* ---------- answer checking ---------- */

@@ -1,0 +1,32 @@
+/* ===== Schatzkammer ===== */
+.tkopen{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.tcard{--c1:#E9E4FF;--c2:#CFC6FF;--ci:#4B3CC4;display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:var(--card);border:1px solid var(--line);position:relative}
+.tcard.tn0{--c1:#EDE8FF;--c2:#C9BFFF;--ci:#4B3CC4}
+.tcard.tn1{--c1:#DDF6EA;--c2:#A9E6C9;--ci:#14744E}
+.tcard.tn2{--c1:#FFE9DB;--c2:#FFC6A3;--ci:#B2481A}
+.tcard.tn3{--c1:#E1EEFF;--c2:#B3D2FF;--ci:#2358B5}
+.tcard.tn4{--c1:#FFF4C4;--c2:#FFDD7A;--ci:#8A5E00}
+.tcard.tn5{--c1:#E8F1D6;--c2:#C4DE98;--ci:#47701A}
+.tpic{position:relative;height:132px;background:var(--c1);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tpic.big{height:170px}
+.tpic i{position:absolute;border-radius:50%;background:rgba(255,255,255,.45)}
+.tpic .d1{width:120px;height:120px;left:-30px;top:-44px}
+.tpic .d2{width:70px;height:70px;right:-14px;bottom:-20px;background:rgba(255,255,255,.35)}
+.tpic .d3{width:26px;height:26px;right:40px;top:16px;background:rgba(255,255,255,.6)}
+.tpic .te{position:relative;font-size:4.2rem;line-height:1}
+.tpic .te svg{width:96px;height:96px}
+.tty{position:absolute;left:12px;top:12px;font-size:.74rem;font-weight:800;color:var(--ci);background:rgba(255,255,255,.78);border-radius:99px;padding:3px 10px;display:inline-flex;gap:4px;align-items:center}
+.ty-witz .tpic .d1{border-radius:30%;transform:rotate(18deg)}
+.ty-raetsel .tpic .d2,.ty-frage .tpic .d2{border-radius:22%;transform:rotate(-14deg)}
+.tbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.tq{font-weight:700;line-height:1.38}
+.ta{background:var(--soft);border-radius:14px;padding:9px 12px;font-weight:600;border-left:4px solid var(--ci)}
+.tnote{font-size:.82rem;color:var(--mute);font-weight:700}
+.tcard.hot{border-color:var(--pri);animation:cardin .5s ease}
+@keyframes cardin{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+.rvh{display:flex;align-items:center;gap:8px;margin:8px 4px 10px;color:var(--pri)}
+.rvcard{max-width:340px;margin:0 auto 22px}
+
+.tpic .te .ithumb{font-size:inherit}
+.tkopen .sp{min-width:200px}

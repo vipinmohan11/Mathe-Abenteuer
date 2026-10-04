@@ -1,0 +1,10 @@
+/* ===== Wesen ===== */
+.wes-detail{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.wes-i{display:inline-block;line-height:1;transform-origin:50% 100%}
+.wes-i.st1{transform:scale(.72)}.wes-i.st2{transform:scale(.9)}.wes-i.st3{transform:scale(1.08)}
+.wd-art{width:140px;height:140px;display:flex;align-items:center;justify-content:center;background:var(--soft);border-radius:34px;flex:none}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.wtile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:112px;padding:14px 8px;border-radius:20px;background:var(--card);border:1.5px solid var(--line)}
+.wtile.on{border-color:var(--pri);background:var(--soft)}
+.wtile.lk{background:transparent;border-style:dashed;color:var(--mute)}
+.wtile b{font-size:.88rem;text-align:center;line-height:1.1}

@@ -27,12 +27,12 @@ function eyes(m, x1, x2, y, r, col) {
 }
 function mouth(m, x, y, w, col) {
   col = col || INK;
-  if (m === 'cheer') return `<path d="M${x - w} ${y - w * .2} Q${x} ${y + w * 1.6} ${x + w} ${y - w * .2} Z" fill="#7a2e3a"/><ellipse cx="${x}" cy="${y + w * .75}" rx="${w * .5}" ry="${w * .3}" fill="#ff8fa3"/>`;
+  if (m === 'cheer') return `<path d="M${x - w} ${y - w * .2} Q${x} ${y + w * 1.6} ${x + w} ${y - w * .2} Z" fill="#7a2e3a"/><ellipse cx="${x}" cy="${y + w * .75}" rx="${w * .5}" ry="${w * .3}" fill="#e9a15a"/>`;
   if (m === 'sad') return `<path d="M${x - w * .8} ${y + w * .6} Q${x} ${y - w * .4} ${x + w * .8} ${y + w * .6}" fill="none" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/>`;
   if (m === 'think') return `<path d="M${x - w * .6} ${y + 2} q${w * .3} ${-w * .35} ${w * .6} 0 t${w * .6} 0" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/>`;
   return `<path d="M${x - w} ${y} Q${x} ${y + w * 1.0} ${x + w} ${y}" fill="none" stroke="${col}" stroke-width="3.5" stroke-linecap="round"/>`;
 }
-const blush = (x1, x2, y, c) => `<ellipse cx="${x1}" cy="${y}" rx="9" ry="5.5" fill="${c || '#ff9aa8'}" opacity=".55"/><ellipse cx="${x2}" cy="${y}" rx="9" ry="5.5" fill="${c || '#ff9aa8'}" opacity=".55"/>`;
+const blush = (x1, x2, y, c) => `<ellipse cx="${x1}" cy="${y}" rx="9" ry="5.5" fill="${c || '#e9a15a'}" opacity=".55"/><ellipse cx="${x2}" cy="${y}" rx="9" ry="5.5" fill="${c || '#e9a15a'}" opacity=".55"/>`;
 const arms = (m, col, y) => m === 'cheer'
   ? `<ellipse cx="58" cy="${y - 28}" rx="10" ry="17" transform="rotate(30 58 ${y - 28})" fill="${col}"/><ellipse cx="142" cy="${y - 28}" rx="10" ry="17" transform="rotate(-30 142 ${y - 28})" fill="${col}"/>`
   : `<ellipse cx="62" cy="${y}" rx="10" ry="17" transform="rotate(14 62 ${y})" fill="${col}"/><ellipse cx="138" cy="${y}" rx="10" ry="17" transform="rotate(-14 138 ${y})" fill="${col}"/>`;
@@ -107,7 +107,7 @@ const SKINS = {
       <path d="M100 46 v14 M86 48 l3 12 M114 48 l-3 12" stroke="${d}" stroke-width="5" stroke-linecap="round"/>
       <ellipse cx="100" cy="106" rx="26" ry="17" fill="${w}"/>
       ${eyes(m, 78, 122, 88, 6.5)}
-      <path d="M94 98 L106 98 L100 105Z" fill="#ff8fa3" stroke="#ff8fa3" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M94 98 L106 98 L100 105Z" fill="#e9a15a" stroke="#e9a15a" stroke-width="2" stroke-linejoin="round"/>
       ${mouth(m, 100, 108, 8)}
       <path d="M60 100 L36 94 M60 108 L36 110 M140 100 L164 94 M140 108 L164 110" stroke="${d}" stroke-width="2.5" stroke-linecap="round"/>
       ${blush(66, 134, 104)}`;
@@ -135,7 +135,7 @@ const SKINS = {
       <rect x="36" y="82" width="12" height="26" rx="6" fill="${d}"/><rect x="152" y="82" width="12" height="26" rx="6" fill="${d}"/>
       <rect x="56" y="70" width="88" height="56" rx="18" fill="${s}"/>
       ${face}
-      <circle cx="62" cy="116" r="3" fill="#ff9aa8"/><circle cx="138" cy="116" r="3" fill="#ff9aa8"/>`;
+      <circle cx="62" cy="116" r="3" fill="#e9a15a"/><circle cx="138" cy="116" r="3" fill="#e9a15a"/>`;
     }
   },
   drache: {
@@ -318,13 +318,15 @@ const CUR = { c: { ic: '🪙', n: 'Münzen' }, s: { ic: '⭐', n: 'Sterne' }, f:
 const SHOP = {
   theme: {
     label: 'Farben', icon: '🎨', none: false, items: [
-      { id: 'sonne', name: 'Sonnenschein', cur: 'c', price: 0, c: ['#FFF3C4', '#FFB703', '#FB8500'] },
-      { id: 'ocean', name: 'Ozean', cur: 'c', price: 40, c: ['#D9F0FF', '#2D9CDB', '#1565C0'] },
-      { id: 'wald', name: 'Wald', cur: 'c', price: 60, c: ['#E3F6D8', '#43A047', '#2E7D32'] },
-      { id: 'sunset', name: 'Sonnenuntergang', cur: 'c', price: 90, c: ['#FFE0E6', '#F25C7A', '#8E44AD'] },
-      { id: 'nacht', name: 'Sternennacht', cur: 'c', price: 120, c: ['#1E2447', '#7C83FF', '#FFD166'] },
-      { id: 'regen', name: 'Regenbogen', cur: 'c', price: 160, c: ['#FFD6E8', '#8C7BFF', '#3DD6A6'] },
-      { id: 'tuerkis', name: 'Türkis-Blau (Finale Farbe)', cur: 'f', price: 15, c: ['#D8FAF6', '#19B7C2', '#0E8C9A'] }
+      // HINWEIS: Die ID 'sonne' wird als „Himmelblau“ angezeigt. ID NICHT umbenennen – Besitz und gespeichertes Theme hängen daran.
+      { id: 'sonne', name: 'Himmelblau', cur: 'c', price: 0, c: ['#1764d5', '#4197ec', '#ffda55'] },
+      { id: 'butter', name: 'Sonnenschein', cur: 'c', price: 30, c: ['#976000', '#ddaa37', '#ffe7a0'] },
+      { id: 'ocean', name: 'Ozean', cur: 'c', price: 40, c: ['#006caa', '#3fb7e4', '#b4f0ea'] },
+      { id: 'wald', name: 'Wald', cur: 'c', price: 60, c: ['#18734a', '#5fb576', '#d4ef84'] },
+      { id: 'sunset', name: 'Sonnenuntergang', cur: 'c', price: 90, c: ['#b34b16', '#f39742', '#ffdc86'] },
+      { id: 'nacht', name: 'Sternennacht', cur: 'c', price: 120, c: ['#526ab9', '#829ce3', '#d2ddff'] },
+      { id: 'regen', name: 'Regenbogen', cur: 'c', price: 160, c: ['#5148b4', '#8982dc', '#e0d8ff'] },
+      { id: 'tuerkis', name: 'Türkis-Blau (Finale Farbe)', cur: 'f', price: 15, c: ['#087e89', '#21acb5', '#b4efdc'] }
     ]
   },
   skin: {
@@ -362,6 +364,41 @@ const SHOP = {
   frame: {
     label: 'Rahmen', icon: '🖼️', none: true, items: [
       { id: 'gold', name: 'Goldrahmen', cur: 'f', price: 3 }, { id: 'regen', name: 'Regenbogen', cur: 'f', price: 6 }, { id: 'sterne', name: 'Sternenrahmen', cur: 'f', price: 10 }
+    ]
+  },
+  /* Fino-Insel: viele Dinge zum Sammeln und Sparen – damit es immer ein nächstes Ziel gibt. Sie werden nicht „benutzt“, sondern wachsen auf der Insel. */
+  insel: {
+    label: 'Fino-Insel', icon: '🏝️', none: false, multi: true, items: [
+      { id: 'palme', name: 'Palme', e: '🌴', cur: 'c', price: 30 },
+      { id: 'sonnenblume', name: 'Sonnenblumen', e: '🌻', cur: 'c', price: 35 },
+      { id: 'pilze', name: 'Pilzwiese', e: '🍄', cur: 'c', price: 40 },
+      { id: 'drachen', name: 'Drachen', e: '🪁', cur: 'c', price: 50 },
+      { id: 'zelt', name: 'Zeltplatz', e: '⛺', cur: 'c', price: 60 },
+      { id: 'huette', name: 'Hütte', e: '🏠', cur: 'c', price: 80 },
+      { id: 'kanu', name: 'Kanu', e: '🛶', cur: 'c', price: 90 },
+      { id: 'brunnen', name: 'Brunnen', e: '⛲', cur: 'c', price: 100 },
+      { id: 'teich', name: 'Fischteich', e: '🐠', cur: 'c', price: 110 },
+      { id: 'regenbogen', name: 'Regenbogen', e: '🌈', cur: 'c', price: 120 },
+      { id: 'bienen', name: 'Bienenstock', e: '🐝', cur: 'c', price: 130 },
+      { id: 'apfel', name: 'Apfelbaum', e: '🍎', cur: 'c', price: 140 },
+      { id: 'zirkus', name: 'Zirkuszelt', e: '🎪', cur: 'c', price: 160 },
+      { id: 'schildkroete', name: 'Schildkröten-Strand', e: '🐢', cur: 'c', price: 170 },
+      { id: 'burg', name: 'Burg', e: '🏰', cur: 'c', price: 200 },
+      { id: 'segelboot', name: 'Segelboot', e: '⛵', cur: 'c', price: 220 },
+      { id: 'riesenrad', name: 'Riesenrad', e: '🎡', cur: 'c', price: 250 },
+      { id: 'leuchtturm', name: 'Leuchtturm', e: '🗼', cur: 'c', price: 270 },
+      { id: 'eisenbahn', name: 'Eisenbahn', e: '🚂', cur: 'c', price: 300 },
+      { id: 'vulkan', name: 'Vulkan', e: '🌋', cur: 'c', price: 320 },
+      { id: 'dino', name: 'Dino-Park', e: '🦕', cur: 'c', price: 350 },
+      { id: 'ufo', name: 'Ufo-Landeplatz', e: '🛸', cur: 'c', price: 380 },
+      { id: 'rakete', name: 'Raketenstation', e: '🚀', cur: 'c', price: 420 },
+      { id: 'sternwarte', name: 'Sternwarte', e: '🔭', cur: 'c', price: 450 },
+      { id: 'tempel', name: 'Tempel', e: '🏯', cur: 'c', price: 480 },
+      { id: 'drachenhoehle', name: 'Drachenhöhle', e: '🐉', cur: 'c', price: 520 },
+      { id: 'planeten', name: 'Planeten-Garten', e: '🪐', cur: 'c', price: 560 },
+      { id: 'denkmal', name: 'Mathe-Denkmal', e: '🏆', cur: 'c', price: 600 },
+      { id: 'sternenturm', name: 'Sternen-Turm', e: '🌟', cur: 'c', price: 700 },
+      { id: 'schloss', name: 'Königsschloss', e: '👑', cur: 'c', price: 800 }
     ]
   }
 };

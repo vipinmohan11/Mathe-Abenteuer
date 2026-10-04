@@ -12,7 +12,7 @@ with sync_playwright() as p:
     svg = pg.evaluate("()=>__app.mascotSVG({skin:'fino',hat:null,extra:null,bg:null,mood:'happy'})")
     for name, scale in [('icon-512.png', 0.92), ('icon-maskable-512.png', 0.66)]:   # maskable = bigger safe zone
         size = int(512 * scale)
-        pg.set_content(f"<body style='margin:0;width:512px;height:512px;background:radial-gradient(circle at 50% 35%,#FFE9B0,#FFB703);"
+        pg.set_content(f"<body style='margin:0;width:512px;height:512px;background:radial-gradient(circle at 50% 35%,#7fc0ff,#1764d5);"
                        f"display:flex;align-items:center;justify-content:center;overflow:hidden'><div style='width:{size}px;height:{size}px'>{svg}</div>"
                        "<style>svg{width:100%;height:100%}</style>")
         pg.wait_for_timeout(300); pg.screenshot(path=str(root / name))

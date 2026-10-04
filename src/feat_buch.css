@@ -1,0 +1,36 @@
+/* ===== Mein Buch ===== */
+.bk-head{margin:0 0 6px}
+.bk-idx button{min-width:64px;display:flex;flex-direction:column;align-items:center;line-height:1.1;padding:4px 12px}
+.bk-idx button small{font-size:.68rem;color:var(--mute);font-weight:800}
+.bk-idx button.on{border-color:var(--pri);background:var(--soft)}
+.bk-page{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:18px}
+.bk-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.bk-t{flex:1;text-align:center}.bk-t h2{margin:2px 0 0}
+.bk-nav{width:52px;min-height:52px;padding:0;flex:none}
+.bk-prog{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.bk-stamps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.bk-st{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;min-width:0}
+.bk-st .sc{width:60px;height:60px;border-radius:50%;border:2.5px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--mute);filter:grayscale(1);opacity:.7}
+.bk-st.got .sc{border:3px solid var(--ti);background:var(--tb);filter:none;opacity:1;transform:rotate(-6deg)}
+.bk-st b{font-size:.82rem;line-height:1.1}
+.bk-st small{font-size:.66rem;color:var(--mute);line-height:1.15}
+.bk-spaces{display:grid;grid-template-columns:repeat(4,minmax(0,120px));gap:10px;justify-content:center}
+.bk-slot{aspect-ratio:1;border-radius:18px;border:2px dashed var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2.6rem;min-height:64px}
+.bk-slot i{font-style:normal;font-size:1.8rem;color:var(--mute)}
+.bk-slot.full{border-style:solid;background:var(--card)}
+.bk-slot.sel{border-color:var(--pri);box-shadow:0 0 0 3px var(--soft)}
+.bk-slot:disabled{opacity:1}
+.bk-tray{max-height:46vh;overflow-y:auto;margin-top:16px;padding-top:14px;border-top:1.5px solid var(--line)}
+@media(max-width:420px){.bk-stamps{grid-template-columns:repeat(2,1fr)}.bk-slot{font-size:2rem}}
+/* Urkunde: schlicht, druckbar */
+.urk{max-width:860px;margin:0 auto}
+.urk-in{background:#fff;border:3px double var(--pri);border-radius:18px;padding:26px 22px;text-align:center;color:#2A2457}
+.urk-top{font-size:2.2rem;font-weight:800;letter-spacing:.14em;color:var(--pri);text-transform:uppercase}
+.urk-av{display:flex;justify-content:center;margin:12px 0 6px}
+.urk-s{margin:6px 0;color:#6E6A98;font-weight:700}
+.urk-n{font-size:2.6rem;margin:2px 0}
+.urk-h{font-size:1.9rem;color:var(--pri);margin:4px 0 8px}
+.urk-st{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;font-size:1.7rem;margin:10px 0}
+.urk-ft{display:flex;justify-content:space-between;margin-top:18px;padding-top:10px;border-top:2px solid #E3DDF8;font-weight:700;color:#6E6A98;font-size:.9rem}
+@page{size:A4 landscape;margin:12mm}
+@media print{.urk-in{border-radius:0;padding:30px}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}

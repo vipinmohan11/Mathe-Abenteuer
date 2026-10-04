@@ -1,0 +1,104 @@
+/* ===== Avatar „Mein Avatar“ (alle Klassen mit av-) – ruhig, Theme-Variablen, keine Schatten ===== */
+.av-wrap{display:flex;flex-direction:column;gap:14px}
+.av-left{display:contents}
+.av-stage{order:1;position:sticky;top:0;z-index:20;margin:0 -16px;padding:6px 16px 8px;background:var(--bg);background-attachment:fixed}
+.av-tools{order:2;min-width:0}
+.av-side{order:3;padding:14px}
+.av-card{display:flex;gap:12px;align-items:center;padding:10px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
+.av-pv{position:relative;display:block;flex:none;width:130px;height:130px;border-radius:50%;padding:0;cursor:pointer}
+.av-circ{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;background:var(--soft);border:3px solid var(--line)}
+.av-circ svg{display:block;width:100%;height:100%}
+.av-mood{display:none}
+.av-bar{flex:1;min-width:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.av-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;padding:4px 2px;border-radius:16px;background:var(--soft);border:1.5px solid var(--line);font-size:.74rem;font-weight:800;color:var(--ink);line-height:1.1;transition:transform .1s}
+.av-btn .ico{color:var(--pri)}
+.av-btn:active{transform:scale(.94)}
+.av-count{display:flex;flex-direction:column;gap:2px;font-size:1.1rem}
+.av-sh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:16px 2px 8px}
+.av-sh:first-child{margin-top:2px}
+.av-sh b{font-size:1.02rem}
+.av-sub{margin:12px 2px 6px;font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.av-tip{margin:18px 2px 2px}
+.av-cats .ico{color:var(--pri);vertical-align:-5px}
+.av-cats .on .ico{color:var(--priInk)}
+.av-panel{padding:14px 14px 16px}
+.av-clear{margin:2px 0 8px}
+.av-grid{grid-template-columns:repeat(auto-fill,minmax(98px,1fr))}
+.av-grid .itile .ith{width:84px;height:84px}
+.av-grid .itile.sel .ith{background:var(--head)}
+div.itile{cursor:default}
+/* Farben: eigene als Punkte, gesperrte als Feld mit Preis */
+.av-sws{display:flex;flex-wrap:wrap;gap:9px;margin:2px 2px 6px;align-items:center}
+.av-sw{display:inline-block;position:relative;width:40px;height:40px;border-radius:50%;background:var(--c);border:2px solid rgba(0,0,0,.14);transition:transform .1s}
+button.av-sw:active{transform:scale(.92)}
+.av-sw.on{outline:3px solid var(--pri);outline-offset:2px}
+.av-lks{margin-top:4px}
+.av-chip{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:4px 12px 4px 5px;border-radius:99px;border:1.5px dashed var(--line);background:var(--card);color:var(--mute);font-size:.78rem;font-weight:800}
+.av-chip i{display:block;flex:none;width:28px;height:28px;border-radius:50%;background:var(--c);opacity:.55;border:2px solid rgba(0,0,0,.12)}
+.av-chip span{display:inline-flex;align-items:center;gap:3px}
+button.av-chip:active{transform:scale(.96)}
+/* Meine Looks */
+.av-looks{display:flex;gap:10px;overflow-x:auto;padding:4px 4px 6px;scrollbar-width:thin}
+.av-look{position:relative;flex:none}
+.av-lk{display:flex;flex-direction:column;align-items:center;gap:3px;width:62px}
+.av-lc{display:block;width:54px;height:54px;border-radius:50%;overflow:hidden;background:var(--soft);border:2px solid var(--line)}
+.av-lc svg{display:block;width:100%;height:100%}
+.av-lk i{font-style:normal;font-size:.68rem;font-weight:800;color:var(--mute);max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.av-lk:active .av-lc{transform:scale(.94)}
+.av-lk.add .av-lc{display:flex;align-items:center;justify-content:center;color:var(--pri);border:2px dashed var(--pri)}
+.av-x{position:absolute;top:-4px;right:-3px;width:24px;height:24px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--mute)}
+.av-x:hover{color:var(--bad)}
+/* Schalter */
+.av-tog{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.av-side .av-looks+.av-tog{margin-top:8px;padding-top:12px;border-top:1px solid var(--line)}
+.av-sw2{width:56px;height:32px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.av-sw2 i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .2s}
+.av-sw2.on{background:var(--pri)}
+.av-sw2.on i{transform:translateX(24px)}
+.av-mp{display:inline-block;width:96px;height:96px;border-radius:50%;overflow:hidden;margin-bottom:6px;border:3px solid var(--line)}
+.av-mp svg{display:block;width:100%;height:100%}
+.av-name{width:100%;margin-top:10px;text-align:center;font-weight:800;-webkit-user-select:text;user-select:text}
+/* Ersteinrichtung */
+.av-setup .av-stage{order:0}
+.av-setup{display:flex;flex-direction:column;gap:12px;max-width:760px;margin:0 auto}
+.av-one{justify-content:center;flex-direction:column;gap:8px}
+.av-dots{display:flex;gap:8px}
+.av-dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.av-dots i.on{background:var(--pri)}
+.av-st{margin:2px 2px 0;font-size:1.25rem}
+.av-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px}
+/* Bewegung */
+@keyframes avpop{0%{transform:scale(.6);opacity:.15}55%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+.av-pop{animation:avpop .5s cubic-bezier(.3,1.4,.5,1);transform-box:fill-box;transform-origin:50% 55%}
+@keyframes avbounce{0%{transform:scale(1)}35%{transform:scale(1.05) translateY(-5px)}70%{transform:scale(.99)}100%{transform:scale(1)}}
+.av-bounce{animation:avbounce .45s ease}
+@keyframes avshake{0%,100%{transform:rotate(0)}15%{transform:rotate(-9deg) scale(1.03)}35%{transform:rotate(8deg)}55%{transform:rotate(-6deg)}75%{transform:rotate(4deg)}}
+.av-shake{animation:avshake .48s ease}
+@keyframes avroll{to{transform:rotate(360deg)}}
+.av-roll{animation:avroll .48s ease}
+@keyframes avtw{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.78)}}
+.av-tw{animation:avtw 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){.av-pop,.av-bounce,.av-shake,.av-roll,.av-tw{animation:none}}
+/* Tablet / Laptop: große Vorschau links, Sammlung rechts */
+@media (min-width:900px){
+  .av-wrap{display:grid;grid-template-columns:minmax(380px,430px) minmax(0,1fr);gap:20px;align-items:start}
+  .av-left{display:flex;flex-direction:column;gap:10px;position:sticky;top:8px;max-height:calc(100vh - 16px);overflow-y:auto;padding:2px 4px 4px 2px;margin:-2px -4px -4px -2px;scrollbar-width:thin}
+  .av-stage{position:static;margin:0;padding:0;background:none}
+  .av-card{flex-direction:column;padding:12px 14px 12px;gap:12px}
+  .av-pv{width:min(100%,340px);height:auto;aspect-ratio:1}
+  .av-mood{display:block;position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);background:var(--card);border:1.5px solid var(--line);border-radius:99px;padding:2px 14px;font-size:.8rem;font-weight:800;color:var(--mute);white-space:nowrap}
+  .av-bar{width:100%}
+  .av-side{padding:10px 14px}
+  .av-side .av-lc{width:46px;height:46px}
+  .av-side .av-lk{width:56px}
+  .av-side .av-sh{margin:0 2px 4px}
+  .av-tools{order:0}
+  .av-grid{grid-template-columns:repeat(auto-fill,minmax(108px,1fr))}
+  .av-grid .itile .ith{width:92px;height:92px}
+  .av-one .av-pv{width:200px}
+  .av-one{padding:14px}
+}
+@media (max-width:899px){
+  .av-stage{border-bottom:1px solid var(--line)}
+  .av-one .av-pv{width:120px;height:120px}
+}
