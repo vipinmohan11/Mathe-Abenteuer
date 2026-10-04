@@ -1,13 +1,13 @@
 {
- "name": "Mathe-Abenteuer Klasse 4",
- "short_name": "Mathe",
+ "name": "Rechenhelden Klasse 4",
+ "short_name": "Rechenhelden",
  "lang": "de",
  "start_url": "./index.html",
  "scope": "./",
  "display": "standalone",
  "orientation": "any",
- "background_color": "#FFF3D6",
- "theme_color": "#FFB703",
+ "background_color": "#eaf7ff",
+ "theme_color": "#1764d5",
  "icons": [
   {
    "src": "icon-192.png",
