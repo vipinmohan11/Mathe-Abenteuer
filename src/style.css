@@ -320,9 +320,6 @@ select.txt{font:inherit;padding:10px 14px;border-radius:12px;border:1.5px solid 
   #app{max-width:none;padding:0}
 }
 
-/* Fino-Insel */
-.island .isl{display:flex;flex-wrap:wrap;gap:6px;font-size:2rem;line-height:1.2}
-.isl-pv{font-size:3.6rem;line-height:1.2;text-align:center;padding:8px 0}
 
 /* ===== Shell: Start, Hefte, Belohnungen, Navigation ===== */
 #app{padding-bottom:96px}

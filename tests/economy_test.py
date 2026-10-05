@@ -59,7 +59,8 @@ with sync_playwright() as p:
     E("()=>{go('home');S.decks={};S.cfg.goal=2;S.coins=0;S.chests=0;S.daily={d:ymd(),n:0,sec:0,got:false,unlocked:false,testRewarded:false,shopSec:0,cr:{left:0,grants:0,used:0,lvl:false,goal:false}};S.cfg.creativeMode='after';dailyCheck();dailyCheck()}")
     ok(E("()=>S.coins") >= 3 and E("()=>S.flames") == 0 and E("()=>S.chests") == 1 and E("()=>creativeLeft()") == 300, 'Tagesziel: Münzen, 1 Karte, Kreativzeit (coins=%s)' % E("()=>S.coins"))
     # --- Fino-Name
-    E("()=>{S.coins=999;buyItem('fn.pixel');ACT.setFinoName('Pixel')}"); ok(E("()=>FN()") == 'Pixel', 'Fino umbenannt (nur gekaufte Namen im Shop)')
+    E("()=>{S.finoName='Pixel';save()}"); ok(E("()=>FN()") == 'Pixel' and E("()=>!KIND.finoname && !SHOP.insel"), 'Früher gespeicherter Fino-Name bleibt; Umbenennen und Fino-Insel sind aus dem Shop')
+    E("()=>{S.finoName='';save()}")
     # --- Mini-Test: pro Tag zählt das beste Ergebnis, ein besserer Test zahlt nur die Differenz
     E("()=>{S.coins=0;S.life=0;S.starsLife=0;S.chests=0;S.daily={d:ymd(),n:0,sec:0,got:false,unlocked:false,testRewarded:false,shopSec:0,cr:{left:0,grants:0,used:0,lvl:false,goal:false}}}")
     r0 = E("()=>payTest(4)"); ok(r0['c'] == 0 and E("()=>S.daily.testRewarded") is False and E("()=>testLeft().c") == 10, 'schwacher erster Test verbraucht nichts')

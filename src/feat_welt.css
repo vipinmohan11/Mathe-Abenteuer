@@ -128,3 +128,16 @@
 /* Mein Reisepass: nichts darf breiter als der Bildschirm werden */
 .w-prog li,.w-prog button{min-width:0}.w-prog b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+
+/* Alle Stationen im gleichen Karten-Look wie Orte und Essen: Bildfläche oben, Titel, kurzer Text */
+.w-iart,.w-wart,.w-qart{display:grid;place-items:center;position:relative;color:#52676c}
+.w-iart .w-info-ico{width:44px;height:44px;color:#52676c}
+.w-ic p.short{font-weight:800;color:var(--ink);font-size:1.02rem;margin-top:3px}
+.w-wart b{display:block;margin:0;font-size:1.5rem;line-height:1.2;color:#2c3236;text-align:center;padding:0 38px 0 8px}.w-wart b.long{font-size:1.1rem}
+.w-wart .w-spk{position:absolute;right:6px;bottom:6px;width:34px;height:34px;grid-column:auto;grid-row:auto}
+.w-qart svg{width:auto;height:72px;display:block}
+.w-one{grid-template-columns:minmax(0,340px);justify-content:center;margin-top:12px}
+.w-qc{text-align:center}.w-qc .row{justify-content:center;margin-top:12px}.w-qc>b{font-size:1.15rem}
+.w-cards{grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}
+.w-wcards{grid-template-columns:repeat(auto-fill,minmax(176px,1fr))}
+@media(max-width:560px){.w-cards,.w-wcards{grid-template-columns:repeat(2,minmax(0,1fr))}.w-one{grid-template-columns:minmax(0,1fr)}}

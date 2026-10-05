@@ -8,7 +8,7 @@ with sync_playwright() as p:
     pg.goto(URL); pg.wait_for_function("()=>window.__app")
     themes=pg.evaluate("()=>Object.values(__app.CATALOG).filter(i=>i.kind==='theme').map(i=>i.id).concat(Object.keys(__app.CATALOG).length?[]:[])")
     th=pg.evaluate("()=>__app.SHOP.theme.items.map(i=>i.id)")
-    views=['home','hefte','rewards','look','finoname','shop','trophies','schatz','buch','insel','wesen','story','avatar','musik','parent','profile','testSetup','extra','fakten','geo','welt','geoCards','geoPass']
+    views=['home','hefte','rewards','look','shop','trophies','schatz','buch','insel','wesen','story','avatar','musik','parent','profile','testSetup','extra','fakten','geo','welt','geoCards','geoPass']
     bad=0
     for t in th:
         pg.evaluate("(t)=>{__app.S.cfg.creativeMode='always';__app.S.owned.theme.includes(t)||__app.S.owned.theme.push(t);__app.S.eq.theme=t}",t)

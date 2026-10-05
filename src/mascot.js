@@ -264,8 +264,39 @@ const EXTRAS = {
   schal: (s) => {
     const y = s.neckY;
     return `<g><path d="M62 ${y - 4} Q100 ${y + 14} 138 ${y - 4} L140 ${y + 10} Q100 ${y + 28} 60 ${y + 10}Z" fill="#e8454f"/><path d="M118 ${y + 14} l12 36 l16 -6 l-8 -34Z" fill="#e8454f"/><path d="M70 ${y} Q100 ${y + 14} 130 ${y}" stroke="#fff" stroke-width="3" fill="none" stroke-dasharray="6 7" opacity=".8"/></g>`;
+  },
+  sonnenbrille: (s) => {
+    const [x1, x2] = s.ex, y = s.ey, r = s.er + 8;
+    return `<g stroke="#1b1730" stroke-width="3.5" stroke-linejoin="round"><path d="M${x1 - r} ${y - r + 3} H${x1 + r} V${y + 2} Q${x1 + r} ${y + r + 2} ${x1} ${y + r + 2} Q${x1 - r} ${y + r + 2} ${x1 - r} ${y + 2}Z" fill="#2a2450"/><path d="M${x2 - r} ${y - r + 3} H${x2 + r} V${y + 2} Q${x2 + r} ${y + r + 2} ${x2} ${y + r + 2} Q${x2 - r} ${y + r + 2} ${x2 - r} ${y + 2}Z" fill="#2a2450"/><path d="M${x1 + r} ${y - 2} Q100 ${y - 8} ${x2 - r} ${y - 2}" fill="none"/><path d="M${x1 - r} ${y - 2} l-10 -3 M${x2 + r} ${y - 2} l10 -3" fill="none"/></g><path d="M${x1 - r + 6} ${y - r + 8} l9 0 M${x2 - r + 6} ${y - r + 8} l9 0" stroke="#8fd3ff" stroke-width="3" stroke-linecap="round"/>`;
+  },
+  fliege: (s) => {
+    const y = s.neckY + 8;
+    return `<g stroke="#1d4f91" stroke-width="2.5" stroke-linejoin="round"><path d="M100 ${y} L74 ${y - 14} Q68 ${y} 74 ${y + 14}Z" fill="#3c8dde"/><path d="M100 ${y} L126 ${y - 14} Q132 ${y} 126 ${y + 14}Z" fill="#3c8dde"/><rect x="93" y="${y - 7}" width="14" height="14" rx="4" fill="#ffc93c" stroke="#e0a100"/></g>`;
+  },
+  kopfhoerer: (s) => {
+    const y = s.headTop + 6;
+    return `<g stroke-linecap="round"><path d="M52 ${s.ey + 4} Q50 ${y - 8} 100 ${y - 10} Q150 ${y - 8} 148 ${s.ey + 4}" fill="none" stroke="#2b2b3a" stroke-width="7"/><rect x="40" y="${s.ey - 14}" width="20" height="38" rx="9" fill="#35c4b0" stroke="#1d7f72" stroke-width="3"/><rect x="140" y="${s.ey - 14}" width="20" height="38" rx="9" fill="#35c4b0" stroke="#1d7f72" stroke-width="3"/></g>`;
+  },
+  blume: (s) => {
+    const x = s.ex[1] + 26, y = s.headTop + 14;
+    let p = ''; for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; p += `<circle cx="${(x + Math.cos(a) * 9).toFixed(1)}" cy="${(y + Math.sin(a) * 9).toFixed(1)}" r="7" fill="#fff" stroke="#c9d3ea" stroke-width="1.5"/>`; }
+    return `<g>${p}<circle cx="${x}" cy="${y}" r="6" fill="#ffc93c" stroke="#e0a100" stroke-width="1.5"/></g>`;
+  },
+  medaille: (s) => {
+    const y = s.neckY;
+    return `<g><path d="M78 ${y - 2} L100 ${y + 40} L122 ${y - 2}" fill="none" stroke="#3c8dde" stroke-width="8" stroke-linejoin="round"/><circle cx="100" cy="${y + 50}" r="17" fill="#ffc93c" stroke="#e0a100" stroke-width="3"/><path d="M100 ${y + 40} l4 8 9 1 -6.500 6 2 9 -8.500 -4.500 -8.500 4.500 2 -9 -6.500 -6 9 -1z" fill="#fff3b0" stroke="#e0a100" stroke-width="1.5" stroke-linejoin="round"/></g>`;
+  },
+  sternchen: (s) => {
+    const st = (x, y, k, c) => `<path transform="translate(${x} ${y}) scale(${k})" d="M0 -9 L2.600 -2.800 9 -2.500 4 1.800 5.600 8.200 0 4.800 -5.600 8.200 -4 1.800 -9 -2.500 -2.600 -2.800Z" fill="${c}" stroke="#e0a100" stroke-width="1.200"/>`;
+    return `<g>${st(40, s.headTop + 30, 1.500, '#ffe066')}${st(162, s.headTop + 44, 1.200, '#fff3b0')}${st(52, s.headTop + 78, .9, '#fff3b0')}${st(158, s.headTop + 96, 1.600, '#ffe066')}</g>`;
+  },
+  cape: (s) => {
+    const y = s.neckY;
+    return `<g><path d="M62 ${y - 4} Q100 ${y + 8} 138 ${y - 4} L178 ${y + 22} Q184 ${y + 48} 172 ${y + 54} Q100 ${y + 40} 28 ${y + 54} Q16 ${y + 48} 22 ${y + 22}Z" fill="#6a4fc7" stroke="#47339a" stroke-width="2.500" stroke-linejoin="round"/></g>`;
   }
 };
+
+const EXTRA_BACK = { cape: 1 };          // Extras, die hinter dem Körper gezeichnet werden
 
 /* ---------- scene backgrounds (inside the avatar circle) ---------- */
 const BGS = {
@@ -309,7 +340,7 @@ function mascotSVG(o) {
   const shadow = o.noShadow ? '' : '<ellipse cx="100" cy="184" rx="52" ry="8" fill="rgba(0,0,0,.14)"/>';
   const thinkBubble = m === 'think' ? '<g fill="#fff" stroke="#c9c2dd" stroke-width="2"><circle cx="160" cy="46" r="3.5"/><circle cx="170" cy="32" r="5.5"/><ellipse cx="178" cy="14" rx="14" ry="10"/></g><text x="178" y="19" font-size="14" font-weight="800" text-anchor="middle" fill="#7b5cd6" font-family="sans-serif">?</text>' : '';
   const stars = m === 'cheer' ? '<g fill="#FFC93C"><path d="M30 40 l3 7 7 .6 -5.4 4.6 1.7 7 -6.3 -3.8 -6.3 3.8 1.7 -7 -5.4 -4.6 7 -.6z"/><path d="M168 56 l2.4 5.6 5.6 .5 -4.3 3.7 1.4 5.6 -5.1 -3 -5.1 3 1.4 -5.6 -4.3 -3.7 5.6 -.5z"/></g>' : '';
-  return `<svg class="mascot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${bg}${shadow}<g class="mbody">${s.draw(m)}${ex}${hat}</g>${stars}${thinkBubble}</svg>`;
+  return `<svg class="mascot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${bg}${shadow}<g class="mbody">${EXTRA_BACK[o.extra] ? ex : ''}${s.draw(m)}${EXTRA_BACK[o.extra] ? '' : ex}${hat}</g>${stars}${thinkBubble}</svg>`;
 }
 
 /* ---------- SHOP catalog ----------
@@ -350,7 +381,11 @@ const SHOP = {
   },
   extra: {
     label: 'Extras', icon: '🕶️', none: true, items: [
-      { id: 'brille', name: 'Brille', cur: 's', price: 6 }, { id: 'schal', name: 'Schal', cur: 's', price: 8 }
+      { id: 'brille', name: 'Brille', cur: 's', price: 6 }, { id: 'schal', name: 'Schal', cur: 's', price: 8 },
+      { id: 'sonnenbrille', name: 'Sonnenbrille', cur: 's', price: 10 }, { id: 'fliege', name: 'Fliege', cur: 's', price: 10 },
+      { id: 'kopfhoerer', name: 'Kopfhörer', cur: 's', price: 12 }, { id: 'blume', name: 'Blume im Ohr', cur: 's', price: 12 },
+      { id: 'medaille', name: 'Goldmedaille', cur: 's', price: 15 }, { id: 'sternchen', name: 'Glitzersterne', cur: 's', price: 18 },
+      { id: 'cape', name: 'Heldencape', cur: 's', price: 20 }
     ]
   },
   bg: {
@@ -364,41 +399,6 @@ const SHOP = {
   frame: {
     label: 'Rahmen', icon: '🖼️', none: true, items: [
       { id: 'gold', name: 'Goldrahmen', cur: 'f', price: 3 }, { id: 'regen', name: 'Regenbogen', cur: 'f', price: 6 }, { id: 'sterne', name: 'Sternenrahmen', cur: 'f', price: 10 }
-    ]
-  },
-  /* Fino-Insel: viele Dinge zum Sammeln und Sparen – damit es immer ein nächstes Ziel gibt. Sie werden nicht „benutzt“, sondern wachsen auf der Insel. */
-  insel: {
-    label: 'Fino-Insel', icon: '🏝️', none: false, multi: true, items: [
-      { id: 'palme', name: 'Palme', e: '🌴', cur: 'c', price: 30 },
-      { id: 'sonnenblume', name: 'Sonnenblumen', e: '🌻', cur: 'c', price: 35 },
-      { id: 'pilze', name: 'Pilzwiese', e: '🍄', cur: 'c', price: 40 },
-      { id: 'drachen', name: 'Drachen', e: '🪁', cur: 'c', price: 50 },
-      { id: 'zelt', name: 'Zeltplatz', e: '⛺', cur: 'c', price: 60 },
-      { id: 'huette', name: 'Hütte', e: '🏠', cur: 'c', price: 80 },
-      { id: 'kanu', name: 'Kanu', e: '🛶', cur: 'c', price: 90 },
-      { id: 'brunnen', name: 'Brunnen', e: '⛲', cur: 'c', price: 100 },
-      { id: 'teich', name: 'Fischteich', e: '🐠', cur: 'c', price: 110 },
-      { id: 'regenbogen', name: 'Regenbogen', e: '🌈', cur: 'c', price: 120 },
-      { id: 'bienen', name: 'Bienenstock', e: '🐝', cur: 'c', price: 130 },
-      { id: 'apfel', name: 'Apfelbaum', e: '🍎', cur: 'c', price: 140 },
-      { id: 'zirkus', name: 'Zirkuszelt', e: '🎪', cur: 'c', price: 160 },
-      { id: 'schildkroete', name: 'Schildkröten-Strand', e: '🐢', cur: 'c', price: 170 },
-      { id: 'burg', name: 'Burg', e: '🏰', cur: 'c', price: 200 },
-      { id: 'segelboot', name: 'Segelboot', e: '⛵', cur: 'c', price: 220 },
-      { id: 'riesenrad', name: 'Riesenrad', e: '🎡', cur: 'c', price: 250 },
-      { id: 'leuchtturm', name: 'Leuchtturm', e: '🗼', cur: 'c', price: 270 },
-      { id: 'eisenbahn', name: 'Eisenbahn', e: '🚂', cur: 'c', price: 300 },
-      { id: 'vulkan', name: 'Vulkan', e: '🌋', cur: 'c', price: 320 },
-      { id: 'dino', name: 'Dino-Park', e: '🦕', cur: 'c', price: 350 },
-      { id: 'ufo', name: 'Ufo-Landeplatz', e: '🛸', cur: 'c', price: 380 },
-      { id: 'rakete', name: 'Raketenstation', e: '🚀', cur: 'c', price: 420 },
-      { id: 'sternwarte', name: 'Sternwarte', e: '🔭', cur: 'c', price: 450 },
-      { id: 'tempel', name: 'Tempel', e: '🏯', cur: 'c', price: 480 },
-      { id: 'drachenhoehle', name: 'Drachenhöhle', e: '🐉', cur: 'c', price: 520 },
-      { id: 'planeten', name: 'Planeten-Garten', e: '🪐', cur: 'c', price: 560 },
-      { id: 'denkmal', name: 'Mathe-Denkmal', e: '🏆', cur: 'c', price: 600 },
-      { id: 'sternenturm', name: 'Sternen-Turm', e: '🌟', cur: 'c', price: 700 },
-      { id: 'schloss', name: 'Königsschloss', e: '👑', cur: 'c', price: 800 }
     ]
   }
 };

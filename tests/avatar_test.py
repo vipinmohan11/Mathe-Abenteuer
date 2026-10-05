@@ -27,7 +27,7 @@ with sync_playwright() as p:
         thumbs:L.every(i=>{const t=KIND[i.kind].thumb(i);return typeof t==='string'&&t.indexOf('<svg')>=0&&t.indexOf('undefined')<0&&t.indexOf('NaN')<0}),
         old:['avbrow','avnose','avface','avextra'].some(k=>KIND[k]),
         freeSkin:L.filter(i=>i.id.startsWith('col.skin.')).every(i=>i.src.t==='free'),
-        fino:!!KIND.finoname,feat:FEATS.avatar&&FEATS.avatar.creative}}""")
+        feat:FEATS.avatar&&FEATS.avatar.creative}}""")
     print(r)
     ok(90 <= r['n'] <= 110 and r['uniq'] == r['n'], 'Katalog 90-110 Stück, IDs eindeutig (%d)' % r['n'])
     ok(r['grp'] and r['cur'], 'Gruppe avatar, nur Münzen')
@@ -37,7 +37,7 @@ with sync_playwright() as p:
     ok(15 <= r['min'] and r['max'] <= 400 and r['min'] <= 20, 'Münzpreise 15..400 (%s..%s), billig zuerst' % (r['min'], r['max']))
     ok(r['freeSkin'] and not r['old'], 'Hautfarben frei, alte Arten entfernt')
     ok(r['thumbs'], 'Jede Vorschau (Thumb) rendert')
-    ok(r['fino'] and r['feat'] == 'view', 'Fino-Namen-Art vom Kern da, Feature creative:view')
+    ok(r['feat'] == 'view', 'Feature creative:view')
 
     # ---------- meSVG: robust ----------
     r = E("""()=>{

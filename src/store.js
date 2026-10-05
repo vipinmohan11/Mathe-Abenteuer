@@ -380,9 +380,9 @@ function trophyList() {
   return L;
 }
 function checkTrophies() {
-  let any = false;
-  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; toast(t.i, `Neuer Pokal: ${t.n}`); } });
-  if (any) confetti(60);
+  let any = false; const quiet = typeof UI !== 'undefined' && UI && UI.wQuiet;          // Weltreise: Pokale still vergeben
+  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
+  if (any && !quiet) confetti(60);
   if (typeof checkUnlocks === 'function') checkUnlocks();
 }
 

@@ -283,3 +283,24 @@ body[data-theme=nacht] .itile.lk{background:var(--dz-t1)}
 .dz-tile.locked,.itile.lk,.item.lk,.card.item,.epc.lk,.wtile.lk,.w-card.locked,.w-card.open,.w-card.locked.can{border:var(--dz-bd-w) solid var(--dz-bd)}
 .dz-tile .dz-tag{border:var(--dz-bd-w) solid var(--dz-bd)}
 body[data-theme=nacht]{--dz-bd:color-mix(in srgb,var(--dz-accent) 26%,var(--dz-line))}
+
+/* Fragen-Nummern (Üben, Test, Europa): Ziffer immer mittig; „jetzt“ in Gold, „beantwortet“ in der Akzentfarbe */
+.qnav button{display:grid;place-items:center;padding:0;line-height:1;font-size:1rem;transition:background var(--dz-t),color var(--dz-t),transform var(--dz-t),box-shadow var(--dz-t)}
+.qnav button.has{background:var(--dz-accent);color:var(--dz-accent-ink);border-color:transparent}
+.qnav button.cur{background:var(--dz-gold);color:#2b2a24;border-color:var(--dz-gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--dz-gold) 32%,transparent);transform:scale(1.08);position:relative;z-index:1}
+.qnav button.cur.has{background:var(--dz-gold)}
+
+/* Europa Memory: kleinere Karten, mittig */
+.geo-mem{grid-template-columns:repeat(4,minmax(0,94px));justify-content:center;gap:8px}
+.geo-mc{border-radius:var(--dz-r-s);font-size:1.3rem}.geo-mc.up{font-size:.72rem}.geo-mc .geo-mflag{max-width:52px}
+@media(max-width:430px){.geo-mem{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* Haus-Symbol: oben in der Mitte, sobald man 2 oder mehr Schritte von Start entfernt ist */
+.top{position:relative}
+.top.has-home .dz-home{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2}
+.top.has-home .dz-home:hover{transform:translate(-50%,calc(-50% - 2px))}
+.top.has-home .dz-home:active{transform:translate(-50%,-50%) scale(.96)}
+.top.has-home h2{max-width:calc(50% - 130px)}
+@media(max-width:560px){.top.has-home .dz-home{position:static;transform:none;margin-left:auto}.top.has-home .dz-home:hover,.top.has-home .dz-home:active{transform:none}.top.has-home h2{max-width:none}}
+/* Home-Symbol in der Mitte: die Chips rechts bleiben rechts */
+.top.has-home .stats{margin-left:auto}

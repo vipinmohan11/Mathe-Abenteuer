@@ -41,7 +41,7 @@ VIEWS.storyread = () => {
   const s = SC(), ep = epList().find(e => e.id === s.ep); if (!ep) return VIEWS.story();
   if (s.fin) {
     const idx = epList().indexOf(ep), nx = epList().find(e => !epUnlocked(e));
-    return `<div class="top"><button class="btn sec back" data-act="story" aria-label="Zurück">${ico('back', 22)}</button><h2>${ep.icon} ${nameIn(ep.title)}</h2></div>
+    return `<div class="top has-home"><button class="btn sec back" data-act="story" aria-label="Zurück zu den Episoden">${ico('back', 20)}<span>Geschichte</span></button><h2>${ep.icon} ${nameIn(ep.title)}</h2><button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzIc('home', 22)}</button></div>
     <div class="card result"><h3>Episode ${idx + 1} gelesen</h3><p class="mute">${nx ? `Noch ${grp(epLeft(nx))} bis zur nächsten Episode.` : 'Das war die letzte Episode.'}</p>
     <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="story">Alle Episoden</button></div></div>`;
   }
@@ -56,7 +56,7 @@ VIEWS.storyread = () => {
   else if (s.phase === 'puzzle') body = `<p class="sc-t">${nameIn(sc.say)}</p><div class="sc-puz"><b>${nameIn(sc.puzzle.q)}</b><div class="sc-opts">${sc.puzzle.opts.map((o, k) => `<button class="btn sec ${s.bad.includes(k) ? 'bad' : ''}" data-act="storyAns" data-arg="${k}" ${s.bad.includes(k) ? 'disabled' : ''}>${nameIn(o)}</button>`).join('')}</div>${s.bad.length ? `<p class="small" style="color:var(--bad);font-weight:800">${nameIn(sc.puzzle.no)}</p>` : ''}${sc.puzzle.hint && s.bad.length ? `<p class="small mute">💡 ${nameIn(sc.puzzle.hint)}</p>` : ''}</div>`;
   else if (s.phase === 'ok') body = `<p class="sc-t">${nameIn(sc.say)}</p><p class="sc-t" style="color:var(--ok)">✔ ${nameIn(sc.puzzle.ok)}</p>`;
   const needBtn = !['choice', 'puzzle'].includes(s.phase);
-  return `<div class="top"><button class="btn sec back" data-act="story" aria-label="Pause">${ico('back', 22)}</button><h2>${ep.icon} ${nameIn(ep.title)}</h2><span class="chip">${s.i + 1} / ${ep.scenes.length}</span></div>
+  return `<div class="top has-home"><button class="btn sec back" data-act="story" aria-label="Pause: zurück zu den Episoden">${ico('back', 20)}<span>Pause</span></button><h2>${ep.icon} ${nameIn(ep.title)}</h2><button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzIc('home', 22)}</button><span class="chip">${s.i + 1} / ${ep.scenes.length}</span></div>
   <div class="sc-stage">${scBG(sc.bg)}
     <div class="sc-cast">
       <div class="sc-c fino ${sc.who === 'fino' ? 'on' : ''}">${mascotSVG({ skin: S.eq.skin, hat: S.eq.hat, extra: S.eq.extra, mood: fm })}</div>

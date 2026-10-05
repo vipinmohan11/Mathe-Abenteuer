@@ -15,7 +15,7 @@ const chapIdx = m => Math.max(0, CHAPTERS.findIndex(c => c.id === (m.id || '')[0
 const modNum = m => +String(m.id).slice(1) || 0;
 const isExtra = m => !!m.extra || !/^[A-D][1-5]$/.test(m.id);
 const chapMods = c => MODULES.filter(m => !isExtra(m) && m.id[0] === c);
-const FN = () => (S.finoName || 'Fino');                         // Fino darf umbenannt werden (Shop → Avatar → Fino-Namen)
+const FN = () => (S.finoName || 'Fino');                         // ein früher gespeicherter Fino-Name bleibt erhalten (Umbenennen gibt es nicht mehr)
 
 /* Preise im alten Fino-Shop auf Münzen umstellen (Flamme = 3 Münzen, Stern = 12 Münzen); Besitz bleibt unverändert */
 (function normShop() {
@@ -130,17 +130,21 @@ function startNext() {
 const subjTiles = () => SUBJECTS.filter(x => x.tile).map(x => x.tile());
 const TILE_CLS = ['t1', 't2', 't3'];
 
-/* Noch mal üben + Mini-Test: ehrliche Angabe der heutigen Belohnung */
+/* Fehler-Heft + Mini-Test: ehrliche Angabe der heutigen Belohnung */
 const heftePrizeNote = () => {
   const L = testLeft(), any = L.c || L.s || L.ch;
   return any ? `<div class="dz-note"><b>Mini-Test heute:</b> bis zu ${L.c} 🪙 + ${L.s} ⭐${L.ch ? ' und eine Karte bei voller Punktzahl' : ''}.</div>` : '';
 };
 
+/* Begrüßung nach lokaler Uhrzeit (Gerätezeit): Morgen 5–10, Tag 11–13, Nachmittag 14–17, Abend 18–21, sonst Nacht */
+const greetWord = (h = new Date().getHours()) => h >= 5 && h < 11 ? 'Guten Morgen' : h < 14 && h >= 11 ? 'Guten Tag' : h >= 14 && h < 18 ? 'Schönen Nachmittag' : h >= 18 && h < 22 ? 'Guten Abend' : 'Hallo Nachteule';
+const homeGreeting = (h) => { const nm = S.name || S.avName || '', w = greetWord(h); return nm ? `${w}, ${esc(nm)}!` : `${w}!`; };
+
 /* ---------- Startseite: der Hub ---------- */
 VIEWS.home = () => {
   const n = S.daily.d === ymd() ? S.daily.n : 0, goal = S.cfg.goal, nu = nextUp();
   const progress = Math.min(n, goal), pct = Math.min(100, Math.round(n / goal * 100)), done = n >= goal;
-  const hello = S.name ? `Hey ${esc(S.name)}!` : 'Hey, schön, dass du da bist!';
+  const hello = homeGreeting();
   const sub = done ? 'Dein Tagesziel ist geschafft – super!' : useMe() ? 'Was entdeckst du heute?' : `${esc(FN())} ist bereit. Du auch?`;
   const tree = `<div class="dz-tree" aria-label="Dein Baum wächst mit jeder Aufgabe">${dzTree(pct)}<div class="dz-tree-t"><strong>${done ? 'Dein Baum ist groß!' : n ? 'Dein Baum wächst' : 'Pflanze deinen Samen'}</strong><small>Heute ${progress} von ${goal} Aufgaben</small><div class="dz-tree-bar" role="progressbar" aria-label="Tagesziel" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="${goal}"><i style="width:${pct}%"></i></div></div></div>`;
   const ex = MODULES.filter(isExtra);
@@ -164,8 +168,8 @@ const dueInfo = c => {
 };
 const chapterOf = m => isExtra(m) ? 'Extra' : m.id[0];
 const heftTile = (m, cls) => {
-  const p = modProgress(m), art = { EMAL: 'mal', KOPF: 'kopf', SCHR: 'schrift' }[m.id];
-  return dzTile({ cls, html: art ? dzArt(art) : `<span class="dz-glyph">${esc(m.icon)}</span>`, title: m.extra ? m.title : m.id, sub: m.extra ? ({ EMAL: 'Mal & geteilt', KOPF: 'Plus & minus', SCHR: 'Untereinander' }[m.id] || '') : m.title, act: 'mod', arg: m.id, bar: p.pct, pct: p.pct, label: `${m.extra ? '' : 'Heft ' + m.id + ': '}${m.title}, ${p.pct} Prozent geschafft` });
+  const p = modProgress(m), art = { EMAL: 'mal', KOPF: 'kopf', SCHR: 'schrift', A4: 'teilen', A5: 'geld' }[m.id];
+  return dzTile({ cls, html: art ? dzArt(art) : `<span class="dz-glyph">${esc(m.icon)}</span>`, title: m.extra ? m.title : m.id, sub: m.extra ? ({ EMAL: 'Mal & geteilt', KOPF: 'Plus & minus', SCHR: 'Untereinander' }[m.id] || '') : m.title, act: 'mod', arg: m.id, pct: p.pct, label: `${m.extra ? '' : 'Heft ' + m.id + ': '}${m.title}, ${p.pct} Prozent geschafft` });
 };
 function chapterBody(c) {
   const mods = chapMods(c.id).sort((a, b) => modNum(a) - modNum(b));
@@ -182,7 +186,7 @@ VIEWS.hefte = () => {
   if (UI.acc_hefte === undefined) UI.acc_hefte = openDefault;
   const tiles = [
     { art: 'play', title: 'Los geht’s', sub: nu ? (nu.kind === 'rev' ? `Wiederholen: ${nu.mod.id}` : nu.i ? `Weiter bei ${nu.mod.id}` : `Start: ${nu.mod.id}`) : 'Alles geschafft', act: nu ? 'goNext' : 'mistakes', label: nu ? `Los geht’s: ${nu.mod.title}, ${nu.topic.t}` : 'Los geht’s: alle Hefte sind fertig' },
-    { art: 'retry', title: 'Noch mal üben', sub: nm ? `${nm} ${nm === 1 ? 'Aufgabe' : 'Aufgaben'}` : 'Alles richtig', act: 'mistakes' },
+    { art: 'retry', title: 'Fehler-Heft', sub: nm ? `${nm} ${nm === 1 ? 'Aufgabe' : 'Aufgaben'}` : 'Alles richtig', act: 'mistakes' },
     { art: 'test', title: 'Mini-Test', sub: `${TEST_N} Aufgaben`, act: 'testSetup', label: `Mini-Test: ${TEST_N} Aufgaben in ${TEST_SECS / 60} Minuten` }
   ].map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join('') + dzSlot('slot_hefte');
   const items = CHAPTERS.map(c => {
@@ -232,7 +236,6 @@ VIEWS.profile = () => {
   const tiles = [
     { html: avArt(120), title: 'Das bin ich', sub: 'Mein Bild', act: 'avatar' },
     { art: 'pokal', title: 'Meine Pokale', sub: `${nTro} gesammelt`, act: 'trophies' },
-    { art: 'fino', title: `${FN()} umbenennen`, act: 'finoname' },
     { art: 'farben', title: 'Farben & Töne', act: 'look' }
   ].map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join('');
   return topBar('Mein Profil', 'home') + `<section class="dz-panel dz-id">${avArt(112)}<div><h1>${esc(profileName())}</h1><p>Level ${L.n} · ${esc(L.title)}</p><div class="bar" style="margin-top:8px"><i style="width:${L.pct}%"></i></div><small class="mute">Noch ${L.need} verdiente Münzen bis Level ${L.n + 1}</small>${S.name ? '' : `<label class="dz-lbl" for="nameIn">Mein Name</label>${nameEditor()}`}</div></section>
@@ -243,7 +246,7 @@ VIEWS.profile = () => {
       ${stat('trophy', nTro, 'Pokale', 'Alle ansehen', 'trophies')}
     </div>
     ${g ? `<button class="dz-goal" data-act="shop">${dzIc('target', 22)}<span>Dein Sparziel: <b>${esc(g.name)}</b></span><b>${Math.max(0, g.src.price - S.coins) ? `Noch ${Math.max(0, g.src.price - S.coins)} Münzen` : 'Ziel erreicht!'}</b></button>` : ''}
-    ${dzSec('Mein Platz')}${dzGrid(4, tiles, 'dz-prof4')}
+    ${dzSec('Mein Platz')}${dzGrid(3, tiles, 'dz-prof4')}
     ${S.av && S.av.look && !S.avName ? `<div class="dz-panel" style="margin-top:12px">${avNameEditor()}</div>` : ''}
     ${recent.length ? `<details class="ad-earned"><summary>${ico('star', 18)} Neu verdient <span>${recent.length}</span></summary><ul>${recent.map(e => `<li>${esc(e.ic || '✓')} ${esc(e.text)}</li>`).join('')}</ul></details>` : ''}`;
 };
@@ -251,32 +254,6 @@ Object.assign(ACT, {
   profile: () => go('profile'), extra: () => go('extra'),
   rhSaveName: () => { ACT.saveName(); render(); },
   saveAvName: () => { const el = $('#avNameIn'); S.avName = ((el && el.value) || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); render(); }
-});
-
-/* ---------- Fino-Name: 6 Namen zum Verdienen + eigener Name ---------- */
-regKind('finoname', { group: 'avatar', label: 'Fino-Namen', ic: 'fox' });
-regItems([
-  { id: 'fn.funki', kind: 'finoname', name: 'Funki', e: '🦊', src: { t: 'shop', cur: 'c', price: 40 } },
-  { id: 'fn.pixel', kind: 'finoname', name: 'Pixel', e: '🦊', src: { t: 'shop', cur: 'c', price: 50 } },
-  { id: 'fn.blitz', kind: 'finoname', name: 'Blitz', e: '🦊', src: { t: 'shop', cur: 'c', price: 60 } },
-  { id: 'fn.nuss', kind: 'finoname', name: 'Nuss', e: '🦊', src: { t: 'shop', cur: 'c', price: 70 } },
-  { id: 'fn.sunny', kind: 'finoname', name: 'Sunny', e: '🦊', src: { t: 'shop', cur: 'c', price: 80 } },
-  { id: 'fn.rocky', kind: 'finoname', name: 'Rocky', e: '🦊', src: { t: 'shop', cur: 'c', price: 90 } },
-  { id: 'fn.own', kind: 'finoname', name: 'Eigener Name', e: '✏️', src: { t: 'shop', cur: 'c', price: 150 } }
-]);
-VIEWS.finoname = () => {
-  const names = itemsOf('finoname').filter(i => i.id !== 'fn.own'), own = hasItem('fn.own');
-  const cur = FN();
-  return `${topBar(ico('fox', 26) + ' Fino-Name', 'profile')}
-  <div class="card"><div class="row wrap" style="align-items:center"><div style="width:120px">${avatarHTML(finoLook(), 120, 'happy')}</div><div style="flex:1;min-width:200px"><h3 style="margin:0">Fino heißt gerade: <b>${esc(cur)}</b></h3><p class="mute small">Neue Namen bekommst du im Shop (Avatar → Fino-Namen).</p></div></div></div>
-  <div class="itiles" style="margin-top:12px"><button class="itile ${cur === 'Fino' ? 'sel' : ''}" data-act="setFinoName" data-arg="Fino"><span class="ith"><div class="ithumb nm">Fino</div></span><span class="itn">Fino</span>${cur === 'Fino' ? '<span class="tag on">aktiv</span>' : ''}</button>
-  ${names.map(i => itemTile(i, { act: 'setFinoName', arg: i.name, sel: cur === i.name })).join('')}</div>
-  <div class="card" style="margin-top:12px"><h3>Eigener Name</h3>${own ? `<div class="row"><input class="txt" id="finoIn" maxlength="12" placeholder="Name für Fino" value="${esc(cur)}"><button class="btn" data-act="saveFinoName">Speichern</button></div>` : `<p class="mute small">Mit dem „Eigenen Namen“ aus dem Shop kannst du Fino selbst benennen.</p>${itemTile(CATALOG['fn.own'], {})}`}</div>`;
-};
-Object.assign(ACT, {
-  finoname: () => go('finoname'),
-  setFinoName: n => { S.finoName = n === 'Fino' ? '' : n; save(); toast('🦊', `${FN()} heißt jetzt so`); render(); },
-  saveFinoName: () => { const v = ($('#finoIn').value || '').trim().slice(0, 12); if (v) { S.finoName = v; save(); toast('🦊', `${v} heißt jetzt so`); render(); } }
 });
 
 /* ---------- Darstellung: Farben (Themes) und Lesbarkeit ---------- */

@@ -68,12 +68,12 @@ with sync_playwright() as p:
     ok(pg.evaluate("()=>FACTS.length") == 29, '29 Fakten')
     # Profil -> Farben -> zurück
     pg.evaluate("()=>go('home')"); click('.dz-head .dz-me'); ok(V() == 'profile', 'Profil über Profilfeld')
-    pt = pg.inner_text('#app'); ok('Meine Pokale' in pt and 'Das bin ich' in pt and 'Farben' in pt and 'umbenennen' in pt, 'Profil: Kacheln')
+    pt = pg.inner_text('#app'); ok('Meine Pokale' in pt and 'Das bin ich' in pt and 'Farben' in pt and 'umbenennen' not in pt, 'Profil: Kacheln (kein Umbenennen mehr)')
     pg.evaluate("()=>go('look')"); pg.wait_for_timeout(100); click('.top .back[data-act=back]'); ok(V() == 'profile', 'Farben & Töne → zurück zum Profil')
     # Android-Zurück
     pg.evaluate("()=>go('home')"); pg.evaluate("()=>go('hefte')"); pg.wait_for_timeout(100)
     pg.go_back(); pg.wait_for_timeout(200); ok(V() == 'home', 'Android-Zurück: Hefte → Start')
-    # Fino umbenennen
+    # Ein früher gespeicherter Fino-Name bleibt erhalten und wirkt
     pg.evaluate("()=>{S.finoName='Mia';save();go('home')}"); pg.wait_for_timeout(200)
     pg.evaluate("()=>go('rewards')"); pg.wait_for_timeout(200)
     txt = pg.inner_text('#app'); ok('Mias Geschichte' in txt and 'Finos' not in txt, 'Umbenennen: „Mias Geschichte“')
@@ -81,6 +81,16 @@ with sync_playwright() as p:
     ok('Max’ Geschichte' in pg.inner_text('#app') or 'Maxʼ Geschichte' in pg.inner_text('#app'), 'Umbenennen: Max’ Geschichte')
     pg.evaluate("()=>{S.finoName='';save();render()}"); pg.wait_for_timeout(200)
     ok('Finos Geschichte' in pg.inner_text('#app'), 'zurück auf Fino: „Finos Geschichte“')
+    # Begrüßung nach Uhrzeit
+    g = pg.evaluate("()=>[[6,'Guten Morgen'],[12,'Guten Tag'],[15,'Schönen Nachmittag'],[19,'Guten Abend'],[23,'Hallo Nachteule'],[3,'Hallo Nachteule']].map(([h,w])=>greetWord(h)===w)")
+    ok(all(g), 'Begrüßung: Wort passend zur Uhrzeit')
+    pg.evaluate("()=>{S.name='Mira';save();go('home')}"); pg.wait_for_timeout(120)
+    ok(pg.evaluate("()=>homeGreeting(9)") == 'Guten Morgen, Mira!' and 'Mira!' in pg.inner_text('#app') and 'schön, dass du da bist' not in pg.inner_text('#app'), 'Begrüßung mit Namen auf Start')
+    # Shop: keine Fino-Insel, mehr Extras, jedes Extra zeichnet auf jedem Fell
+    sh = pg.evaluate("()=>({insel:!!SHOP.insel,extras:SHOP.extra.items.length,bad:Object.keys(SKINS).flatMap(k=>SHOP.extra.items.map(i=>mascotSVG({skin:k,extra:i.id,mood:'happy'})).filter(s=>/undefined|NaN/.test(s)||s.indexOf('<svg')<0).map(()=>k)),rn:!!VIEWS.finoname,tab:Object.keys(SHOP)})")
+    ok(not sh['insel'] and not sh['rn'] and sh['extras'] >= 9 and not sh['bad'], 'Shop: keine Fino-Insel/-Namen, %d Extras, alle zeichnen (%s)' % (sh['extras'], sh['bad']))
+    ok('Fehler-Heft' in (pg.evaluate("()=>{go('hefte');return document.getElementById('app').innerText}")), 'Hefte: „Fehler-Heft“ statt „Noch mal üben“')
+    pg.evaluate("()=>{S.name='';save();go('rewards')}"); pg.wait_for_timeout(120)
     # Schalter
     pg.evaluate("()=>{S.flags={wesen:1,buch:1,insel:1};save();render()}"); pg.wait_for_timeout(100)
     ok(pg.locator('.dz-tile').count() == 8, 'Schalter an: Wesen/Buch/Insel erscheinen')

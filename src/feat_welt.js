@@ -120,22 +120,23 @@ const wSouvLine = (p, st) => {
 };
 const wHead = (p, d, extra) => `<div class="w-head"><div><h2>${esc(d.title)}</h2><p>${esc(d.lead)}</p></div>${wFlag(p.id, 'w-hflag')}</div>
   <div class="w-note"><span class="w-note-pic">${p.guide.svg}</span><p><b>${esc(p.guide.name)}:</b> ${esc(d.guide)}</p></div>${extra || ''}`;
-const wItems = items => `<div class="w-items">${items.map(i => `<div class="w-item">${wInfoIco(i[0])}<div><small>${esc(i[1])}</small><b>${esc(i[2])}</b></div></div>`).join('')}</div>`;
+const wIArt = t => `<span class="w-art w-iart">${wInfoIco(t)}</span>`;
+const wItems = items => `<div class="w-cards">${items.map(i => `<article class="w-pc w-ic">${wIArt(i[0])}<b>${esc(i[1])}</b><p class="${String(i[2]).length <= 16 ? 'short' : ''}">${esc(i[2])}</p></article>`).join('')}</div>`;
 const wRich = rich => rich && rich.length ? `<div class="w-rich">${rich.map(r => `<div><b>${esc(r[0])}</b><p>${esc(r[1])}</p></div>`).join('')}</div>` : '';
 const wCards = cards => `<div class="w-cards">${cards.map(c => `<article class="w-pc">${wArt(c[0])}<b>${esc(c[1])}</b><p>${esc(c[2])}</p></article>`).join('')}</div>`;
 function wWords(p, d) {
-  return `<div class="w-words">${d.words.map((w, i) => `<div class="w-word"><div class="w-word-t"><b lang="${p.speech.slice(0, 2)}">${esc(w[0])}</b>${w[1] ? `<span>${esc(w[1])}</span>` : ''}</div><div class="w-word-m"><span>${esc(w[2])}</span><small>Sprich: ${esc(w[3])}</small></div>
-    <button class="w-spk" data-act="wSay" data-arg="${i}" aria-label="${esc(w[0])} anhören">${ico('speaker', 22)}</button></div>`).join('')}</div>`;
+  return `<div class="w-cards w-wcards">${d.words.map((w, i) => `<article class="w-pc w-wc"><span class="w-art w-wart"><b lang="${p.speech.slice(0, 2)}" class="${w[0].length > 6 ? 'long' : ''}">${esc(w[0])}</b>
+    <button class="w-spk" data-act="wSay" data-arg="${i}" aria-label="${esc(w[0])} anhören">${ico('speaker', 18)}</button></span><b>${esc(w[2])}</b><p>${w[1] ? esc(w[1]) + ' · ' : ''}Sprich: ${esc(w[3])}</p></article>`).join('')}</div>`;
 }
 function wQuizBuild(p) { return { id: p.id, i: 0, done: false, score: 0, qs: shuffle(p.quiz).map(x => ({ q: x.q, ok: x.ok, opts: shuffle([x.ok].concat(x.bad)), pick: null })) }; }
 function wQuiz(p) {
   const Q = UI.wQz && UI.wQz.id === p.id ? UI.wQz : null, best = (wS().quiz[p.id] || {}).best || 0, n = p.quiz.length;
   const head = `<div class="w-head"><div><h2>Rätsel: ${esc(p.name)}</h2><p>${n} Fragen. Du kannst es so oft versuchen, wie du möchtest. Ab ${W_QUIZ_OK} richtigen gibt es ein Souvenir.</p></div>${wFlag(p.id, 'w-hflag')}</div>`;
-  if (!Q) return head + `<div class="w-quiz-intro"><p>${best ? `Dein bestes Ergebnis: <b>${best} von ${n}</b>.` : 'Bereit für dein erstes Rätsel?'}</p><button class="btn big" data-act="wQuizStart">${best ? 'Noch mal rätseln' : 'Rätsel starten'}</button></div>${wSouvLine(p, 'quiz')}`;
+  const card = (art, title, text, btns) => `<div class="w-cards w-one"><article class="w-pc w-qc"><span class="w-art w-qart">${dzArt(art)}</span><b>${title}</b><p>${text}</p><div class="row wrap">${btns}</div></article></div>`;
+  if (!Q) return head + card('quiz', best ? `Dein bestes Ergebnis: ${best} von ${n}` : 'Bereit für dein erstes Rätsel?', best ? 'Versuche es noch einmal und hole alle Punkte.' : 'Die Fragen handeln von dem, was du in diesem Land gesehen hast.', `<button class="btn big" data-act="wQuizStart">${best ? 'Noch mal rätseln' : 'Rätsel starten'}</button>`) + wSouvLine(p, 'quiz');
   if (Q.done) {
-    const pass = Q.score >= W_QUIZ_OK;
-    return head + `<div class="w-quiz-res"><h3>${Q.score} von ${n} richtig</h3><p>${Q.score === n ? 'Alles richtig. Das war ein Rätsel für Entdecker.' : pass ? 'Gut gemacht! Das letzte Souvenir ist da.' : 'Noch nicht ganz. Schau dir die Stationen an und probiere es gleich noch mal.'}</p>
-      <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="wQuizStart">Noch mal</button><button class="btn sec big" data-act="wStation" data-arg="arrival">Weiter erkunden</button></div></div>${wSouvLine(p, 'quiz')}`;
+    const pass = Q.score >= W_QUIZ_OK, all = Q.score === n;
+    return head + card(all ? 'pokal' : pass ? 'stempel' : 'quiz', `${Q.score} von ${n} richtig`, all ? 'Alles richtig. Das war ein Rätsel für Entdecker.' : pass ? 'Gut gemacht! Das letzte Souvenir ist da.' : 'Noch nicht ganz. Schau dir die Stationen an und probiere es gleich noch mal.', `<button class="btn big" data-act="wQuizStart">Noch mal</button><button class="btn sec big" data-act="wStation" data-arg="arrival">Weiter erkunden</button>`) + wSouvLine(p, 'quiz');
   }
   const q = Q.qs[Q.i], done = q.pick != null, last = Q.i === Q.qs.length - 1;
   return head + `<div class="w-q" aria-live="polite"><small>Frage ${Q.i + 1} von ${Q.qs.length}</small><h3>${esc(q.q)}</h3>
@@ -277,15 +278,16 @@ function wFlight(id, then) {
   let done = false; const end = () => { if (done) return; done = true; d.remove(); UI.wFlightEnd = null; then(); };
   UI.wFlightEnd = end; setTimeout(end, 1900);
 }
+const wQuietly = fn => { UI.wQuiet = true; try { return fn(); } finally { UI.wQuiet = false; } };     // keine Pokal-Meldung, kein Konfetti
 function wLand(id) {
   UI.wId = id; UI.wSt = 'arrival'; UI.wQz = null; UI.wNew = null;
-  const fresh = WA.markSeen(id, 'arrival'); UI.wMsg = fresh ? 'Ankunft besucht' : '';
+  const fresh = wQuietly(() => WA.markSeen(id, 'arrival')); UI.wMsg = fresh ? 'Ankunft besucht' : '';
   if (fresh) UI.wNew = id + ':arrival';
   go('weltReise'); window.scrollTo && window.scrollTo(0, 0);
   wAfterMark(id);
 }
 function wAfterMark(id) {
-  if (UI.wStampNew === id) { UI.wStampNew = null; sfx('pop'); toast('🧭', `Einreisestempel für ${WP[id].name}!`); }
+  if (UI.wStampNew === id) UI.wStampNew = null;                       // der Stempel wartet still im Reisepass (Feier gibt es nur bei einem fehlerfreien Rätsel)
 }
 function wSpeak(text, lang) {
   try { const sy = window.speechSynthesis; if (!sy || typeof SpeechSynthesisUtterance === 'undefined') return false; sy.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = .8; sy.speak(u); return true; } catch (e) { return false; }
@@ -307,12 +309,12 @@ registerFeature({
       if (free >= p.cost) modal(`${esc(p.name)} öffnen?`, `Das kostet <b>einmal ${p.cost} ⭐</b> von deinen freien Sternen. Du hast ${free}, danach ${free - p.cost}.<br>Deine gesammelten Sterne, Wesen und Pokale bleiben. Das Land bleibt danach für immer offen.`, 'Öffnen', 'wOpenYes', id, 'Später');
       else modal(`${esc(p.name)} ist noch zu`, `Dir fehlen noch <b>${p.cost - free} ⭐</b> (${p.cost} ⭐ kostet das Land, du hast ${free}). Sterne bekommst du beim Üben.`, null, '', '', 'Okay');
     },
-    wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; checkTrophies(); wFlight(id, () => wLand(id)); },
+    wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; wQuietly(() => checkTrophies()); wFlight(id, () => wLand(id)); },
     wFlightSkip: () => { if (UI.wFlightEnd) UI.wFlightEnd(); },
     wStation: st => {
       const p = WP[UI.wId]; if (!p || !WSTAT.some(x => x[0] === st)) return;
       UI.wSt = st; UI.wNew = null; UI.wMsg = '';
-      if (st !== 'quiz') { const fresh = WA.markSeen(p.id, st); if (fresh) { UI.wNew = p.id + ':' + st; UI.wMsg = `${WSTAT.find(x => x[0] === st)[1]} besucht`; } }
+      if (st !== 'quiz') { const fresh = wQuietly(() => WA.markSeen(p.id, st)); if (fresh) { UI.wNew = p.id + ':' + st; UI.wMsg = `${WSTAT.find(x => x[0] === st)[1]} besucht`; } }
       render(); wAfterMark(p.id);
     },
     wSay: i => { const p = WP[UI.wId], w = p && p.st.language.words[+i]; if (!w) return; if (!wSpeak(w[0], p.speech)) toast('🔇', 'Auf diesem Gerät gibt es keine Sprachausgabe. Lies die Aussprache mit.'); },
@@ -321,7 +323,7 @@ registerFeature({
     wQuizNext: () => {
       const Q = UI.wQz; if (!Q) return;
       if (Q.i < Q.qs.length - 1) Q.i++;
-      else { Q.done = true; const had = WA.souvs(Q.id).includes('quiz'); WA.saveQuiz(Q.id, Q.score); if (!had && Q.score >= W_QUIZ_OK) { UI.wNew = Q.id + ':quiz'; UI.wMsg = 'Rätsel geschafft'; } }
+      else { Q.done = true; const had = WA.souvs(Q.id).includes('quiz'), all = Q.score === Q.qs.length; if (all) { WA.saveQuiz(Q.id, Q.score); sfx('ok'); confetti(70); toast('🏆', 'Alles richtig! Stark gemacht!'); } else wQuietly(() => WA.saveQuiz(Q.id, Q.score)); if (!had && Q.score >= W_QUIZ_OK) { UI.wNew = Q.id + ':quiz'; UI.wMsg = 'Rätsel geschafft'; } }
       render(); wAfterMark(Q.id);
     },
     wPassGo: () => { UI.wBookSeen = false; go('weltPass'); },

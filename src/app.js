@@ -78,7 +78,10 @@ function render() {
 const chip = (ic, v, t) => `<span class="chip" title="${t || ''}">${ic} <b>${v}</b></span>`;
 const statChips = () => `<div class="stats"><button class="chip cb" data-act="shop" title="Münzen – im Shop ausgeben">🪙 <b>${S.coins}</b></button>${chip('⭐', S.starsLife, 'Sterne – dein Beleg, bleiben immer erhalten')}</div>`;
 /* Kopfzeile innerer Seiten. „back“ ist nur der Notnagel; der Zurück-Knopf führt zur Seite, von der man wirklich kam (dz.js: NAV) */
-const topBar = (title, back = 'home', extra = '') => { const lb = dzBackLabel(back); return `<div class="top"><button class="btn sec back" data-act="back" data-arg="${esc(back)}" aria-label="Zurück zu: ${esc(lb)}">${ico('back', 20)}<span>${esc(lb)}</span></button><h2>${title}</h2>${extra}${statChips()}</div>`; };
+const topBar = (title, back = 'home', extra = '') => {
+  const lb = dzBackLabel(back), deep = NAV.stack.length >= 2;                  // ab 2 Schritten von Start: Haus-Symbol in der Mitte
+  return `<div class="top${deep ? ' has-home' : ''}"><button class="btn sec back" data-act="back" data-arg="${esc(back)}" aria-label="Zurück zu: ${esc(lb)}">${ico('back', 20)}<span>${esc(lb)}</span></button><h2>${title}</h2>${deep ? `<button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzIc('home', 22)}</button>` : ''}${extra}${statChips()}</div>`;
+};
 const greeting = () => { const h = new Date().getHours(); return h < 11 ? 'Guten Morgen' : h < 17 ? 'Hallo' : 'Guten Abend'; };
 const pctCls = p => p === null ? 'n' : p >= 80 ? 'g' : p >= 55 ? 'y' : 'r';
 
