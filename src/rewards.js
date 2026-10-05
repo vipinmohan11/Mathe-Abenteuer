@@ -27,7 +27,7 @@ const featList = g => Object.values(FEATS).filter(f => f.group === g).sort((a, b
 
 /* ---------- Katalog ---------- */
 const CATALOG = {}, KIND = {};
-const SHOP_GROUPS = { fino: { label: 'Fino', ic: 'fox' }, avatar: { label: 'Avatar', ic: 'avatar' }, musik: { label: 'Musik', ic: 'music' } };
+const SHOP_GROUPS = { fino: { label: 'Fino', ic: 'fox' }, avatar: { label: 'Avatar', ic: 'avatar' }, musik: { label: 'Musik', ic: 'music' }, reisen: { label: 'Reisen', ic: 'stamp' } };
 function regKind(id, o) { KIND[id] = Object.assign({ label: id, group: 'fino', ic: 'sparkle', thumb: it => it.svg ? `<svg viewBox="-55 -55 110 110">${it.svg}</svg>` : `<div class="ithumb">${it.e || '❓'}</div>` }, o); }
 /* REGELN: Münzen sind die einzige Währung; ausgegeben wird nur im Shop. src.t: free (nur das Allernötigste) | shop {price in Münzen} | milestone {why} (wird vom Lernfortschritt geschenkt, nie gekauft). */
 const TIER_PRICE = 60;

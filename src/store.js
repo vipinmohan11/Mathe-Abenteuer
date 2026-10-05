@@ -30,8 +30,12 @@ const TIER = { 1: '🟢', 2: '🔵', 3: '🔥', 4: '👑' };            // Das K
 const WALLET = { c: 'coins', s: 'stars', f: 'flames' };
 
 /* ---------- state ---------- */
-const KEY = 'mathe_abenteuer_v1';                 // bleibt gleich, damit alter Fortschritt erhalten bleibt
-const BKUP = ['mathe_abenteuer_bak1', 'mathe_abenteuer_bak2'];
+/* Admin-Modus (nur für Eltern zum Testen): eigener Speicher mit Endung „_admin“. Der Speicher des Kindes wird dabei nie gelesen oder geschrieben. */
+const MODE_KEY = 'mathe_abenteuer_mode';
+const ADMIN = (() => { try { return localStorage.getItem(MODE_KEY) === 'admin'; } catch (e) { return false; } })();
+const SFX = ADMIN ? '_admin' : '';
+const KEY = 'mathe_abenteuer_v1' + SFX;           // Kind-Speicher bleibt gleich, damit alter Fortschritt erhalten bleibt
+const BKUP = ['mathe_abenteuer_bak1' + SFX, 'mathe_abenteuer_bak2' + SFX];
 let memStore = null, persistOK = true, lastSaveErr = '';
 const DEF = () => ({
   v: 2, name: '', avName: '', saved: 0,
@@ -44,12 +48,12 @@ const DEF = () => ({
   streak: { n: 0, last: '', best: 0 }, tests: [],
   stats: { q: 0, c: 0, fixed: 0, bought: 0, goalDays: 0, blocks: 0, perfect: 0, decks: 0, rounds: 0 },
   daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
-  goal: null, earned: [], mig3: 1,
+  goal: null, earned: [], notes: [], mig3: 1,
   geo: { sessions: 0, seen: {}, ok: {}, miss: {}, k: {}, cards: {}, ms: {}, kd: {}, perf: 0, tpf: 0, kpf: 0, best: 0 },
-  world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {} },
+  world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {}, wishes: [], tix: [] },
   flags: {},                                   // ausgeblendete Funktionen (wesen, buch, insel): Eltern können sie einschalten – nur Anzeige, Daten bleiben
   facts: { i: 0, seen: {} },                   // Lustige Fakten: Stelle im Stapel, schon gelesene
-  cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {} }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
+  cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {}, pageMin: 3, pageWin: 2, pageNeed: 10, plang: 'de' }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
 });
 function mergeState(raw) {
   const d = DEF();
@@ -79,6 +83,7 @@ function mergeState(raw) {
   if (!raw.mig3) { if (d.flames > 0) { d.coins += d.flames * 3; } d.flames = 0; d.mig3 = 1; }
   if (!isObj(d.daily.cr)) d.daily.cr = { left: 0, grants: 0, used: 0, lvl: false, goal: false };
   if (!Array.isArray(d.earned)) d.earned = [];
+  if (d.cfg.creativeMode === 'always') d.cfg.creativeMode = 'after';
   d.v = 2;
   return d;
 }
@@ -96,7 +101,7 @@ function load() {
 let idbTimer = null, bakTimer = 0;
 function idbOpen() {
   return new Promise((res, rej) => {
-    try { const r = indexedDB.open('mathe_abenteuer', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); }
+    try { const r = indexedDB.open('mathe_abenteuer' + SFX, 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); }
   });
 }
 function idbPut(j) { idbOpen().then(db => { const tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(j, 'state'); tx.oncomplete = () => db.close(); }).catch(() => { }); }
@@ -201,8 +206,9 @@ const bestRound = key => { const t = S.topics[key], d = S.decks[key]; let m = 0;
 /* ---------- rewards ---------- */
 function touchDay() {
   const t = ymd();
-  if (S.daily.d !== t) S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } };
+  if (S.daily.d !== t) S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, pg: {}, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } };
   if (!S.daily.cr) S.daily.cr = { left: 0, grants: 0, used: 0, lvl: false, goal: false };
+  if (!S.daily.pg || typeof S.daily.pg !== 'object') S.daily.pg = {};
 }
 const streakNow = () => (S.streak.last === ymd() || S.streak.last === yesterday()) ? S.streak.n : 0;
 /* Protokoll „Neu verdient“: jede Belohnung nennt ihren Grund */
@@ -236,7 +242,8 @@ function payTest(score) {
   return r;
 }
 /* ---------- Kreativzeit: nach dem Üben öffnet sich ein kurzes Zeitfenster ---------- */
-function creativeMode() { return (S.cfg && S.cfg.creativeMode) || 'after'; }
+/* Kreativzeit gibt es nur nach dem Üben („after“) oder gar nicht („locked“). Ein früher gespeichertes „immer offen“ wird beim Laden zu „nach dem Üben“ (mergeState); die Eltern-Seite bietet es nicht mehr an. Nur der Admin-Modus ist immer offen. */
+function creativeMode() { return ADMIN ? 'always' : ((S.cfg && S.cfg.creativeMode) || 'after'); }
 function grantCreative(kind) {
   touchDay(); const c = S.daily.cr, m = creativeMode();
   if (m !== 'after' || c[kind]) return false;
@@ -247,7 +254,7 @@ function grantCreative(kind) {
 }
 const creativeLeft = () => { touchDay(); return S.daily.cr.left; };
 const creativeOK = () => { const m = creativeMode(); return m === 'always' || (m === 'after' && creativeLeft() > 0) || (UI.pinCreative && Date.now() < UI.pinCreative); };
-const shopLeft = () => { touchDay(); const lim = (S.cfg.shopMin || 0) * 60; return lim ? Math.max(0, lim - (S.daily.shopSec || 0)) : Infinity; };
+const shopLeft = () => { if (ADMIN) return Infinity; touchDay(); const lim = (S.cfg.shopMin || 0) * 60; return lim ? Math.max(0, lim - (S.daily.shopSec || 0)) : Infinity; };
 function addLog(correct) {
   const t = ymd(); const e = S.log[t] || (S.log[t] = { n: 0, c: 0 });
   e.n++; if (correct) e.c++;
@@ -409,4 +416,4 @@ const pinOk = p => !!S.pin && hashStr(p) === S.pin.h;
 const recOk = p => !!S.pin && hashStr(p) === S.pin.r;
 
 /* ---------- Tageslimit ---------- */
-const limitHit = () => S.cfg.limitMin > 0 && S.daily.d === ymd() && S.daily.sec >= S.cfg.limitMin * 60 && !S.daily.unlocked;
+const limitHit = () => !ADMIN && S.cfg.limitMin > 0 && S.daily.d === ymd() && S.daily.sec >= S.cfg.limitMin * 60 && !S.daily.unlocked;

@@ -80,7 +80,7 @@ const statChips = () => `<div class="stats"><button class="chip cb" data-act="sh
 /* Kopfzeile innerer Seiten. „back“ ist nur der Notnagel; der Zurück-Knopf führt zur Seite, von der man wirklich kam (dz.js: NAV) */
 const topBar = (title, back = 'home', extra = '') => {
   const lb = dzBackLabel(back), deep = NAV.stack.length >= 2;                  // ab 2 Schritten von Start: Haus-Symbol in der Mitte
-  return `<div class="top${deep ? ' has-home' : ''}"><button class="btn sec back" data-act="back" data-arg="${esc(back)}" aria-label="Zurück zu: ${esc(lb)}">${ico('back', 20)}<span>${esc(lb)}</span></button><h2>${title}</h2>${deep ? `<button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzIc('home', 22)}</button>` : ''}${extra}${statChips()}</div>`;
+  return `<div class="top${deep ? ' has-home' : ''}"><button class="btn sec back" data-act="back" data-arg="${esc(back)}" aria-label="Zurück zu: ${esc(lb)}">${ico('back', 20)}<span>${esc(lb)}</span></button><h2>${title}</h2>${deep ? `<button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzHomeArt(26)}<span class="dz-home-l">Start</span></button>` : ''}${extra}${statChips()}</div>`;
 };
 const greeting = () => { const h = new Date().getHours(); return h < 11 ? 'Guten Morgen' : h < 17 ? 'Hallo' : 'Guten Abend'; };
 const pctCls = p => p === null ? 'n' : p >= 80 ? 'g' : p >= 55 ? 'y' : 'r';
@@ -106,6 +106,7 @@ VIEWS.module = () => {
 };
 
 /* ----- group screen ----- */
+const BLOCK_SUB = ['Warm werden', 'Weiter geht’s', 'Großes Finale'];
 const resDot = r => `<i class="${r === 'first' ? 'ok' : r === 'second' ? 'half' : r === 'fail' ? 'bad' : ''}"></i>`;
 const LEGEND = '🟢 = 1 Punkt · 🔵 = 2 Punkte · 🔥 = 3 Punkte · 👑 = 4 Punkte';
 VIEWS.topic = () => {
@@ -114,7 +115,7 @@ VIEWS.topic = () => {
   const earned = t.cb.reduce((a, b) => a + b, 0), starsE = t.sb.reduce((a, b) => a + b, 0);
   const blocks = [0, 1, 2].map(b => {
     const bd = d && blockDone(d, b), bp = blockPts(d, b), bm = blockMax(d, b), st = bd ? blockStarsOf(bp, bm) : 0, cnt = d ? d.res.slice(...blockRange(b)).filter(r => r !== null).length : 0;
-    return `<div class="blk ${bd ? 'done' : ''}"><b>Stufe ${b + 1}</b><div class="stars sm">${[1, 2, 3].map(k => `<span class="${k <= st ? 'on' : ''}">⭐</span>`).join('')}</div>
+    return `<div class="blk ${bd ? 'done' : ''}"><b>Stufe ${b + 1}</b><span class="blk-sub">${BLOCK_SUB[b]}</span><div class="stars sm">${[1, 2, 3].map(k => `<span class="${k <= st ? 'on' : ''}">⭐</span>`).join('')}</div>
       <div class="dotsm">${(d ? d.res.slice(...blockRange(b)) : Array(BLOCK).fill(null)).map(resDot).join('')}</div>
       <span class="small mute">${cnt}/${BLOCK} · ${bp}/${bm} Punkte</span></div>`;
   }).join('');
@@ -193,7 +194,7 @@ VIEWS.play = () => {
   if (deck) {
     const d = S.decks[R.key], b = Math.floor(R.idx / BLOCK), f = findTopic(R.key);
     dots = d.res.slice(...blockRange(b)).map((r, k) => `<i class="${b * BLOCK + k === R.idx ? 'cur' : r === 'first' ? 'ok' : r === 'second' ? 'half' : r === 'fail' ? 'bad' : ''}"></i>`).join('');
-    label = `${f.topic.icon} ${f.topic.t} · Aufgabe ${R.idx + 1} von ${DECK_N} · Stufe ${b + 1}`; pchip = chip('🪙', `${deckPts(d)}/${deckMax(d)}`, 'Punkte in dieser Gruppe');
+    label = `${f.topic.icon} ${f.topic.t} · Aufgabe ${R.idx + 1} von ${DECK_N} · Stufe ${b + 1}: ${BLOCK_SUB[b]}`; pchip = chip('🪙', `${deckPts(d)}/${deckMax(d)}`, 'Punkte in dieser Gruppe');
   } else {
     dots = R.items.map((x, k) => `<i class="${k === R.idx ? 'cur' : k < R.idx ? 'done' : ''}"></i>`).join('');
     label = `📒 Fehler-Heft · Aufgabe ${R.idx + 1} von ${R.n}`; pchip = chip('✔', R.first, 'gleich richtig');
@@ -208,6 +209,7 @@ VIEWS.play = () => {
     let pts = '';
     if (deck) pts = R.lastDelta ? ` <b>+${R.lastDelta} 🪙</b>` : pt ? ` <span class="small">(${pt} Punkt${pt > 1 ? 'e' : ''} – Münzen-Bestwert dieser Stufe schon erreicht)</span>` : ` <span class="small">(Beim 2. Versuch zählt eine 1-Punkt-Aufgabe nicht mehr.)</span>`;
     else pts = c.res === 'first' ? ' Die Aufgabe verschwindet aus dem Fehler-Heft.' : ' Noch einmal gleich richtig – dann verschwindet sie.';
+    if (R.lastMile) pts += ' <b class="mile">+1 ✈️</b>';
     fb = `<div class="fb ok" role="status"><strong class="ad-feedback-title">${ico('check', 23)} ${c.res === 'first' ? 'Ja! Richtig gerechnet!' : 'Jetzt stimmt’s! Gut verbessert.'}</strong>${pts}<span class="ex">${q.explain}</span></div>`;
   } else {
     mood = 'sad'; fb = `<div class="fb bad" role="status"><strong class="ad-feedback-title">${XMARK} Noch nicht richtig. Schau mal:</strong><span class="ex">${q.explain}</span></div>`;
@@ -225,10 +227,10 @@ VIEWS.play = () => {
   return `<div class="top"><button class="btn sec back" data-act="quit" aria-label="Pause">← Pause</button><div class="dots">${dots}</div>${pchip}</div>
   <div class="small mute" style="margin:-4px 0 8px 4px">${label}</div>
   <div class="play ad-play ad-${st}">
-    <div class="card qcard ad-question">${pbadge}${qBody(c)}</div>
+    <div class="mainc"><div class="card qcard ad-question">${pbadge}${qBody(c)}</div>${fb}</div>
     <div class="side">
-      <div class="coach">${avatarHTML(eqAvatar(), 92, c.state === 'right' ? 'cheer' : mood)}<div class="bubble">${esc(say)}</div></div>
-      ${fb}${c.state === 'ask' && q.fields ? keypad(c) : ''}${hintBtn}${act}
+      <div class="coach">${avatarHTML(eqAvatar(), 92, c.state === 'right' ? 'cheer' : mood)}<div class="cbody"><div class="bubble">${esc(say)}</div>${hintBtn}</div></div>
+      ${c.state === 'ask' && q.fields ? keypad(c) : ''}${act}
     </div>
   </div>`;
 };
@@ -278,6 +280,7 @@ function settle(res) {
     const tid = R.items[R.idx].tid; noteAnswer(tid, first);
     if (first) { R.first++; removeMistake(tid, c.q); R.fixed++; } else addMistake(tid, c.q, c.firstAns);
   }
+  R.lastMile = (res !== 'fail' && typeof WA !== 'undefined') ? WA.addMiles(1) : 0;
   dailyCheck(); checkTrophies(); save();
 }
 function check() {
@@ -415,15 +418,16 @@ function finishTest(timeUp) {
   let score = 0; const secs = Math.min(T.dur, Math.floor((Date.now() - T.start) / 1000)), left = T.dur - secs;
   T.qs.forEach(x => {
     const c = x.c, ok = isCorrect(c); x.ok = ok; if (ok) score++;
-    noteAnswer(x.tid, ok); dailyCheck();
+    noteAnswer(x.tid, ok); if (ok && typeof WA !== 'undefined') WA.addMiles(1); dailyCheck();
     x.ans = c.q.fields ? { vals: c.vals.slice() } : { sel: c.sel };
     if (!ok) addMistake(x.tid, x.q, x.ans);
   });
   touchDay();
+  const passId = (typeof WA !== 'undefined') ? WA.testPass(score, T.qs.length) : null;
   const stars = testTier(score).s, pay = payTest(score), rewarded = !!(pay.c || pay.s || pay.chest), chest = pay.chest;
   if (score >= 13 && left > 360) S.stats.blitz = 1;
   S.tests.push({ ts: Date.now(), score, total: T.qs.length, secs, scope: T.scope }); if (S.tests.length > 60) S.tests.shift();
-  T.res = { score, stars, coins: pay.c, stars2: pay.s, secs, timeUp, rewarded, chest };
+  T.res = { pass: passId, score, stars, coins: pay.c, stars2: pay.s, secs, timeUp, rewarded, chest };
   checkTrophies(); save(); go('testResult');
   if (stars >= 2) confetti(stars === 3 ? 110 : 60);
 }
@@ -434,6 +438,7 @@ VIEWS.testResult = () => {
   <h2>${r.score} von ${T.qs.length} richtig</h2>
   <p style="font-weight:700">${r.timeUp ? 'Die Zeit ist um! ' : ''}${esc(rnd(SAY['r' + r.stars]))}</p>
   <div class="rewards">${r.coins ? chip('🪙', '+' + r.coins) : ''}${r.stars2 ? chip('⭐', '+' + r.stars2) : ''}${r.chest ? chip('📦', 'Schatztruhe!') : ''}${chip('⏱️', fmtT(r.secs))}</div>
+  ${r.pass ? `<div class="fb ok" style="margin:10px auto;max-width:520px">✈️ <b>Boarding-Pass!</b> ${esc(WP[r.pass].name)} ist jetzt für dich offen. Du findest es in Meine Weltreise.</div>` : ''}
   <p class="small mute">${testPrizeNote(r)}</p>
   <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="testSetup">Neuer Test</button><button class="btn sec big" data-act="home">Fertig</button></div></div>
   <h3 style="margin:18px 4px 8px">So war dein Test</h3>
@@ -452,7 +457,7 @@ function itemPreview(slot, it) {
   if (slot === 'bg') return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, bg: it.id }, 112);
   return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, frame: it.id }, 112);
 }
-const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (!g.includes(k.group)) g.push(k.group); }); return g; };
+const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (!g.includes(k.group)) g.push(k.group); }); if (typeof wShopTickets === 'function') g.push('reisen'); return g; };
 const shopTimeHTML = () => { const L = shopLeft(); return L === Infinity ? '' : `<span class="mute small">Shop-Zeit heute: <b id="shopT">${fmtT(L)}</b> übrig</span>`; };
 function goalItem() { return S.goal && CATALOG[S.goal] && !hasItem(S.goal) ? CATALOG[S.goal] : null; }
 const goalCard = () => {
@@ -464,6 +469,7 @@ VIEWS.shop = () => {
   const grp = UI.shopGrp || 'fino', groups = shopGroups(), lock = shopLeft() <= 0;
   const gtabs = `<div class="tabs">${groups.map(g => `<button class="${g === grp ? 'on' : ''}" data-act="shopGrp" data-arg="${g}">${ico((SHOP_GROUPS[g] || {}).ic || 'sparkle', 18)} ${(SHOP_GROUPS[g] || { label: g }).label}</button>`).join('')}</div>`;
   const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
+  if (grp === 'reisen' && typeof wShopTickets === 'function') return head + gtabs + wShopTickets();
   if (grp !== 'fino') {
     const kinds = Object.keys(KIND).filter(k => KIND[k].group === grp);
     const kind = kinds.includes(UI.shopKind) ? UI.shopKind : kinds[0];
@@ -511,48 +517,7 @@ VIEWS.limit = () => `<div class="card result"><div style="margin:auto;width:170p
   <h2>Für heute reicht’s!</h2><p>Du hast heute schon <b>${usedMin()} Minuten</b> geübt. Pausen sind wichtig – morgen geht es weiter. Dein Fortschritt ist gespeichert.</p>
   <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="home">Zum Start</button><button class="btn sec big" data-act="limitUnlock">Eltern: heute weiter üben</button></div></div>`;
 
-/* ----- Eltern ----- */
-VIEWS.parent = () => {
-  const L = levelInfo(), rows = [], weak = [];
-  MODULES.forEach(m => {
-    rows.push(`<tr><th colspan="5">${m.icon} ${m.title} <span class="mute small">(Arbeitsheft ${m.id} · ${m.wb})</span></th></tr>`);
-    m.topics.forEach(t => {
-      const key = tk(m.id, t.id), r = S.topics[key], d = S.decks[key], p = r && r.q ? Math.round(r.c / r.q * 100) : null;
-      if (r && r.q >= 10 && p < 60) weak.push(`${t.icon} ${t.t} – ${t.wb} (${p} %)`);
-      rows.push(`<tr><td>${t.icon} ${t.t} <span class="mute small">(${t.wb})</span></td><td>${d ? d.i : 0}/${DECK_N}</td><td>${deckPts(d)}/${d ? deckMax(d) : NEW_DECK_MAX}</td><td><span class="pct ${pctCls(p)}">${p === null ? '–' : p + ' %'}</span></td><td>${MEDALS[medalOf(key)] || '–'}</td></tr>`);
-    });
-  });
-  const days = Object.keys(S.log).sort().slice(-7).reverse(), tests = S.tests.slice(-6).reverse();
-  const sel = (id, opts, val) => `<select id="${id}" class="txt noprint">${opts.map(o => `<option value="${o[0]}" ${+o[0] === +val ? 'selected' : ''}>${o[1]}</option>`).join('')}</select>`;
-  return topBar(ico('gear', 26) + ' Eltern', 'home', '<button class="btn sm noprint" data-act="print">🖨️ Drucken</button>') + `
-  <div class="card noprint"><h3>Einstellungen</h3>
-    <div class="cfg"><div><b>Name des Kindes</b><br><span class="small mute">Wird auf dem Startbildschirm angezeigt.</span></div><div class="row"><input class="txt" id="nameIn" maxlength="20" value="${esc(S.name)}" placeholder="Name"><button class="btn sm" data-act="saveName">Speichern</button></div></div>
-    <div class="cfg"><div><b>Name des Avatars</b><br><span class="small mute">Steht im Profil. Leer = Name des Kindes.</span></div><div class="row"><input class="txt" id="avNameIn" maxlength="20" value="${esc(S.avName || '')}" placeholder="${esc(S.name || 'Spitzname')}"><button class="btn sm" data-act="saveAvName">Speichern</button></div></div>
-    <div class="cfg"><div><b>Tagesziel</b><br><span class="small mute">So viele Aufgaben pro Tag für Serie, Karte und Kreativzeit.</span></div>${sel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, n + ' Aufgaben']), S.cfg.goal)}</div>
-    <div class="cfg"><div><b>Tageslimit</b><br><span class="small mute">Nach dieser Übungszeit pro Tag gibt es eine Pause. Heute: ${usedMin()} Min · ${S.daily.d === ymd() ? S.daily.n : 0} Aufgaben.</span></div>${sel('cfgLimit', [[0, 'Kein Limit'], [15, '15 Minuten'], [20, '20 Minuten'], [30, '30 Minuten'], [45, '45 Minuten'], [60, '60 Minuten'], [90, '90 Minuten']], S.cfg.limitMin)}</div>
-    <div class="cfg"><div><b>Kreativzeit</b><br><span class="small mute">Avatar, Buch und Musik. „Nach dem Üben“: Tagesziel oder eine fertige Stufe öffnet ein kurzes Zeitfenster. „Gesperrt“ = Klassenmodus: nur ansehen, bis du sie freigibst.</span></div><select id="cfgCrMode" class="txt noprint">${[['after', 'Nach dem Üben'], ['always', 'Immer offen'], ['locked', 'Gesperrt']].map(o => `<option value="${o[0]}" ${o[0] === (S.cfg.creativeMode || 'after') ? 'selected' : ''}>${o[1]}</option>`).join('')}</select></div>
-    <div class="cfg"><div><b>Dauer pro Kreativzeit</b><br><span class="small mute">Wie lange eine Kreativzeit dauert, und wie oft pro Tag sie sich öffnet.</span></div><div class="row">${sel('cfgCrMin', [3, 5, 10, 15, 20].map(n => [n, n + ' Min']), S.cfg.creativeMin || 5)}${sel('cfgCrMax', [1, 2, 3].map(n => [n, n + '× pro Tag']), S.cfg.creativeMax || 2)}</div></div>
-    <div class="cfg"><div><b>Kreativzeit jetzt freigeben</b><br><span class="small mute">Heute extra: ${S.cfg.creativeMin || 5} Minuten. Heute noch ${fmtT(creativeLeft())} übrig.</span></div><button class="btn sm sec" data-act="crGrant">Freigeben</button></div>
-    <div class="cfg" style="display:block"><b>Zusatzfunktionen</b><br><span class="small mute">Diese Bereiche sind in „Meine Welt“ ausgeblendet. Was darin schon gesammelt wurde, bleibt immer erhalten.</span>
-      ${DZ_FLAGS.map(f => `<div class="cfg"><div><b>${f.label}</b><br><span class="small mute">${f.sub}</span></div><button class="btn sm ${flagOn(f.id) ? '' : 'sec'}" data-act="dzFlag" data-arg="${f.id}" aria-pressed="${flagOn(f.id)}">${flagOn(f.id) ? 'An' : 'Aus'}</button></div>`).join('')}</div>
-    <div class="cfg"><div><b>Shop-Zeit pro Tag</b><br><span class="small mute">So lange darf sie pro Tag im Shop stöbern und einkaufen. Heute: ${Math.floor((S.daily.shopSec || 0) / 60)} Min.</span></div>${sel('cfgShop', [[0, 'Unbegrenzt'], [3, '3 Minuten'], [5, '5 Minuten'], [10, '10 Minuten']], S.cfg.shopMin == null ? 5 : S.cfg.shopMin)}</div>
-    <div class="cfg" style="display:block"><b>Kapitel-Termine</b><br><span class="small mute">Bis wann soll das Kapitel vor den Ferien fertig sein? Erscheint in „Hefte“.</span>
-      <div class="row wrap" style="margin-top:8px">${CHAPTERS.map(c => `<label class="small">${c.id} (${c.season})<br><input type="date" class="txt" id="due_${c.id}" value="${(S.cfg.due || {})[c.id] || ''}"></label>`).join('')}</div></div>
-    <div class="cfg"><div><b>Töne &amp; Musik</b><br><span class="small mute">Schaltet alle Töne der App aus (auch die Musik-Werkstatt).</span></div><select id="cfgSound" class="txt noprint"><option value="1" ${S.cfg.sound !== false ? 'selected' : ''}>Töne an</option><option value="0" ${S.cfg.sound === false ? 'selected' : ''}>Töne aus</option></select></div>
-    <div class="cfg"><div><b>Eltern-PIN</b><br><span class="small mute">Schützt diesen Bereich, das Zurücksetzen von Gruppen und das Verlängern des Tageslimits.</span></div><button class="btn sm sec" data-act="pinChange">PIN ändern</button></div>
-  </div>
-  <div class="card" style="margin-top:12px"><h3>Überblick</h3><p>Stufe ${L.n} (${L.title}) · ${S.stats.q} Aufgaben · ${S.stats.q ? Math.round(S.stats.c / S.stats.q * 100) : 0} % gleich richtig · Serie ${streakNow()} Tag(e) · ${S.mistakes.length} im Fehler-Heft · ${Object.keys(S.cards).length} Karten · ${stampCount()} Stempel · ${(S.songs || []).length} Beats · Kreativzeit heute: ${Math.round((S.daily.cr.used || 0) / 60)} Min · Shop heute: ${Math.floor((S.daily.shopSec || 0) / 60)} Min</p>
-  ${weak.length ? `<p><b>Das sollte noch geübt werden:</b> ${weak.join(', ')}</p>` : '<p class="mute small">Schwache Themen werden angezeigt, sobald genug Aufgaben gelöst wurden.</p>'}</div>
-  <div class="card" style="margin-top:12px"><h3>Gruppen</h3><div style="overflow-x:auto"><table class="tbl"><tr><th>Gruppe</th><th>Fortschritt</th><th>Punkte</th><th>1. Versuch</th><th>Medaille</th></tr>${rows.join('')}</table></div></div>
-  <div class="grid" style="margin-top:12px"><div class="card"><h3>Letzte Tage</h3>${days.length ? `<table class="tbl">${days.map(d => `<tr><td>${d}</td><td>${S.log[d].n} Aufgaben</td><td>${S.log[d].c} gleich richtig</td></tr>`).join('')}</table>` : '<p class="mute">Noch nichts.</p>'}</div>
-  <div class="card"><h3>Mini-Tests</h3>${tests.length ? `<table class="tbl">${tests.map(t => `<tr><td>${new Date(t.ts).toLocaleDateString('de-DE')}</td><td>${t.score} / ${t.total}</td><td>${fmtT(t.secs)} min</td></tr>`).join('')}</table>` : '<p class="mute">Noch kein Test.</p>'}</div></div>
-  <div class="card noprint" style="margin-top:12px"><h3>Daten &amp; Sicherung</h3>
-    <p class="small">Der Fortschritt wird <b>nie von der App gelöscht</b>. Er geht nur verloren, wenn die Browserdaten (Cookies / Websitedaten) gelöscht werden. Er liegt doppelt im Browser. Zusätzlich kann man hier eine Sicherungsdatei speichern (z. B. in die Cloud) und später wieder laden. Die Datei immer im selben Browser öffnen und nicht im privaten Modus.</p>
-    <p class="small mute">Letzte Sicherung: ${S.lastBackup ? new Date(S.lastBackup).toLocaleDateString('de-DE') : 'noch nie'}</p>
-    <div class="row wrap"><button class="btn sm" data-act="export">💾 Sichern</button><label class="btn sm sec" style="cursor:pointer">📂 Laden<input type="file" id="impFile" accept=".json,application/json" class="hide"></label></div>
-    <textarea class="txt hide" id="expTxt" readonly style="margin-top:10px"></textarea>
-    ${persistOK ? '' : '<p class="small" style="color:var(--bad)">In diesem Browser kann gerade nichts dauerhaft gespeichert werden (privater Modus?).</p>'}</div>`;
-};
+/* ----- Eltern: siehe feat_eltern.js ----- */
 function exportData() {
   const j = JSON.stringify(S, null, 1);
   try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([j], { type: 'application/json' })); a.download = 'denkzauber-sicherung-' + ymd() + '.json'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { }
@@ -591,7 +556,7 @@ function importData(txt, force) {
 
 /* ----- PIN ----- */
 function requirePin(act, arg) {
-  if (Date.now() < UI.pinUntil) { ACT[act](arg); return; }
+  if (ADMIN || Date.now() < UI.pinUntil) { ACT[act](arg); return; }
   PIN = S.pin ? { act, arg, buf: '', mode: 'enter', msg: 'Eltern-PIN eingeben' }
     : { act, arg, buf: '', mode: 'create1', msg: 'Lege eine PIN für den Eltern-Bereich fest (4 Ziffern).' };
   pinDraw();
@@ -728,10 +693,9 @@ const ACT = {
   shopAt: id => shopAt(id), shopAll: () => { UI.shopAll = true; render(); },
   buyItemYes: id => { closeModal(); const it = CATALOG[id]; if (buyItem(id)) { render(); sfx('magic'); toast('🎁', `${esc(it.name)} gehört jetzt dir!`); } },
   trophies: () => go('trophies'),
-  crGrant: () => { touchDay(); S.daily.cr.left += (S.cfg.creativeMin || 5) * 60; save(); toast('🎨', 'Kreativzeit freigegeben'); render(); },
   parent: () => requirePin('parentGo'), parentGo: () => go('parent'), print: () => window.print(),
   dzFlag: id => { S.flags = S.flags || {}; S.flags[id] = !flagOn(id); save(); render(); },
-  saveName: () => { S.name = ($('#nameIn').value || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); },
+  saveName: () => { S.name = ($('#nameIn').value || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); render(); },
   export: exportData, importYes: () => { closeModal(); importData(UI.pending, true); },
   limitUnlock: () => requirePin('limitUnlockYes'), limitUnlockYes: () => { touchDay(); S.daily.unlocked = true; save(); toast('✅', 'Heute ohne Limit'); go('home', { say: '' }); },
   pinKey, pinDone: () => pinSucceed(), pinCancel: () => { PIN = null; closeModal(); },

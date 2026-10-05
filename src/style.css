@@ -395,3 +395,21 @@ body[data-calm="1"] *{animation:none!important;transition:none!important}
 }
 .finobox .fino .avwrap{--s:100%!important;width:100%;height:100%}
 .finobox .fino .avatar{width:100%;height:100%}
+.blk-sub{font-size:.8rem;font-weight:700;color:var(--mute,#6b7280);margin-top:-4px}
+
+/* ===== Tablet: Ziffernblock + Prüfen passen ohne Scrollen ===== */
+.mainc{display:flex;flex-direction:column;gap:12px;min-width:0}
+.coach .cbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.coach .cbody .bubble{width:100%}
+.coach .cbody .btn.sm{padding:6px 12px;font-size:.85rem;min-height:0}
+@media (min-width:700px) and (orientation:landscape){.play{grid-template-columns:minmax(0,1fr) 300px;align-items:start}}
+@media (orientation:landscape) and (max-height:820px){
+  .qcard{min-height:0!important}
+  .coach .avwrap{width:clamp(52px,9vh,92px);height:clamp(52px,9vh,92px)}
+  body .ad-play .keypad .key,body .play .keypad .key{min-height:clamp(36px,7.4vh,62px)}
+  body .play .keypad{gap:clamp(4px,1vh,8px)}
+  .side{gap:clamp(6px,1.2vh,12px)}
+  body .play .side>.btn.big{min-height:clamp(42px,7.4vh,60px);padding-top:6px;padding-bottom:6px}
+}
+@media (orientation:landscape) and (max-height:560px){.coach .bubble{font-size:.85rem;padding:6px 10px}.coach .cbody{gap:4px}body .ad-play .qcard{padding:16px 20px}}
+@media (orientation:portrait) and (max-width:700px){.qcard{min-height:0!important}}

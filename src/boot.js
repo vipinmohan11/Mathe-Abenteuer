@@ -7,6 +7,7 @@ window.__app = {
 };
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { }
 touchDay();
+if (ADMIN) adminFill();
 Object.values(FEATS).forEach(f => { if (f.boot) { try { f.boot(); } catch (e) { console.error(e); } } });
 try { checkUnlocks(); } catch (e) { console.error(e); }
 render();

@@ -2,7 +2,10 @@
    WELT: „Meine Weltreise“ – ruhige Belohnung in Meine Welt
    ---------------------------------------------------------------------
    Daten: world_data.js (WP = Länder, WSTAT = 6 Stationen). Zustand: S.world (Standardwerte in store.js DEF).
-   Sterne: frei = gesammelte Sterne (S.starsLife) − für Länder ausgegebene (S.world.spent). S.stars / S.starsLife werden hier NIE geschrieben,
+   Reisemeilen ✈️ (ab Runde 5): Länder kosten Meilen statt Sterne (Preis = früherer Sternpreis × 10). Meilen gibt es nur für gelöste Aufgaben
+           (1 je richtig gelöster Aufgabe, höchstens W_MILES_DAY pro Tag) – S.world.miles (gesammelt, nur mehr) / S.world.milesSpent (ausgegeben).
+           Mini-Test mit mindestens 80 % richtig = Boarding-Pass: öffnet das nächste Land (einmal pro Tag, S.daily.bp).
+           S.world.spent (früher für Länder ausgegebene Sterne) bleibt als Altwert erhalten. S.stars / S.starsLife werden hier NIE geschrieben,
            Wesen, Pokale, Münzen und Karten bleiben unberührt. Weltreise zahlt weder Münzen noch Karten aus (nur Souvenirs, Stempel, Pokale).
    Ein geöffnetes Land bleibt für immer offen, alle Stationen frei wählbar. Stempel nach W_STAMP_AT von 6 Stationen.
    Die Oberfläche spricht nur mit dem Adapter WA (unten) – nie direkt mit S.
@@ -14,19 +17,52 @@ function wS() {
   const w = S.world || (S.world = {});
   ['open', 'seen', 'stamps', 'souv', 'quiz', 'pass', 'off'].forEach(k => { if (!w[k] || typeof w[k] !== 'object' || Array.isArray(w[k])) w[k] = {}; });
   if (!Array.isArray(w.log)) w.log = [];
+  if (!Array.isArray(w.wishes)) w.wishes = [];                      // Wunsch-Tickets: [{ n: Name, ts, id? (sobald das Land vorhanden ist), done }]
+  if (!Array.isArray(w.tix)) w.tix = [];                            // gekaufte Tickets: [{ k: 'next'|'wish', id, ts }]
   if (typeof w.spent !== 'number' || w.spent < 0) w.spent = 0;
+  if (typeof w.miles !== 'number' || w.miles < 0) w.miles = 0;
+  if (typeof w.milesSpent !== 'number' || w.milesSpent < 0) w.milesSpent = 0;
   return w;
 }
 
+const wNorm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ß/g, 'ss').replace(/[^a-z0-9]/g, '');
+const W_ALIAS = { deu: ['germany', 'brd'], gbr: ['england', 'grossbritannien', 'uk', 'unitedkingdom', 'greatbritain', 'schottland', 'wales'], usa: ['vereinigtestaaten', 'amerika', 'unitedstates', 'us', 'vereinigtestaatenvonamerika'], kor: ['korea', 'southkorea', 'suedkorea'], zaf: ['southafrica'], nld: ['holland', 'netherlands'], tur: ['turkey', 'tuerkei'], chn: ['china'], egy: ['egypt', 'aegypten'], ken: ['kenya'], ind: ['india'], jpn: ['japan'], ita: ['italy'], esp: ['spain'], grc: ['greece'], pol: ['poland'], swe: ['sweden'], tha: ['thailand', 'siam'], mex: ['mexico'], bra: ['brazil'], aus: ['australia'], can: ['canada'], fra: ['france'] };
+const W_TIX_NEXT = 250, W_TIX_WISH = 500, W_MILES_DAY = 100, W_PASS_PCT = 0.8, W_MILE_X = 10;                           // Münzen (Shop → Reisen)
+
 /* ---------- Adapter: die einzige Tür zum Zustand ---------- */
 const WA = {
-  freeStars: () => Math.max(0, (S.starsLife || 0) - wS().spent),
+  freeMiles: () => { const w = wS(); return Math.max(0, w.miles - w.milesSpent); },
+  mcost: id => WP[id].cost * W_MILE_X,
+  addMiles(n) {                                                                  // nur für gelöste Aufgaben; Tagesgrenze schützt vor Dauer-Klicken
+    touchDay(); const d = S.daily, give = Math.max(0, Math.min(n, W_MILES_DAY - (d.mi || 0))); if (!give) return 0;
+    d.mi = (d.mi || 0) + give; wS().miles += give; return give;
+  },
+  testPass(score, total) {                                                       // Mini-Test ≥ 80 %: Boarding-Pass öffnet das nächste Land (1× pro Tag)
+    touchDay(); if (total < 10 || score / total < W_PASS_PCT || S.daily.bp) return null;
+    const id = WA.nextLocked(); if (!id) return null;
+    S.daily.bp = true; WA.grant(id, 'pass'); return id;
+  },
   isOpen: id => !!WP[id] && (WP[id].cost === 0 || !!wS().open[id]),
   shown: id => !!WP[id] && (WA.isOpen(id) || !wS().off[id]),                  // vom Elternteil ausgeblendete, noch gesperrte Länder
-  canOpen: id => !!WP[id] && !WA.isOpen(id) && WA.freeStars() >= WP[id].cost,
+  canOpen: id => !!WP[id] && !WA.isOpen(id) && WA.freeMiles() >= WA.mcost(id),
   openCountry(id) {
     if (!WA.canOpen(id)) return false;
-    const w = wS(); w.spent += WP[id].cost; w.open[id] = wDay(); save(); return true;
+    const w = wS(); w.milesSpent += WA.mcost(id); w.open[id] = wDay(); save(); return true;
+  },
+  /* ---- Tickets (Shop → Reisen): Münzen statt Sterne; Land bleibt danach für immer offen ---- */
+  nextLocked: () => WORDER.find(id => WP[id] && !WA.isOpen(id) && WA.shown(id)) || null,
+  grant(id, kind) { const w = wS(); w.open[id] = wDay(); w.tix.push({ k: kind, id, ts: Date.now() }); if (w.tix.length > 60) w.tix.shift(); save(); },
+  match(name) {                                                     // Wunschname → Länder-Id (oder null)
+    const n = wNorm(name); if (!n) return null;
+    return WORDER.find(id => WP[id] && (wNorm(WP[id].name) === n || (W_ALIAS[id] || []).includes(n))) || null;
+  },
+  wish(name) { const w = wS(); w.wishes.push({ n: name, ts: Date.now(), done: false }); if (w.wishes.length > 40) w.wishes.shift(); save(); },
+  pending: () => wS().wishes.filter(x => !x.done),
+  checkWishes() {                                                   // nach einem Update: Wünsche, die jetzt vorhanden sind, werden freigeschaltet
+    const w = wS(), got = [];
+    w.wishes.forEach(x => { if (x.done) return; const id = WA.match(x.n); if (id) { x.done = true; x.id = id; if (!WA.isOpen(id)) { w.open[id] = wDay(); w.tix.push({ k: 'wish', id, ts: Date.now() }); } got.push(id); } });
+    if (got.length) save();
+    return got;
   },
   seen: id => wS().seen[id] || {},
   marks: id => WSTAT.filter(s => WA.seen(id)[s[0]]).length,
@@ -88,7 +124,7 @@ const wMarkSVG = on => on
   ? '<svg class="w-mk on" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="M8 2.8l2.7 5.2L8 13.2 5.3 8z" fill="#fff"/></svg>'
   : '<svg class="w-mk" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
 const wDots = id => `<span class="w-dots" aria-hidden="true">${WSTAT.map(s => wMarkSVG(!!WA.seen(id)[s[0]])).join('')}</span>`;
-const wStarChip = () => `<span class="w-free" title="Freie Sterne für neue Länder"><b>${WA.freeStars()}</b> freie ⭐</span>`;
+const wMileChip = () => `<span class="w-free" title="Reisemeilen für neue Länder"><b>${WA.freeMiles()}</b> ✈️ Meilen</span>`;
 const wBar = (title, back, backLabel, extra) => topBar(esc(title), back, extra ? `<div class="w-bar-x">${extra}</div>` : '');
 const wRoot = body => `<div class="w-root">${body}</div>`;
 const wShortDate = d => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(d || ''); return m ? `${m[3]}.${m[2]}.` : ''; };
@@ -100,18 +136,59 @@ function wCard(p) {
   if (open) return `<button class="w-card open" data-act="wBoard" data-arg="${p.id}" aria-label="${esc(p.name)}, Reise starten, ${WA.marks(p.id)} von ${WSTAT.length} Stationen besucht${WA.stamped(p.id) ? ', Stempel erhalten' : ''}">
     ${wFlag(p.id, 'w-cflag')}<b>${esc(p.name)}</b><small>${esc(p.sub)}</small>${wDots(p.id)}${WA.stamped(p.id) ? `<span class="w-cstamp">${ico('stamp', 14)} Stempel</span>` : ''}</button>`;
   const can = WA.canOpen(p.id);
-  return `<button class="w-card locked ${can ? 'can' : ''}" data-act="wLock" data-arg="${p.id}" aria-label="${esc(p.name)}, gesperrt, kostet ${p.cost} Sterne${can ? ', du kannst es öffnen' : ''}">
-    <span class="w-cflagwrap">${wFlag(p.id, 'w-cflag')}<i class="w-lockic">${ico('lock', 16)}</i></span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small><span class="w-price">${p.cost} ⭐${can ? ' · bereit' : ''}</span></button>`;
+  return `<button class="w-card locked ${can ? 'can' : ''}" data-act="wLock" data-arg="${p.id}" aria-label="${esc(p.name)}, gesperrt, kostet ${WA.mcost(p.id)} Reisemeilen${can ? ', du kannst es öffnen' : ''}">
+    <span class="w-cflagwrap">${wFlag(p.id, 'w-cflag')}<i class="w-lockic">${ico('lock', 16)}</i></span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small><span class="w-price">${WA.mcost(p.id)} ✈️${can ? ' · bereit' : ''}</span></button>`;
 }
+const W_CONT = ['Europa', 'Asien', 'Afrika', 'Nordamerika', 'Südamerika', 'Ozeanien'];
 VIEWS.welt = () => {
   const all = wList().filter(p => WA.shown(p.id)), open = all.filter(p => WA.isOpen(p.id)), locked = all.filter(p => !WA.isOpen(p.id));
+  const sel = UI.wDest && WP[UI.wDest] ? UI.wDest : (open[0] || all[0] || {}).id;
+  const opt = p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(p.name)}${WA.isOpen(p.id) ? '' : ' · ' + WA.mcost(p.id) + ' ✈️ Meilen'}</option>`;
+  const pick = `<section class="w-pick" aria-label="Reiseziel wählen"><label for="wDest">Reiseziel wählen</label><div class="w-pick-row"><select id="wDest" class="txt">${open.length ? `<optgroup label="Meine Reisen">${open.map(opt).join('')}</optgroup>` : ''}${locked.length ? `<optgroup label="Noch gesperrt">${locked.map(opt).join('')}</optgroup>` : ''}</select><button class="btn" data-act="wGoDest">Los geht’s</button></div></section>`;
+  const groups = W_CONT.map(c => [c, locked.filter(p => p.cont === c)]).filter(x => x[1].length);
+  const pend = WA.pending();
   return wRoot(wBar(W_NAME, 'rewards', 'Meine Welt', `<button class="w-pill" data-act="wPassGo">${ico('stamp', 18)} ${W_PASS}</button>`)
-    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Ein Land kostet einmal ein paar freie ⭐. Danach bleibt es für immer offen.</p></div>
-      <div class="w-bal"><b>${WA.freeStars()}</b><span>freie ⭐</span><small>${S.starsLife} gesammelt${wS().spent ? ` · ${wS().spent} ausgegeben` : ''}</small></div></section>
+    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Für jede richtig gelöste Aufgabe bekommst du eine Reisemeile ✈️. Mit Meilen öffnest du neue Länder – Sterne und Münzen bleiben dabei, wie sie sind. Ein Mini-Test mit 12 von 15 richtig bringt einen Boarding-Pass für das nächste Land. Oder du kaufst im Shop ein Reise-Ticket.</p></div>
+      <div class="w-bal"><b>${WA.freeMiles()}</b><span>Reisemeilen ✈️</span><small>${wS().miles} gesammelt${wS().milesSpent ? ` · ${wS().milesSpent} ausgegeben` : ''}</small></div></section>
+    ${pick}
     <h3 class="w-sec">Meine Reisen</h3><div class="w-grid">${open.map(wCard).join('')}</div>
-    ${locked.length ? `<h3 class="w-sec">Weitere Ziele</h3><div class="w-grid">${locked.map(wCard).join('')}</div>` : ''}
-    <p class="w-foot">Sterne bekommst du beim Üben. Deine Sterne, Wesen und Pokale bleiben, wie sie sind.</p>`);
+    ${pend.length ? `<div class="w-wish">${ico('stamp', 18)} <span>Dein Wunschland${pend.length > 1 ? 'länder' : ''}: <b>${pend.map(x => esc(x.n)).join(', ')}</b>. Es kommt bald und wird dann von selbst geöffnet.</span></div>` : ''}
+    ${groups.length ? `<h3 class="w-sec">Weitere Ziele</h3>${groups.map(([c, list]) => `<details class="w-cont" ${UI.wCont === c ? 'open' : ''} data-cont="${c}"><summary>${esc(c)} <span>${list.length}</span></summary><div class="w-grid">${list.map(wCard).join('')}</div></details>`).join('')}` : ''}
+    <div class="w-foot2"><button class="btn sec" data-act="wTixShop">${ico('bag', 18)} Reise-Ticket im Shop</button></div>
+    <p class="w-foot">Reisemeilen bekommst du für richtig gelöste Aufgaben. Deine Sterne, Münzen, Wesen und Pokale bleiben, wie sie sind.</p>`);
 };
+
+/* ---------- Shop → Reisen: Reise-Ticket (nächstes Land) und Wunsch-Ticket (frei gewähltes Land) ---------- */
+const W_TIX_ART = '<svg viewBox="0 0 120 64" class="w-tix-svg" aria-hidden="true"><path d="M8 10h104a4 4 0 0 1 4 4v10a8 8 0 0 0 0 16v10a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V40a8 8 0 0 0 0-16V14a4 4 0 0 1 4-4Z" fill="#f1e4b6" stroke="#9b806d" stroke-width="2.4"/><path d="M84 12v40" stroke="#9b806d" stroke-width="2.4" stroke-dasharray="4 4"/><path d="M30 38l24-14-6 15-9 1-5 7-2-6Z" fill="#52676c"/><circle cx="100" cy="32" r="8" fill="#bed1c6" stroke="#52676c" stroke-width="2"/><path d="M96 32h8M100 28v8" stroke="#52676c" stroke-width="1.6"/></svg>';
+function wShopTickets() {
+  const nx = WA.nextLocked(), lock = shopLeft() <= 0, np = nx ? WP[nx] : null;
+  const pickable = wList().filter(p => WA.shown(p.id) && !WA.isOpen(p.id));
+  const can1 = S.coins >= W_TIX_NEXT, can2 = S.coins >= W_TIX_WISH;
+  const pend = WA.pending();
+  return `<div class="w-tix">
+    <article class="card w-ticket">${W_TIX_ART}<h3>Reise-Ticket</h3>
+      <p>${np ? `Öffnet sofort das nächste Land auf der Liste: <b>${esc(np.name)}</b>.` : 'Du hast schon alle Länder auf der Liste geöffnet. Mehr kommen bald.'}</p>
+      ${np ? `<div class="w-tix-go">${wFlag(np.id, 'w-lflag')}<span>${esc(np.sub)}</span></div>` : ''}
+      <div class="price">🪙 ${W_TIX_NEXT}</div>
+      <button class="btn ${np && can1 && !lock ? '' : 'sec'}" data-act="wTixNext" ${np ? '' : 'disabled'}>${!np ? 'Alles geöffnet' : can1 ? 'Kaufen' : 'Noch ' + (W_TIX_NEXT - S.coins) + ' 🪙'}</button></article>
+    <article class="card w-ticket">${W_TIX_ART}<h3>Wunsch-Ticket</h3>
+      <p>Du wünschst dir ein bestimmtes Land. Gibt es das Land schon, ist es sofort offen. Wenn nicht, merken wir es uns und öffnen es, sobald es da ist.</p>
+      <label class="sr-only" for="wxSel">Land wählen</label>
+      <select id="wxSel" class="txt"><option value="">Land aus der Liste wählen …</option>${pickable.map(p => `<option value="${p.id}" ${UI.wxSel === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select>
+      <label for="wxTxt">… oder ein anderes Land eintippen</label>
+      <input class="txt" id="wxTxt" maxlength="30" placeholder="z. B. Norwegen" autocomplete="off" value="${esc(UI.wxTxt || '')}">
+      <div class="price">🪙 ${W_TIX_WISH}</div>
+      <button class="btn ${can2 && !lock ? '' : 'sec'}" data-act="wTixWish">${can2 ? 'Kaufen' : 'Noch ' + (W_TIX_WISH - S.coins) + ' 🪙'}</button></article>
+    ${pend.length ? `<div class="w-wish w-wish-shop">${ico('stamp', 18)} <span>Deine Wünsche: <b>${pend.map(x => esc(x.n)).join(', ')}</b>. Sie öffnen sich von selbst, sobald das Land da ist.</span></div>` : ''}
+    <p class="mute small w-tix-note">Ein Ticket kostet Münzen und ersetzt die Sterne für ein Land. Das Land bleibt danach für immer offen.</p></div>`;
+}
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'wDest') UI.wDest = t.value;
+  else if (t.id === 'wxSel') UI.wxSel = t.value;
+}); 
+document.addEventListener('input', e => { if (e.target.id === 'wxTxt') UI.wxTxt = e.target.value; });
+document.addEventListener('toggle', e => { const d = e.target; if (d && d.classList && d.classList.contains('w-cont') && d.open) UI.wCont = d.dataset.cont; }, true);
 
 /* ---------- Reise: links Szene + Begleiter, rechts Route + Station ---------- */
 const wSouvLine = (p, st) => {
@@ -169,7 +246,7 @@ VIEWS.weltReise = () => {
 };
 
 /* ---------- Mein Reisepass: Datenseite + Visa-Seite mit Einreisestempeln ---------- */
-const WP_ISO = { deu: 'DEU', jpn: 'JPN', ind: 'IND' }, WP_AP = { deu: 'FRA', jpn: 'NRT', ind: 'DEL' };       // Flughafen- und Länder-Codes (sichere Angaben)
+const WP_ISO = Object.assign({ deu: 'DEU', jpn: 'JPN', ind: 'IND' }, WX.iso), WP_AP = Object.assign({ deu: 'FRA', jpn: 'NRT', ind: 'DEL' }, WX.ap);       // Flughafen- und Länder-Codes (sichere Angaben)
 const WMON = ['JAN', 'FEB', 'MÄR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];
 const wParts = d => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(d || ''); return m ? { y: m[1], mo: +m[2], m: WMON[+m[2] - 1] || '', d: m[3] } : null; };
 const wLong = d => { const q = wParts(d); return q ? `${q.d} ${q.m} ${q.y}` : '—'; };
@@ -264,7 +341,8 @@ VIEWS.weltEltern = () => {
         <label><input type="radio" name="wpPhoto" value="avatar" ${w.pass.photo === 'fino' ? '' : 'checked'}> Mein Avatar (Standard)</label>
         <label><input type="radio" name="wpPhoto" value="fino" ${w.pass.photo === 'fino' ? 'checked' : ''}> ${esc(FN())}</label></fieldset>
       <h3>Länder, die angeboten werden</h3><p class="small mute">Schon geöffnete Länder bleiben immer offen.</p>
-      ${locked.length ? locked.map(p => `<label class="w-toggle"><input type="checkbox" data-wpack="${p.id}" ${w.off[p.id] ? '' : 'checked'}> ${wFlag(p.id, 'w-lflag')} ${esc(p.name)} <small>${p.cost} ⭐</small></label>`).join('') : '<p class="small mute">Alle Länder sind schon geöffnet.</p>'}
+      ${locked.length ? locked.map(p => `<label class="w-toggle"><input type="checkbox" data-wpack="${p.id}" ${w.off[p.id] ? '' : 'checked'}> ${wFlag(p.id, 'w-lflag')} ${esc(p.name)} <small>${WA.mcost(p.id)} ✈️</small></label>`).join('') : '<p class="small mute">Alle Länder sind schon geöffnet.</p>'}
+      <h3>Wunsch-Länder</h3>${w.wishes.length ? `<ul class="w-wishes">${w.wishes.map(x => `<li><b>${esc(x.n)}</b> <small>${x.done ? 'geöffnet' : 'wartet auf ein Update'} · ${esc(new Date(x.ts).toLocaleDateString('de-DE'))}</small></li>`).join('')}</ul>` : '<p class="small mute">Noch keine Wünsche.</p>'}
       <div class="row wrap" style="margin-top:14px"><button class="btn big" data-act="wSaveEltern">Speichern</button></div></section>`);
 };
 
@@ -297,17 +375,50 @@ function wSpeak(text, lang) {
 registerFeature({
   id: 'welt', title: W_NAME, icon: 'stamp', tint: 'sky', group: 'world', order: 70, view: 'welt',
   sub: () => { const n = wList().filter(p => WA.isOpen(p.id)).length; return wList().some(p => WA.shown(p.id) && WA.canOpen(p.id)) ? 'Du kannst ein Land öffnen' : `${n} ${n === 1 ? 'Land' : 'Länder'} offen`; },
+  check: () => { const got = WA.checkWishes(); if (got.length) toast('🎫', `Dein Wunschland ${esc(WP[got[0]].name)} ist da und offen!`); },
   views: { weltReise: VIEWS.weltReise, weltPass: VIEWS.weltPass, weltEltern: VIEWS.weltEltern },
   leave: () => { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
   acts: {
     welt: () => go('welt'),
     wBoard: id => { if (WA.isOpen(id)) wLand(id); },
+    wGoDest: () => { const el = $('#wDest'), id = el && el.value; if (!id || !WP[id]) return; UI.wDest = id; ACT.wLock(id); },
+    wTixShop: () => { UI.shopGrp = 'reisen'; go('shop'); },
+    wTixNext: () => {
+      const id = WA.nextLocked(); if (!id) return;
+      if (shopLeft() <= 0) return toast('⏳', 'Die Shop-Zeit für heute ist vorbei.');
+      if (S.coins < W_TIX_NEXT) return modal('Noch nicht genug Münzen', `Das Reise-Ticket kostet <b>${W_TIX_NEXT} 🪙</b>. Dir fehlen noch <b>${W_TIX_NEXT - S.coins} 🪙</b>.`, null, '', '', 'Okay');
+      modal('Reise-Ticket kaufen?', `Das Ticket kostet <b>${W_TIX_NEXT} 🪙</b> und öffnet sofort <b>${esc(WP[id].name)}</b>. Das Land bleibt für immer offen.`, 'Kaufen', 'wTixNextYes', id, 'Später');
+    },
+    wTixNextYes: id => {
+      closeModal(); if (WA.nextLocked() !== id || S.coins < W_TIX_NEXT || shopLeft() <= 0) return;
+      S.coins -= W_TIX_NEXT; S.stats.bought++; WA.grant(id, 'next'); wQuietly(() => checkTrophies()); save(); sfx('magic');
+      wFlight(id, () => wLand(id));
+    },
+    wTixWish: () => {
+      const sel = $('#wxSel'), txt = $('#wxTxt'), typed = ((txt && txt.value) || '').trim().slice(0, 30), pickId = sel && sel.value;
+      UI.wxSel = pickId || ''; UI.wxTxt = typed;
+      if (shopLeft() <= 0) return toast('⏳', 'Die Shop-Zeit für heute ist vorbei.');
+      const name = typed || (pickId && WP[pickId] ? WP[pickId].name : '');
+      if (!name) return toast('✈️', 'Wähle ein Land oder tippe einen Namen ein.');
+      const id = WA.match(name);
+      if (id && WA.isOpen(id)) return modal('Schon geöffnet', `<b>${esc(WP[id].name)}</b> hast du schon. Dafür brauchst du kein Ticket.`, null, '', '', 'Okay');
+      if (S.coins < W_TIX_WISH) return modal('Noch nicht genug Münzen', `Das Wunsch-Ticket kostet <b>${W_TIX_WISH} 🪙</b>. Dir fehlen noch <b>${W_TIX_WISH - S.coins} 🪙</b>.`, null, '', '', 'Okay');
+      UI.wxGo = name;
+      modal('Wunsch-Ticket kaufen?', id ? `Das Ticket kostet <b>${W_TIX_WISH} 🪙</b> und öffnet sofort <b>${esc(WP[id].name)}</b>.` : `<b>${esc(name)}</b> gibt es noch nicht in der App. Das Ticket kostet <b>${W_TIX_WISH} 🪙</b>. Wir merken uns deinen Wunsch und öffnen das Land, sobald es da ist.`, 'Kaufen', 'wTixWishYes', '', 'Später');
+    },
+    wTixWishYes: () => {
+      closeModal(); const name = UI.wxGo; if (!name || S.coins < W_TIX_WISH || shopLeft() <= 0) return;
+      const id = WA.match(name); if (id && WA.isOpen(id)) return;
+      S.coins -= W_TIX_WISH; S.stats.bought++; UI.wxGo = ''; UI.wxSel = ''; UI.wxTxt = '';
+      if (id) { WA.grant(id, 'wish'); wQuietly(() => checkTrophies()); save(); sfx('magic'); wFlight(id, () => wLand(id)); }
+      else { WA.wish(name); wQuietly(() => checkTrophies()); save(); sfx('magic'); toast('🎫', `Wunsch gemerkt: ${name}`); render(); }
+    },
     wLock: id => {
       const p = WP[id]; if (!p) return;
       if (WA.isOpen(id)) return wLand(id);
-      const free = WA.freeStars();
-      if (free >= p.cost) modal(`${esc(p.name)} öffnen?`, `Das kostet <b>einmal ${p.cost} ⭐</b> von deinen freien Sternen. Du hast ${free}, danach ${free - p.cost}.<br>Deine gesammelten Sterne, Wesen und Pokale bleiben. Das Land bleibt danach für immer offen.`, 'Öffnen', 'wOpenYes', id, 'Später');
-      else modal(`${esc(p.name)} ist noch zu`, `Dir fehlen noch <b>${p.cost - free} ⭐</b> (${p.cost} ⭐ kostet das Land, du hast ${free}). Sterne bekommst du beim Üben.`, null, '', '', 'Okay');
+      const free = WA.freeMiles(), cost = WA.mcost(id);
+      if (free >= cost) modal(`${esc(p.name)} öffnen?`, `Das kostet <b>einmal ${cost} ✈️ Reisemeilen</b>. Du hast ${free}, danach ${free - cost}.<br>Deine Sterne, Münzen, Wesen und Pokale bleiben. Das Land bleibt danach für immer offen.`, 'Öffnen', 'wOpenYes', id, 'Später');
+      else modal(`${esc(p.name)} ist noch zu`, `Dir fehlen noch <b>${cost - free} ✈️</b> (das Land kostet ${cost} Reisemeilen, du hast ${free}). Meilen bekommst du für jede richtig gelöste Aufgabe. Ein Mini-Test mit 12 von 15 richtig öffnet ein Land sofort.`, null, '', '', 'Okay');
     },
     wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; wQuietly(() => checkTrophies()); wFlight(id, () => wLand(id)); },
     wFlightSkip: () => { if (UI.wFlightEnd) UI.wFlightEnd(); },

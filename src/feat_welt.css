@@ -141,3 +141,32 @@
 .w-cards{grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}
 .w-wcards{grid-template-columns:repeat(auto-fill,minmax(176px,1fr))}
 @media(max-width:560px){.w-cards,.w-wcards{grid-template-columns:repeat(2,minmax(0,1fr))}.w-one{grid-template-columns:minmax(0,1fr)}}
+
+/* ===== Reiseziel-Auswahl, Kontinente, Tickets ===== */
+.w-pick{background:var(--dz-surface,#fff);border-radius:var(--dz-r-lg,20px);padding:14px 16px;margin:0 0 14px;display:grid;gap:8px;box-shadow:var(--dz-sh-sof,none)}
+.w-pick label{font-weight:800;font-size:.95rem}
+.w-pick-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.w-pick-row select{flex:1 1 220px;min-width:0;height:48px;font-size:1.05rem;font-weight:700}
+.w-pick-row .btn{height:48px}
+.w-cont{margin:8px 0;background:var(--dz-surface,#fff);border-radius:var(--dz-r-lg,20px);padding:0 14px;box-shadow:var(--dz-sh-sof,none)}
+.w-cont>summary{list-style:none;cursor:pointer;padding:14px 4px;font-weight:800;font-size:1.05rem;display:flex;align-items:center;justify-content:space-between}
+.w-cont>summary::-webkit-details-marker{display:none}
+.w-cont>summary span{background:var(--dz-tint,#e8efec);border-radius:99px;padding:2px 12px;font-size:.9rem}
+.w-cont[open]{padding-bottom:14px}
+.w-cont[open]>summary{border-bottom:1px solid var(--dz-line,#ddd);margin-bottom:12px}
+.w-wish{display:flex;gap:10px;align-items:center;background:var(--dz-tint,#e8efec);border-radius:16px;padding:12px 14px;margin:12px 0;font-size:.95rem}
+.w-foot2{display:flex;justify-content:center;margin:16px 0 4px}
+.w-tix{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+.w-ticket{display:flex;flex-direction:column;gap:8px;align-items:stretch;padding:18px;text-align:left}
+.w-ticket h3{margin:0;font-size:1.25rem}
+.w-ticket p{margin:0;font-size:.95rem}
+.w-ticket label{font-weight:700;font-size:.9rem;margin-top:4px}
+.w-ticket .txt,.w-ticket select{width:100%;min-height:44px}
+.w-ticket .price{font-weight:800;font-size:1.2rem;margin-top:4px}
+.w-ticket .btn{align-self:flex-start}
+.w-tix-svg{width:130px;height:auto;align-self:center}
+.w-tix-go{display:flex;align-items:center;gap:10px;font-weight:700}
+.w-tix-go .w-lflag{width:36px;height:24px}
+.w-wish-shop,.w-tix-note{grid-column:1/-1}
+.w-wishes{margin:6px 0 0;padding-left:18px}
+.w-pick{grid-template-columns:minmax(0,1fr)}.w-pick>*{min-width:0}.w-pick-row select{max-width:100%;text-overflow:ellipsis}

@@ -15,7 +15,8 @@ const chapIdx = m => Math.max(0, CHAPTERS.findIndex(c => c.id === (m.id || '')[0
 const modNum = m => +String(m.id).slice(1) || 0;
 const isExtra = m => !!m.extra || !/^[A-D][1-5]$/.test(m.id);
 const chapMods = c => MODULES.filter(m => !isExtra(m) && m.id[0] === c);
-const FN = () => (S.finoName || 'Fino');                         // ein früher gespeicherter Fino-Name bleibt erhalten (Umbenennen gibt es nicht mehr)
+/* FN() = der Name, der überall statt „Fino“ steht: der Name des Kindes (Profil), sonst ein früher gespeicherter Fino-Name, sonst „Fino“. */
+const FN = () => ((S.name || '').trim() || S.finoName || 'Fino');
 
 /* Preise im alten Fino-Shop auf Münzen umstellen (Flamme = 3 Münzen, Stern = 12 Münzen); Besitz bleibt unverändert */
 (function normShop() {
@@ -60,7 +61,8 @@ const crBanner = ok => ok
 
 /* ---------- Navigation: die Startseite ist der Hub. Kein unterer Tab-Balken mehr; „Zurück“ führt zur Seite, von der man kam (dz.js) ---------- */
 const avArt = (size, mood) => avatarHTML(eqAvatar(), size, mood || 'happy');            // das ausgewählte Bild (eigener Avatar oder Fino)
-const profileName = () => useMe() ? (S.avName || S.name || 'Mein Zauberlehrling') : FN();
+/* Der Name des Kindes ist auch der Name des Avatars. S.avName (früher getrennt) wird nur noch als Notnagel gelesen, nie gelöscht. */
+const profileName = () => ((S.name || '').trim()) || (useMe() ? (S.avName || 'Mein Zauberlehrling') : FN());
 
 function shellRender(v, f) {
   const b = document.body;
@@ -72,7 +74,9 @@ function shellRender(v, f) {
     if (!ok && F.creative === 'closed') return lockScreen(F);
     UI.ro = !ok; banner = (v === 'avatar' && !(S.av && S.av.look)) ? '' : crBanner(ok);
   }
-  return banner + f();
+  const pa = pgArea(v);
+  if (pa) { const st = pgState(pa); if (!st.open) return adminBar() + pageLock(v, st); banner = pgBar(pa, st) + banner; }
+  return adminBar() + banner + f();
 }
 
 /* ---------- Uhr: Shop-Zeit und Kreativzeit laufen nur, wenn man wirklich dort ist ---------- */
@@ -145,7 +149,7 @@ VIEWS.home = () => {
   const n = S.daily.d === ymd() ? S.daily.n : 0, goal = S.cfg.goal, nu = nextUp();
   const progress = Math.min(n, goal), pct = Math.min(100, Math.round(n / goal * 100)), done = n >= goal;
   const hello = homeGreeting();
-  const sub = done ? 'Dein Tagesziel ist geschafft – super!' : useMe() ? 'Was entdeckst du heute?' : `${esc(FN())} ist bereit. Du auch?`;
+  const sub = done ? 'Dein Tagesziel ist geschafft – super!' : (useMe() || S.name) ? 'Was entdeckst du heute?' : `${esc(FN())} ist bereit. Du auch?`;
   const tree = `<div class="dz-tree" aria-label="Dein Baum wächst mit jeder Aufgabe">${dzTree(pct)}<div class="dz-tree-t"><strong>${done ? 'Dein Baum ist groß!' : n ? 'Dein Baum wächst' : 'Pflanze deinen Samen'}</strong><small>Heute ${progress} von ${goal} Aufgaben</small><div class="dz-tree-bar" role="progressbar" aria-label="Tagesziel" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="${goal}"><i style="width:${pct}%"></i></div></div></div>`;
   const ex = MODULES.filter(isExtra);
   const tiles = [
@@ -156,13 +160,31 @@ VIEWS.home = () => {
   ];
   return dzHead() + dzHero('', hello, sub, tree) + dzSec('Wohin heute?') +
     dzGrid(tiles.length, tiles.map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join(''), 'dz-home4') +
-    `<div class="dz-foot"><button class="dz-linkbtn" data-act="parent">${ico('gear', 16)} Für Eltern</button></div>
+    `<div class="dz-foot"><button class="dz-linkbtn dz-snd" data-act="toggleSound" aria-pressed="${S.cfg.sound !== false}" aria-label="${S.cfg.sound !== false ? 'Ton ausschalten' : 'Ton einschalten'}">${ico(S.cfg.sound !== false ? 'speaker' : 'speakerOff', 18)} ${S.cfg.sound !== false ? 'Ton an' : 'Ton aus'}</button><button class="dz-linkbtn" data-act="parent">${ico('gear', 16)} Für Eltern</button></div>
     ${persistOK ? '' : '<p class="ad-save-warning" role="alert">Gerade kann nichts gespeichert werden. Bitte lass einen Erwachsenen eine Sicherung exportieren.</p>'}`;
 };
 
 /* ---------- Meine Hefte ---------- */
+/* Schulferien Niedersachsen (Quelle: Kultusministerium Niedersachsen, Ferientermine). Je Kapitel: [erster Ferientag, letzter Ferientag].
+   Vorschlag für den Termin = letzter Schultag davor (Mo–Fr). Eltern können jedes Datum ändern; nichts davon wird gespeichert, solange es nicht geändert wird. */
+const FERIEN_NI = {
+  A: [['2026-10-12', '2026-10-24'], ['2027-10-16', '2027-10-30']],
+  B: [['2026-12-23', '2027-01-09'], ['2027-12-23', '2028-01-08']],
+  C: [['2027-03-22', '2027-04-03'], ['2028-04-10', '2028-04-22']],
+  D: [['2026-07-02', '2026-08-12'], ['2027-07-08', '2027-08-18']]
+};
+function lastSchoolDay(startIso) {
+  const d = new Date(startIso + 'T12:00:00'); d.setDate(d.getDate() - 1);
+  while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function ferienFor(c, today) {
+  const t = today || ymd(), e = (FERIEN_NI[c.id] || []).find(p => p[1] >= t);
+  return e ? { start: e[0], end: e[1], due: lastSchoolDay(e[0]) } : null;
+}
+const dueOf = c => (S.cfg.due && S.cfg.due[c.id]) || (ferienFor(c) || {}).due || '';
 const dueInfo = c => {
-  const ds = S.cfg.due && S.cfg.due[c.id]; if (!ds) return { txt: 'bis zu den ' + c.season, days: null };
+  const ds = dueOf(c); if (!ds) return { txt: 'bis zu den ' + c.season, days: null };
   const days = Math.ceil((new Date(ds + 'T23:59:59') - Date.now()) / 864e5);
   return { txt: 'bis zu den ' + c.season + ' (' + new Date(ds + 'T12:00:00').toLocaleDateString('de-DE', { day: 'numeric', month: 'long' }) + ')', days };
 };
@@ -210,6 +232,7 @@ function worldTile(id, i) {
   const tag = closed ? (f.creative === 'closed' ? `${ico('lock', 13)} Noch zu` : `${ico('eye', 13)} Ansehen`) : '';
   const cls = TILE_CLS[i % 3];
   if (id === 'fakten') return dzTile({ cls, art: 'fakten', title: 'Lustige Fakten', sub: factsSub(), act: 'fakten' });
+  if (id === 'notiz') return dzTile({ cls, art: 'notiz', title: 'Notizbuch', sub: noteSub(), act: 'notiz' });
   if (id === 'shop') return dzTile({ cls, art: 'shop', title: 'Shop', sub: `${S.coins} Münzen`, act: 'shop' });
   if (id === 'musik') return dzTile({ cls, art: 'musik', title: 'Meine Musik', sub: closed ? 'Nach dem Üben' : (f.sub ? f.sub() : ''), act: 'musik', tag });
   if (id === 'story') return dzTile({ cls, art: 'story', title: dzPoss(FN()) + ' Geschichte', sub: (typeof epList === 'function') ? `${epList().filter(epUnlocked).length} von ${epList().length} Episoden` : '', act: 'story' });
@@ -218,20 +241,19 @@ function worldTile(id, i) {
   return dzTile({ cls, art: id === 'wesen' ? 'fino' : id === 'buch' ? 'hefte' : 'welt', title: nm, sub: f && f.sub ? f.sub() : '', act: id, tag });
 }
 VIEWS.rewards = () => {
-  const ids = ['fakten', 'musik', 'shop', 'story', 'welt'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
+  const ids = ['fakten', 'musik', 'shop', 'story', 'welt', 'notiz'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
   return topBar('Meine Welt', 'home') + dzHero('', 'Meine Welt', 'Von dir verdient. Für dich gemacht.', '', 'sm') + dzSec('Entdecken & sammeln') +
-    dzGrid(5, ids.map(worldTile).join(''), 'dz-welt5') +
+    dzGrid(ids.length <= 6 ? ids.length : 4, ids.map(worldTile).join(''), 'dz-welt5') +
     `<p class="ad-creative-note">${creativeOK() ? (creativeMode() === 'always' ? 'Deine Kreativbereiche sind offen.' : `Deine Kreativzeit: ${fmtT(creativeLeft())}`) : esc(creativeInfo())}</p>`;
 };
 
 /* ---------- Mein Profil: Bild, Level, alles Verdiente, Namen ----------
    S.name   = mein Name (Begrüßung + Urkunde)
-   S.avName = Spitzname meines eigenen Avatars (nur Profil). Leer = S.name. */
+   Der Name gilt auch für den Avatar (kein eigener Avatar-Name mehr). */
 const nameEditor = () => `<div class="dz-namefield"><label class="sr-only" for="nameIn">Mein Name</label><input class="txt" id="nameIn" maxlength="20" value="${esc(S.name)}" placeholder="So heiße ich" autocomplete="off"><button class="btn sm" data-act="rhSaveName">Speichern</button></div>`;
-const avNameEditor = () => `<div class="rh-name"><label for="avNameIn">Name für meinen Avatar</label><div class="row"><input class="txt" id="avNameIn" maxlength="20" value="${esc(S.avName || '')}" placeholder="${esc(S.name || 'Spitzname')}" autocomplete="off"><button class="btn" data-act="saveAvName">Speichern</button></div><small>Steht in deinem Profil. Leer lassen = dein Name.</small></div>`;
 VIEWS.profile = () => {
   const L = levelInfo(), g = goalItem(), recent = (S.earned || []).filter(e => Date.now() - e.ts < 3 * 864e5).slice(0, 5);
-  const free = (typeof WA !== 'undefined') ? WA.freeStars() : null, nCards = Object.keys(S.cards).length, nTro = Object.keys(S.trophies).length;
+  const nCards = Object.keys(S.cards).length, nTro = Object.keys(S.trophies).length;
   const stat = (ic, val, name, small, act) => `<button class="dz-stat" data-act="${act}">${dzIc(ic, 26)}<b>${val}</b><span>${name}</span><small>${small}</small></button>`;
   const tiles = [
     { html: avArt(120), title: 'Das bin ich', sub: 'Mein Bild', act: 'avatar' },
@@ -240,20 +262,18 @@ VIEWS.profile = () => {
   ].map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join('');
   return topBar('Mein Profil', 'home') + `<section class="dz-panel dz-id">${avArt(112)}<div><h1>${esc(profileName())}</h1><p>Level ${L.n} · ${esc(L.title)}</p><div class="bar" style="margin-top:8px"><i style="width:${L.pct}%"></i></div><small class="mute">Noch ${L.need} verdiente Münzen bis Level ${L.n + 1}</small>${S.name ? '' : `<label class="dz-lbl" for="nameIn">Mein Name</label>${nameEditor()}`}</div></section>
     <div class="dz-stats">
-      ${stat('star', S.starsLife, 'Sterne', free === null ? 'Für immer gesammelt' : `${free} frei für die Weltreise`, 'profile')}
+      ${stat('star', S.starsLife, 'Sterne', 'Für immer gesammelt', 'profile')}
       ${stat('coin', S.coins, 'Münzen', 'Im Shop ausgeben', 'shop')}
       ${stat('cards', `${nCards}<span style="display:inline;font-weight:700;font-size:.9rem"> / ${CARDS.length}</span>`, 'Karten', S.chests ? `${S.chests} ${S.chests === 1 ? 'neue wartet' : 'neue warten'}!` : 'Beim Üben verdient', 'schatz')}
       ${stat('trophy', nTro, 'Pokale', 'Alle ansehen', 'trophies')}
     </div>
     ${g ? `<button class="dz-goal" data-act="shop">${dzIc('target', 22)}<span>Dein Sparziel: <b>${esc(g.name)}</b></span><b>${Math.max(0, g.src.price - S.coins) ? `Noch ${Math.max(0, g.src.price - S.coins)} Münzen` : 'Ziel erreicht!'}</b></button>` : ''}
     ${dzSec('Mein Platz')}${dzGrid(3, tiles, 'dz-prof4')}
-    ${S.av && S.av.look && !S.avName ? `<div class="dz-panel" style="margin-top:12px">${avNameEditor()}</div>` : ''}
     ${recent.length ? `<details class="ad-earned"><summary>${ico('star', 18)} Neu verdient <span>${recent.length}</span></summary><ul>${recent.map(e => `<li>${esc(e.ic || '✓')} ${esc(e.text)}</li>`).join('')}</ul></details>` : ''}`;
 };
 Object.assign(ACT, {
   profile: () => go('profile'), extra: () => go('extra'),
-  rhSaveName: () => { ACT.saveName(); render(); },
-  saveAvName: () => { const el = $('#avNameIn'); S.avName = ((el && el.value) || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); render(); }
+  rhSaveName: () => { ACT.saveName(); if (S.name) toast('👋', `Hallo ${S.name}! Dein Name steht jetzt überall.`); render(); },
 });
 
 /* ---------- Darstellung: Farben (Themes) und Lesbarkeit ---------- */

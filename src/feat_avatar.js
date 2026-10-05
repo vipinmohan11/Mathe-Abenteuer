@@ -568,8 +568,7 @@ ${edit ? `<div class="av-bar">${bt('avRand', 'dice', 'Zufall')}${bt('avSave', 's
 <div class="av-side card">${edit ? looksHTML() : ''}${useTog()}</div>
 </div>
 <section class="av-tools">${toolsHTML(edit)}</section>
-</div>
-<section class="rh-avatar-name">${avNameEditor()}</section>`;
+</div>`;
 }
 /* ---------- Aktionen ---------- */
 function dl(blob, name) {

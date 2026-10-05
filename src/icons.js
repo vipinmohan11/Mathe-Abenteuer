@@ -50,6 +50,7 @@ const ICO = {
   book: '<path d="M6 3.5h12a1 1 0 0 1 1 1v15H7a2 2 0 0 0-2 2v-17a1 1 0 0 1 1-1z" class="a"/><path d="M5 19.5a2 2 0 0 1 2-2h12"/>',
   leaf: '<path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14z" class="a"/><path d="M5 19l8-8"/>',
   tap: '<path d="M9 11V6a1.6 1.6 0 0 1 3.2 0v4l4.3.9a2 2 0 0 1 1.5 2l-.5 5.2a1.5 1.5 0 0 1-1.5 1.4H11l-3.6-4.7a1.4 1.4 0 0 1 2-2z" class="a"/>',
+  speakerOff: '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" class="a"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
   speaker: '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" class="a"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
   mute: '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" class="a"/><path d="M16 10l4 4M20 10l-4 4"/>',
   fox: '<path d="M4 4l5 3.5h6L20 4v8c0 4.5-3.5 8-8 8s-8-3.5-8-8z" class="a"/><path d="M9.2 12.5h.01M14.8 12.5h.01M12 15.2h.01" stroke-width="2.4"/>',
