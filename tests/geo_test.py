@@ -1,5 +1,6 @@
 """Europa-Entdecker: Daten, Fragen-Bau, Ausstiegsschutz, Belohnung (Tageslimit), Erhalt vorhandener Münzen. Aufruf: python3 geo_test.py /abs/pfad/Mathe-Abenteuer_Klasse4.html"""
-import sys, json
+import sys, json, os
+os.makedirs('/tmp/rh', exist_ok=True)
 from playwright.sync_api import sync_playwright
 html = sys.argv[1]; fails = []
 def ok(c, m):
@@ -11,11 +12,23 @@ with sync_playwright() as p:
     pg.goto('file://' + html); pg.wait_for_timeout(300)
     # Vorhandener Stand: Münzen/Sterne/Karten/Pokale setzen
     pg.evaluate("""()=>{const a=window.__app;a.S.coins=500;a.S.life=500;a.S.starsLife=40;a.S.stars=40;a.S.chests=2;a.S.cards={a1:1,a2:1};a.S.trophies={blk1:1};a.save();}""")
-    n = pg.evaluate("()=>COUNTRIES.length"); ok(n == 50, f'{n} Länder')
+    n = pg.evaluate("()=>COUNTRIES.length"); ok(n == 47, f'{n} Länder (50 − Armenien, Aserbaidschan, Kasachstan, Türkei + Kosovo)')
     ok(pg.evaluate("()=>COUNTRIES.every(c=>typeof FLAGS[c.id]==='function')"), 'jedes Land hat eine Flagge')
     ok(pg.evaluate("()=>new Set(COUNTRIES.map(c=>c.id)).size===COUNTRIES.length"), 'Ids eindeutig')
     ok(pg.evaluate("()=>COUNTRIES.every(c=>c.facts.length>=1&&c.cap&&c.name)"), 'Name, Hauptstadt, Fakten vorhanden')
     ok(pg.evaluate("()=>COUNTRIES.every(c=>c.nb.every(n=>CBY[n]&&CBY[n].nb.includes(c.id)&&n!==c.id))"), 'Nachbarschaft gegenseitig')
+    ok(pg.evaluate("()=>['arm','aze','kaz','tur'].every(i=>!CBY[i])&&!COUNTRIES.some(c=>c.nb.concat(c.tr).some(i=>['arm','aze','kaz','tur'].includes(i)))"), 'Armenien/Aserbaidschan/Kasachstan/Türkei entfernt, nirgends mehr verwiesen')
+    ok(pg.evaluate("()=>COUNTRIES.every(c=>c.nb.concat(c.tr).every(i=>CBY[i]))"), 'alle nb/tr-Ids zeigen auf vorhandene Länder')
+    ok(pg.evaluate("()=>typeof FLAGS.tur==='function'"), 'FLAGS.tur bleibt (Meine Weltreise)')
+    ok(pg.evaluate("()=>{const k=CBY.kos;return k&&k.name==='Kosovo'&&k.cap==='Pristina'&&k.reg==='balk'&&['alb','mkd','mne','srb'].every(i=>k.nb.includes(i)&&CBY[i].nb.includes('kos'))&&k.nb.length===4&&k.facts.length>=1&&k.area>0&&gCapOK(k,'pristina')&&gCapOK(k,'Priština')}"), 'Kosovo: Pristina, Region Balkan, 4 Nachbarn gegenseitig, Fakten, Fläche, Flagge')
+    ok(pg.evaluate("()=>COUNTRIES.every(c=>!c.trap||(!COUNTRIES.some(x=>x.cap===c.trap)&&c.trap!==c.cap))"), 'kniffelige Städte (trap) sind nie eine Hauptstadt')
+    ok(pg.evaluate("()=>{const c=CBY.smr;return c.cap==='San Marino'&&gCapOK(c,'Stadt San Marino')&&gCapOK(c,'san marino')&&gTrivial(c)&&['smr','lux','mco','vat'].every(i=>gTrivial(CBY[i]))&&!gTrivial(CBY.and)}"), 'San Marino: Hauptstadt „San Marino“, „Stadt San Marino“ wird akzeptiert, gleichnamige Hauptstädte sind „trivial“')
+    # San-Marino-Regel: gleichnamige Hauptstädte kommen nie als Tipp-/Rück-Frage vor; in der Auswahl-Frage steht ein Hinweis
+    smr = pg.evaluate("""()=>{let bad=[],cap=0;for(let r=0;r<300;r++){for(const mode of ['typ','rev','mix']){const qs=gBuild({cont:'europa',n:15,mode,tricky:'mix'});for(const q of qs){const c=CBY[q.cid]; if((q.t==='typ'||q.t==='rev')&&gTrivial(c))bad.push([q.t,c.id]);}}}
+      const q=gQuestion(CBY.smr,'cap',false); if(q.ans!=='San Marino'||!q.title.includes('Manchmal')||q.opts.filter(o=>o.k==='San Marino').length!==1)bad.push(['cap-smr']);
+      const q2=gQuestion(CBY.deu,'cap',false); if(q2.title.includes('Manchmal'))bad.push(['hint-deu']); return bad.slice(0,5);}""")
+    ok(not smr, 'gleichnamige Hauptstädte (San Marino, Luxemburg, Monaco, Vatikanstadt) nie in Tippen/Land-finden; Auswahl-Frage hat Hinweis ' + str(smr))
+    ok(pg.evaluate("()=>{const q=gQuestion(CBY.nld,'cap',true);return q.opts.every(o=>o.k!=='Den Haag')&&CBY.nld.facts[0].includes('Den Haag')}"), 'Niederlande: Den Haag nie als Antwortmöglichkeit, Hinweis steht im ersten Fakt (Ergebnisseite)')
     # Fragen-Bau: viele Läufe
     bad = pg.evaluate("""()=>{const bad=[];
       for(const mode of ['mix','cap','typ','rev','nb','flag','size','route'])for(const tricky of [false,true,'mix'])for(const n of [10,15])for(let r=0;r<40;r++){
@@ -36,6 +49,11 @@ with sync_playwright() as p:
           if(q.t==='cap'&&q.opts.some(o=>o.k!==c.cap&&gNorm(o.k)===gNorm(c.cap)))bad.push(['samecap']);
         }}
       return bad.slice(0,5);}""")
+    # Alte Ids im Spielstand (Armenien, Aserbaidschan, Kasachstan, Türkei): ignorieren, nie löschen
+    pg.evaluate("()=>{S.geo.k={arm:2,aze:2,kaz:2,tur:2,deu:2};S.geo.ms={};S.geo.cards={tur:1};S.geo.seen={tur:3};S.geo.miss={arm:1};S.geo.kd={kaz:5};save();}")
+    ok(pg.evaluate("()=>gKnownN('europa')")==1 and pg.evaluate("()=>{const t=geoTrophies().find(x=>x.id==='geo50');return !t.t(S)}") , 'Alte Ids zählen nicht als „sicher gewusst“')
+    pg.evaluate("()=>{ACT.geo();ACT.geoPass();ACT.geoCards();ACT.gCard('deu');ACT.geoFacts();ACT.geo();}"); pg.wait_for_timeout(80)
+    ok(pg.evaluate("()=>S.geo.k.tur===2&&S.geo.k.arm===2&&S.geo.k.aze===2&&S.geo.k.kaz===2&&S.geo.cards.tur===1&&S.geo.seen.tur===3"), 'Alte Ids bleiben gespeichert (nichts gelöscht)')
     ok(not bad, 'Fragen-Bau in 800 Läufen fehlerfrei ' + str(bad))
     ok(pg.evaluate("()=>gCapOK(CBY.che,'bern ')&&gCapOK(CBY.mda,'Chisinau')&&gCapOK(CBY.deu,'BERLIN')&&!gCapOK(CBY.che,'Zürich')&&gCapOK(CBY.ukr,'Kyiv')"), 'Tippen: Groß/Klein, Leerzeichen, Alternativen; falsche Stadt falsch')
     ok(pg.evaluate("()=>!gCapOK(CBY.gbr,'Großbritannien')"), 'Ländername wird nicht als Hauptstadt akzeptiert')
@@ -99,19 +117,34 @@ with sync_playwright() as p:
     m1 = pg.evaluate("()=>geoMilestones('europa').length"); pg.evaluate("()=>{S.geo.k[COUNTRIES[9].id]=2}")
     m2 = pg.evaluate("()=>geoMilestones('europa').length"); m3 = pg.evaluate("()=>geoMilestones('europa').length")
     ok((m1, m2, m3) == (0, 1, 0), f'Meilenstein 10 einmalig ({m1},{m2},{m3})')
+    # Letzter Meilenstein = alle Länder (aus den Daten), nicht fest 50; alter Schlüssel europa.50 verhindert doppelte Belohnung
+    ok(pg.evaluate("()=>GEO_MS[GEO_MS.length-1][0]===COUNTRIES.length&&GEO_MS[GEO_MS.length-1][0]===47"), 'Letzter Meilenstein = alle 47 Länder (berechnet)')
+    pg.evaluate("()=>{S.geo.ms={};COUNTRIES.slice(0,46).forEach(c=>S.geo.k[c.id]=2);}")
+    a1 = pg.evaluate("()=>geoMilestones('europa').map(m=>m.need)"); ok(a1 == [10, 25], f'46 Länder: nur 10 und 25 ({a1})')
+    pg.evaluate("()=>{S.geo.k[COUNTRIES[46].id]=2}")
+    a2 = pg.evaluate("()=>geoMilestones('europa').map(m=>m.need)"); a3 = pg.evaluate("()=>geoMilestones('europa').length")
+    ok(a2 == [47] and a3 == 0, f'alle 47 Länder: Europa-Meister einmalig ({a2},{a3})')
+    ok(pg.evaluate("()=>!!S.geo.ms['europa.50']&&gNextMs()===undefined&&geoTrophies().find(x=>x.id==='geo50').t(S)"), 'Schlüssel europa.50 gesetzt, Pokal Europa-Meister erreicht')
+    pg.evaluate("()=>{S.geo.ms={'europa.50':1};COUNTRIES.forEach(c=>S.geo.k[c.id]=2);}"); a4 = pg.evaluate("()=>geoMilestones('europa').map(m=>m.need)")
+    ok(a4 == [10, 25], f'schon vorhandener Meilenstein „50“ wird nicht doppelt bezahlt ({a4})')
+    pg.evaluate("()=>{S.geo.k={};S.geo.ms={};}")
+    c1 = pg.evaluate("()=>S.coins")        # Meilensteine zahlen Münzen – danach neu messen
     # Neue Spiele: Reisepass, Memory, Land des Tages
     pg.evaluate("()=>ACT.geo()"); t0 = pg.inner_text('body'); ok('Land des Tages' in t0 and all(w in t0 for w in ['Flaggen','Größer','Reiseroute','Memory','Stempel','Länderkarten','Wusstest du']), 'Europa-Seite: alle Bereiche')
-    pg.evaluate("()=>ACT.geoPass()"); pg.wait_for_timeout(80); ok(pg.locator('.geo-stamp').count()==50, 'Stempel: 50 Stempel-Plätze'); pg.screenshot(path='/tmp/rh/geo_pass.png', full_page=True)
+    pg.evaluate("()=>ACT.geoPass()"); pg.wait_for_timeout(80); ok(pg.locator('.geo-stamp').count()==47, 'Stempel: 47 Stempel-Plätze'); ok('Alle 47 Stempel' in pg.inner_text('body'), 'Reisepass: letzte Stufe „Alle 47 Stempel“'); pg.screenshot(path='/tmp/rh/geo_pass.png', full_page=True)
     pg.evaluate("()=>ACT.geoMemory()"); pg.wait_for_timeout(80)
     done = pg.evaluate("""()=>{const m=UI.mem;for(let i=0;i<16;i++){ if(m.done[i])continue; const j=m.cards.findIndex((c,k)=>k!==i&&!m.done[k]&&c.id===m.cards[i].id); ACT.gMem(i); ACT.gMem(j);} return Object.keys(m.done).length}""")
     ok(done==16 and pg.evaluate("()=>UI.mem.moves")==8, 'Memory: 8 Paare in 8 Zügen lösbar'); pg.screenshot(path='/tmp/rh/geo_mem.png', full_page=True)
     c2 = pg.evaluate("()=>S.coins"); ok(c2 == c1, 'Memory/Reisepass zahlen nichts')
     # Karten
     pg.evaluate("()=>ACT.geoCards()"); pg.wait_for_timeout(100); pg.screenshot(path='/tmp/rh/geo_cards.png', full_page=True)
-    ok(pg.locator('.geo-tile').count()==50, '50 Länderkarten')
+    ok(pg.locator('.geo-tile').count()==47, '47 Länderkarten')
     pg.evaluate("()=>ACT.gCard('deu')"); pg.wait_for_timeout(100); pg.screenshot(path='/tmp/rh/geo_card.png', full_page=True)
     t = pg.inner_text('body'); ok('Berlin' in t and 'Stadtstaat' in t, 'Deutschland: Berlin-Fakt')
     pg.evaluate("()=>ACT.gCard('and')"); ok('Kleinstaat' in pg.inner_text('body'), 'Andorra-Fakt')
+    pg.evaluate("()=>ACT.gCard('kos')"); t = pg.inner_text('body'); ok('Pristina' in t and 'Serbien' in t and 'Albanien' in t, 'Kosovo-Karte')
+    pg.evaluate("()=>ACT.gCard('rus')"); ok('nicht dabei sind' in pg.inner_text('body'), 'Russland-Karte: Hinweis auf weitere Nachbarn')
+    pg.evaluate("()=>ACT.gCard('smr')"); ok('Stadt San Marino' in pg.inner_text('body'), 'San-Marino-Karte erklärt die Hauptstadt')
     # Speichern / Neuladen
     pg.evaluate("()=>save()"); pg.reload(); pg.wait_for_timeout(300)
     ok(pg.evaluate("()=>S.geo.sessions")>=5 and pg.evaluate("()=>S.coins")>=505, 'übersteht Neuladen')

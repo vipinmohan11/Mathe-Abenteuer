@@ -13,7 +13,10 @@
 const GEO_NAME = 'Europa Entdecker', GEO_PASS = 'Meine Stempel';                       // Name des Fachs (eine Stelle ändern genügt)
 const GEO_TIERS = [[.9, 5, 2], [.7, 3, 1], [.5, 0, 1]];    // [Anteil richtig, Münzen, Sterne]
 const GEO_GOAL_CAP = 10, GEO_MIN_PAY = 10;
-const GEO_MS = [[10, 1, 0, 'Länder-Kenner'], [25, 2, 5, 'Länder-Profi'], [50, 3, 10, 'Europa-Meister']];   // [Länder, Sterne, Münzen, Name] + jeweils 1 Karte
+/* [Länder, Sterne, Münzen, Name, Speicher-Schlüssel] + jeweils 1 Karte. Der letzte Meilenstein heißt „alle Länder“ und wird aus den Daten berechnet.
+   Speicher-Schlüssel '50' bleibt absichtlich so (früher gab es genau 50 Länder): wer ihn schon hat, bekommt ihn nicht ein zweites Mal. */
+const GEO_MS = [[10, 1, 0, 'Länder-Kenner', '10'], [25, 2, 5, 'Länder-Profi', '25'], [COUNTRIES.filter(c => c.cont === 'europa').length, 3, 10, 'Europa-Meister', '50']];
+const gMsKey = (cont, m) => (cont || 'europa') + '.' + m[4];
 let GQ = null;                                             // laufende Runde (wird nie gespeichert)
 
 function gS() {
@@ -57,7 +60,7 @@ function gOptsCountry(c, tricky, avoid) {                  // 1 richtiges + 3 fa
 }
 function gQuestion(c, t, tricky) {
   const fl = flagSVG(c.id, 'geo-qflag');
-  if (t === 'cap') return { t, cid: c.id, title: `${fl}<span>Was ist die Hauptstadt von <b>${esc(c.name)}</b>?</span>`, opts: gOptsCap(c, tricky), ans: c.cap, show: c.cap };
+  if (t === 'cap') return { t, cid: c.id, title: `${fl}<span>Was ist die Hauptstadt von <b>${esc(c.name)}</b>?</span>${gTrivial(c) ? '<span class="small mute">(Manchmal heißt die Hauptstadt wie das Land.)</span>' : ''}`, opts: gOptsCap(c, tricky), ans: c.cap, show: c.cap };
   if (t === 'flag') {
     const wrong = gOptsCountry(c, tricky, []), opts = shuffle([c].concat(wrong)).map(x => ({ k: x.id, label: '<span>' + esc(x.name) + '</span>' }));
     return { t, cid: c.id, title: `${flagSVG(c.id, 'geo-bigq')}<span>Zu welchem Land gehört diese Flagge?</span>`, opts, ans: c.id, show: c.name };
@@ -153,9 +156,9 @@ function payGeo(score, total) {
 }
 function geoMilestones(cont) {
   const g = gS(), n = gKnownN(cont), got = [];
-  GEO_MS.forEach(([need, st, co, name]) => {
-    const key = (cont || 'europa') + '.' + need, total = gList(cont).length;
-    if ((n >= need || (need >= 50 && n >= total)) && !g.ms[key]) {
+  GEO_MS.forEach(m => {
+    const [need, st, co, name] = m, key = gMsKey(cont, m);
+    if (n >= need && !g.ms[key]) {
       g.ms[key] = Date.now(); giveStars(st); giveCoins(co, name); giveChest();
       got.push({ need, st, co, name });
     }
@@ -187,7 +190,7 @@ function geoFinish() {
   if (score / total >= .7 || ms.length) confetti(score === total ? 110 : 60);
 }
 function geoTrophies() {
-  const kn = s => Object.values((s.geo && s.geo.k) || {}).filter(v => v >= 2).length, G = s => s.geo || {};
+  const kn = s => Object.entries((s.geo && s.geo.k) || {}).filter(([id, v]) => v >= 2 && CBY[id] && CBY[id].cont === 'europa').length, G = s => s.geo || {};   // nur Länder, die es in den Daten gibt (alte Ids im Spielstand zählen nicht, bleiben aber gespeichert)
   return [
     { id: 'geo1', i: '🧭', n: 'Erste Europa-Reise', d: 'Ein Europa-Quiz abgegeben', t: s => (G(s).sessions || 0) >= 1 },
     { id: 'geo5', i: '🎒', n: 'Vielreisende', d: '5 Europa-Quizrunden', t: s => (G(s).sessions || 0) >= 5 },
@@ -203,7 +206,7 @@ function geoTrophies() {
 /* ---------- Ansichten ---------- */
 const gFlagRow = (ids, cls) => ids.map(id => flagSVG(id, cls || 'geo-mini')).join('');
 const gPct = () => { const t = gList('europa').length; return t ? Math.round(gKnownN('europa') / t * 100) : 0; };
-function gNextMs() { const n = gKnownN('europa'), g = gS(); return GEO_MS.find(m => !g.ms['europa.' + m[0]] && n < m[0]); }
+function gNextMs() { const n = gKnownN('europa'), g = gS(); return GEO_MS.find(m => !g.ms[gMsKey('europa', m)] && n < m[0]); }
 function geoPrizeBox() {
   const L = geoLeft(), any = L.c || L.s || L.ch;
   return `<div class="geo-prize1">🎁 ${any ? `Heute noch: ${L.c} 🪙 + ${L.s} ⭐${L.ch ? ' + Karte (alles richtig)' : ''}` : 'Heute schon alles verdient ✓'}</div>`;
@@ -284,7 +287,7 @@ VIEWS.geoCard = () => {
     <div class="geo-cap">${hide ? `<button class="btn" data-act="gShow">Hauptstadt aufdecken</button>` : `<span class="small mute">Hauptstadt</span><b>${esc(c.cap)}</b>`}</div>
     <div class="geo-known ${k >= 2 ? 'on' : ''}">${k >= 2 ? '✓ Sicher gewusst' : `Im Quiz richtig: ${k} von 2`}</div>
     <h3>Wusstest du?</h3><ul class="geo-facts">${c.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
-    <h3>Nachbarländer</h3>${nbs.length ? `<div class="geo-nbs">${nbs.map(n => `<button class="geo-nb" data-act="gCard" data-arg="${n.id}">${flagSVG(n.id, 'geo-mini')}<span>${esc(n.name)}</span></button>`).join('')}</div>` : '<p class="small mute">Dieses Land hat keine Landgrenze.</p>'}
+    <h3>Nachbarländer</h3>${nbs.length ? `<div class="geo-nbs">${nbs.map(n => `<button class="geo-nb" data-act="gCard" data-arg="${n.id}">${flagSVG(n.id, 'geo-mini')}<span>${esc(n.name)}</span></button>`).join('')}</div>` : '<p class="small mute">Dieses Land hat keine Landgrenze.</p>'}${c.nbx ? '<p class="small mute">Dieses Land grenzt noch an weitere Länder, die in Europa Entdecker nicht dabei sind.</p>' : ''}
     <div class="row" style="margin-top:14px"><button class="btn sec sp" data-act="gStep" data-arg="-1" ${i === 0 ? 'disabled' : ''}>← Zurück</button><button class="btn sp" data-act="gStep" data-arg="1" ${i === list.length - 1 ? 'disabled' : ''}>Weiter →</button></div></section>`;
 };
 
@@ -296,7 +299,7 @@ VIEWS.geoPass = () => {
     : `<button class="geo-stamp" data-act="gCard" data-arg="${c.id}"><span class="geo-slock">${flagSVG(c.id, 'geo-sflag')}<i>${ico('lock', 14)}</i></span><b>${esc(c.name)}</b><small>${Math.min(2, g.k[c.id] || 0)} von 2</small></button>`;
   return topBar(GEO_PASS, 'geo') + `<section class="card geo-slim"><b>${n} von ${l.length} Stempeln</b><div class="bar"><i style="width:${gPct()}%"></i></div>
     <p class="small mute">Ein Stempel kommt, wenn du ein Land in 2 Runden richtig hattest.</p>
-    <div class="geo-ms">${GEO_MS.map(m => `<span class="${g.ms['europa.' + m[0]] ? 'on' : ''}">${g.ms['europa.' + m[0]] ? '✓' : ico('lock', 13)} ${m[0]} Stempel: Karte${m[1] ? ' + ' + m[1] + ' ⭐' : ''}${m[2] ? ' + ' + m[2] + ' 🪙' : ''}</span>`).join('')}</div></section>
+    <div class="geo-ms">${GEO_MS.map((m, i) => `<span class="${g.ms[gMsKey('europa', m)] ? 'on' : ''}">${g.ms[gMsKey('europa', m)] ? '✓' : ico('lock', 13)} ${i === GEO_MS.length - 1 ? 'Alle ' + m[0] : m[0]} Stempel: Karte${m[1] ? ' + ' + m[1] + ' ⭐' : ''}${m[2] ? ' + ' + m[2] + ' 🪙' : ''}</span>`).join('')}</div></section>
     <div class="geo-stamps">${l.slice().sort((a, b) => (gKnown(b.id) - gKnown(a.id)) || a.name.localeCompare(b.name, 'de')).map(stamp).join('')}</div>`;
 };
 

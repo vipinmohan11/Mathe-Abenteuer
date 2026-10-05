@@ -169,5 +169,7 @@ const WP = {
       language: { n: 'Namaste-Sticker', k: 'bubble', bg: '#e9e2d6' }, food: { n: 'Mango', k: 'mango', bg: '#dce6d8' }, quiz: { n: 'Goldene Lampe', k: 'lamp', bg: '#e9e2c9' } }
   }
 };
+/* Länder-Pakete aus world_pack_*.js ergänzen WP, WORDER, WX (Codes) und FLAGS. */
+const WX = { iso: {}, ap: {} };                                 // WX.iso[id] = Länder-Code (3 Buchstaben), WX.ap[id] = großer Flughafen-Code (IATA) – nur sichere Angaben
 const WORDER = ['deu', 'jpn', 'ind'];                          // Reihenfolge in der Abflughalle (später: weitere Länder anhängen)
 const wList = () => WORDER.map(id => WP[id]).filter(Boolean);
