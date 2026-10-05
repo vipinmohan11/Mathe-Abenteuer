@@ -20,7 +20,8 @@ const SC_BG = {
 const scBG = id => { const b = SC_BG[id] || SC_BG.strand; return `<div class="sc-bg" style="background:${b.sky[0]}"><div class="sc-ground" style="background:${b.ground}"></div>${b.props.map(p => `<span class="sc-prop" style="left:${p[1]}%;top:${p[2]}%;font-size:${p[3]}px">${p[0]}</span>`).join('')}</div>`; };
 const epUnlocked = ep => (S.stats.decks || 0) >= ep.need;
 const epList = () => (typeof STORY_EPS !== 'undefined' ? STORY_EPS : []);
-const nameIn = t => esc(String(t).replace(/\{name\}/g, S.name || 'du').replace(/Fino/g, FN()));
+/* Heißt die Begleiterin jetzt wie das Kind, entfällt die Anrede „{name}“ (sonst würde sich Fino selbst ansprechen). */
+const nameIn = t => esc(String(t).replace(/,? ?\{name\}/g, (S.name && FN() === S.name) ? '' : (m => (S.name ? m.replace('{name}', S.name) : m.replace('{name}', 'du')))).replace(/Fino/g, FN()));
 const epLeft = ep => Math.max(0, ep.need - (S.stats.decks || 0));
 const grp = n => n + ' Gruppe' + (n === 1 ? '' : 'n');
 VIEWS.story = () => {
@@ -48,7 +49,7 @@ VIEWS.storyread = () => {
   const sc = ep.scenes[s.i], speakerNpc = sc.who === 'npc', last = s.i >= ep.scenes.length - 1;
   const fm = sc.who === 'fino' ? (sc.mood || 'happy') : 'happy', dm = sc.who === 'du' ? (sc.mood || 'happy') : 'happy';
   const duHTML = useMe() ? avatarHTML({ me: true }, 120, dm) : `<div class="avwrap" style="--s:120px"><div class="avatar">${typeof meSVG === 'function' ? meSVG({}, dm) : '🧒'}</div></div>`;
-  const who = sc.who === 'fino' ? FN() : sc.who === 'du' ? (S.name || 'Du') : sc.who === 'npc' ? sc.name : '';
+  const who = sc.who === 'fino' ? FN() : sc.who === 'du' ? ((S.name && S.name !== FN()) ? S.name : 'Du') : sc.who === 'npc' ? sc.name : '';
   let body = '';
   if (s.phase === 'say') body = `<p class="sc-t">${nameIn(sc.say)}</p>`;
   else if (s.phase === 'choice') body = `<p class="sc-t">${nameIn(sc.say)}</p><div class="sc-opts">${sc.choice.opts.map((o, k) => `<button class="btn sec" data-act="storyPick" data-arg="${k}">${nameIn(o)}</button>`).join('')}</div>`;
