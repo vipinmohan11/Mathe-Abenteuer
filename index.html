@@ -333,9 +333,6 @@ select.txt{font:inherit;padding:10px 14px;border-radius:12px;border:1.5px solid 
   #app{max-width:none;padding:0}
 }
 
-/* Fino-Insel */
-.island .isl{display:flex;flex-wrap:wrap;gap:6px;font-size:2rem;line-height:1.2}
-.isl-pv{font-size:3.6rem;line-height:1.2;text-align:center;padding:8px 0}
 
 /* ===== Shell: Start, Hefte, Belohnungen, Navigation ===== */
 #app{padding-bottom:96px}
@@ -935,6 +932,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .w-prog li,.w-prog button{min-width:0}.w-prog b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 
+/* Alle Stationen im gleichen Karten-Look wie Orte und Essen: Bildfläche oben, Titel, kurzer Text */
+.w-iart,.w-wart,.w-qart{display:grid;place-items:center;position:relative;color:#52676c}
+.w-iart .w-info-ico{width:44px;height:44px;color:#52676c}
+.w-ic p.short{font-weight:800;color:var(--ink);font-size:1.02rem;margin-top:3px}
+.w-wart b{display:block;margin:0;font-size:1.5rem;line-height:1.2;color:#2c3236;text-align:center;padding:0 38px 0 8px}.w-wart b.long{font-size:1.1rem}
+.w-wart .w-spk{position:absolute;right:6px;bottom:6px;width:34px;height:34px;grid-column:auto;grid-row:auto}
+.w-qart svg{width:auto;height:72px;display:block}
+.w-one{grid-template-columns:minmax(0,340px);justify-content:center;margin-top:12px}
+.w-qc{text-align:center}.w-qc .row{justify-content:center;margin-top:12px}.w-qc>b{font-size:1.15rem}
+.w-cards{grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}
+.w-wcards{grid-template-columns:repeat(auto-fill,minmax(176px,1fr))}
+@media(max-width:560px){.w-cards,.w-wcards{grid-template-columns:repeat(2,minmax(0,1fr))}.w-one{grid-template-columns:minmax(0,1fr)}}
+
 /* ===== Wesen ===== */
 .wes-detail{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .wes-i{display:inline-block;line-height:1;transform-origin:50% 100%}
@@ -1304,6 +1314,27 @@ body[data-theme=nacht] .itile.lk{background:var(--dz-t1)}
 .dz-tile.locked,.itile.lk,.item.lk,.card.item,.epc.lk,.wtile.lk,.w-card.locked,.w-card.open,.w-card.locked.can{border:var(--dz-bd-w) solid var(--dz-bd)}
 .dz-tile .dz-tag{border:var(--dz-bd-w) solid var(--dz-bd)}
 body[data-theme=nacht]{--dz-bd:color-mix(in srgb,var(--dz-accent) 26%,var(--dz-line))}
+
+/* Fragen-Nummern (Üben, Test, Europa): Ziffer immer mittig; „jetzt“ in Gold, „beantwortet“ in der Akzentfarbe */
+.qnav button{display:grid;place-items:center;padding:0;line-height:1;font-size:1rem;transition:background var(--dz-t),color var(--dz-t),transform var(--dz-t),box-shadow var(--dz-t)}
+.qnav button.has{background:var(--dz-accent);color:var(--dz-accent-ink);border-color:transparent}
+.qnav button.cur{background:var(--dz-gold);color:#2b2a24;border-color:var(--dz-gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--dz-gold) 32%,transparent);transform:scale(1.08);position:relative;z-index:1}
+.qnav button.cur.has{background:var(--dz-gold)}
+
+/* Europa Memory: kleinere Karten, mittig */
+.geo-mem{grid-template-columns:repeat(4,minmax(0,94px));justify-content:center;gap:8px}
+.geo-mc{border-radius:var(--dz-r-s);font-size:1.3rem}.geo-mc.up{font-size:.72rem}.geo-mc .geo-mflag{max-width:52px}
+@media(max-width:430px){.geo-mem{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* Haus-Symbol: oben in der Mitte, sobald man 2 oder mehr Schritte von Start entfernt ist */
+.top{position:relative}
+.top.has-home .dz-home{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2}
+.top.has-home .dz-home:hover{transform:translate(-50%,calc(-50% - 2px))}
+.top.has-home .dz-home:active{transform:translate(-50%,-50%) scale(.96)}
+.top.has-home h2{max-width:calc(50% - 130px)}
+@media(max-width:560px){.top.has-home .dz-home{position:static;transform:none;margin-left:auto}.top.has-home .dz-home:hover,.top.has-home .dz-home:active{transform:none}.top.has-home h2{max-width:none}}
+/* Home-Symbol in der Mitte: die Chips rechts bleiben rechts */
+.top.has-home .stats{margin-left:auto}
 
 </style>
 <!-- Embedded fonts: Baloo 2 + Nunito (subset)
@@ -2505,8 +2536,39 @@ const EXTRAS = {
   schal: (s) => {
     const y = s.neckY;
     return `<g><path d="M62 ${y - 4} Q100 ${y + 14} 138 ${y - 4} L140 ${y + 10} Q100 ${y + 28} 60 ${y + 10}Z" fill="#e8454f"/><path d="M118 ${y + 14} l12 36 l16 -6 l-8 -34Z" fill="#e8454f"/><path d="M70 ${y} Q100 ${y + 14} 130 ${y}" stroke="#fff" stroke-width="3" fill="none" stroke-dasharray="6 7" opacity=".8"/></g>`;
+  },
+  sonnenbrille: (s) => {
+    const [x1, x2] = s.ex, y = s.ey, r = s.er + 8;
+    return `<g stroke="#1b1730" stroke-width="3.5" stroke-linejoin="round"><path d="M${x1 - r} ${y - r + 3} H${x1 + r} V${y + 2} Q${x1 + r} ${y + r + 2} ${x1} ${y + r + 2} Q${x1 - r} ${y + r + 2} ${x1 - r} ${y + 2}Z" fill="#2a2450"/><path d="M${x2 - r} ${y - r + 3} H${x2 + r} V${y + 2} Q${x2 + r} ${y + r + 2} ${x2} ${y + r + 2} Q${x2 - r} ${y + r + 2} ${x2 - r} ${y + 2}Z" fill="#2a2450"/><path d="M${x1 + r} ${y - 2} Q100 ${y - 8} ${x2 - r} ${y - 2}" fill="none"/><path d="M${x1 - r} ${y - 2} l-10 -3 M${x2 + r} ${y - 2} l10 -3" fill="none"/></g><path d="M${x1 - r + 6} ${y - r + 8} l9 0 M${x2 - r + 6} ${y - r + 8} l9 0" stroke="#8fd3ff" stroke-width="3" stroke-linecap="round"/>`;
+  },
+  fliege: (s) => {
+    const y = s.neckY + 8;
+    return `<g stroke="#1d4f91" stroke-width="2.5" stroke-linejoin="round"><path d="M100 ${y} L74 ${y - 14} Q68 ${y} 74 ${y + 14}Z" fill="#3c8dde"/><path d="M100 ${y} L126 ${y - 14} Q132 ${y} 126 ${y + 14}Z" fill="#3c8dde"/><rect x="93" y="${y - 7}" width="14" height="14" rx="4" fill="#ffc93c" stroke="#e0a100"/></g>`;
+  },
+  kopfhoerer: (s) => {
+    const y = s.headTop + 6;
+    return `<g stroke-linecap="round"><path d="M52 ${s.ey + 4} Q50 ${y - 8} 100 ${y - 10} Q150 ${y - 8} 148 ${s.ey + 4}" fill="none" stroke="#2b2b3a" stroke-width="7"/><rect x="40" y="${s.ey - 14}" width="20" height="38" rx="9" fill="#35c4b0" stroke="#1d7f72" stroke-width="3"/><rect x="140" y="${s.ey - 14}" width="20" height="38" rx="9" fill="#35c4b0" stroke="#1d7f72" stroke-width="3"/></g>`;
+  },
+  blume: (s) => {
+    const x = s.ex[1] + 26, y = s.headTop + 14;
+    let p = ''; for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; p += `<circle cx="${(x + Math.cos(a) * 9).toFixed(1)}" cy="${(y + Math.sin(a) * 9).toFixed(1)}" r="7" fill="#fff" stroke="#c9d3ea" stroke-width="1.5"/>`; }
+    return `<g>${p}<circle cx="${x}" cy="${y}" r="6" fill="#ffc93c" stroke="#e0a100" stroke-width="1.5"/></g>`;
+  },
+  medaille: (s) => {
+    const y = s.neckY;
+    return `<g><path d="M78 ${y - 2} L100 ${y + 40} L122 ${y - 2}" fill="none" stroke="#3c8dde" stroke-width="8" stroke-linejoin="round"/><circle cx="100" cy="${y + 50}" r="17" fill="#ffc93c" stroke="#e0a100" stroke-width="3"/><path d="M100 ${y + 40} l4 8 9 1 -6.500 6 2 9 -8.500 -4.500 -8.500 4.500 2 -9 -6.500 -6 9 -1z" fill="#fff3b0" stroke="#e0a100" stroke-width="1.5" stroke-linejoin="round"/></g>`;
+  },
+  sternchen: (s) => {
+    const st = (x, y, k, c) => `<path transform="translate(${x} ${y}) scale(${k})" d="M0 -9 L2.600 -2.800 9 -2.500 4 1.800 5.600 8.200 0 4.800 -5.600 8.200 -4 1.800 -9 -2.500 -2.600 -2.800Z" fill="${c}" stroke="#e0a100" stroke-width="1.200"/>`;
+    return `<g>${st(40, s.headTop + 30, 1.500, '#ffe066')}${st(162, s.headTop + 44, 1.200, '#fff3b0')}${st(52, s.headTop + 78, .9, '#fff3b0')}${st(158, s.headTop + 96, 1.600, '#ffe066')}</g>`;
+  },
+  cape: (s) => {
+    const y = s.neckY;
+    return `<g><path d="M62 ${y - 4} Q100 ${y + 8} 138 ${y - 4} L178 ${y + 22} Q184 ${y + 48} 172 ${y + 54} Q100 ${y + 40} 28 ${y + 54} Q16 ${y + 48} 22 ${y + 22}Z" fill="#6a4fc7" stroke="#47339a" stroke-width="2.500" stroke-linejoin="round"/></g>`;
   }
 };
+
+const EXTRA_BACK = { cape: 1 };          // Extras, die hinter dem Körper gezeichnet werden
 
 /* ---------- scene backgrounds (inside the avatar circle) ---------- */
 const BGS = {
@@ -2550,7 +2612,7 @@ function mascotSVG(o) {
   const shadow = o.noShadow ? '' : '<ellipse cx="100" cy="184" rx="52" ry="8" fill="rgba(0,0,0,.14)"/>';
   const thinkBubble = m === 'think' ? '<g fill="#fff" stroke="#c9c2dd" stroke-width="2"><circle cx="160" cy="46" r="3.5"/><circle cx="170" cy="32" r="5.5"/><ellipse cx="178" cy="14" rx="14" ry="10"/></g><text x="178" y="19" font-size="14" font-weight="800" text-anchor="middle" fill="#7b5cd6" font-family="sans-serif">?</text>' : '';
   const stars = m === 'cheer' ? '<g fill="#FFC93C"><path d="M30 40 l3 7 7 .6 -5.4 4.6 1.7 7 -6.3 -3.8 -6.3 3.8 1.7 -7 -5.4 -4.6 7 -.6z"/><path d="M168 56 l2.4 5.6 5.6 .5 -4.3 3.7 1.4 5.6 -5.1 -3 -5.1 3 1.4 -5.6 -4.3 -3.7 5.6 -.5z"/></g>' : '';
-  return `<svg class="mascot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${bg}${shadow}<g class="mbody">${s.draw(m)}${ex}${hat}</g>${stars}${thinkBubble}</svg>`;
+  return `<svg class="mascot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${bg}${shadow}<g class="mbody">${EXTRA_BACK[o.extra] ? ex : ''}${s.draw(m)}${EXTRA_BACK[o.extra] ? '' : ex}${hat}</g>${stars}${thinkBubble}</svg>`;
 }
 
 /* ---------- SHOP catalog ----------
@@ -2591,7 +2653,11 @@ const SHOP = {
   },
   extra: {
     label: 'Extras', icon: '🕶️', none: true, items: [
-      { id: 'brille', name: 'Brille', cur: 's', price: 6 }, { id: 'schal', name: 'Schal', cur: 's', price: 8 }
+      { id: 'brille', name: 'Brille', cur: 's', price: 6 }, { id: 'schal', name: 'Schal', cur: 's', price: 8 },
+      { id: 'sonnenbrille', name: 'Sonnenbrille', cur: 's', price: 10 }, { id: 'fliege', name: 'Fliege', cur: 's', price: 10 },
+      { id: 'kopfhoerer', name: 'Kopfhörer', cur: 's', price: 12 }, { id: 'blume', name: 'Blume im Ohr', cur: 's', price: 12 },
+      { id: 'medaille', name: 'Goldmedaille', cur: 's', price: 15 }, { id: 'sternchen', name: 'Glitzersterne', cur: 's', price: 18 },
+      { id: 'cape', name: 'Heldencape', cur: 's', price: 20 }
     ]
   },
   bg: {
@@ -2605,41 +2671,6 @@ const SHOP = {
   frame: {
     label: 'Rahmen', icon: '🖼️', none: true, items: [
       { id: 'gold', name: 'Goldrahmen', cur: 'f', price: 3 }, { id: 'regen', name: 'Regenbogen', cur: 'f', price: 6 }, { id: 'sterne', name: 'Sternenrahmen', cur: 'f', price: 10 }
-    ]
-  },
-  /* Fino-Insel: viele Dinge zum Sammeln und Sparen – damit es immer ein nächstes Ziel gibt. Sie werden nicht „benutzt“, sondern wachsen auf der Insel. */
-  insel: {
-    label: 'Fino-Insel', icon: '🏝️', none: false, multi: true, items: [
-      { id: 'palme', name: 'Palme', e: '🌴', cur: 'c', price: 30 },
-      { id: 'sonnenblume', name: 'Sonnenblumen', e: '🌻', cur: 'c', price: 35 },
-      { id: 'pilze', name: 'Pilzwiese', e: '🍄', cur: 'c', price: 40 },
-      { id: 'drachen', name: 'Drachen', e: '🪁', cur: 'c', price: 50 },
-      { id: 'zelt', name: 'Zeltplatz', e: '⛺', cur: 'c', price: 60 },
-      { id: 'huette', name: 'Hütte', e: '🏠', cur: 'c', price: 80 },
-      { id: 'kanu', name: 'Kanu', e: '🛶', cur: 'c', price: 90 },
-      { id: 'brunnen', name: 'Brunnen', e: '⛲', cur: 'c', price: 100 },
-      { id: 'teich', name: 'Fischteich', e: '🐠', cur: 'c', price: 110 },
-      { id: 'regenbogen', name: 'Regenbogen', e: '🌈', cur: 'c', price: 120 },
-      { id: 'bienen', name: 'Bienenstock', e: '🐝', cur: 'c', price: 130 },
-      { id: 'apfel', name: 'Apfelbaum', e: '🍎', cur: 'c', price: 140 },
-      { id: 'zirkus', name: 'Zirkuszelt', e: '🎪', cur: 'c', price: 160 },
-      { id: 'schildkroete', name: 'Schildkröten-Strand', e: '🐢', cur: 'c', price: 170 },
-      { id: 'burg', name: 'Burg', e: '🏰', cur: 'c', price: 200 },
-      { id: 'segelboot', name: 'Segelboot', e: '⛵', cur: 'c', price: 220 },
-      { id: 'riesenrad', name: 'Riesenrad', e: '🎡', cur: 'c', price: 250 },
-      { id: 'leuchtturm', name: 'Leuchtturm', e: '🗼', cur: 'c', price: 270 },
-      { id: 'eisenbahn', name: 'Eisenbahn', e: '🚂', cur: 'c', price: 300 },
-      { id: 'vulkan', name: 'Vulkan', e: '🌋', cur: 'c', price: 320 },
-      { id: 'dino', name: 'Dino-Park', e: '🦕', cur: 'c', price: 350 },
-      { id: 'ufo', name: 'Ufo-Landeplatz', e: '🛸', cur: 'c', price: 380 },
-      { id: 'rakete', name: 'Raketenstation', e: '🚀', cur: 'c', price: 420 },
-      { id: 'sternwarte', name: 'Sternwarte', e: '🔭', cur: 'c', price: 450 },
-      { id: 'tempel', name: 'Tempel', e: '🏯', cur: 'c', price: 480 },
-      { id: 'drachenhoehle', name: 'Drachenhöhle', e: '🐉', cur: 'c', price: 520 },
-      { id: 'planeten', name: 'Planeten-Garten', e: '🪐', cur: 'c', price: 560 },
-      { id: 'denkmal', name: 'Mathe-Denkmal', e: '🏆', cur: 'c', price: 600 },
-      { id: 'sternenturm', name: 'Sternen-Turm', e: '🌟', cur: 'c', price: 700 },
-      { id: 'schloss', name: 'Königsschloss', e: '👑', cur: 'c', price: 800 }
     ]
   }
 };
@@ -4137,9 +4168,9 @@ function trophyList() {
   return L;
 }
 function checkTrophies() {
-  let any = false;
-  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; toast(t.i, `Neuer Pokal: ${t.n}`); } });
-  if (any) confetti(60);
+  let any = false; const quiet = typeof UI !== 'undefined' && UI && UI.wQuiet;          // Weltreise: Pokale still vergeben
+  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
+  if (any && !quiet) confetti(60);
   if (typeof checkUnlocks === 'function') checkUnlocks();
 }
 
@@ -4485,7 +4516,10 @@ function render() {
 const chip = (ic, v, t) => `<span class="chip" title="${t || ''}">${ic} <b>${v}</b></span>`;
 const statChips = () => `<div class="stats"><button class="chip cb" data-act="shop" title="Münzen – im Shop ausgeben">🪙 <b>${S.coins}</b></button>${chip('⭐', S.starsLife, 'Sterne – dein Beleg, bleiben immer erhalten')}</div>`;
 /* Kopfzeile innerer Seiten. „back“ ist nur der Notnagel; der Zurück-Knopf führt zur Seite, von der man wirklich kam (dz.js: NAV) */
-const topBar = (title, back = 'home', extra = '') => { const lb = dzBackLabel(back); return `<div class="top"><button class="btn sec back" data-act="back" data-arg="${esc(back)}" aria-label="Zurück zu: ${esc(lb)}">${ico('back', 20)}<span>${esc(lb)}</span></button><h2>${title}</h2>${extra}${statChips()}</div>`; };
+const topBar = (title, back = 'home', extra = '') => {
+  const lb = dzBackLabel(back), deep = NAV.stack.length >= 2;                  // ab 2 Schritten von Start: Haus-Symbol in der Mitte
+  return `<div class="top${deep ? ' has-home' : ''}"><button class="btn sec back" data-act="back" data-arg="${esc(back)}" aria-label="Zurück zu: ${esc(lb)}">${ico('back', 20)}<span>${esc(lb)}</span></button><h2>${title}</h2>${deep ? `<button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzIc('home', 22)}</button>` : ''}${extra}${statChips()}</div>`;
+};
 const greeting = () => { const h = new Date().getHours(); return h < 11 ? 'Guten Morgen' : h < 17 ? 'Hallo' : 'Guten Abend'; };
 const pctCls = p => p === null ? 'n' : p >= 80 ? 'g' : p >= 55 ? 'y' : 'r';
 
@@ -5230,8 +5264,9 @@ if (typeof MutationObserver !== 'undefined') {
 
 /* ---------- Navigation: Verlauf statt fester Rücksprünge ---------- */
 const NAV = { stack: [], isBack: false, sentinel: false };
-const DZ_TRANSIENT = new Set(['play', 'test', 'result', 'testResult', 'geoPlay', 'geoResult', 'limit']);
-const DZ_LABEL = { home: 'Start', hefte: 'Meine Hefte', extra: 'Extra Spaß', rewards: 'Meine Welt', geo: 'Europa Entdecker', profile: 'Profil', shop: 'Shop', trophies: 'Pokale', schatz: 'Karten', look: 'Farben & Töne', finoname: 'Name', avatar: 'Das bin ich', musik: 'Musik', story: 'Geschichte', welt: 'Weltreise', weltPass: 'Mein Reisepass', weltReise: 'Reise', fakten: 'Lustige Fakten', geoCards: 'Länderkarten', geoPass: 'Stempel', parent: 'Eltern', module: 'Heft', topic: 'Übung', mistakes: 'Fehler-Heft', testSetup: 'Mini-Test', buch: 'Mein Buch', insel: 'Meine Insel', wesen: 'Meine Wesen' };
+const DZ_TRANSIENT = new Set(['play', 'test', 'result', 'testResult', 'geoPlay', 'geoResult', 'limit', 'storyread']);
+const DZ_PARENT = { storyread: 'story' };                   // Seiten, die nicht im Verlauf stehen: Zurück geht hierhin
+const DZ_LABEL = { home: 'Start', hefte: 'Meine Hefte', extra: 'Extra Spaß', rewards: 'Meine Welt', geo: 'Europa Entdecker', profile: 'Profil', shop: 'Shop', trophies: 'Pokale', schatz: 'Karten', look: 'Farben & Töne', avatar: 'Das bin ich', musik: 'Musik', story: 'Geschichte', welt: 'Weltreise', weltPass: 'Mein Reisepass', weltReise: 'Reise', fakten: 'Lustige Fakten', geoCards: 'Länderkarten', geoPass: 'Stempel', parent: 'Eltern', module: 'Heft', topic: 'Übung', mistakes: 'Fehler-Heft', testSetup: 'Mini-Test', buch: 'Mein Buch', insel: 'Meine Insel', wesen: 'Meine Wesen' };
 const DZ_KEEP_UI = k => !['say', 'pending', 'pinUntil', 'pinCreative', 'ro', 'wNew', 'wFlight'].includes(k);
 const dzSnap = () => { const o = {}; Object.keys(UI).forEach(k => { const v = UI[k]; if (DZ_KEEP_UI(k) && (v === null || ['string', 'number', 'boolean'].includes(typeof v))) o[k] = v; }); return o; };
 function dzNavPush(from, to) {
@@ -5245,6 +5280,7 @@ function dzNavPush(from, to) {
   dzSentinel();
 }
 function dzBack(fb) {
+  if (DZ_PARENT[view] && VIEWS[DZ_PARENT[view]]) { go(DZ_PARENT[view]); return; }
   let e;
   while ((e = NAV.stack.pop()) && (!VIEWS[e.v] || e.v === view)) { e = null; }
   if (e) { NAV.isBack = true; try { go(e.v, e.ui); } finally { NAV.isBack = false; } return; }
@@ -5309,9 +5345,9 @@ const DZ_ART = {
   play: '<circle cx="32" cy="26" r="19" fill="#bed1c6"/><path d="M26 16v20l17-10Z" fill="#52676c" stroke="#52676c" stroke-width="3" stroke-linejoin="round"/>',
   retry: '<rect x="14" y="7" width="30" height="38" rx="5" fill="#e9d9da"/><path d="M14 15h-3M14 25h-3M14 35h-3" stroke="#9c6668" stroke-width="2.4" stroke-linecap="round"/><path d="M42 33a11 11 0 1 1-3-12" fill="none" stroke="#52676c" stroke-width="3" stroke-linecap="round"/><path d="m40 14 .5 8-8-.7" fill="none" stroke="#52676c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
   test: '<circle cx="32" cy="29" r="16" fill="#e7edeb" stroke="#52676c" stroke-width="2.4"/><path d="M32 29V19M32 29l7 4M27 8h10M32 8v5M47 13l3-3" fill="none" stroke="#52676c" stroke-width="2.8" stroke-linecap="round"/><circle cx="32" cy="29" r="2" fill="#9c6668"/>',
-  mal: '<rect x="10" y="8" width="44" height="36" rx="12" fill="#e9d9da"/><path d="M23 18l18 16M41 18 23 34" stroke="#8e5962" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="10" r="3" fill="#d5ad72"/>',
-  kopf: '<path d="M12 33c-5-5-3-14 4-17 4-6 14-6 18-1 7-1 13 5 10 12-1 4-5 6-9 5v5H20v-4Z" fill="#e7edeb" stroke="#52676c" stroke-width="2.2" stroke-linejoin="round"/><path d="M24 22h12M30 16v12M24 35h12" stroke="#8e5962" stroke-width="3" stroke-linecap="round"/><circle cx="52" cy="14" r="3" fill="#d5ad72"/>',
-  schrift: '<rect x="12" y="5" width="40" height="42" rx="6" fill="#f4efe4" stroke="#52676c" stroke-width="2"/><text x="44" y="20" text-anchor="end" font-family="ui-rounded,system-ui,sans-serif" font-size="12" font-weight="800" fill="#52676c">127</text><text x="44" y="33" text-anchor="end" font-family="ui-rounded,system-ui,sans-serif" font-size="12" font-weight="800" fill="#52676c">+ 58</text><path d="M20 37h26" stroke="#8e5962" stroke-width="2.6" stroke-linecap="round"/><text x="44" y="46" text-anchor="end" font-family="ui-rounded,system-ui,sans-serif" font-size="9" font-weight="800" fill="#9c6668">185</text>',
+  mal: '<rect x="7" y="5" width="42" height="42" rx="10" fill="#f4efe4" stroke="#52676c" stroke-width="2"/><circle cx="16" cy="16" r="3.1" fill="#9c6668"/><circle cx="24.5" cy="16" r="3.1" fill="#9c6668"/><circle cx="33" cy="16" r="3.1" fill="#9c6668"/><circle cx="41.5" cy="16" r="3.1" fill="#9c6668"/><circle cx="16" cy="26" r="3.1" fill="#9c6668"/><circle cx="24.5" cy="26" r="3.1" fill="#9c6668"/><circle cx="33" cy="26" r="3.1" fill="#9c6668"/><circle cx="41.5" cy="26" r="3.1" fill="#9c6668"/><circle cx="16" cy="36" r="3.1" fill="#9c6668"/><circle cx="24.5" cy="36" r="3.1" fill="#9c6668"/><circle cx="33" cy="36" r="3.1" fill="#9c6668"/><circle cx="41.5" cy="36" r="3.1" fill="#9c6668"/><circle cx="50" cy="39" r="10" fill="#e9d9da" stroke="#8e5962" stroke-width="2"/><path d="M45.5 34.5l9 9M54.5 34.5l-9 9" stroke="#8e5962" stroke-width="3" stroke-linecap="round"/><path d="M54 6l1.6 3.8 3.8 1.6-3.8 1.6L54 16.8l-1.6-3.8-3.8-1.6 3.8-1.6Z" fill="#d5ad72"/>',
+  kopf: '<path d="M18 46V38c-6-3-9-8-9-15C9 12 18 4 29 4s19 7 19 17c0 4-2 7-4 9v7c0 5-3 9-8 9Z" fill="#e7edeb" stroke="#52676c" stroke-width="2.2" stroke-linejoin="round"/><path d="M22 20h10M27 15v10M35 31h9" stroke="#8e5962" stroke-width="3" stroke-linecap="round"/><path d="M52 6l-5 9h6l-5 9" fill="none" stroke="#d5ad72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 32c2 2 4 2 6 1" fill="none" stroke="#52676c" stroke-width="2" stroke-linecap="round"/>',
+  schrift: '<rect x="9" y="4" width="40" height="44" rx="6" fill="#f4efe4" stroke="#52676c" stroke-width="2"/><path d="M15 12h28" stroke="#bed1c6" stroke-width="2.4" stroke-linecap="round"/><text x="41" y="25" text-anchor="end" font-family="ui-rounded,system-ui,sans-serif" font-size="11" font-weight="800" fill="#52676c">127</text><text x="41" y="36" text-anchor="end" font-family="ui-rounded,system-ui,sans-serif" font-size="11" font-weight="800" fill="#52676c">+ 58</text><path d="M16 39h26" stroke="#8e5962" stroke-width="2.4" stroke-linecap="round"/><g transform="rotate(32 50 34)"><rect x="46.5" y="16" width="7" height="26" rx="1.8" fill="#d5ad72" stroke="#52676c" stroke-width="1.8"/><path d="M46.5 42h7l-3.5 7Z" fill="#f1e4b6" stroke="#52676c" stroke-width="1.8" stroke-linejoin="round"/><rect x="46.5" y="16" width="7" height="5" fill="#e9d9da" stroke="#52676c" stroke-width="1.8"/></g>',
   quiz: '<path d="M10 12a8 8 0 0 1 8-8h28a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8H30l-10 9v-9h-2a8 8 0 0 1-8-8Z" fill="#e7edeb" stroke="#52676c" stroke-width="2.2" stroke-linejoin="round"/><path d="M26 17q0-6 6-6t6 5c0 5-6 5-6 10M32 33v1.5" fill="none" stroke="#8e5962" stroke-width="3.4" stroke-linecap="round"/>',
   flaggen: '<path d="M16 6v42" stroke="#52676c" stroke-width="3.4" stroke-linecap="round"/><path d="M16 8h32l-6 9 6 9H16Z" fill="#e9d9da" stroke="#52676c" stroke-width="2" stroke-linejoin="round"/><path d="M16 14h28" stroke="#9c6668" stroke-width="3"/><path d="M16 20h26" stroke="#bed1c6" stroke-width="3"/>',
   groesser: '<path d="M32 8v36M20 44h24M14 16h36" stroke="#52676c" stroke-width="3" stroke-linecap="round"/><path d="M14 16l-7 14h14ZM50 16l-7 14h14Z" fill="#e9d9da" stroke="#52676c" stroke-width="2" stroke-linejoin="round"/><path d="M7 30q7 7 14 0M43 30q7 7 14 0" fill="#bed1c6" stroke="#52676c" stroke-width="2"/>',
@@ -5325,6 +5361,8 @@ const DZ_ART = {
   farben: '<path d="M10 38c18 5 36-6 34-20C41 4 18 3 11 14c-4 8 8 8 6 14-1 5-9 2-9 6 0 3 1 4 2 4Z" fill="#f4efe4" stroke="#52676c" stroke-width="2.2" stroke-linejoin="round"/><circle cx="20" cy="17" r="3" fill="#9c6668"/><circle cx="30" cy="13" r="3" fill="#bed1c6"/><circle cx="38" cy="22" r="3" fill="#d5ad72"/><circle cx="26" cy="27" r="3" fill="#b7cbcc"/>',
   fino: '<path d="M10 8l10 8h24l10-8v24c0 11-10 18-22 18S10 43 10 32Z" fill="#e9c9a8"/><path d="M10 8l10 8-8 6ZM54 8 44 16l8 6Z" fill="#9c6668"/><path d="M20 34q12 14 24 0" fill="#f4efe4"/><circle cx="24" cy="30" r="2.4" fill="#52676c"/><circle cx="40" cy="30" r="2.4" fill="#52676c"/><ellipse cx="32" cy="38" rx="3" ry="2" fill="#52676c"/>'
 };
+DZ_ART.teilen = '<rect x="5" y="5" width="54" height="42" rx="9" fill="#f4efe4" stroke="#52676c" stroke-width="2"/><rect x="11" y="11" width="9" height="30" rx="2.5" fill="#bed1c6" stroke="#52676c" stroke-width="1.8"/><path d="M11 14h9M11 17h9M11 20h9M11 23h9M11 26h9M11 29h9M11 32h9M11 35h9M11 38h9" stroke="#52676c" stroke-width="1" opacity=".5"/><rect x="23" y="11" width="9" height="30" rx="2.5" fill="#bed1c6" stroke="#52676c" stroke-width="1.8"/><path d="M23 14h9M23 17h9M23 20h9M23 23h9M23 26h9M23 29h9M23 32h9M23 35h9M23 38h9" stroke="#52676c" stroke-width="1" opacity=".5"/><rect x="35" y="11" width="9" height="30" rx="2.5" fill="#bed1c6" stroke="#52676c" stroke-width="1.8"/><path d="M35 14h9M35 17h9M35 20h9M35 23h9M35 26h9M35 29h9M35 32h9M35 35h9M35 38h9" stroke="#52676c" stroke-width="1" opacity=".5"/><circle cx="51" cy="38" r="11" fill="#e9d9da" stroke="#8e5962" stroke-width="2"/><circle cx="51" cy="38" r="1.9" fill="#8e5962"/><path d="M45.5 38h11" stroke="#8e5962" stroke-width="2.8" stroke-linecap="round"/><circle cx="51" cy="32" r="1.9" fill="#8e5962"/><circle cx="51" cy="44" r="1.9" fill="#8e5962"/>';
+DZ_ART.geld = '<g transform="rotate(-9 26 22)"><rect x="5" y="9" width="40" height="23" rx="4.5" fill="#bed1c6" stroke="#52676c" stroke-width="2"/><circle cx="25" cy="20.5" r="6.8" fill="#f4efe4" stroke="#52676c" stroke-width="1.7"/><text x="25" y="24.2" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" text-anchor="middle" font-size="10" fill="#52676c">€</text><circle cx="11" cy="14.5" r="1.7" fill="#52676c"/><circle cx="39" cy="26.5" r="1.7" fill="#52676c"/></g><ellipse cx="46" cy="44" rx="11" ry="4.6" fill="#c3984f" stroke="#52676c" stroke-width="1.8"/><path d="M35 44v-5c0 2.5 5 4.6 11 4.6S57 41.500 57 39v5" fill="#c3984f"/><ellipse cx="46" cy="39" rx="11" ry="4.6" fill="#d5ad72" stroke="#52676c" stroke-width="1.8"/><ellipse cx="46" cy="33" rx="11" ry="4.6" fill="#e6c987" stroke="#52676c" stroke-width="1.8"/><text x="46" y="35.600" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" text-anchor="middle" font-size="7" fill="#52676c">€</text>';
 const dzArt = (n, cls) => `<svg viewBox="0 0 64 52" class="${cls || ''}" aria-hidden="true" focusable="false">${DZ_ART[n] || ''}</svg>`;
 const dzPassport = () => dzArt('passport');
 
@@ -5400,7 +5438,7 @@ const chapIdx = m => Math.max(0, CHAPTERS.findIndex(c => c.id === (m.id || '')[0
 const modNum = m => +String(m.id).slice(1) || 0;
 const isExtra = m => !!m.extra || !/^[A-D][1-5]$/.test(m.id);
 const chapMods = c => MODULES.filter(m => !isExtra(m) && m.id[0] === c);
-const FN = () => (S.finoName || 'Fino');                         // Fino darf umbenannt werden (Shop → Avatar → Fino-Namen)
+const FN = () => (S.finoName || 'Fino');                         // ein früher gespeicherter Fino-Name bleibt erhalten (Umbenennen gibt es nicht mehr)
 
 /* Preise im alten Fino-Shop auf Münzen umstellen (Flamme = 3 Münzen, Stern = 12 Münzen); Besitz bleibt unverändert */
 (function normShop() {
@@ -5515,17 +5553,21 @@ function startNext() {
 const subjTiles = () => SUBJECTS.filter(x => x.tile).map(x => x.tile());
 const TILE_CLS = ['t1', 't2', 't3'];
 
-/* Noch mal üben + Mini-Test: ehrliche Angabe der heutigen Belohnung */
+/* Fehler-Heft + Mini-Test: ehrliche Angabe der heutigen Belohnung */
 const heftePrizeNote = () => {
   const L = testLeft(), any = L.c || L.s || L.ch;
   return any ? `<div class="dz-note"><b>Mini-Test heute:</b> bis zu ${L.c} 🪙 + ${L.s} ⭐${L.ch ? ' und eine Karte bei voller Punktzahl' : ''}.</div>` : '';
 };
 
+/* Begrüßung nach lokaler Uhrzeit (Gerätezeit): Morgen 5–10, Tag 11–13, Nachmittag 14–17, Abend 18–21, sonst Nacht */
+const greetWord = (h = new Date().getHours()) => h >= 5 && h < 11 ? 'Guten Morgen' : h < 14 && h >= 11 ? 'Guten Tag' : h >= 14 && h < 18 ? 'Schönen Nachmittag' : h >= 18 && h < 22 ? 'Guten Abend' : 'Hallo Nachteule';
+const homeGreeting = (h) => { const nm = S.name || S.avName || '', w = greetWord(h); return nm ? `${w}, ${esc(nm)}!` : `${w}!`; };
+
 /* ---------- Startseite: der Hub ---------- */
 VIEWS.home = () => {
   const n = S.daily.d === ymd() ? S.daily.n : 0, goal = S.cfg.goal, nu = nextUp();
   const progress = Math.min(n, goal), pct = Math.min(100, Math.round(n / goal * 100)), done = n >= goal;
-  const hello = S.name ? `Hey ${esc(S.name)}!` : 'Hey, schön, dass du da bist!';
+  const hello = homeGreeting();
   const sub = done ? 'Dein Tagesziel ist geschafft – super!' : useMe() ? 'Was entdeckst du heute?' : `${esc(FN())} ist bereit. Du auch?`;
   const tree = `<div class="dz-tree" aria-label="Dein Baum wächst mit jeder Aufgabe">${dzTree(pct)}<div class="dz-tree-t"><strong>${done ? 'Dein Baum ist groß!' : n ? 'Dein Baum wächst' : 'Pflanze deinen Samen'}</strong><small>Heute ${progress} von ${goal} Aufgaben</small><div class="dz-tree-bar" role="progressbar" aria-label="Tagesziel" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="${goal}"><i style="width:${pct}%"></i></div></div></div>`;
   const ex = MODULES.filter(isExtra);
@@ -5549,8 +5591,8 @@ const dueInfo = c => {
 };
 const chapterOf = m => isExtra(m) ? 'Extra' : m.id[0];
 const heftTile = (m, cls) => {
-  const p = modProgress(m), art = { EMAL: 'mal', KOPF: 'kopf', SCHR: 'schrift' }[m.id];
-  return dzTile({ cls, html: art ? dzArt(art) : `<span class="dz-glyph">${esc(m.icon)}</span>`, title: m.extra ? m.title : m.id, sub: m.extra ? ({ EMAL: 'Mal & geteilt', KOPF: 'Plus & minus', SCHR: 'Untereinander' }[m.id] || '') : m.title, act: 'mod', arg: m.id, bar: p.pct, pct: p.pct, label: `${m.extra ? '' : 'Heft ' + m.id + ': '}${m.title}, ${p.pct} Prozent geschafft` });
+  const p = modProgress(m), art = { EMAL: 'mal', KOPF: 'kopf', SCHR: 'schrift', A4: 'teilen', A5: 'geld' }[m.id];
+  return dzTile({ cls, html: art ? dzArt(art) : `<span class="dz-glyph">${esc(m.icon)}</span>`, title: m.extra ? m.title : m.id, sub: m.extra ? ({ EMAL: 'Mal & geteilt', KOPF: 'Plus & minus', SCHR: 'Untereinander' }[m.id] || '') : m.title, act: 'mod', arg: m.id, pct: p.pct, label: `${m.extra ? '' : 'Heft ' + m.id + ': '}${m.title}, ${p.pct} Prozent geschafft` });
 };
 function chapterBody(c) {
   const mods = chapMods(c.id).sort((a, b) => modNum(a) - modNum(b));
@@ -5567,7 +5609,7 @@ VIEWS.hefte = () => {
   if (UI.acc_hefte === undefined) UI.acc_hefte = openDefault;
   const tiles = [
     { art: 'play', title: 'Los geht’s', sub: nu ? (nu.kind === 'rev' ? `Wiederholen: ${nu.mod.id}` : nu.i ? `Weiter bei ${nu.mod.id}` : `Start: ${nu.mod.id}`) : 'Alles geschafft', act: nu ? 'goNext' : 'mistakes', label: nu ? `Los geht’s: ${nu.mod.title}, ${nu.topic.t}` : 'Los geht’s: alle Hefte sind fertig' },
-    { art: 'retry', title: 'Noch mal üben', sub: nm ? `${nm} ${nm === 1 ? 'Aufgabe' : 'Aufgaben'}` : 'Alles richtig', act: 'mistakes' },
+    { art: 'retry', title: 'Fehler-Heft', sub: nm ? `${nm} ${nm === 1 ? 'Aufgabe' : 'Aufgaben'}` : 'Alles richtig', act: 'mistakes' },
     { art: 'test', title: 'Mini-Test', sub: `${TEST_N} Aufgaben`, act: 'testSetup', label: `Mini-Test: ${TEST_N} Aufgaben in ${TEST_SECS / 60} Minuten` }
   ].map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join('') + dzSlot('slot_hefte');
   const items = CHAPTERS.map(c => {
@@ -5617,7 +5659,6 @@ VIEWS.profile = () => {
   const tiles = [
     { html: avArt(120), title: 'Das bin ich', sub: 'Mein Bild', act: 'avatar' },
     { art: 'pokal', title: 'Meine Pokale', sub: `${nTro} gesammelt`, act: 'trophies' },
-    { art: 'fino', title: `${FN()} umbenennen`, act: 'finoname' },
     { art: 'farben', title: 'Farben & Töne', act: 'look' }
   ].map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join('');
   return topBar('Mein Profil', 'home') + `<section class="dz-panel dz-id">${avArt(112)}<div><h1>${esc(profileName())}</h1><p>Level ${L.n} · ${esc(L.title)}</p><div class="bar" style="margin-top:8px"><i style="width:${L.pct}%"></i></div><small class="mute">Noch ${L.need} verdiente Münzen bis Level ${L.n + 1}</small>${S.name ? '' : `<label class="dz-lbl" for="nameIn">Mein Name</label>${nameEditor()}`}</div></section>
@@ -5628,7 +5669,7 @@ VIEWS.profile = () => {
       ${stat('trophy', nTro, 'Pokale', 'Alle ansehen', 'trophies')}
     </div>
     ${g ? `<button class="dz-goal" data-act="shop">${dzIc('target', 22)}<span>Dein Sparziel: <b>${esc(g.name)}</b></span><b>${Math.max(0, g.src.price - S.coins) ? `Noch ${Math.max(0, g.src.price - S.coins)} Münzen` : 'Ziel erreicht!'}</b></button>` : ''}
-    ${dzSec('Mein Platz')}${dzGrid(4, tiles, 'dz-prof4')}
+    ${dzSec('Mein Platz')}${dzGrid(3, tiles, 'dz-prof4')}
     ${S.av && S.av.look && !S.avName ? `<div class="dz-panel" style="margin-top:12px">${avNameEditor()}</div>` : ''}
     ${recent.length ? `<details class="ad-earned"><summary>${ico('star', 18)} Neu verdient <span>${recent.length}</span></summary><ul>${recent.map(e => `<li>${esc(e.ic || '✓')} ${esc(e.text)}</li>`).join('')}</ul></details>` : ''}`;
 };
@@ -5636,32 +5677,6 @@ Object.assign(ACT, {
   profile: () => go('profile'), extra: () => go('extra'),
   rhSaveName: () => { ACT.saveName(); render(); },
   saveAvName: () => { const el = $('#avNameIn'); S.avName = ((el && el.value) || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); render(); }
-});
-
-/* ---------- Fino-Name: 6 Namen zum Verdienen + eigener Name ---------- */
-regKind('finoname', { group: 'avatar', label: 'Fino-Namen', ic: 'fox' });
-regItems([
-  { id: 'fn.funki', kind: 'finoname', name: 'Funki', e: '🦊', src: { t: 'shop', cur: 'c', price: 40 } },
-  { id: 'fn.pixel', kind: 'finoname', name: 'Pixel', e: '🦊', src: { t: 'shop', cur: 'c', price: 50 } },
-  { id: 'fn.blitz', kind: 'finoname', name: 'Blitz', e: '🦊', src: { t: 'shop', cur: 'c', price: 60 } },
-  { id: 'fn.nuss', kind: 'finoname', name: 'Nuss', e: '🦊', src: { t: 'shop', cur: 'c', price: 70 } },
-  { id: 'fn.sunny', kind: 'finoname', name: 'Sunny', e: '🦊', src: { t: 'shop', cur: 'c', price: 80 } },
-  { id: 'fn.rocky', kind: 'finoname', name: 'Rocky', e: '🦊', src: { t: 'shop', cur: 'c', price: 90 } },
-  { id: 'fn.own', kind: 'finoname', name: 'Eigener Name', e: '✏️', src: { t: 'shop', cur: 'c', price: 150 } }
-]);
-VIEWS.finoname = () => {
-  const names = itemsOf('finoname').filter(i => i.id !== 'fn.own'), own = hasItem('fn.own');
-  const cur = FN();
-  return `${topBar(ico('fox', 26) + ' Fino-Name', 'profile')}
-  <div class="card"><div class="row wrap" style="align-items:center"><div style="width:120px">${avatarHTML(finoLook(), 120, 'happy')}</div><div style="flex:1;min-width:200px"><h3 style="margin:0">Fino heißt gerade: <b>${esc(cur)}</b></h3><p class="mute small">Neue Namen bekommst du im Shop (Avatar → Fino-Namen).</p></div></div></div>
-  <div class="itiles" style="margin-top:12px"><button class="itile ${cur === 'Fino' ? 'sel' : ''}" data-act="setFinoName" data-arg="Fino"><span class="ith"><div class="ithumb nm">Fino</div></span><span class="itn">Fino</span>${cur === 'Fino' ? '<span class="tag on">aktiv</span>' : ''}</button>
-  ${names.map(i => itemTile(i, { act: 'setFinoName', arg: i.name, sel: cur === i.name })).join('')}</div>
-  <div class="card" style="margin-top:12px"><h3>Eigener Name</h3>${own ? `<div class="row"><input class="txt" id="finoIn" maxlength="12" placeholder="Name für Fino" value="${esc(cur)}"><button class="btn" data-act="saveFinoName">Speichern</button></div>` : `<p class="mute small">Mit dem „Eigenen Namen“ aus dem Shop kannst du Fino selbst benennen.</p>${itemTile(CATALOG['fn.own'], {})}`}</div>`;
-};
-Object.assign(ACT, {
-  finoname: () => go('finoname'),
-  setFinoName: n => { S.finoName = n === 'Fino' ? '' : n; save(); toast('🦊', `${FN()} heißt jetzt so`); render(); },
-  saveFinoName: () => { const v = ($('#finoIn').value || '').trim().slice(0, 12); if (v) { S.finoName = v; save(); toast('🦊', `${v} heißt jetzt so`); render(); } }
 });
 
 /* ---------- Darstellung: Farben (Themes) und Lesbarkeit ---------- */
@@ -7549,7 +7564,7 @@ VIEWS.storyread = () => {
   const s = SC(), ep = epList().find(e => e.id === s.ep); if (!ep) return VIEWS.story();
   if (s.fin) {
     const idx = epList().indexOf(ep), nx = epList().find(e => !epUnlocked(e));
-    return `<div class="top"><button class="btn sec back" data-act="story" aria-label="Zurück">${ico('back', 22)}</button><h2>${ep.icon} ${nameIn(ep.title)}</h2></div>
+    return `<div class="top has-home"><button class="btn sec back" data-act="story" aria-label="Zurück zu den Episoden">${ico('back', 20)}<span>Geschichte</span></button><h2>${ep.icon} ${nameIn(ep.title)}</h2><button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzIc('home', 22)}</button></div>
     <div class="card result"><h3>Episode ${idx + 1} gelesen</h3><p class="mute">${nx ? `Noch ${grp(epLeft(nx))} bis zur nächsten Episode.` : 'Das war die letzte Episode.'}</p>
     <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="story">Alle Episoden</button></div></div>`;
   }
@@ -7564,7 +7579,7 @@ VIEWS.storyread = () => {
   else if (s.phase === 'puzzle') body = `<p class="sc-t">${nameIn(sc.say)}</p><div class="sc-puz"><b>${nameIn(sc.puzzle.q)}</b><div class="sc-opts">${sc.puzzle.opts.map((o, k) => `<button class="btn sec ${s.bad.includes(k) ? 'bad' : ''}" data-act="storyAns" data-arg="${k}" ${s.bad.includes(k) ? 'disabled' : ''}>${nameIn(o)}</button>`).join('')}</div>${s.bad.length ? `<p class="small" style="color:var(--bad);font-weight:800">${nameIn(sc.puzzle.no)}</p>` : ''}${sc.puzzle.hint && s.bad.length ? `<p class="small mute">💡 ${nameIn(sc.puzzle.hint)}</p>` : ''}</div>`;
   else if (s.phase === 'ok') body = `<p class="sc-t">${nameIn(sc.say)}</p><p class="sc-t" style="color:var(--ok)">✔ ${nameIn(sc.puzzle.ok)}</p>`;
   const needBtn = !['choice', 'puzzle'].includes(s.phase);
-  return `<div class="top"><button class="btn sec back" data-act="story" aria-label="Pause">${ico('back', 22)}</button><h2>${ep.icon} ${nameIn(ep.title)}</h2><span class="chip">${s.i + 1} / ${ep.scenes.length}</span></div>
+  return `<div class="top has-home"><button class="btn sec back" data-act="story" aria-label="Pause: zurück zu den Episoden">${ico('back', 20)}<span>Pause</span></button><h2>${ep.icon} ${nameIn(ep.title)}</h2><button class="btn sec dz-home" data-act="home" aria-label="Zur Startseite" title="Zur Startseite">${dzIc('home', 22)}</button><span class="chip">${s.i + 1} / ${ep.scenes.length}</span></div>
   <div class="sc-stage">${scBG(sc.bg)}
     <div class="sc-cast">
       <div class="sc-c fino ${sc.who === 'fino' ? 'on' : ''}">${mascotSVG({ skin: S.eq.skin, hat: S.eq.hat, extra: S.eq.extra, mood: fm })}</div>
@@ -7718,22 +7733,23 @@ const wSouvLine = (p, st) => {
 };
 const wHead = (p, d, extra) => `<div class="w-head"><div><h2>${esc(d.title)}</h2><p>${esc(d.lead)}</p></div>${wFlag(p.id, 'w-hflag')}</div>
   <div class="w-note"><span class="w-note-pic">${p.guide.svg}</span><p><b>${esc(p.guide.name)}:</b> ${esc(d.guide)}</p></div>${extra || ''}`;
-const wItems = items => `<div class="w-items">${items.map(i => `<div class="w-item">${wInfoIco(i[0])}<div><small>${esc(i[1])}</small><b>${esc(i[2])}</b></div></div>`).join('')}</div>`;
+const wIArt = t => `<span class="w-art w-iart">${wInfoIco(t)}</span>`;
+const wItems = items => `<div class="w-cards">${items.map(i => `<article class="w-pc w-ic">${wIArt(i[0])}<b>${esc(i[1])}</b><p class="${String(i[2]).length <= 16 ? 'short' : ''}">${esc(i[2])}</p></article>`).join('')}</div>`;
 const wRich = rich => rich && rich.length ? `<div class="w-rich">${rich.map(r => `<div><b>${esc(r[0])}</b><p>${esc(r[1])}</p></div>`).join('')}</div>` : '';
 const wCards = cards => `<div class="w-cards">${cards.map(c => `<article class="w-pc">${wArt(c[0])}<b>${esc(c[1])}</b><p>${esc(c[2])}</p></article>`).join('')}</div>`;
 function wWords(p, d) {
-  return `<div class="w-words">${d.words.map((w, i) => `<div class="w-word"><div class="w-word-t"><b lang="${p.speech.slice(0, 2)}">${esc(w[0])}</b>${w[1] ? `<span>${esc(w[1])}</span>` : ''}</div><div class="w-word-m"><span>${esc(w[2])}</span><small>Sprich: ${esc(w[3])}</small></div>
-    <button class="w-spk" data-act="wSay" data-arg="${i}" aria-label="${esc(w[0])} anhören">${ico('speaker', 22)}</button></div>`).join('')}</div>`;
+  return `<div class="w-cards w-wcards">${d.words.map((w, i) => `<article class="w-pc w-wc"><span class="w-art w-wart"><b lang="${p.speech.slice(0, 2)}" class="${w[0].length > 6 ? 'long' : ''}">${esc(w[0])}</b>
+    <button class="w-spk" data-act="wSay" data-arg="${i}" aria-label="${esc(w[0])} anhören">${ico('speaker', 18)}</button></span><b>${esc(w[2])}</b><p>${w[1] ? esc(w[1]) + ' · ' : ''}Sprich: ${esc(w[3])}</p></article>`).join('')}</div>`;
 }
 function wQuizBuild(p) { return { id: p.id, i: 0, done: false, score: 0, qs: shuffle(p.quiz).map(x => ({ q: x.q, ok: x.ok, opts: shuffle([x.ok].concat(x.bad)), pick: null })) }; }
 function wQuiz(p) {
   const Q = UI.wQz && UI.wQz.id === p.id ? UI.wQz : null, best = (wS().quiz[p.id] || {}).best || 0, n = p.quiz.length;
   const head = `<div class="w-head"><div><h2>Rätsel: ${esc(p.name)}</h2><p>${n} Fragen. Du kannst es so oft versuchen, wie du möchtest. Ab ${W_QUIZ_OK} richtigen gibt es ein Souvenir.</p></div>${wFlag(p.id, 'w-hflag')}</div>`;
-  if (!Q) return head + `<div class="w-quiz-intro"><p>${best ? `Dein bestes Ergebnis: <b>${best} von ${n}</b>.` : 'Bereit für dein erstes Rätsel?'}</p><button class="btn big" data-act="wQuizStart">${best ? 'Noch mal rätseln' : 'Rätsel starten'}</button></div>${wSouvLine(p, 'quiz')}`;
+  const card = (art, title, text, btns) => `<div class="w-cards w-one"><article class="w-pc w-qc"><span class="w-art w-qart">${dzArt(art)}</span><b>${title}</b><p>${text}</p><div class="row wrap">${btns}</div></article></div>`;
+  if (!Q) return head + card('quiz', best ? `Dein bestes Ergebnis: ${best} von ${n}` : 'Bereit für dein erstes Rätsel?', best ? 'Versuche es noch einmal und hole alle Punkte.' : 'Die Fragen handeln von dem, was du in diesem Land gesehen hast.', `<button class="btn big" data-act="wQuizStart">${best ? 'Noch mal rätseln' : 'Rätsel starten'}</button>`) + wSouvLine(p, 'quiz');
   if (Q.done) {
-    const pass = Q.score >= W_QUIZ_OK;
-    return head + `<div class="w-quiz-res"><h3>${Q.score} von ${n} richtig</h3><p>${Q.score === n ? 'Alles richtig. Das war ein Rätsel für Entdecker.' : pass ? 'Gut gemacht! Das letzte Souvenir ist da.' : 'Noch nicht ganz. Schau dir die Stationen an und probiere es gleich noch mal.'}</p>
-      <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="wQuizStart">Noch mal</button><button class="btn sec big" data-act="wStation" data-arg="arrival">Weiter erkunden</button></div></div>${wSouvLine(p, 'quiz')}`;
+    const pass = Q.score >= W_QUIZ_OK, all = Q.score === n;
+    return head + card(all ? 'pokal' : pass ? 'stempel' : 'quiz', `${Q.score} von ${n} richtig`, all ? 'Alles richtig. Das war ein Rätsel für Entdecker.' : pass ? 'Gut gemacht! Das letzte Souvenir ist da.' : 'Noch nicht ganz. Schau dir die Stationen an und probiere es gleich noch mal.', `<button class="btn big" data-act="wQuizStart">Noch mal</button><button class="btn sec big" data-act="wStation" data-arg="arrival">Weiter erkunden</button>`) + wSouvLine(p, 'quiz');
   }
   const q = Q.qs[Q.i], done = q.pick != null, last = Q.i === Q.qs.length - 1;
   return head + `<div class="w-q" aria-live="polite"><small>Frage ${Q.i + 1} von ${Q.qs.length}</small><h3>${esc(q.q)}</h3>
@@ -7875,15 +7891,16 @@ function wFlight(id, then) {
   let done = false; const end = () => { if (done) return; done = true; d.remove(); UI.wFlightEnd = null; then(); };
   UI.wFlightEnd = end; setTimeout(end, 1900);
 }
+const wQuietly = fn => { UI.wQuiet = true; try { return fn(); } finally { UI.wQuiet = false; } };     // keine Pokal-Meldung, kein Konfetti
 function wLand(id) {
   UI.wId = id; UI.wSt = 'arrival'; UI.wQz = null; UI.wNew = null;
-  const fresh = WA.markSeen(id, 'arrival'); UI.wMsg = fresh ? 'Ankunft besucht' : '';
+  const fresh = wQuietly(() => WA.markSeen(id, 'arrival')); UI.wMsg = fresh ? 'Ankunft besucht' : '';
   if (fresh) UI.wNew = id + ':arrival';
   go('weltReise'); window.scrollTo && window.scrollTo(0, 0);
   wAfterMark(id);
 }
 function wAfterMark(id) {
-  if (UI.wStampNew === id) { UI.wStampNew = null; sfx('pop'); toast('🧭', `Einreisestempel für ${WP[id].name}!`); }
+  if (UI.wStampNew === id) UI.wStampNew = null;                       // der Stempel wartet still im Reisepass (Feier gibt es nur bei einem fehlerfreien Rätsel)
 }
 function wSpeak(text, lang) {
   try { const sy = window.speechSynthesis; if (!sy || typeof SpeechSynthesisUtterance === 'undefined') return false; sy.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = .8; sy.speak(u); return true; } catch (e) { return false; }
@@ -7905,12 +7922,12 @@ registerFeature({
       if (free >= p.cost) modal(`${esc(p.name)} öffnen?`, `Das kostet <b>einmal ${p.cost} ⭐</b> von deinen freien Sternen. Du hast ${free}, danach ${free - p.cost}.<br>Deine gesammelten Sterne, Wesen und Pokale bleiben. Das Land bleibt danach für immer offen.`, 'Öffnen', 'wOpenYes', id, 'Später');
       else modal(`${esc(p.name)} ist noch zu`, `Dir fehlen noch <b>${p.cost - free} ⭐</b> (${p.cost} ⭐ kostet das Land, du hast ${free}). Sterne bekommst du beim Üben.`, null, '', '', 'Okay');
     },
-    wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; checkTrophies(); wFlight(id, () => wLand(id)); },
+    wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; wQuietly(() => checkTrophies()); wFlight(id, () => wLand(id)); },
     wFlightSkip: () => { if (UI.wFlightEnd) UI.wFlightEnd(); },
     wStation: st => {
       const p = WP[UI.wId]; if (!p || !WSTAT.some(x => x[0] === st)) return;
       UI.wSt = st; UI.wNew = null; UI.wMsg = '';
-      if (st !== 'quiz') { const fresh = WA.markSeen(p.id, st); if (fresh) { UI.wNew = p.id + ':' + st; UI.wMsg = `${WSTAT.find(x => x[0] === st)[1]} besucht`; } }
+      if (st !== 'quiz') { const fresh = wQuietly(() => WA.markSeen(p.id, st)); if (fresh) { UI.wNew = p.id + ':' + st; UI.wMsg = `${WSTAT.find(x => x[0] === st)[1]} besucht`; } }
       render(); wAfterMark(p.id);
     },
     wSay: i => { const p = WP[UI.wId], w = p && p.st.language.words[+i]; if (!w) return; if (!wSpeak(w[0], p.speech)) toast('🔇', 'Auf diesem Gerät gibt es keine Sprachausgabe. Lies die Aussprache mit.'); },
@@ -7919,7 +7936,7 @@ registerFeature({
     wQuizNext: () => {
       const Q = UI.wQz; if (!Q) return;
       if (Q.i < Q.qs.length - 1) Q.i++;
-      else { Q.done = true; const had = WA.souvs(Q.id).includes('quiz'); WA.saveQuiz(Q.id, Q.score); if (!had && Q.score >= W_QUIZ_OK) { UI.wNew = Q.id + ':quiz'; UI.wMsg = 'Rätsel geschafft'; } }
+      else { Q.done = true; const had = WA.souvs(Q.id).includes('quiz'), all = Q.score === Q.qs.length; if (all) { WA.saveQuiz(Q.id, Q.score); sfx('ok'); confetti(70); toast('🏆', 'Alles richtig! Stark gemacht!'); } else wQuietly(() => WA.saveQuiz(Q.id, Q.score)); if (!had && Q.score >= W_QUIZ_OK) { UI.wNew = Q.id + ':quiz'; UI.wMsg = 'Rätsel geschafft'; } }
       render(); wAfterMark(Q.id);
     },
     wPassGo: () => { UI.wBookSeen = false; go('weltPass'); },
