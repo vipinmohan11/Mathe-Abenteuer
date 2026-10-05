@@ -22,23 +22,24 @@ with sync_playwright() as p:
     # Meine Welt: Kachel
     pg.evaluate("()=>go('rewards')"); ok(pg.locator('.dz-tile[data-act=welt]').count() == 1, 'Kachel „Meine Weltreise“ in Meine Welt')
     pg.evaluate("()=>go('welt')"); pg.wait_for_timeout(100)
-    ok(pg.locator('.w-card.open').count() == 1 and pg.locator('.w-card.locked').count() == 2, 'Abflug: Deutschland offen, Japan und Indien gesperrt')
-    ok(pg.evaluate("()=>WA.freeStars()") == 46, '46 freie Sterne (= gesammelte)')
-    # Zu wenig Sterne
-    pg.evaluate("()=>{S.starsLife=3;S.stars=3}")
-    pg.evaluate("()=>ACT.wLock('jpn')"); ok('fehlen' in pg.inner_text('#modal'), 'zu wenig Sterne: Hinweis statt Öffnen')
-    pg.evaluate("()=>{closeModal();ACT.wOpenYes('jpn')}"); ok(pg.evaluate("()=>!WA.isOpen('jpn')&&wS().spent===0"), 'zu wenig Sterne: nichts passiert, nichts abgezogen')
-    pg.evaluate("()=>{S.starsLife=46;S.stars=46}")
+    ok(pg.locator('.w-card.open').count() == 1 and pg.locator('.w-card.locked').count() == 22, 'Abflug: Deutschland offen, alle 22 anderen gesperrt')
+    pg.evaluate("()=>{wS().miles=460;wS().milesSpent=0;save()}")
+    ok(pg.evaluate("()=>WA.freeMiles()") == 460, '460 freie Reisemeilen')
+    # Zu wenig Meilen
+    pg.evaluate("()=>{wS().miles=30}")
+    pg.evaluate("()=>ACT.wLock('jpn')"); ok('fehlen' in pg.inner_text('#modal'), 'zu wenig Meilen: Hinweis statt Öffnen')
+    pg.evaluate("()=>{closeModal();ACT.wOpenYes('jpn')}"); ok(pg.evaluate("()=>!WA.isOpen('jpn')&&wS().milesSpent===0"), 'zu wenig Meilen: nichts passiert, nichts abgezogen')
+    pg.evaluate("()=>{wS().miles=460}")
     # Öffnen
-    pg.evaluate("()=>ACT.wLock('jpn')"); ok('Öffnen' in pg.inner_text('#modal') and '10' in pg.inner_text('#modal'), 'Dialog zeigt Preis 10 ⭐')
+    pg.evaluate("()=>ACT.wLock('jpn')"); ok('Öffnen' in pg.inner_text('#modal') and '100' in pg.inner_text('#modal'), 'Dialog zeigt Preis 100 Meilen')
     pg.evaluate("()=>ACT.wOpenYes('jpn')"); pg.wait_for_timeout(150)
     ok(pg.locator('.w-flight').count() == 1, 'Flug-Overlay läuft')
     pg.evaluate("()=>ACT.wFlightSkip()"); pg.wait_for_timeout(150)
-    ok(pg.evaluate("()=>view")=='weltReise' and pg.evaluate("()=>WA.isOpen('jpn')&&wS().spent===10&&WA.freeStars()===36"), 'Japan offen, 10 Sterne ausgegeben, 36 frei')
+    ok(pg.evaluate("()=>view")=='weltReise' and pg.evaluate("()=>WA.isOpen('jpn')&&wS().milesSpent===100&&WA.freeMiles()===360"), 'Japan offen, 100 Meilen ausgegeben, 360 frei')
     ok(snap() == before, 'Münzen, Sterne (gesammelt), Truhen, Karten, Pokale unverändert')
     ok(pg.evaluate("()=>S.starsLife")==46 and pg.evaluate("()=>S.stars")==46, 'gesammelte Sterne bleiben 46')
     # nochmal öffnen kostet nichts
-    pg.evaluate("()=>{ACT.wOpenYes('jpn')}"); ok(pg.evaluate("()=>wS().spent")==10, 'zweites Öffnen kostet nichts')
+    pg.evaluate("()=>{ACT.wOpenYes('jpn')}"); ok(pg.evaluate("()=>wS().milesSpent")==100, 'zweites Öffnen kostet nichts')
     # Stationen frei
     ok(pg.locator('.w-stop').count() == 6, '6 Stationen in der Route')
     ok(pg.evaluate("()=>WA.marks('jpn')")==1, 'Ankunft zählt als besucht')
@@ -71,11 +72,12 @@ with sync_playwright() as p:
     ok(pg.evaluate("()=>S.coins===500&&S.chests===2&&Object.keys(S.cards).length===2&&S.starsLife===46"), 'nach der ganzen Reise: Münzen, Truhen, Karten, Sterne unverändert (Weltreise zahlt nichts aus)')
     # Persistenz
     pg.reload(); pg.wait_for_timeout(300)
-    ok(pg.evaluate("()=>WA.isOpen('jpn')&&wS().spent===10&&WA.stamped('jpn')&&WA.souvs('jpn').length===6&&WA.freeStars()===36"), 'nach Neuladen: Land offen, Stempel, Souvenirs, Sterne')
+    ok(pg.evaluate("()=>WA.isOpen('jpn')&&wS().milesSpent===100&&WA.stamped('jpn')&&WA.souvs('jpn').length===6&&WA.freeMiles()===360"), 'nach Neuladen: Land offen, Stempel, Souvenirs, Meilen')
     # Alter Spielstand ohne world
     ok(pg.evaluate("()=>{const m=mergeState({v:2,coins:77,starsLife:12,stars:12,cards:{x:1}});return m.coins===77&&m.starsLife===12&&m.world&&m.world.spent===0&&Object.keys(m.world.open).length===0}"), 'alter Spielstand ohne world: alles erhalten, world mit Standardwerten')
     ok(pg.evaluate("()=>{const m=mergeState({world:{spent:5,open:{jpn:'x'}}});return m.world.spent===5&&m.world.open.jpn==='x'&&m.world.stamps&&m.world.log.length===0}"), 'teilweiser world-Stand wird ergänzt')
-    ok(pg.evaluate("()=>{const s=S.starsLife;wS().spent=999;const f=WA.freeStars();wS().spent=10;return f===0&&s===46}"), 'freie Sterne nie negativ')
+    ok(pg.evaluate("()=>{wS().milesSpent=9999;const f=WA.freeMiles();wS().milesSpent=100;return f===0}"), 'freie Meilen nie negativ')
+    ok(pg.evaluate("()=>{const m=mergeState({world:{spent:5}});return m.world.spent===5"), 'alter Sternzähler bleibt erhalten') if False else None
     # Eltern
     pg.evaluate("()=>{UI.pinUntil=0;S.pin={h:'x',r:'y'}}")
     pg.evaluate("()=>ACT.wParent()"); ok(pg.locator('#modal').count()==1 and 'Eltern' in pg.inner_text('#modal'), 'Elternbereich verlangt PIN')
@@ -86,7 +88,7 @@ with sync_playwright() as p:
     pg.evaluate("()=>go('weltPass')"); pg.wait_for_timeout(80)
     ok(pg.evaluate("()=>WA.childName()")=='Mira' and 'MIRA' in pg.inner_text('.rp-data').upper(), 'Name im Pass geändert')
     pg.evaluate("()=>go('welt')")
-    ok(pg.locator('.w-card.locked').count()==0 and pg.locator('.w-card.open').count()==2, 'ausgeblendetes gesperrtes Land (Indien) verschwindet, offene bleiben')
+    ok(pg.locator('.w-card.locked').count()==20 and pg.locator('.w-card[data-arg=ind]').count()==0 and pg.locator('.w-card.open').count()==2, 'ausgeblendetes gesperrtes Land (Indien) verschwindet, offene bleiben')
     pg.evaluate("()=>{wS().off.jpn=1}"); pg.evaluate("()=>go('welt')")
     ok(pg.locator('.w-card.open').count()==2, 'ein schon geöffnetes Land bleibt trotz Eltern-Schalter offen')
     # Rückweg

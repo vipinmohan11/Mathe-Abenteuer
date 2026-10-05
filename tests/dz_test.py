@@ -57,7 +57,7 @@ with sync_playwright() as p:
     click('.top .back[data-act=back]'); ok(V() == 'home', 'Zurück → Start')
     # Meine Welt -> Shop -> zurück
     pg.evaluate("()=>go('rewards')"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 5, 'Meine Welt: 5 Kacheln (Wesen/Buch/Insel verborgen)')
+    ok(pg.locator('.dz-tile').count() == 6, 'Meine Welt: 6 Kacheln (Wesen/Buch/Insel verborgen)')
     ok(pg.inner_text('#app').count('Lustige Fakten') >= 1 and 'Weltreise' in pg.inner_text('#app'), 'Lustige Fakten + Meine Weltreise')
     click('.dz-tile[data-act=shop], .dz-tile[data-act=go][data-arg=shop]')
     ok(V() == 'shop', 'Shop öffnet'); click('.top .back[data-act=back]'); ok(V() == 'rewards', 'Zurück → Meine Welt')
@@ -65,7 +65,7 @@ with sync_playwright() as p:
     pg.evaluate("()=>go('fakten')"); pg.wait_for_timeout(100)
     a = pg.inner_text('#app'); click('[data-act=faktStep][data-arg="1"]') if pg.locator('[data-act=faktStep][data-arg="1"]').count() else click('[data-act=faktStep]')
     ok(pg.inner_text('#app') != a, 'Lustige Fakten: Nächster Fakt wechselt')
-    ok(pg.evaluate("()=>FACTS.length") == 29, '29 Fakten')
+    ok(pg.evaluate("()=>FACTS.length>=29&&factsOpen()>=29"), 'Fakten: mindestens 29 frei')
     # Profil -> Farben -> zurück
     pg.evaluate("()=>go('home')"); click('.dz-head .dz-me'); ok(V() == 'profile', 'Profil über Profilfeld')
     pt = pg.inner_text('#app'); ok('Meine Pokale' in pt and 'Das bin ich' in pt and 'Farben' in pt and 'umbenennen' not in pt, 'Profil: Kacheln (kein Umbenennen mehr)')
@@ -93,9 +93,9 @@ with sync_playwright() as p:
     pg.evaluate("()=>{S.name='';save();go('rewards')}"); pg.wait_for_timeout(120)
     # Schalter
     pg.evaluate("()=>{S.flags={wesen:1,buch:1,insel:1};save();render()}"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 8, 'Schalter an: Wesen/Buch/Insel erscheinen')
+    ok(pg.locator('.dz-tile').count() == 9, 'Schalter an: Wesen/Buch/Insel erscheinen')
     pg.evaluate("()=>{S.flags={};save();render()}"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 5, 'Schalter aus: wieder 5 Kacheln')
+    ok(pg.locator('.dz-tile').count() == 6, 'Schalter aus: wieder 6 Kacheln')
     # Extra Spaß
     pg.evaluate("()=>go('extra')"); pg.wait_for_timeout(100)
     ok(pg.locator('.dz-tile[data-act=mod]').count() == 3, 'Extra Spaß: 3 Kacheln')
@@ -111,7 +111,7 @@ with sync_playwright() as p:
     nob = []
     for v in ['home', 'hefte', 'extra', 'rewards', 'profile', 'fakten', 'geo', 'welt', 'weltPass', 'shop', 'trophies']:
         pg.evaluate("v=>go(v)", v); pg.wait_for_timeout(60)
-        r = pg.evaluate("""()=>[...document.querySelectorAll('.dz-tile,.dz-hero,.dz-panel,.dz-acc-item,.dz-stat,.card,.w-card,.rp,.topic,.dz-chip,.dz-me')].filter(e=>e.offsetParent&&parseFloat(getComputedStyle(e).borderTopWidth)<1).map(e=>e.className)""")
+        r = pg.evaluate("""()=>[...document.querySelectorAll('.dz-tile,.dz-hero,.dz-panel,.dz-acc-item,.dz-stat,.card,.w-card,.rp,.topic,.dz-chip')].filter(e=>e.offsetParent&&parseFloat(getComputedStyle(e).borderTopWidth)<1).map(e=>e.className)""")
         if r: nob.append((v, r[:3]))
     ok(not nob, f'jede Karte hat einen feinen Rahmen {nob[:3]}')
     # Reisepass

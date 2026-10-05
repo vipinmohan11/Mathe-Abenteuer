@@ -21,7 +21,7 @@ with sync_playwright() as p:
     E("()=>{S.daily.cr.goal=false;S.daily.cr.lvl=false}"); ok(E("()=>grantCreative('lvl')") is False, 'höchstens 2 Kreativzeiten pro Tag')
     E("()=>{S.cfg.creativeMode='locked';S.daily.cr={left:0,grants:0,used:0,lvl:false,goal:false}}")
     ok(E("()=>grantCreative('lvl')") is False and E("()=>!creativeOK()"), 'Klassenmodus: nichts öffnet sich')
-    E("()=>{S.cfg.creativeMode='always'}"); ok(E("()=>creativeOK()"), 'immer offen')
+    E("()=>{S.cfg.creativeMode='always'}"); ok(E("()=>creativeOK()"), 'immer offen (nur intern/Admin)')
     # --- Timer läuft nur im Kreativ-Bereich, Ende: Hinweis + automatisch gespeichert
     E("()=>{S.cfg.creativeMode='after';S.daily.cr={left:3,grants:1,used:0,lvl:true,goal:false};go('musik')}"); pg.wait_for_timeout(1200)
     ok(E("()=>S.daily.cr.left") <= 2, 'Timer zählt im Kreativ-Bereich')
@@ -73,11 +73,11 @@ with sync_playwright() as p:
     E("()=>{S.daily={d:ymd(),n:0,sec:0,got:false,unlocked:false,testRewarded:true,shopSec:0,cr:{left:0,grants:0,used:0,lvl:false,goal:false}};S.coins=0}")
     ok(E("()=>payTest(15).c") == 0 and E("()=>S.coins") == 0, 'alter Stand (heute schon belohnt) zahlt nicht doppelt')
     E("()=>go('testSetup')"); ok('Heute schon alles verdient' in pg.locator('#app').inner_text(), 'Mini-Test zeigt ehrlich: heute schon alles verdient')
-    # --- Avatar-Spitzname getrennt vom Urkunden-Namen
+    # --- Name des Kindes = Name des Avatars (kein getrennter Avatar-Name)
     E("()=>{S.name='Mia';S.av.look=S.av.look||{};S.av.use=true;S.avName='Kapitänin Komma';go('profile')}")
     t = pg.locator('#app').inner_text()
-    ok('Kapitänin Komma' in t and E("()=>S.name") == 'Mia', 'Profil zeigt Avatar-Spitzname, Name bleibt für Urkunde')
-    E("()=>{UI.bMod='A4';go('urkunde')}"); ok('Mia' in pg.locator('#app').inner_text() and 'Kapitänin' not in pg.locator('#app').inner_text(), 'Urkunde nutzt den echten Namen')
+    ok('Mia' in t and 'Kapitänin' not in t and 'Name für meinen Avatar' not in t, 'Profil zeigt den Namen des Kindes; kein eigener Avatar-Name')
+    E("()=>{UI.bMod='A4';go('urkunde')}"); ok('Mia' in pg.locator('#app').inner_text() and 'Kapitänin' not in pg.locator('#app').inner_text(), 'Urkunde nutzt den Namen')
     # --- Extra-Training: Einmaleins & Co. sichtbar, nicht von „Jetzt üben“ vorgeschlagen
     E("()=>{S.decks={};S.topics={};S.lastKey='';go('extra')}"); t = pg.locator('#app').inner_text()
     ok('Extra Spaß' in t and 'Einmaleins' in t and 'Kopfrechnen' in t and 'Schriftlich rechnen' in t and pg.locator('.dz-tile[data-act=mod]').count() == 3, 'Extra Spaß: Einmaleins, Kopfrechnen, Schriftlich rechnen (3 Kacheln)')
