@@ -1,0 +1,66 @@
+/* Europa-Entdecker: Flaggen, Quiz, Karten – alle Farben folgen dem gewählten Thema */
+.geo-flag{display:block;border-radius:6px;border:1.5px solid var(--line);background:var(--soft);flex-shrink:0}
+.geo-qflag{width:84px;height:56px;margin:0 auto 8px}
+.geo-oflag{width:42px;height:28px;border-radius:5px}
+.geo-mini{width:30px;height:20px;border-radius:4px;display:inline-block;vertical-align:middle}
+.geo-mos{width:54px;height:36px}
+.geo-big{width:min(300px,78vw);height:auto;aspect-ratio:3/2;border-radius:14px;border-width:2px}
+.geo-tflag{width:100%;max-width:96px;height:auto;aspect-ratio:3/2;margin:0 auto}
+.geo-title{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-size:1.3rem}
+.geo-capq{font-family:'Adventure Baloo','Baloo 2',sans-serif;font-size:2.1rem;color:var(--pri)}
+.geo-choices .ch{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.2rem}
+.geo-in{width:100%;max-width:420px;font-size:1.5rem;text-align:center;min-height:64px}
+.geo-type{display:flex;justify-content:center;margin-top:14px}
+.geo-hero{text-align:center}
+.geo-hero h2{margin:6px 0}
+.geo-mosaic{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px}
+.geo-prizes{margin-top:14px}
+.geo-soon{display:flex;gap:8px;align-items:center;justify-content:center;margin:16px 0;color:var(--mute);font-weight:800}
+.geo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:14px}
+.geo-tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;text-align:center}
+.geo-tile b{font-size:.95rem;line-height:1.15}
+.geo-tile span{color:var(--mute);font-size:.85rem;font-weight:800}
+.geo-tile.known{border-color:var(--ok)}
+.geo-ck{position:absolute;top:6px;right:8px;color:var(--ok);font-style:normal;font-weight:900}
+.geo-card{text-align:center}
+.geo-bigflag{display:flex;justify-content:center;margin-bottom:10px}
+.geo-card h1{margin:4px 0}
+.geo-cap{margin:6px 0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.geo-cap b{font-family:'Adventure Baloo','Baloo 2',sans-serif;font-size:2rem;color:var(--pri)}
+.geo-known{display:inline-block;padding:4px 14px;border-radius:999px;background:var(--soft);font-weight:800;color:var(--mute)}
+.geo-known.on{background:var(--okBg);color:var(--ok)}
+.geo-card h3{margin:16px 0 6px}
+.geo-facts{text-align:left;max-width:520px;margin:0 auto;padding-left:22px}
+.geo-facts li{margin:6px 0}
+.geo-nbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.geo-nb{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--card);border:1.5px solid var(--line);border-radius:12px;font-weight:800}
+.geo-ans{font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.geo-ans.bad{color:var(--bad)}
+.geo-ans.ok{color:var(--ok)}
+.geo-good{margin-top:16px}
+.geo-goodlist{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.geo-goodlist span{padding:4px 10px;background:var(--okBg);border-radius:10px;font-weight:800}
+
+
+.geo-subic{font-size:2.2rem;line-height:1}
+@media(max-width:760px){.geo-grid{grid-template-columns:repeat(2,1fr)}.geo-mos{width:42px;height:28px}}
+.geo-slim{padding:14px;text-align:center}
+.geo-fact{font-size:1.25rem;font-weight:800;margin:10px auto;max-width:520px}
+
+.geo-sec{margin:16px 4px 4px;font-size:1rem;color:var(--mute)}
+.geo-bigq{width:130px;height:87px;margin:0 auto 8px;border-radius:10px;border-width:2px}
+.geo-pair{display:flex;gap:8px;justify-content:center}
+.geo-stamps{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;margin-top:12px}
+.geo-stamp{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px;border-radius:50% / 40%;border:2.5px dashed var(--line);background:var(--card);text-align:center;min-height:116px}
+.geo-stamp.on{border:2.5px solid var(--pri2);transform:rotate(-2deg)}
+.geo-stamp b{font-size:.82rem;line-height:1.1}.geo-stamp small{color:var(--mute);font-weight:800}
+.geo-sflag{width:56px;height:37px}
+.geo-slock{position:relative;display:block}.geo-slock .geo-flag{filter:grayscale(.85);opacity:.55}.geo-slock i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;color:var(--ink)}
+.geo-ms{display:flex;flex-direction:column;gap:4px;margin-top:8px;align-items:center}.geo-ms span{font-weight:800;color:var(--mute)}.geo-ms span.on{color:var(--ok)}
+.geo-mem{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.geo-mc{aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px;border-radius:14px;background:var(--pri);color:#fff;border:2px solid var(--pri);font-size:1.6rem;font-weight:900;overflow:hidden}
+.geo-mc.up{background:var(--card);color:var(--ink);border-color:var(--pri2);font-size:.85rem}
+.geo-mc.done{background:var(--okBg);border-color:var(--ok)}
+.geo-mc b{line-height:1.1;word-break:break-word}.geo-mflag{width:100%;max-width:64px;height:auto;aspect-ratio:3/2}
+
+.geo-prize1{margin:14px 0;padding:10px 14px;border-radius:14px;background:var(--acs);border:2px solid var(--pri2);font-weight:800;text-align:center}
