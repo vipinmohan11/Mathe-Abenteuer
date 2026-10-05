@@ -1,0 +1,130 @@
+/* Meine Weltreise: ruhig, kompakt, alle Farben folgen dem gewählten Thema (Illustrationen behalten feste helle Farben, nie Pink) */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.w-bar-x{display:flex;gap:8px;flex:none}
+.w-pill{min-height:38px;display:inline-flex;align-items:center;gap:6px;padding:0 14px;border-radius:999px;background:var(--dz-surface);border:0;box-shadow:var(--dz-sh-soft);font-weight:720;cursor:pointer;color:var(--dz-ink);font-family:inherit}
+.w-pill .ico{flex:none}
+.w-sec{display:flex;align-items:baseline;gap:8px;margin:18px 2px 8px;font-size:1.15rem}
+.w-sec small{color:var(--mute);font-weight:800}
+.w-depart{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--acs);border:0;box-shadow:var(--dz-sh-card);border-radius:22px;padding:14px 18px}
+.w-depart h2{margin:0 0 4px;font-size:1.3rem}.w-depart p{margin:0;color:var(--mute);font-size:.92rem;max-width:520px}
+.w-bal{flex:none;min-width:104px;text-align:center;background:var(--card);border-radius:18px;padding:8px 12px;border:0;box-shadow:var(--dz-sh-soft)}
+.w-bal b{display:block;font-size:1.7rem;line-height:1.1;color:var(--pri)}.w-bal span{font-size:.8rem;font-weight:800}.w-bal small{display:block;color:var(--mute);font-size:.7rem;line-height:1.25}
+.w-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.w-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:12px;min-height:150px;text-align:left;background:var(--card);border:0;box-shadow:var(--dz-sh-card);border-radius:20px;cursor:pointer;color:var(--ink)}
+.w-card.open{border-color:var(--pri2)}
+.w-card b{font-size:1.05rem;line-height:1.15}.w-card small{color:var(--mute);font-weight:700;font-size:.8rem;line-height:1.25}
+.w-cflag{width:56px;height:37px;border-radius:7px}
+.w-cflagwrap{position:relative;display:inline-block}
+.w-lockic{position:absolute;right:-10px;bottom:-8px;width:26px;height:26px;border-radius:50%;background:var(--card);border:0;box-shadow:var(--dz-sh-soft);display:grid;place-items:center;color:var(--pri);font-style:normal}
+.w-card.locked{background:var(--acs);border-style:dashed}
+.w-card.locked.can{border-style:solid;border-color:var(--ok)}
+.w-price{margin-top:auto;padding:3px 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--pri2);font-weight:800;font-size:.85rem}
+.w-card.can .w-price{border-color:var(--ok);color:var(--ok)}
+.w-cstamp{margin-top:auto;display:inline-flex;gap:4px;align-items:center;font-size:.78rem;font-weight:800;color:var(--ok)}
+.w-dots{display:inline-flex;gap:3px;margin-top:auto;color:var(--pri)}
+.w-mk{width:15px;height:15px;color:var(--pri)}.w-prog .w-dots{margin:0}.w-mk:not(.on){color:var(--mute)}
+.w-foot{margin:20px 2px 0;color:var(--mute);font-size:.88rem;text-align:center}
+/* Reise */
+.w-journey{display:grid;grid-template-columns:318px minmax(0,1fr);gap:14px;align-items:start}
+.w-scene{position:sticky;top:10px;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:26px;background:var(--sc);color:#303536;overflow:hidden;isolation:isolate}
+.w-scene:before,.w-scene:after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(32px);opacity:.7}
+.w-scene:before{width:210px;height:210px;right:-80px;top:-80px;background:var(--g1)}.w-scene:after{width:200px;height:200px;left:-90px;bottom:-80px;background:var(--g2)}
+.w-entry{display:inline-flex;gap:5px;align-items:center;background:#fbfaf7;border-radius:14px;padding:6px 10px;font-size:.78rem;font-weight:800}
+.w-scene-vis{display:grid;place-items:center}.w-scene-svg{width:100%;height:172px;filter:drop-shadow(0 8px 10px rgba(48,55,56,.09))}
+.w-guide{display:grid;grid-template-columns:62px 1fr;gap:10px;align-items:center;background:#fbfaf7;border-radius:20px;padding:10px 12px}
+.w-guide-pic svg{width:62px;height:72px}.w-guide small{font-weight:800;color:#697071;font-size:.74rem}.w-guide h2{margin:0;font-size:1.3rem;color:#303536}.w-guide p{margin:2px 0 0;font-size:.82rem;line-height:1.35;color:#596263;font-weight:700}
+.w-work{display:grid;gap:10px;min-width:0}
+.w-route{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:6px;background:var(--acs);border-radius:20px}
+.w-stop{position:relative;min-height:66px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:2px solid transparent;border-radius:15px;color:var(--mute);font-weight:800;font-size:.8rem;cursor:pointer}
+.w-stop.active{background:var(--card);border-color:var(--pri2);color:var(--pri)}
+.w-stop .w-mk{position:absolute;right:4px;top:4px;width:16px;height:16px}
+.w-panel{background:var(--card);border:0;box-shadow:var(--dz-sh-card);border-radius:22px;padding:16px 18px;min-height:360px;outline:0}
+.w-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.w-head h2{margin:0;font-size:1.35rem}.w-head p{margin:5px 0 0;color:var(--mute);font-size:.93rem;line-height:1.4;max-width:560px}
+.w-hflag{flex:none;width:52px;height:35px;border-radius:7px}
+.w-note{display:flex;align-items:center;gap:10px;background:var(--acs);border-radius:16px;padding:8px 12px;margin:12px 0}
+.w-note p{margin:0;font-size:.9rem;line-height:1.4}.w-note-pic svg{width:36px;height:42px;display:block}
+.w-story{display:flex;gap:12px;align-items:center;background:var(--acs);border-radius:18px;padding:10px 14px;margin-bottom:12px}
+.w-story p{margin:0;line-height:1.45}.w-note-pic.big svg{width:62px;height:72px}
+.w-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.w-item{display:flex;gap:10px;align-items:center;padding:9px 12px;border:0;box-shadow:var(--dz-sh-soft);border-radius:14px}
+.w-info-ico{flex:none;width:30px;height:30px;color:var(--pri)}.w-item small{display:block;color:var(--mute);font-weight:800;font-size:.76rem}.w-item b{font-size:.93rem;line-height:1.25}
+.w-rich{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:12px}
+.w-rich>div{background:var(--soft);border-radius:14px;padding:9px 12px}.w-rich p{margin:2px 0 0;font-size:.86rem;color:var(--mute);line-height:1.35}
+.w-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.w-pc{border:0;box-shadow:var(--dz-sh-soft);border-radius:16px;padding:8px}.w-pc b{display:block;margin-top:6px}.w-pc p{margin:2px 0 0;font-size:.84rem;color:var(--mute);line-height:1.35}
+.w-art{display:block;width:100%;height:84px;background:#eceee9;border-radius:11px}
+.w-words{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.w-word{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:8px 10px 8px 12px;border:0;box-shadow:var(--dz-sh-soft);border-radius:14px}
+.w-word-t b{font-size:1.2rem}.w-word-t span{display:block;color:var(--pri);font-weight:800;font-size:.86rem}
+.w-word-m{grid-column:1}.w-word-m span{font-weight:800;font-size:.92rem}.w-word-m small{display:block;color:var(--mute);font-size:.78rem}
+.w-spk{grid-column:2;grid-row:1/3;width:46px;height:46px;border-radius:50%;border:0;background:var(--pri);color:var(--priInk);display:grid;place-items:center;cursor:pointer}
+.w-souvline{display:flex;align-items:center;gap:10px;margin-top:14px;padding:6px 14px 6px 8px;border-radius:16px;background:var(--okBg);color:var(--ink);font-size:.92rem}
+.w-souv{width:40px;height:40px;flex:none}.w-souv.big{width:66px;height:66px}
+.w-quiz-intro,.w-quiz-res{text-align:center;padding:20px 0 6px}.w-quiz-res h3{font-size:1.6rem;margin:0 0 6px}
+.w-q{margin-top:14px}.w-q small{color:var(--mute);font-weight:800}.w-q h3{margin:4px 0 12px;font-size:1.25rem}
+.w-qopts{display:grid;gap:8px;max-width:480px}
+.w-qo{min-height:52px;text-align:left;border:0;box-shadow:var(--dz-sh-card);border-radius:14px;background:var(--card);color:var(--ink);font-weight:800;padding:8px 14px}
+.w-qo.ok{border-color:var(--ok);background:var(--okBg)}.w-qo.bad{border-color:var(--bad);background:var(--badBg)}.w-qo.dim{opacity:.78}
+.w-qfb{margin:12px 0 8px;font-weight:800}
+/* Flug */
+.w-flight{position:fixed;inset:0;z-index:300;background:var(--bg);display:grid;place-items:center;text-align:center}
+.w-flight-in{--lw:min(390px,75vw);padding:20px}.w-fflag{width:104px;height:69px;border-radius:10px;margin:0 auto 10px}
+.w-flight small{color:var(--mute);font-weight:800}.w-flight h2{font-size:clamp(1.6rem,5vw,2.4rem);margin:4px 0}
+.w-fline{position:relative;width:var(--lw);height:50px;margin:18px auto;border-top:2px dashed var(--line);border-radius:50%}
+.w-plane{position:absolute;left:0;top:-14px;width:28px;height:28px;color:var(--pri);animation:wFly 1.7s cubic-bezier(.2,0,0,1) forwards}
+@keyframes wFly{to{transform:translateX(calc(var(--lw) - 28px)) rotate(5deg)}}
+/* Mein Reisepass: Papier und Tinte behalten feste Farben (wie ein echter Pass), nur der Rahmen folgt dem Thema */
+.rp{--paper:#f4efe1;--pi:#2c3236;--pl:#6b7479;--bur:#5b2431;--bur2:#7a3a47;position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:20px;overflow:hidden;box-shadow:var(--dz-sh-panel);border:1px solid var(--dz-bd);background:var(--paper)}
+.rp:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:26px;margin-left:-13px;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(60,50,30,0),rgba(60,50,30,.16) 50%,rgba(60,50,30,0))}
+.rp-page{position:relative;min-width:0;padding:16px 18px 18px;color:var(--pi);container-type:inline-size;background:
+  repeating-radial-gradient(circle at 50% 120%,rgba(91,36,49,.045) 0 2px,transparent 2px 7px),var(--paper)}
+.rp-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-2px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--bur);color:var(--bur)}
+.rp-hd span{font-weight:900;letter-spacing:.18em;text-transform:uppercase;font-size:.84rem}.rp-hd i{font-style:normal;font-weight:700;letter-spacing:.06em;opacity:.8}
+.rp-hd b{display:grid;place-items:center;min-width:32px;font-size:1.2rem}.rp-hd svg{width:30px;height:30px;display:block}
+.rp-body{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.rp-pic{display:grid;gap:10px;justify-items:center}
+.rp-photo{display:block;width:104px;height:128px;border-radius:6px;overflow:hidden;background:#cfd9dc;border:1px solid rgba(44,50,54,.35);box-shadow:inset 0 0 0 3px rgba(255,255,255,.55)}
+.rp-photo .avwrap{--s:104px;width:104px;height:128px;border-radius:0;background:none;display:grid;place-items:end center;overflow:hidden}.rp-photo .avwrap>*{max-width:100%}
+.rp-sig{display:block;width:104px;border-bottom:1px solid var(--pi);padding-bottom:2px;text-align:center}.rp-sig small{display:block;font-size:.6rem;color:var(--pl);font-weight:800;text-align:left}.rp-sig small i{font-style:normal;font-weight:600}
+.rp-sig em{display:block;font:italic 700 1.25rem/1.15 "Segoe Script","Snell Roundhand","Brush Script MT","Lucida Handwriting",cursive;color:#27408b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transform:rotate(-4deg)}
+.rp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;min-width:0}
+.rp-f{min-width:0}.rp-f.full{grid-column:1/-1}
+.rp-f small{display:block;font-size:.62rem;line-height:1.15;color:var(--pl);font-weight:800;letter-spacing:.03em}.rp-f small i{font-style:normal;font-weight:600}
+.rp-f b{display:block;font-size:.95rem;line-height:1.25;font-weight:800;color:var(--pi);overflow-wrap:anywhere;font-feature-settings:"tnum"}
+.rp-f.big b{font-size:1.35rem;letter-spacing:.04em;text-transform:uppercase}
+.rp-f b em{display:block;font-style:normal;font-size:.8rem;font-weight:700;color:var(--pl)}
+.rp-data .rp-grid .sm,.rp-data .rp-grid .wide{grid-column:auto}
+.rp-data .rp-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.rp-data .rp-f{grid-column:span 2}.rp-data .rp-f.sm{grid-column:span 1}.rp-data .rp-f.wide{grid-column:span 2}.rp-data .rp-f.full{grid-column:1/-1}
+.rp-mrz{display:grid;gap:0;margin:14px -6px -4px;padding:8px 6px 6px;background:rgba(44,50,54,.05);border-top:1px dashed rgba(44,50,54,.25);font:700 min(12.5px,calc((100cqw - 36px)/26.8))/1.35 "Courier New",Courier,monospace;color:var(--pi);letter-spacing:0;overflow:hidden}
+.rp-mrz span{white-space:nowrap}
+.rp-grid.trips{grid-template-columns:repeat(2,minmax(0,1fr));padding-bottom:12px;border-bottom:1px dashed rgba(44,50,54,.28);margin-bottom:6px}
+.rp-stamps{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;gap:0;min-height:230px;padding:10px 0}
+.rp-none{margin:30px 12px;text-align:center;color:var(--pl);font-weight:700;line-height:1.5;max-width:30em}
+.rp-st{--ink:#25508f;margin:0 -2px -4px;width:clamp(120px,36%,170px);color:var(--ink);transform:translate(var(--dx),var(--dy)) rotate(var(--rot));filter:url(#rpInk);mix-blend-mode:multiply;opacity:.9}
+.rp-st svg{display:block;width:100%;height:auto;overflow:visible}
+.rp-st.fresh{animation:rpThump .62s .55s cubic-bezier(.2,.9,.3,1.25) both}
+@keyframes rpThump{0%{opacity:0;transform:translate(var(--dx),calc(var(--dy) - 26px)) rotate(calc(var(--rot) + 9deg)) scale(1.7)}55%{opacity:.95;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.94)}100%{opacity:.9;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(1)}}
+/* Umschlag: bordeauxrot mit Goldprägung, klappt beim ersten Öffnen auf */
+.rp-cover{display:none}
+.rp.anim .rp-cover{display:grid;place-items:center;position:absolute;z-index:6;inset:0;border-radius:20px;background:linear-gradient(145deg,var(--bur2),var(--bur) 55%,#431a25);color:#e6c777;text-align:center;transform-origin:left center;animation:rpOpen 1.1s .35s cubic-bezier(.2,0,0,1) forwards}
+.rp-cover svg{width:68px;height:68px}.rp-cover small{display:block;margin-top:8px;font-weight:900;letter-spacing:.2em;font-size:.78rem}.rp-cover b{display:block;font-size:1.6rem;margin-top:6px;letter-spacing:.04em}
+@keyframes rpOpen{0%{transform:perspective(1100px) rotateY(0);opacity:1}70%{opacity:1}100%{transform:perspective(1100px) rotateY(-108deg);opacity:0;visibility:hidden}}
+.w-prog{list-style:none;margin:0;padding:0;display:grid;gap:8px}.w-prog button{width:100%;min-height:48px;display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--card);border:0;box-shadow:var(--dz-sh-soft);border-radius:14px;cursor:pointer;text-align:left;color:var(--ink)}
+.w-prog b{flex:1}.w-prog small{color:var(--mute);font-weight:800;min-width:42px;text-align:right}.w-lflag{width:30px;height:20px;border-radius:4px}
+/* Eltern */
+.w-par{display:grid;gap:8px;max-width:560px}.w-par h3{margin:10px 0 0}.w-par label{font-weight:800}
+.w-radio{border:0;padding:0;margin:6px 0;display:grid;gap:6px}.w-radio legend{font-weight:800;margin-bottom:4px}
+.w-toggle{display:flex;align-items:center;gap:10px;min-height:44px}.w-toggle input,.w-radio input{width:22px;height:22px}
+/* Kachel in Meine Welt */
+@media(max-width:860px){.w-journey{grid-template-columns:minmax(0,1fr)}.w-scene{position:relative;top:auto}.w-scene-svg{height:128px}.w-depart{flex-direction:column;align-items:stretch}.w-bal{align-self:flex-start}}
+@media(max-width:560px){.w-route{padding:4px}.w-panel{padding:14px}.w-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.rp{grid-template-columns:minmax(0,1fr)}.rp:before{display:none}.rp-visa{border-top:1px solid rgba(44,50,54,.18)}.rp-st{width:clamp(118px,44%,170px)}}
+@media(prefers-reduced-motion:reduce){.rp.anim .rp-cover{display:none}.rp-st.fresh{animation:none}.w-plane{animation:none}}
+/* Kachel in Meine Welt: eine breite Zeile statt einer einsamen Kachel */
+@media(max-width:560px){.w-route{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.w-stop{flex-direction:row;min-height:50px;gap:6px;font-size:.84rem;padding:6px 8px;justify-content:flex-start}.w-stop svg:first-child{flex:none}.w-stop .w-mk{position:static;margin-left:auto;width:16px;height:16px}}
+.w-qo[aria-disabled=true]{cursor:default}
+
+/* Mein Reisepass: nichts darf breiter als der Bildschirm werden */
+.w-prog li,.w-prog button{min-width:0}.w-prog b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
