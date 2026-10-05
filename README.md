@@ -10,7 +10,7 @@ One static web app, no server, no accounts, no tracking (sounds can be switched 
 | Module | Content |
 |---|---|
 | **Teilen mit Zehnern** (workbook A4 · Division durch Zehnerzahlen) | Dividing by tens – 8 exercises |
-| **Rechnen mit Geld** (workbook A5 · Geld) | Euro and cent: writing amounts, adding/subtracting, rounding, offers, change, tickets – 7 exercises |
+| **Rechnen mit Geld** (workbook A5 · Geld) | Euro and cent: writing amounts, adding/subtracting, rounding, offers, change, tickets, Frage-Rechnung-Antwort (workbook page 34) – 8 exercises |
 | **Extra Spaß** (not from the workbook, `extra:true`; formerly “Extra-Training”) | **Einmaleins** (×, :, missing number, rows), **Kopfrechnen** (plus/minus to 1000, doubling/halving), **Schriftlich rechnen** (written addition/subtraction) |
 
 Besides maths there are two **learning worlds** (see below): **Europa Entdecker** (geography quiz and discovery) and **Meine Weltreise** (a calm, star-paid travel reward with a passport).
@@ -41,21 +41,30 @@ All questions are **generated** by code (`src/gen.js`); no workbook content is c
 - **Profil** (tap the profile on Start): level, name, big tiles for stars / coins / cards / trophies, saving goal, *Das bin ich*, *Meine Pokale*, *Farben & Töne*. Once the child's name is saved the field disappears (parents can change it in the Eltern area).
 - **Fino's name:** renaming and the Fino-Namen shop items were removed (round 3). A name saved earlier is kept and still replaced everywhere in the UI, including possessives (“Finos Geschichte” → “Mias Geschichte”).
 - **Greeting:** Start greets by the device's local time and the child's name (Guten Morgen 5–10, Guten Tag 11–13, Schönen Nachmittag 14–17, Guten Abend 18–21, Hallo Nachteule otherwise).
+- **Meine Weltreise now has 23 countries:** Deutschland, Japan, Indien + 20 new (Frankreich, Italien, Spanien, Griechenland, Niederlande, Polen, Schweden, Vereinigtes Königreich, Türkei, Thailand, USA, Kanada, Mexiko, Brasilien, Australien, China, Südkorea, Ägypten, Südafrika, Kenia). Each has the six stations (Ankunft, Orte, Alltag, Sprache, Essen, Rätsel), flag, guide child, souvenirs and passport codes. Packs live in `src/world_pack_a…d.js`. Costs in free ⭐: Europe 6, Asia 10, other continents 14.
+- **Choosing a country:** the departure hall has a **drop-down** (“Reiseziel wählen”: *Meine Reisen* / *Noch gesperrt*); locked countries are grouped by continent below. A locked country is still unlocked by ⭐ as before.
+- **Shop → Reisen (tickets, paid with 🪙):** *Reise-Ticket* (250 🪙) opens the next country on the list at once; *Wunsch-Ticket* (500 🪙) opens a chosen country at once, or – if the country is not in the app yet – stores the wish (`S.world.wishes`) and opens it automatically after a later update. Parents see all wishes in Eltern → Mein Reisepass. Tickets cost no ⭐.
+- **Lustige Fakten:** no count is shown. 29 facts are open at the start, then one batch of 7 every week; if everything open has been read, a batch is released early (max. once a day). 90 facts in total; add more at the end of `FACTS`.
+- **Name:** the name saved in the Profil replaces “Fino” everywhere (texts, possessives, story). Without a name the mascot stays Fino.
+- **Brand & home button:** “Denkzauber” mark in the Start header (wide screens) and footer; the home button is a small house with a “Start” label.
 - **Home symbol:** two or more steps away from Start, a house button appears in the middle of the top bar (Reader/Story, Europa Entdecker, Weltreise, Shop, …). It never resets or changes any data.
 - **Shop → Fino → Extras:** Brille, Schal, Sonnenbrille, Fliege, Kopfhörer, Blume im Ohr, Goldmedaille, Glitzersterne, Heldencape (all drawn for every figure). The Fino-Insel category is gone; *Meine Insel* (learning record) is separate and unchanged.
 - **Economy:** 🪙 coins (earned by maths work, spent **only in the shop**), ⭐ stars (permanent proof, never spent), stamps (milestones in the Achievement Book). Flames are retired (old balances became coins, 1 flame = 3 coins; the daily streak stays as a display). Every reward says where it came from ("Neu verdient").
 - **Hard-earned only:** block credits only pay improvements over the previous best. A finished group can be revised after 7+ days for a small capped reward (max 15 coins per round). The mistakes notebook pays nothing.
 - **Ownership is permanent; creativity is time-boxed:** finishing a level or the daily goal opens a short *Kreativzeit* (default 5 min, max 2 per day; parent settings: after practice / always open / locked = classroom mode). It applies to avatar editing, sticker placement in the book and the music workshop (closed before the first creative session). Everything autosaves; there is a gentle notice at the end. Achievements stay viewable when locked.
 - **Shop:** every unlock is a purchase here (max 5 min per day, parent-adjustable). Locked things stay visible, greyed, with price and "noch X 🪙", plus one saving goal. Few things are free (skin tone, basic hair, one drum sound).
-- **Features (Meine Welt):** Lustige Fakten (29 safe facts about animals, nature, space, body, numbers, world – no rewards) · Avatar (quick identity setup, earned extras; Fino's old name, if one was saved earlier, is kept; renaming and the Fino-Insel shop category were removed) · Mein Buch (Achievement Book: one page per workbook with progress, stamps and 4 sticker spaces, printable certificate) · Insel (visual record of finished groups on fixed spots) · Wesen (hatch from stars, no care, no punishment) · Story (12 episodes as milestones, pays nothing) · Schatzkammer (one earned card per chest, 475+ cards) · Musik-Werkstatt (one drum + 8 steps at the start; sounds/bars earned) · Pokale.
+- **Features (Meine Welt):** Lustige Fakten (29 safe facts about animals, nature, space, body, numbers, world – no rewards) · Avatar (quick identity setup, earned extras; Fino's old name, if one was saved earlier, is kept; renaming and the Fino-Insel shop category were removed) · Mein Buch (Achievement Book: one page per workbook with progress, stamps and 4 sticker spaces, printable certificate) · Insel (visual record of finished groups on fixed spots) · Wesen (hatch from stars, no care, no punishment) · Story (12 episodes as milestones, pays nothing) · Schatzkammer (one earned card per chest, 475+ cards) · Musik-Werkstatt (one drum + 8 steps at the start; sounds/bars earned) · Notizbuch (Zettel-Wand: short notes up to 140 characters, the latest 6 hang on the wall) · Pokale.
 - **Look (design system “Meine Weltreise”):** calm, rounded and uncluttered. All colours, radii, shadows and motion are **tokens** (`--dz-*` in `src/dz.css`); the 8 themes (id `sonne` is shown as “Nebelblau” – never rename the id) only change tokens. Every card, tile and panel has a thin border in the theme's accent tone. Shared components (square tile, grid, accordion, hero, chips, tree, passport art) live in `src/dz.js`. No pink. Locked things stay visible with a padlock and their real price/condition. Each correct answer gets a short star burst (≤ 0.9 s, off in calm mode / reduced motion). Fonts: system rounded stack with embedded Nunito as fallback. No pinch/double-tap zoom.
 - **Names:** `S.name` = real name (greeting + certificate), `S.avName` = optional nickname of the own avatar (profile only), `S.finoName` = the mascot's name.
 
 ## Europa Entdecker (geography)
 
-50 European countries, only facts that are 100 % certain (`src/geo_data.js`, simple SVG flags). **Spielen:** Quiz (capital choose/type/reverse, flags), Flaggen, Größer? (area), Reiseroute (which country borders both A and B), Memory. **Entdecken:** Länderkarten, Wusstest du?, Meine Stempel (one per known country, milestone ladder), Land des Tages. Rounds have 10 or 15 questions; feedback comes at the end, answers can be changed until submit, and leaving a round asks first. Rewards share the normal coin bucket with a daily cap (best result of the day counts), plus one-time milestones at 10/25/50 known countries and 8 trophies. Existing coins, cards and trophies are never changed.
+47 European countries (incl. Kosovo; Armenia, Azerbaijan, Kazakhstan and Turkey are not part of it – Turkey's flag stays only for Meine Weltreise), only facts that are 100 % certain (`src/geo_data.js`, simple SVG flags). **Spielen:** Quiz (capital choose/type/reverse, flags), Flaggen, Größer? (area), Reiseroute (which country borders both A and B), Memory. **Entdecken:** Länderkarten, Wusstest du?, Meine Stempel (one per known country, milestone ladder), Land des Tages. Rounds have 10 or 15 questions; feedback comes at the end, answers can be changed until submit, and leaving a round asks first. Rewards share the normal coin bucket with a daily cap (best result of the day counts), plus one-time milestones at 10 / 25 / all (= all 47, computed from the data) known countries and 8 trophies. Existing coins, cards and trophies are never changed.
 
 ## Meine Weltreise and Mein Reisepass (reward, no coins)
+
+Countries are opened with **Reisemeilen ✈️** (1 per correctly solved task, max 100 a day; a country costs 60–140 miles) – no stars or coins are spent. A Mini-Test with at least 80 % right (12 of 15) gives a **Boarding-Pass** that opens the next country (once a day). Shop tickets (coins) stay as an extra way.
+
 
 A calm reward in *Meine Welt*. **Stars pay for it, nothing is lost:** free Stars = lifetime Stars − Stars already spent on countries. Opening a country spends Stars **once** and it stays open forever; lifetime Stars, Wesen, trophies, coins and cards are never touched, and the Weltreise itself pays **no coins and no cards**. Deutschland is free, Japan and Indien cost 10 ⭐ each; more countries (20 planned) can be added as data in `src/world_data.js`.
 
@@ -65,7 +74,9 @@ A calm reward in *Meine Welt*. **Stars pay for it, nothing is lost:** free Stars
 ## Parents (Eltern area)
 
 - Protected by a **4-digit PIN** (set on first use). An **8-digit recovery code** is shown once – write it down.
-- Settings: child's name, avatar name, **Tagesziel** (tasks per day for flame/streak/chest), optional **Tageslimit** (minutes per day; only active time counts; PIN-protected unlock for the day), creative time, **Zusatzfunktionen** (show/hide Meine Wesen, Mein Buch, Meine Insel), Weltreise passport details.
+- The Eltern page is **bilingual (DE/EN switch at the top)**; the child's app stays German.
+- **Nutzer: Kind / Admin.** Admin mode is a separate test storage (`…_admin` keys): everything unlocked, coins and stars always 9999, no time limits, no PIN. The child's data is never read or written there. Switching reloads the app; an orange bar offers “Zurück zum Kind”.
+- Settings: child's name (also the avatar's name – there is no separate avatar name), **Zusatzfunktionen** (clear AN/AUS switches for Meine Wesen, Mein Buch, Meine Insel), **Tagesziel**, **Tageslimit**, **Zeit pro Seite** (default 3 min per page in Meine Welt; max 2 windows per page and day until the Tagesziel is reached; reopens after 10 solved tasks; the Profil counts as a page too; parents can **lock one page or all pages for the rest of the day**; not for Meine Hefte, Extra Spaß practice or Europa Entdecker), **Shop-Zeit**, **Kreativzeit** (always after practice, or locked; a once-per-day bonus needs 10 solved tasks), chapter deadlines (suggested from the Niedersachsen school holidays), sound, PIN. **Every time has its own “Zurücksetzen” button** plus “Alles zurücksetzen”.
 - Overview per group, “needs practice” hint, printable report, **backup export/import** (JSON). Import shows a before/after table (coins, stars, solved tasks, finished exercises, cards, trophies, items, beats) and checks it after loading; the previous state is kept under `mathe_abenteuer_preimport`.
 
 ## Data safety
@@ -98,7 +109,7 @@ npm run test:all     # additionally all Playwright suites (needs python3 + playw
 | `src/mascot.js` | SVG mascot skins, hats, extras, backgrounds, themes, `SHOP` catalogue and prices |
 | `src/rewards.js`, `src/icons.js`, `src/boot.js` | catalogue + plugin API, SVG icon set, startup |
 | `src/feat_*.js/.css` | one file (pair) per feature (avatar, buch, insel, musik, schatz, story, wesen, fakten, geo = Europa Entdecker, welt = Weltreise/Reisepass) |
-| `src/geo_data.js`, `src/world_data.js` | data for Europa Entdecker (50 countries) and Meine Weltreise (country packs, stations, scenes) |
+| `src/geo_data.js`, `src/world_data.js` | data for Europa Entdecker (47 countries) and Meine Weltreise (country packs, stations, scenes) |
 | `src/dz.css`, `src/dz.js` | Design tokens, shared components, navigation (back stack); `dz.css` loads last |
 | `src/ui.css`, `src/fonts/` | Remaining inner-page styles, embedded woff2 fonts + OFL licence |
 | `src/story_data.js` | story episodes |
@@ -126,5 +137,5 @@ npm run test:all     # additionally all Playwright suites (needs python3 + playw
 
 ```bash
 cd tests && H=$(realpath ../dist/Mathe-Abenteuer_Klasse4.html)
-for t in migrate economy avatar musik themes geo world dz; do python3 ${t}_test.py $H; done
+for t in migrate economy avatar musik themes geo world dz packs round5; do python3 ${t}_test.py $H; done
 ```
