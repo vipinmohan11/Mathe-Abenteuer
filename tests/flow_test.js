@@ -88,12 +88,12 @@ act('reviewBlock');
 ok(A.view==='review','review view');
 ok(doc.querySelectorAll('.li').length>=3,'review lists wrong items: '+doc.querySelectorAll('.li').length);
 ok(/richtig|Lösung|Richtig/.test(doc.body.textContent),'review shows right answer text');
-act('toBlock');ok(A.view==='block','back to block');
+act('back');ok(A.view==='block','back to block');
 const coinsAfterB1=A.S.coins, starsAfterB1=A.S.stars;
 ok(A.S.stars>=0,'stars non-negative');
 act('toGroup');ok(A.view==='topic','to group');
 act('reviewDeck');ok(A.view==='review','review whole group');
-act('toTopic');
+act('back');
 
 // ================= 4. finish group perfectly -> medal, chest =================
 A.startDeck(key);

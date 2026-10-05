@@ -1,0 +1,130 @@
+"""Denkzauber-Designsystem: Navigation, Profil, Fino-Umbenennung, Schalter, Fakten, Akkordeon, Baum, Überlauf, Stand unverändert.
+Aufruf: python3 dz_test.py /abs/pfad/Mathe-Abenteuer_Klasse4.html"""
+import sys
+from playwright.sync_api import sync_playwright
+html = sys.argv[1]; fails = []
+def ok(c, m):
+    print(('OK   ' if c else 'FAIL ') + m)
+    if not c: fails.append(m)
+with sync_playwright() as p:
+    b = p.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 800}); errs = []
+    pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
+    pg.goto('file://' + html); pg.wait_for_timeout(300)
+    pg.evaluate("""()=>{S.coins=321;S.life=321;S.starsLife=37;S.stars=37;S.chests=1;S.cards={a1:1,a2:1};S.trophies={blk1:1};save();checkTrophies();}""")
+    snap = lambda: pg.evaluate("()=>JSON.stringify({c:S.coins,l:S.life,s:S.stars,sl:S.starsLife,ch:S.chests,cards:S.cards,tr:S.trophies})")
+    before = snap()
+    V = lambda: pg.evaluate("()=>view")
+    click = lambda sel: (pg.locator(sel).first.click(), pg.wait_for_timeout(120))
+    pg.evaluate("()=>go('home')"); pg.wait_for_timeout(100)
+    # Start
+    ok(pg.locator('.nav, .navbar, nav.bottom, #nav').count() == 0 and pg.locator('[data-act=goHome].tab').count() == 0, 'keine untere Navigationsleiste')
+    ok(pg.locator('.dz-home4 .dz-tile').count() == 4, 'Startseite: 4 Kacheln')
+    t = pg.inner_text('#app')
+    ok('Europa Entdecker' in t and 'Extra Spaß' in t and 'Meine Hefte' in t and 'Meine Welt' in t, 'Kachel-Namen')
+    ok('Heute geschafft' not in t and 'Extra Training' not in t and 'Europa Expedition' not in t, 'alte Namen weg')
+    ok(pg.locator('.dz-head .dz-me').count() == 1 and pg.locator('.dz-head .dz-chip').count() >= 3, 'Profil oben links + Chips')
+    # Baum-Stufen
+    stages = []
+    for pct in (0, 10, 30, 60, 90, 100):
+        stages.append(pg.evaluate("p=>dzTree(p)", pct))
+    ok(len(set(stages)) == 6, 'Samen-bis-Baum: 6 verschiedene Stufen')
+    # Navigation: Hefte -> Heft -> zurück
+    click('.dz-tile[data-act=goHefte], .dz-tile[data-act=hefte]') if pg.locator('.dz-tile[data-act=goHefte], .dz-tile[data-act=hefte]').count() else pg.evaluate("()=>go('hefte')")
+    pg.wait_for_timeout(100); ok(V() == 'hefte', 'Hefte öffnet von der Startseite')
+    ok(pg.locator('.dz-hefte4 .dz-tile').count() >= 3, 'Hefte: Kacheln Los geht\'s / üben / Mini-Test')
+    # Akkordeon: nur ein Kapitel offen
+    n = pg.locator('.dz-acc').count()
+    if n >= 2:
+        pg.evaluate("()=>ACT.dzAcc('B','hefte')") if False else None
+    heads = pg.locator('.dz-acc-head')
+    if heads.count() >= 2:
+        heads.nth(0).click(); heads.nth(1).click(); pg.wait_for_timeout(100)
+        ok(pg.locator('.dz-acc-item.open').count() == 1, 'Kapitel: nur eines offen')
+    else:
+        ok(False, 'Akkordeon-Köpfe gefunden')
+    # A1-A5 in einer Reihe, auch 360px
+    for w in (1280, 360):
+        pg.set_viewport_size({'width': w, 'height': 800}); pg.wait_for_timeout(100)
+        ys = pg.evaluate("()=>[...document.querySelectorAll('.dz-acc-item.open .dz-tile')].slice(0,5).map(e=>Math.round(e.getBoundingClientRect().top))")
+        ok(len(ys) == 5 and len(set(ys)) == 1, f'A1–A5 in einer Reihe bei {w}px {ys}')
+    pg.set_viewport_size({'width': 1280, 'height': 800})
+    # Heft öffnen und zurück
+    pg.locator('.dz-acc-head').nth(0).click(); pg.wait_for_timeout(100)
+    tile = pg.locator('.dz-acc-item.open .dz-tile:not(.locked)').first
+    tile.click(); pg.wait_for_timeout(150)
+    v1 = V(); ok(v1 != 'hefte', 'Heft-Seite öffnet (' + v1 + ')')
+    click('.top .back[data-act=back]'); ok(V() == 'hefte', 'Zurück → Hefte')
+    click('.top .back[data-act=back]'); ok(V() == 'home', 'Zurück → Start')
+    # Meine Welt -> Shop -> zurück
+    pg.evaluate("()=>go('rewards')"); pg.wait_for_timeout(100)
+    ok(pg.locator('.dz-tile').count() == 5, 'Meine Welt: 5 Kacheln (Wesen/Buch/Insel verborgen)')
+    ok(pg.inner_text('#app').count('Lustige Fakten') >= 1 and 'Weltreise' in pg.inner_text('#app'), 'Lustige Fakten + Meine Weltreise')
+    click('.dz-tile[data-act=shop], .dz-tile[data-act=go][data-arg=shop]')
+    ok(V() == 'shop', 'Shop öffnet'); click('.top .back[data-act=back]'); ok(V() == 'rewards', 'Zurück → Meine Welt')
+    # Fakten
+    pg.evaluate("()=>go('fakten')"); pg.wait_for_timeout(100)
+    a = pg.inner_text('#app'); click('[data-act=faktStep][data-arg="1"]') if pg.locator('[data-act=faktStep][data-arg="1"]').count() else click('[data-act=faktStep]')
+    ok(pg.inner_text('#app') != a, 'Lustige Fakten: Nächster Fakt wechselt')
+    ok(pg.evaluate("()=>FACTS.length") == 29, '29 Fakten')
+    # Profil -> Farben -> zurück
+    pg.evaluate("()=>go('home')"); click('.dz-head .dz-me'); ok(V() == 'profile', 'Profil über Profilfeld')
+    pt = pg.inner_text('#app'); ok('Meine Pokale' in pt and 'Das bin ich' in pt and 'Farben' in pt and 'umbenennen' in pt, 'Profil: Kacheln')
+    pg.evaluate("()=>go('look')"); pg.wait_for_timeout(100); click('.top .back[data-act=back]'); ok(V() == 'profile', 'Farben & Töne → zurück zum Profil')
+    # Android-Zurück
+    pg.evaluate("()=>go('home')"); pg.evaluate("()=>go('hefte')"); pg.wait_for_timeout(100)
+    pg.go_back(); pg.wait_for_timeout(200); ok(V() == 'home', 'Android-Zurück: Hefte → Start')
+    # Fino umbenennen
+    pg.evaluate("()=>{S.finoName='Mia';save();go('home')}"); pg.wait_for_timeout(200)
+    pg.evaluate("()=>go('rewards')"); pg.wait_for_timeout(200)
+    txt = pg.inner_text('#app'); ok('Mias Geschichte' in txt and 'Finos' not in txt, 'Umbenennen: „Mias Geschichte“')
+    pg.evaluate("()=>{S.finoName='Max';save();render()}"); pg.wait_for_timeout(200)
+    ok('Max’ Geschichte' in pg.inner_text('#app') or 'Maxʼ Geschichte' in pg.inner_text('#app'), 'Umbenennen: Max’ Geschichte')
+    pg.evaluate("()=>{S.finoName='';save();render()}"); pg.wait_for_timeout(200)
+    ok('Finos Geschichte' in pg.inner_text('#app'), 'zurück auf Fino: „Finos Geschichte“')
+    # Schalter
+    pg.evaluate("()=>{S.flags={wesen:1,buch:1,insel:1};save();render()}"); pg.wait_for_timeout(100)
+    ok(pg.locator('.dz-tile').count() == 8, 'Schalter an: Wesen/Buch/Insel erscheinen')
+    pg.evaluate("()=>{S.flags={};save();render()}"); pg.wait_for_timeout(100)
+    ok(pg.locator('.dz-tile').count() == 5, 'Schalter aus: wieder 5 Kacheln')
+    # Extra Spaß
+    pg.evaluate("()=>go('extra')"); pg.wait_for_timeout(100)
+    ok(pg.locator('.dz-tile[data-act=mod]').count() == 3, 'Extra Spaß: 3 Kacheln')
+    # Stand unverändert
+    ok(snap() == before, 'Münzen, Sterne, Karten, Pokale unverändert durch Navigation')
+    # Profil: Name nach dem Speichern fest
+    pg.evaluate("()=>{S.name='';save();go('profile')}"); pg.wait_for_timeout(100)
+    ok(pg.locator('#nameIn').count() == 1, 'Profil: ohne Namen gibt es das Eingabefeld')
+    pg.fill('#nameIn', 'Mira'); pg.evaluate("()=>ACT.rhSaveName()"); pg.wait_for_timeout(120)
+    ok(pg.locator('#nameIn').count() == 0 and pg.evaluate("()=>S.name") == 'Mira', 'Profil: Name gespeichert, kein Eingabefeld mehr')
+    pg.evaluate("()=>go('parent')") if False else None
+    # Rahmen auf allen Karten
+    nob = []
+    for v in ['home', 'hefte', 'extra', 'rewards', 'profile', 'fakten', 'geo', 'welt', 'weltPass', 'shop', 'trophies']:
+        pg.evaluate("v=>go(v)", v); pg.wait_for_timeout(60)
+        r = pg.evaluate("""()=>[...document.querySelectorAll('.dz-tile,.dz-hero,.dz-panel,.dz-acc-item,.dz-stat,.card,.w-card,.rp,.topic,.dz-chip,.dz-me')].filter(e=>e.offsetParent&&parseFloat(getComputedStyle(e).borderTopWidth)<1).map(e=>e.className)""")
+        if r: nob.append((v, r[:3]))
+    ok(not nob, f'jede Karte hat einen feinen Rahmen {nob[:3]}')
+    # Reisepass
+    pg.evaluate("()=>{const w=wS();const t=ymd();w.open.jpn=t;w.stamps={deu:'2026-09-14',jpn:t};w.pass={name:'',photo:'avatar',birth:'2016-05-12',bplace:'Stuttgart',res:'Stuttgart'};save();go('weltPass')}"); pg.wait_for_timeout(1900)
+    pt = pg.inner_text('#app')
+    ok('Mein Reisepass' in pt and 'Entdeckerpass' not in pt, 'Entdeckerpass heißt jetzt Mein Reisepass')
+    ok(pg.locator('.w-sec:has-text("Souvenirs"), .w-sec:has-text("Pokale"), .w-sec:has-text("Reisetagebuch")').count() == 0 and pg.locator('.w-badge, .w-shelf, .w-log').count() == 0, 'Abschnitte Souvenirs, Pokale, Reisetagebuch entfernt')
+    ok(pg.locator('.rp-st').count() == 2, 'Einreisestempel je Land')
+    ok('14 SEP 2026' in pg.inner_html('.rp-visa') or pg.evaluate("()=>document.querySelector('.rp-visa').textContent.includes('14')") and 'SEP' in pg.inner_html('.rp-visa'), 'Stempel tragen ein Datum')
+    ok(all(x in pt for x in ['Geburtsdatum', 'Geburtsort', 'Wohnort', 'Staatsangehörigkeit', 'Pass-Nr.', 'Gültig bis', 'Ausgestellt am', 'Bereiste Länder', 'Einreisestempel']), 'Passdaten und Reisedaten als Passfelder')
+    ok(pg.locator('.rp-mrz span').count() == 2 and all(len(x) == 44 for x in pg.eval_on_selector_all('.rp-mrz span', 'e=>e.map(x=>x.textContent)')), 'maschinenlesbare Zeilen (2 × 44 Zeichen)')
+    ok(pg.evaluate("()=>wS().pass.no&&wS().pass.issued") and pg.evaluate("()=>wS().pass.no")==pg.evaluate("()=>{go('home');go('weltPass');return wS().pass.no}"), 'Pass-Nummer bleibt fest')
+    # Überlauf
+    bad = []
+    views = ['home', 'hefte', 'extra', 'rewards', 'profile', 'fakten', 'geo', 'welt', 'weltPass', 'weltEltern', 'look', 'shop', 'trophies']
+    for w in (360, 820, 1280):
+        pg.set_viewport_size({'width': w, 'height': 800})
+        for th in ('sonne', 'nacht', 'wald', 'meer'):
+            for v in views:
+                r = pg.evaluate("([v,th])=>{S.theme=th;document.body.dataset.theme=th;go(v);return document.documentElement.scrollWidth-document.documentElement.clientWidth}", [v, th])
+                pg.wait_for_timeout(30)
+                if r > 1: bad.append((w, th, v, r))
+    ok(not bad, f'kein waagerechter Überlauf {bad[:5]}')
+    ok(not errs, f'keine Konsolenfehler {errs[:3]}')
+    b.close()
+print('\nFAILS:', fails); sys.exit(1 if fails else 0)
