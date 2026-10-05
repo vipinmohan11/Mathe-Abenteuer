@@ -318,15 +318,15 @@ const CUR = { c: { ic: '🪙', n: 'Münzen' }, s: { ic: '⭐', n: 'Sterne' }, f:
 const SHOP = {
   theme: {
     label: 'Farben', icon: '🎨', none: false, items: [
-      // HINWEIS: Die ID 'sonne' wird als „Himmelblau“ angezeigt. ID NICHT umbenennen – Besitz und gespeichertes Theme hängen daran.
-      { id: 'sonne', name: 'Himmelblau', cur: 'c', price: 0, c: ['#1764d5', '#4197ec', '#ffda55'] },
-      { id: 'butter', name: 'Sonnenschein', cur: 'c', price: 30, c: ['#976000', '#ddaa37', '#ffe7a0'] },
-      { id: 'ocean', name: 'Ozean', cur: 'c', price: 40, c: ['#006caa', '#3fb7e4', '#b4f0ea'] },
-      { id: 'wald', name: 'Wald', cur: 'c', price: 60, c: ['#18734a', '#5fb576', '#d4ef84'] },
-      { id: 'sunset', name: 'Sonnenuntergang', cur: 'c', price: 90, c: ['#b34b16', '#f39742', '#ffdc86'] },
-      { id: 'nacht', name: 'Sternennacht', cur: 'c', price: 120, c: ['#526ab9', '#829ce3', '#d2ddff'] },
-      { id: 'regen', name: 'Regenbogen', cur: 'c', price: 160, c: ['#5148b4', '#8982dc', '#e0d8ff'] },
-      { id: 'tuerkis', name: 'Türkis-Blau (Finale Farbe)', cur: 'f', price: 15, c: ['#087e89', '#21acb5', '#b4efdc'] }
+      // HINWEIS: Die ID 'sonne' wird als „Nebelblau“ angezeigt. ID NICHT umbenennen – Besitz und gespeichertes Theme hängen daran.
+      { id: 'sonne', name: 'Nebelblau', cur: 'c', price: 0, c: ['#526a70', '#7f9a9f', '#dfe8e6'] },
+      { id: 'butter', name: 'Sonnenschein', cur: 'c', price: 30, c: ['#8a6a1f', '#c49a3a', '#efe6cc'] },
+      { id: 'ocean', name: 'Ozean', cur: 'c', price: 40, c: ['#3f6f8a', '#7aa6bd', '#d9e7ec'] },
+      { id: 'wald', name: 'Wald', cur: 'c', price: 60, c: ['#4f7358', '#86a88c', '#dbe8dc'] },
+      { id: 'sunset', name: 'Sonnenuntergang', cur: 'c', price: 90, c: ['#9a5a3c', '#cc8a68', '#f0ddd0'] },
+      { id: 'nacht', name: 'Sternennacht', cur: 'c', price: 120, c: ['#8fb3b8', '#b6d0d3', '#1f2528'] },
+      { id: 'regen', name: 'Regenbogen', cur: 'c', price: 160, c: ['#66608f', '#9a95bf', '#e4e1ee'] },
+      { id: 'tuerkis', name: 'Türkis-Blau (Finale Farbe)', cur: 'f', price: 15, c: ['#3c7d80', '#78afb0', '#d6e8e6'] }
     ]
   },
   skin: {

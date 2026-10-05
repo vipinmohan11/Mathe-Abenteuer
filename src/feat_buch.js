@@ -74,7 +74,7 @@ VIEWS.urkunde = () => {
     <h2 class="urk-h">${m.icon} ${esc(m.title)}</h2>
     <p class="urk-s">${p.done} von ${p.total} Übungen komplett gelöst · ${p.pct} % der Punkte</p>
     <div class="urk-st">${st.map(s => `<span title="${esc(s.n)}">${s.ic}</span>`).join('')}</div>
-    <div class="urk-ft"><span>${fmtDate(when)}</span><span>${esc(FN())} &amp; Rechenhelden</span></div>
+    <div class="urk-ft"><span>${fmtDate(when)}</span><span>${esc(FN())} &amp; Denkzauber</span></div>
   </div></div>`;
 };
 registerFeature({

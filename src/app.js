@@ -60,22 +60,25 @@ const SAY = {
 let view = 'home', R = null, T = null, lastView = '', PIN = null;
 const UI = { mod: null, key: null, shopTab: 'theme', scope: 'all', say: '', ans: {}, reveal: null, review: null, reviewBack: 'topic', pinUntil: 0, pending: null };
 
-function go(v, extra) { if (view !== v && typeof leaveHook === 'function') leaveHook(view); Object.assign(UI, extra || {}); view = v; render(); }
+function go(v, extra) { if (typeof geoGuard === 'function' && geoGuard(v, extra)) return; if (view !== v) { if (typeof leaveHook === 'function') leaveHook(view); if (typeof dzNavPush === 'function') dzNavPush(view, v); } Object.assign(UI, extra || {}); view = v; render(); }
 function render() {
   document.body.dataset.theme = S.eq.theme;
   const f = VIEWS[view] || VIEWS.home;
   $('#app').innerHTML = typeof shellRender === 'function' ? shellRender(view, f) : f();
   $('#app').classList.toggle('wide', !!WIDEV[view]);
   if (AFTER[view]) { try { AFTER[view](); } catch (e) { console.error(e); } }
-  if (lastView !== view) { window.scrollTo(0, 0); lastView = view; }
+  const changed = lastView !== view;
+  if (changed) { window.scrollTo(0, 0); lastView = view; }
+  if (typeof dzAfterRender === 'function') dzAfterRender(changed);
 }
 
 /* =====================================================================
    VIEWS
    ===================================================================== */
 const chip = (ic, v, t) => `<span class="chip" title="${t || ''}">${ic} <b>${v}</b></span>`;
-const statChips = () => `<div class="stats"><button class="chip cb" data-act="shop" title="Münzen – im Shop ausgeben">🪙 <b>${S.coins}</b></button>${chip('⭐', S.starsLife, 'Sterne – dein Beleg, werden nie ausgegeben')}</div>`;
-const topBar = (title, back = 'home', extra = '') => `<div class="top"><button class="btn sec back" data-act="${back}" aria-label="Zurück">←</button><h2>${title}</h2>${extra}${statChips()}</div>`;
+const statChips = () => `<div class="stats"><button class="chip cb" data-act="shop" title="Münzen – im Shop ausgeben">🪙 <b>${S.coins}</b></button>${chip('⭐', S.starsLife, 'Sterne – dein Beleg, bleiben immer erhalten')}</div>`;
+/* Kopfzeile innerer Seiten. „back“ ist nur der Notnagel; der Zurück-Knopf führt zur Seite, von der man wirklich kam (dz.js: NAV) */
+const topBar = (title, back = 'home', extra = '') => { const lb = dzBackLabel(back); return `<div class="top"><button class="btn sec back" data-act="back" data-arg="${esc(back)}" aria-label="Zurück zu: ${esc(lb)}">${ico('back', 20)}<span>${esc(lb)}</span></button><h2>${title}</h2>${extra}${statChips()}</div>`; };
 const greeting = () => { const h = new Date().getHours(); return h < 11 ? 'Guten Morgen' : h < 17 ? 'Hallo' : 'Guten Abend'; };
 const pctCls = p => p === null ? 'n' : p >= 80 ? 'g' : p >= 55 ? 'y' : 'r';
 
@@ -357,7 +360,7 @@ function testPrizeNote(r) {
 VIEWS.testSetup = () => {
   const opts = [['all', 'Alle Hefte gemischt']].concat(MODULES.map(m => [m.id, `${m.icon} ${m.title}`]));
   const best = S.tests.length ? Math.max(...S.tests.map(t => t.score)) : null, L = testLeft(), any = L.c || L.s || L.ch;
-  const prizes = `<div class="rh-test-prizes"><b>${any ? 'Das kannst du heute verdienen' : 'Heute schon alles verdient'}</b>${any ? `<div><span>7–9 richtig<strong>3 Münzen + 1 Stern</strong></span><span>10–12 richtig<strong>6 Münzen + 2 Sterne</strong></span><span>13–15 richtig<strong>10 Münzen + 3 Sterne</strong></span></div><p>Ab 12 richtigen gibt es eine Karte. Pro Tag zählt dein bestes Ergebnis: Ein besserer Test bringt den Unterschied. ${testPrizeNote()}</p>` : '<p>Du kannst trotzdem weiter üben und deinen Rekord verbessern.</p>'}</div>`;
+  const prizes = `<div class="geo-prize1">🎁 ${any ? `Heute noch: ${L.c} 🪙 + ${L.s} ⭐${L.ch ? ' + Karte (ab 12 richtig)' : ''}` : 'Heute schon alles verdient ✓'}</div>`;
   return topBar(ico('stopwatch', 26) + ' Mini-Test', 'home') + `<div class="card result"><div style="margin:auto;width:160px">${avatarHTML(eqAvatar(), 160, 'think')}</div>
   <h2>${TEST_N} Aufgaben · ${TEST_SECS / 60} Minuten</h2>
   <p>Wie in der Schule: keine Tipps und keine Rückmeldung, bis du fertig bist. Du kannst zwischen den Aufgaben springen. Die Aufgaben sind jedes Mal neu.</p>
@@ -521,11 +524,14 @@ VIEWS.parent = () => {
   return topBar(ico('gear', 26) + ' Eltern', 'home', '<button class="btn sm noprint" data-act="print">🖨️ Drucken</button>') + `
   <div class="card noprint"><h3>Einstellungen</h3>
     <div class="cfg"><div><b>Name des Kindes</b><br><span class="small mute">Wird auf dem Startbildschirm angezeigt.</span></div><div class="row"><input class="txt" id="nameIn" maxlength="20" value="${esc(S.name)}" placeholder="Name"><button class="btn sm" data-act="saveName">Speichern</button></div></div>
+    <div class="cfg"><div><b>Name des Avatars</b><br><span class="small mute">Steht im Profil. Leer = Name des Kindes.</span></div><div class="row"><input class="txt" id="avNameIn" maxlength="20" value="${esc(S.avName || '')}" placeholder="${esc(S.name || 'Spitzname')}"><button class="btn sm" data-act="saveAvName">Speichern</button></div></div>
     <div class="cfg"><div><b>Tagesziel</b><br><span class="small mute">So viele Aufgaben pro Tag für Serie, Karte und Kreativzeit.</span></div>${sel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, n + ' Aufgaben']), S.cfg.goal)}</div>
     <div class="cfg"><div><b>Tageslimit</b><br><span class="small mute">Nach dieser Übungszeit pro Tag gibt es eine Pause. Heute: ${usedMin()} Min · ${S.daily.d === ymd() ? S.daily.n : 0} Aufgaben.</span></div>${sel('cfgLimit', [[0, 'Kein Limit'], [15, '15 Minuten'], [20, '20 Minuten'], [30, '30 Minuten'], [45, '45 Minuten'], [60, '60 Minuten'], [90, '90 Minuten']], S.cfg.limitMin)}</div>
     <div class="cfg"><div><b>Kreativzeit</b><br><span class="small mute">Avatar, Buch und Musik. „Nach dem Üben“: Tagesziel oder eine fertige Stufe öffnet ein kurzes Zeitfenster. „Gesperrt“ = Klassenmodus: nur ansehen, bis du sie freigibst.</span></div><select id="cfgCrMode" class="txt noprint">${[['after', 'Nach dem Üben'], ['always', 'Immer offen'], ['locked', 'Gesperrt']].map(o => `<option value="${o[0]}" ${o[0] === (S.cfg.creativeMode || 'after') ? 'selected' : ''}>${o[1]}</option>`).join('')}</select></div>
     <div class="cfg"><div><b>Dauer pro Kreativzeit</b><br><span class="small mute">Wie lange eine Kreativzeit dauert, und wie oft pro Tag sie sich öffnet.</span></div><div class="row">${sel('cfgCrMin', [3, 5, 10, 15, 20].map(n => [n, n + ' Min']), S.cfg.creativeMin || 5)}${sel('cfgCrMax', [1, 2, 3].map(n => [n, n + '× pro Tag']), S.cfg.creativeMax || 2)}</div></div>
     <div class="cfg"><div><b>Kreativzeit jetzt freigeben</b><br><span class="small mute">Heute extra: ${S.cfg.creativeMin || 5} Minuten. Heute noch ${fmtT(creativeLeft())} übrig.</span></div><button class="btn sm sec" data-act="crGrant">Freigeben</button></div>
+    <div class="cfg" style="display:block"><b>Zusatzfunktionen</b><br><span class="small mute">Diese Bereiche sind in „Meine Welt“ ausgeblendet. Was darin schon gesammelt wurde, bleibt immer erhalten.</span>
+      ${DZ_FLAGS.map(f => `<div class="cfg"><div><b>${f.label}</b><br><span class="small mute">${f.sub}</span></div><button class="btn sm ${flagOn(f.id) ? '' : 'sec'}" data-act="dzFlag" data-arg="${f.id}" aria-pressed="${flagOn(f.id)}">${flagOn(f.id) ? 'An' : 'Aus'}</button></div>`).join('')}</div>
     <div class="cfg"><div><b>Shop-Zeit pro Tag</b><br><span class="small mute">So lange darf sie pro Tag im Shop stöbern und einkaufen. Heute: ${Math.floor((S.daily.shopSec || 0) / 60)} Min.</span></div>${sel('cfgShop', [[0, 'Unbegrenzt'], [3, '3 Minuten'], [5, '5 Minuten'], [10, '10 Minuten']], S.cfg.shopMin == null ? 5 : S.cfg.shopMin)}</div>
     <div class="cfg" style="display:block"><b>Kapitel-Termine</b><br><span class="small mute">Bis wann soll das Kapitel vor den Ferien fertig sein? Erscheint in „Hefte“.</span>
       <div class="row wrap" style="margin-top:8px">${CHAPTERS.map(c => `<label class="small">${c.id} (${c.season})<br><input type="date" class="txt" id="due_${c.id}" value="${(S.cfg.due || {})[c.id] || ''}"></label>`).join('')}</div></div>
@@ -546,7 +552,7 @@ VIEWS.parent = () => {
 };
 function exportData() {
   const j = JSON.stringify(S, null, 1);
-  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([j], { type: 'application/json' })); a.download = 'rechenhelden-sicherung-' + ymd() + '.json'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { }
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([j], { type: 'application/json' })); a.download = 'denkzauber-sicherung-' + ymd() + '.json'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { }
   S.lastBackup = Date.now(); save();
   const t = $('#expTxt'); if (t) { t.value = j; t.classList.remove('hide'); }
   toast('💾', 'Sicherung erstellt');
@@ -721,6 +727,7 @@ const ACT = {
   trophies: () => go('trophies'),
   crGrant: () => { touchDay(); S.daily.cr.left += (S.cfg.creativeMin || 5) * 60; save(); toast('🎨', 'Kreativzeit freigegeben'); render(); },
   parent: () => requirePin('parentGo'), parentGo: () => go('parent'), print: () => window.print(),
+  dzFlag: id => { S.flags = S.flags || {}; S.flags[id] = !flagOn(id); save(); render(); },
   saveName: () => { S.name = ($('#nameIn').value || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); },
   export: exportData, importYes: () => { closeModal(); importData(UI.pending, true); },
   limitUnlock: () => requirePin('limitUnlockYes'), limitUnlockYes: () => { touchDay(); S.daily.unlocked = true; save(); toast('✅', 'Heute ohne Limit'); go('home', { say: '' }); },

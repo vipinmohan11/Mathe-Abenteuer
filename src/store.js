@@ -45,6 +45,10 @@ const DEF = () => ({
   stats: { q: 0, c: 0, fixed: 0, bought: 0, goalDays: 0, blocks: 0, perfect: 0, decks: 0, rounds: 0 },
   daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
   goal: null, earned: [], mig3: 1,
+  geo: { sessions: 0, seen: {}, ok: {}, miss: {}, k: {}, cards: {}, ms: {}, kd: {}, perf: 0, tpf: 0, kpf: 0, best: 0 },
+  world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {} },
+  flags: {},                                   // ausgeblendete Funktionen (wesen, buch, insel): Eltern können sie einschalten – nur Anzeige, Daten bleiben
+  facts: { i: 0, seen: {} },                   // Lustige Fakten: Stelle im Stapel, schon gelesene
   cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {} }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
 });
 function mergeState(raw) {
@@ -371,6 +375,8 @@ function trophyList() {
     L.push({ id: m.id + '_m', i: '🏰', n: `${m.title}: Meister`, d: `Alle Gruppen von „${m.title}“ mit Gold`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 3) });
     L.push({ id: m.id + '_d', i: '💠', n: `${m.title}: Diamant`, d: `Alle Gruppen von „${m.title}“ mit Diamant`, t: () => m.topics.every(t => medalOf(tk(m.id, t.id)) >= 4) });
   });
+  if (typeof geoTrophies === 'function') geoTrophies().forEach(t => L.push(t));
+  if (typeof worldTrophies === 'function') worldTrophies().forEach(t => L.push(t));
   return L;
 }
 function checkTrophies() {
