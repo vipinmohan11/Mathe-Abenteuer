@@ -1,8 +1,8 @@
 const fs=require('fs'),vm=require('vm');
 const src=fs.readFileSync('../src/gen.js','utf8');
 const ctx={Math,console,String,Number,Array,Object,JSON};vm.createContext(ctx);
-vm.runInContext(src+';this.MODULES=MODULES;this.eur=eur;',ctx);
-const {MODULES,eur}=ctx;
+vm.runInContext(src+';this.MODULES=MODULES;this.eur=eur;this.FRA_T=FRA_T;',ctx);
+const {MODULES,eur,FRA_T}=ctx;
 const strip=h=>h.replace(/<br>/g,'\n').replace(/<\/div>/g,'\n').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
 // fieldOK copy from app (extract)
 const app=fs.readFileSync('../src/store.js','utf8');
@@ -115,5 +115,75 @@ for(const mod of MODULES)for(const t of mod.topics)for(let L=1;L<=5;L++)for(let 
     if(t.id==='ueber'){const p=strip(q.prompt);const mm=/([\d,]+) € ([+−]) ([\d,]+) € = \?/.exec(p);const a=Math.round(num(mm[1])*100),b=Math.round(num(mm[3])*100);const r=mm[2]==='+'?a+b:a-b;if(q.choices[q.correct]!==eur(r)+' €')err(id,L,'ueber choice wrong',q)}
   }
 }
+
+/* ---------- A5.fra: Frage – Rechnung – Antwort finden ---------- */
+{
+  const a5=MODULES.find(m=>m.id==='A5');
+  const ids=a5.topics.map(t=>t.id);
+  if(ids.slice(0,7).join()!=='schreib,column,ueber,angebot,sach,schaetz,ticket')errors.push('A5 existing topic ids/order changed: '+ids.join());
+  if(ids[ids.length-1]!=='fra'||ids.length!==8)errors.push('A5.fra must be the 8th and last topic: '+ids.join());
+  const ft=a5.topics.find(t=>t.id==='fra');
+  if(!ft||ft.t!=='Frage-Rechnung-Antwort'||!/Frage-Rechnung-Antwort finden/.test(ft.d)||!ft.icon||!ft.wb)errors.push('A5.fra topic meta missing/wrong');
+  FRA_T.forEach((T,i)=>{if(T.length<12)errors.push(`fra: Stufe ${i+1} has only ${T.length} story templates (need >=12)`)});
+  const cents=s=>{const m=/^(\d+),(\d\d) €$/.exec(s);return m?(+m[1])*100+ +m[2]:null};
+  const wholeIn=(story,c)=>story.includes(eur(c)+' €')||(c%100===0&&(story.includes((c/100)+' €')||story.includes((c/100)+'-€')));
+  const tiers={};
+  const chk=(q,L)=>{
+    const bad=m=>err('A5.fra',L,m,q);
+    const story=q.title;
+    if(!q.fields||q.fields[0].digit!==true||!/^[123]$/.test(q.fields[0].a))return bad('field 0 must be a digit 1-3');
+    const lines=strip(q.html).split('\n').map(x=>x.trim()).filter(Boolean);
+    const iP=lines.findIndex(x=>/^Passende Frage/.test(x)),iR=lines.findIndex(x=>/^Rechnung:/.test(x)),iA=lines.findIndex(x=>/^Antwort:/.test(x));
+    if(iP<0||iR<0||iA<0||!(iP<iR&&iR<iA))return bad('layout lines Passende Frage/Rechnung/Antwort missing');
+    const opts=lines.slice(0,iP).filter(x=>/^[123]\s/.test(x)).map(x=>x.replace(/^[123]\s+/,''));
+    if(opts.length!==3||new Set(opts).size!==3||opts.some(o=>!/\?$/.test(o)))return bad('need 3 distinct questions: '+opts.join('|'));
+    const rq=/<b>Frage:<\/b> (.*?)<br>/.exec(q.explain);
+    if(!rq||opts[+q.fields[0].a-1]!==rq[1])return bad('digit does not point to the Frage named in the explanation');
+    if(!/Frage:.*Rechnung:.*Antwort:/.test(q.explain))return bad('explain lacks Frage/Rechnung/Antwort');
+    const calc=lines.slice(iR+1,iA);
+    if(calc.length<1||calc.length>3)return bad('calc steps '+calc.length);
+    if(q.fields.length!==calc.length+2)return bad('field count '+q.fields.length+' vs steps '+calc.length);
+    tiers[L]=tiers[L]||{};tiers[L][calc.length]=(tiers[L][calc.length]||0)+1;
+    const val=[];
+    for(let j=0;j<calc.length;j++){
+      if(calc.length>1&&!calc[j].startsWith('①②③'[j]+' '))return bad('multi-step lines must be numbered: '+calc[j]);
+      const m=/^(?:[①②③] )?(.+?) ([·:+−]) (.+?) = \[\[(\d+)\]\] €$/.exec(calc[j]);
+      if(!m)return bad('calc line shape: '+calc[j]);
+      if(+m[4]!==j+1)return bad('calc result must use field '+(j+1)+': '+calc[j]);
+      const opd=t=>{let x=/^([①②③])$/.exec(t);if(x){const k='①②③'.indexOf(x[1]);if(k>=j)return null;return {c:cents(q.fields[k+1].a+' €'),f:1}}
+        x=/^\d+$/.exec(t);if(x)return {n:+t};const c=cents(t);return c===null?null:{c,lit:t}};
+      const l=opd(m[1]),r=opd(m[3]);if(!l||!r)return bad('bad operand in '+calc[j]);
+      for(const o of [l,r])if(o.lit&&!wholeIn(story,o.c))return bad('operand '+o.lit+' not in story: '+calc[j]);
+      let res;
+      if(m[2]==='·'){if((l.n===undefined)===(r.n===undefined))return bad('mult needs one count: '+calc[j]);res=(l.n!==undefined?l.n*r.c:r.n*l.c)}
+      else if(m[2]===':'){if(l.n!==undefined||r.n===undefined||l.c%r.n)return bad('division must be money : count, exact: '+calc[j]);res=l.c/r.n}
+      else{if(l.n!==undefined||r.n!==undefined)return bad('+/− need money: '+calc[j]);res=m[2]==='+'?l.c+r.c:l.c-r.c}
+      if(!(res>0))return bad('non-positive result '+calc[j]);
+      if(res!==cents(q.fields[j+1].a+' €'))return bad(`result mismatch ${calc[j]} -> ${q.fields[j+1].a}`);
+      val.push(res);
+      if(L<=2&&[l,r].some(o=>o.c!==undefined&&o.c%10))return bad('L1-2 amounts must be multiples of 10 ct: '+calc[j]);
+      if(!q.fields[j+1].money)return bad('step field not money');
+    }
+    const am=/^Antwort: .*\[\[(\d+)\]\] €/.exec(lines[iA]);
+    if(!am||+am[1]!==calc.length+1)return bad('Antwort field index');
+    if(q.fields[calc.length+1].a!==q.fields[calc.length].a)return bad('Antwort differs from last Rechnung result');
+    if(L<=2&&calc.length!==1)return bad('Stufe 1 must be one step');
+    if(L===5&&calc.length<2)return bad('L5 must be >=2 steps');
+    if(/\d{4,}|−/.test(story))return bad('odd numbers in story');
+    for(const m of story.matchAll(/(\d+),(\d+) €/g))if(m[2].length!==2)return bad('story cents format '+m[0]);
+  };
+  const stories={};
+  for(let L=1;L<=5;L++)for(let r=0;r<1500;r++){const q=ft.gen(L);count++;chk(q,L);(stories[L]=stories[L]||new Set()).add(q.title)}
+  if(!(tiers[2]&&tiers[2][1]&&!tiers[2][2]&&!tiers[2][3]))errors.push('fra L2 must only produce 1-step tasks '+JSON.stringify(tiers[2]));
+  if(!(tiers[5]&&tiers[5][2]&&tiers[5][3]&&!tiers[5][1]))errors.push('fra L5 must produce 2- and 3-step tasks '+JSON.stringify(tiers[5]));
+  if(!(tiers[3]&&tiers[3][1]&&tiers[3][2]))errors.push('fra L3 must mix 1- and 2-step tasks');
+  for(let L=2;L<=5;L++)if(stories[L].size<500)errors.push(`fra L${L}: only ${stories[L].size} different stories in 1500 draws`);
+  // 30er-Gruppe wie store.js (BLOCK_LEVELS, mKey, 80 Wiederholungen): keine doppelten Aufgaben, viele verschiedene Vorlagen
+  const mKey=q=>'fra|'+(q.html||q.prompt||'')+'|'+q.title;let dups=0,fewTpl=0;
+  for(let d=0;d<300;d++){const seen=new Set();
+    for(const [lo,hi] of [[2,3],[3,4],[4,5]])for(let i=0;i<10;i++)for(const L of [lo,hi]){let q,g=0;do{q=ft.gen(L);g++}while(seen.has(mKey(q))&&g<80);if(seen.has(mKey(q)))dups++;seen.add(mKey(q))}}
+  if(dups)errors.push('fra: duplicate task inside a 30-deck: '+dups);
+}
+
 console.log('questions generated:',count);
 console.log(errors.length?errors.slice(0,25).join('\n')+`\n... total ${errors.length}`:'ALL GENERATOR CHECKS PASSED');

@@ -657,6 +657,230 @@ function g_ticket(L) {
 }
 
 /* =====================================================================
+   A5  FRAGE – RECHNUNG – ANTWORT FINDEN  (Heft A5, letzte Seite)
+   Eine kurze Geldgeschichte. Das Kind wählt die passende FRAGE (Nummer 1–3, digit-Feld),
+   tippt das Ergebnis der RECHNUNG (1–3 Rechenschritte, Geldfelder) und schreibt die ANTWORT (Geldfeld).
+   Alle Beträge intern in Cent (ganze Zahlen). Stufen (Level L): L1–2 = ein Schritt (+ − ·),
+   L3 = Mischung ein/zwei Schritte, L4 = zwei Schritte bzw. Cent-Aufgaben, L5 = Rückgeld/Vergleich mit Cent (2–3 Schritte).
+   Eine Schablone liefert { story, q (richtige Frage), w [unbeantwortbare Fragen], steps [{e, c}], ans(f), h }.
+   In e steht {i} für das Ergebnis von Schritt i (wird zum Feld bzw. Betrag).
+   ===================================================================== */
+const FRA_NAMES = ['Mia', 'Ben', 'Lena', 'Tom', 'Nora', 'Jan', 'Ida', 'Leo', 'Zoe', 'Finn', 'Emma', 'Paul'];
+const FRA_SCHOOL = [
+  { g: 'n', s: 'Heft', pl: 'Hefte', lo: 80, hi: 150 }, { g: 'm', s: 'Bleistift', pl: 'Bleistifte', lo: 40, hi: 90 },
+  { g: 'm', s: 'Radiergummi', pl: 'Radiergummis', lo: 40, hi: 100 }, { g: 'n', s: 'Lineal', pl: 'Lineale', lo: 60, hi: 150 },
+  { g: 'm', s: 'Block', pl: 'Blöcke', lo: 140, hi: 250 }, { g: 'm', s: 'Anspitzer', pl: 'Anspitzer', lo: 60, hi: 120 },
+  { g: 'm', s: 'Klebestift', pl: 'Klebestifte', lo: 100, hi: 200 }, { g: 'm', s: 'Textmarker', pl: 'Textmarker', lo: 80, hi: 150 }
+];
+const FRA_SNACK = [
+  { g: 'f', s: 'Brezel', pl: 'Brezeln', lo: 70, hi: 140 }, { g: 'm', s: 'Apfel', pl: 'Äpfel', lo: 30, hi: 80 },
+  { g: 'n', s: 'Brötchen', pl: 'Brötchen', lo: 30, hi: 60 }, { g: 'm', s: 'Muffin', pl: 'Muffins', lo: 110, hi: 220 },
+  { g: 'f', s: 'Banane', pl: 'Bananen', lo: 30, hi: 60 }, { g: 'm', s: 'Saft', pl: 'Säfte', lo: 100, hi: 200 },
+  { g: 'n', s: 'Käsebrötchen', pl: 'Käsebrötchen', lo: 90, hi: 150 }, { g: 'm', s: 'Kakao', pl: 'Kakaos', lo: 120, hi: 220 }
+];
+const FRA_PLAY = [
+  { g: 'm', s: 'Ball', pl: 'Bälle', lo: 300, hi: 800 }, { g: 'n', s: 'Puzzle', pl: 'Puzzles', lo: 400, hi: 900 },
+  { g: 'n', s: 'Springseil', pl: 'Springseile', lo: 150, hi: 350 }, { g: 'n', s: 'Buch', pl: 'Bücher', lo: 500, hi: 900 },
+  { g: 'n', s: 'Kartenspiel', pl: 'Kartenspiele', lo: 300, hi: 600 }, { g: 'n', s: 'Malbuch', pl: 'Malbücher', lo: 200, hi: 400 }
+];
+const FRA_BIG = [
+  { g: 'n', s: 'Skateboard', lo: 3000, hi: 4500 }, { g: 'm', s: 'Fahrradhelm', lo: 2000, hi: 3500 },
+  { g: 'm', s: 'Rucksack', lo: 2500, hi: 4000 }, { g: 'n', s: 'Brettspiel', lo: 2000, hi: 3000 }, { g: 'm', s: 'Fußball', lo: 1500, hi: 2500 }
+];
+const FRA_PLACES = [
+  { in: 'im Zoo', go: 'in den Zoo', lo: 400, hi: 900 }, { in: 'im Kino', go: 'ins Kino', lo: 500, hi: 800 },
+  { in: 'im Schwimmbad', go: 'ins Schwimmbad', lo: 300, hi: 600 }, { in: 'im Zirkus', go: 'in den Zirkus', lo: 600, hi: 1200 },
+  { in: 'im Museum', go: 'ins Museum', lo: 300, hi: 600 }
+];
+const FRA_KILO = [
+  { s: 'Äpfel', lo: 180, hi: 280 }, { s: 'Kartoffeln', lo: 100, hi: 160 }, { s: 'Birnen', lo: 200, hi: 300 },
+  { s: 'Karotten', lo: 100, hi: 180 }, { s: 'Tomaten', lo: 250, hi: 400 }, { s: 'Bananen', lo: 130, hi: 200 }
+];
+const FRA_SELL = [
+  { pl: 'Becher Limonade', lo: 50, hi: 100 }, { pl: 'Stücke Kuchen', lo: 100, hi: 200 },
+  { pl: 'Muffins', lo: 100, hi: 200 }, { pl: 'Waffeln', lo: 150, hi: 250 }
+];
+const FRA_PAY = { 200: 'einer 2-€-Münze', 500: 'einem 5-€-Schein', 1000: 'einem 10-€-Schein', 2000: 'einem 20-€-Schein', 5000: 'einem 50-€-Schein' };
+const fraPayFor = t => { if (t < 200 && Math.random() < .4) return 200; return [500, 1000, 2000, 5000].find(x => x > t) || 5000; };   // Beträge werden so gewählt, dass t < 50 € bleibt
+const fraAcc = it => (it.g === 'm' ? 'einen ' : it.g === 'f' ? 'eine ' : 'ein ') + it.s;        // „einen Ball“
+const fraNom = it => (it.g === 'f' ? 'eine ' : 'ein ') + it.s;                                    // „ein Ball“
+const fraDef = it => (it.g === 'm' ? 'der ' : it.g === 'f' ? 'die ' : 'das ') + it.s;            // „der Ball“
+const fraCap = s => s[0].toUpperCase() + s.slice(1);
+const fraRc = (lo, hi, L) => { const st = L <= 2 ? 10 : 5; return Math.max(st, Math.round(ri(lo, hi) / st) * st); };   // Cent-Betrag, Vielfaches von 10 (L≤2) bzw. 5
+const fraNames = n => shuffle(FRA_NAMES).slice(0, n);
+const fraPoolItems = (pool, n) => shuffle(pool).slice(0, n);
+const fraShopW = (N, it) => [`Wie viel Taschengeld bekommt ${N} im Monat?`, `Wie viel Geld hat ${N} zu Hause gespart?`, `Was kostet ${fraNom(it)} in einem anderen Laden?`];
+
+function fraBuild(o) {
+  const opts = shuffle([o.q, ...shuffle(o.w).slice(0, 2)]);
+  const n = o.steps.length, val = i => E(o.steps[i].c);
+  const LAB = ['①', '②', '③'];                                   // Schritte nummerieren, wenn es mehrere gibt; „②  ① + 0,30 €“ = Ergebnis von Schritt 1 plus 0,30 €
+  const line = (s, i) => (n > 1 ? LAB[i] + ' ' : '') + s.replace(/\{(\d)\}/g, (m, k) => LAB[+k]) + ` = [[${i + 1}]] €`;
+  const txt = (s, i) => s.replace(/\{(\d)\}/g, (m, k) => val(+k)) + ` = ${val(i)}`;
+  let html = eqLine('<b>Welche Frage passt zur Geschichte?</b><br>' + opts.map((q, i) => `${i + 1}&nbsp; ${q}`).join('<br>'), 'info');
+  html += eqLine('Passende Frage: Nummer [[0]]') + eqLine('Rechnung:', 'u');
+  o.steps.forEach((s, i) => { html += eqLine(line(s.e, i)); });
+  html += eqLine(`<b>Antwort:</b> ${o.ans(`[[${n + 1}]] €`)}`, 'sum');
+  const last = o.steps[n - 1].c;
+  return {
+    title: o.story,
+    html,
+    fields: [F(opts.indexOf(o.q) + 1, { digit: true, next: 1 }), ...o.steps.map(s => FM(s.c)), FM(last)],
+    hint: `Die richtige Frage kannst du mit den Zahlen aus der Geschichte beantworten. Die anderen Fragen brauchen Angaben, die nicht dastehen. ${o.h}`,
+    explain: `<b>Frage:</b> ${o.q}<br><b>Rechnung:</b> ${o.steps.map((s, i) => txt(s.e, i)).join('; ')}<br><b>Antwort:</b> ${o.ans(E(last))}`
+  };
+}
+
+/* ---- Stufe 1: ein Rechenschritt ---- */
+const FRA1 = [
+  L => { const [N] = fraNames(1), it = pick([...FRA_SCHOOL, ...FRA_SNACK]), k = ri(2, L <= 2 ? 4 : 6), p = fraRc(it.lo, it.hi, L);
+    return { story: `${N} kauft ${k} ${it.pl} für je ${E(p)}.`, q: `Wie viel bezahlt ${N} zusammen?`, w: [`Wie viel Rückgeld bekommt ${N}?`, `Wie viel Geld hat ${N} noch übrig?`, ...fraShopW(N, it).slice(2)],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }], ans: f => `${N} bezahlt ${f}.`, h: 'Rechne mal: Anzahl · Preis.' }; },
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems([...FRA_SCHOOL, ...FRA_SNACK], 2), a = fraRc(A.lo, A.hi, L), b = fraRc(B.lo, B.hi, L);
+    return { story: `${N} kauft ${fraAcc(A)} für ${E(a)} und ${fraAcc(B)} für ${E(b)}.`, q: `Wie viel bezahlt ${N} zusammen?`, w: [`Wie viel Rückgeld bekommt ${N}?`, `Wie viel Geld hat ${N} noch übrig?`, `Wie viel Taschengeld bekommt ${N} im Monat?`],
+      steps: [{ e: `${E(a)} + ${E(b)}`, c: a + b }], ans: f => `${N} bezahlt ${f}.`, h: 'Zusammen heißt: plus rechnen.' }; },
+  L => { const [N] = fraNames(1), it = pick([...FRA_SCHOOL, ...FRA_SNACK, ...FRA_PLAY]), a = fraRc(it.lo, it.hi, L), pay = fraPayFor(a);
+    return { story: `${N} kauft ${fraAcc(it)} für ${E(a)} und bezahlt mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: fraShopW(N, it),
+      steps: [{ e: `${E(pay)} − ${E(a)}`, c: pay - a }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Rückgeld: Das gegebene Geld minus den Preis.' }; },
+  L => { const [N] = fraNames(1), it = pick(FRA_PLAY), T = fraRc(it.lo, it.hi, L), st = L <= 2 ? 10 : 5, s = Math.max(st, Math.round(ri(Math.ceil(T * .3), Math.floor(T * .8)) / st) * st);
+    return { story: `${N} möchte ${fraAcc(it)} für ${E(T)} kaufen. ${N} hat schon ${E(s)} gespart.`, q: `Wie viel Geld fehlt ${N} noch?`, w: [`Wie viele Wochen muss ${N} noch sparen?`, `Wie viel Taschengeld bekommt ${N} pro Woche?`, `Wie viel Geld bekommt ${N} zum Geburtstag?`],
+      steps: [{ e: `${E(T)} − ${E(s)}`, c: T - s }], ans: f => `${N} fehlen noch ${f}.`, h: 'Was fehlt? Preis minus das gesparte Geld.' }; },
+  L => { const [N] = fraNames(1), a = fraRc(300, 1500, L), b = fraRc(200, 1000, L);
+    return { story: `${N} hat ${E(a)} gespart und bekommt zum Geburtstag ${E(b)} geschenkt.`, q: `Wie viel Geld hat ${N} jetzt?`, w: [`Was kostet das Geschenk, das ${N} kaufen möchte?`, `Wie viel gibt ${N} im Monat aus?`, `Wie viel Geld bekommt ${N} nächstes Jahr?`],
+      steps: [{ e: `${E(a)} + ${E(b)}`, c: a + b }], ans: f => `${N} hat jetzt ${f}.`, h: 'Es kommt Geld dazu: plus rechnen.' }; },
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems(FRA_PLAY, 2); let a = fraRc(A.lo, A.hi, L), b = fraRc(B.lo, B.hi, L), X = A, Y = B;
+    if (a === b) b += L <= 2 ? 10 : 5; if (a > b) { [a, b] = [b, a]; [X, Y] = [Y, X]; }
+    return { story: `${N} sieht im Laden ${fraNom(X)} für ${E(a)} und ${fraNom(Y)} für ${E(b)}.`, q: `Wie viel teurer ist ${fraDef(Y)} als ${fraDef(X)}?`, w: [`Wie viel Geld hat ${N} dabei?`, `Wie viele davon möchte ${N} kaufen?`, `Wie viel Rückgeld bekommt ${N}?`],
+      steps: [{ e: `${E(b)} − ${E(a)}`, c: b - a }], ans: f => `${fraCap(fraDef(Y))} ist ${f} teurer.`, h: 'Unterschied: den größeren Preis minus den kleineren Preis.' }; },
+  L => { const [N] = fraNames(1), P = pick(FRA_PLACES), k = ri(2, L <= 2 ? 4 : 6), p = fraRc(P.lo, P.hi, L);
+    return { story: `Eine Eintrittskarte ${P.in} kostet ${E(p)}. ${N} kauft Karten für ${k} Kinder.`, q: `Wie viel kosten alle Karten zusammen?`, w: [`Wie lange dauert der Besuch ${P.in}?`, `Wie viel Rückgeld bekommt ${N}?`, `Wie viele Besucher kommen heute?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }], ans: f => `Alle Karten kosten ${f}.`, h: 'Jedes Kind braucht eine Karte: Anzahl · Preis.' }; },
+  L => { const [N] = fraNames(1), p = fraRc(100, 400, L), k = ri(2, 8);
+    return { story: `${N} bekommt jede Woche ${E(p)} Taschengeld und spart es ${k} Wochen lang.`, q: `Wie viel Geld hat ${N} nach ${k} Wochen gespart?`, w: [`Wie viel gibt ${N} in einer Woche aus?`, `Was kostet das Fahrrad, das ${N} kaufen will?`, `Wie viel Taschengeld bekommt ${N} im Jahr?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }], ans: f => `${N} hat nach ${k} Wochen ${f} gespart.`, h: 'Jede Woche gleich viel: Wochen · Betrag.' }; },
+  L => { const [N] = fraNames(1), it = pick([...FRA_SCHOOL, ...FRA_SNACK, ...FRA_PLAY]), p = fraRc(it.lo, it.hi, L), a = Math.ceil((p + fraRc(100, 1200, L)) / 50) * 50;
+    return { story: `${N} hat ${E(a)}. ${N} kauft ${fraAcc(it)} für ${E(p)}.`, q: `Wie viel Geld hat ${N} danach noch?`, w: [`Wie viel Taschengeld bekommt ${N} im Monat?`, `Was kostet ${fraNom(it)} in einem anderen Laden?`, `Wie viel Geld hat ${N} zu Hause gespart?`],
+      steps: [{ e: `${E(a)} − ${E(p)}`, c: a - p }], ans: f => `${N} hat danach noch ${f}.`, h: 'Etwas wird ausgegeben: Geld minus Preis.' }; },
+  L => { const [N] = fraNames(1), f = pick(FRA_KILO), p = fraRc(f.lo, f.hi, L), k = ri(2, 5);
+    return { story: `Ein Kilo ${f.s} kostet ${E(p)}. ${N} kauft ${k} Kilo.`, q: `Wie viel bezahlt ${N} für die ${k} Kilo ${f.s}?`, w: [`Wie viel Rückgeld bekommt ${N}?`, `Wie viele ${f.s} sind in einem Kilo?`, `Wie viel Geld hat ${N} noch übrig?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }], ans: f2 => `${N} bezahlt ${f2}.`, h: 'Jedes Kilo kostet gleich viel: Kilo · Preis.' }; },
+  L => { const [N] = fraNames(1), S = pick(FRA_SELL), p = fraRc(S.lo, S.hi, L), k = ri(3, L <= 2 ? 6 : 9);
+    return { story: `Auf dem Flohmarkt verkauft ${N} ${k} ${S.pl} für je ${E(p)}.`, q: `Wie viel Geld nimmt ${N} ein?`, w: [`Wie viel Geld gibt ${N} danach aus?`, `Wie viele Besucher kommen auf den Flohmarkt?`, `Wie viele ${S.pl} verkauft ${N} morgen?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }], ans: f => `${N} nimmt ${f} ein.`, h: 'Jedes Stück bringt gleich viel Geld: Anzahl · Preis.' }; },
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems(FRA_PLAY, 2), a = fraRc(A.lo, A.hi, L), b = fraRc(B.lo, B.hi, L);
+    return { story: `Auf dem Flohmarkt verkauft ${N} ${fraAcc(A)} für ${E(a)} und ${fraAcc(B)} für ${E(b)}.`, q: `Wie viel Geld bekommt ${N} insgesamt?`, w: [`Wie viel kostete ${fraDef(A)} neu?`, `Wie viel Geld hat ${N} danach noch zu Hause?`, `Wie viele Besucher kommen auf den Flohmarkt?`],
+      steps: [{ e: `${E(a)} + ${E(b)}`, c: a + b }], ans: f => `${N} bekommt insgesamt ${f}.`, h: 'Beides zusammen: plus rechnen.' }; },
+  L => { const [N] = fraNames(1), s = fraRc(800, 3000, L), e = fraRc(200, Math.min(700, s - 100), L);
+    return { story: `Im Sparschwein von ${N} sind ${E(s)}. ${N} nimmt ${E(e)} heraus.`, q: `Wie viel Geld bleibt im Sparschwein?`, w: [`Wie lange spart ${N} schon?`, `Wie viel Geld kommt nächste Woche dazu?`, `Wie viele Münzen sind im Sparschwein?`],
+      steps: [{ e: `${E(s)} − ${E(e)}`, c: s - e }], ans: f => `Im Sparschwein bleiben ${f}.`, h: 'Es wird Geld weggenommen: minus rechnen.' }; },
+  L => { const [N] = fraNames(1), a = fraRc(80, 250, L), b = fraRc(80, 250, L);
+    return { story: `${N} fährt mit dem Bus in die Stadt. Die Hinfahrt kostet ${E(a)}, die Rückfahrt kostet ${E(b)}.`, q: `Wie viel kostet die Fahrt insgesamt?`, w: [`Wie lange dauert die Fahrt?`, `Wie weit ist es bis in die Stadt?`, `Wie viel Rückgeld bekommt ${N}?`],
+      steps: [{ e: `${E(a)} + ${E(b)}`, c: a + b }], ans: f => `Die Fahrt kostet insgesamt ${f}.`, h: 'Hin und zurück zusammen: plus rechnen.' }; }
+];
+
+/* ---- Stufe 2: zwei Rechenschritte ---- */
+const FRA2 = [
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems([...FRA_SCHOOL, ...FRA_SNACK], 2), k = ri(2, 5), p = fraRc(A.lo, A.hi, L), b = fraRc(B.lo, B.hi, L);
+    return { story: `${N} kauft ${k} ${A.pl} für je ${E(p)} und ${fraAcc(B)} für ${E(b)}.`, q: `Wie viel bezahlt ${N} zusammen?`, w: [`Wie viel Rückgeld bekommt ${N}?`, `Wie viel Geld hat ${N} noch übrig?`, `Wie viel Taschengeld bekommt ${N} im Monat?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }, { e: `{0} + ${E(b)}`, c: k * p + b }], ans: f => `${N} bezahlt zusammen ${f}.`, h: 'Erst die gleichen Dinge mal rechnen, dann das andere dazu addieren.' }; },
+  L => { const [N] = fraNames(1), A = pick([...FRA_SCHOOL, ...FRA_SNACK]), k = ri(2, 5), p = fraRc(A.lo, A.hi, L), t = k * p, pay = fraPayFor(t);
+    return { story: `${N} kauft ${k} ${A.pl} für je ${E(p)} und bezahlt mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: fraShopW(N, A),
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `${E(pay)} − {0}`, c: pay - t }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Erst den Preis für alles (mal), dann das Rückgeld (minus).' }; },
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems([...FRA_SCHOOL, ...FRA_SNACK], 2), a = fraRc(A.lo, A.hi, L), b = fraRc(B.lo, B.hi, L), pay = fraPayFor(a + b);
+    return { story: `${N} kauft ${fraAcc(A)} für ${E(a)} und ${fraAcc(B)} für ${E(b)}. Bezahlt wird mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: fraShopW(N, A),
+      steps: [{ e: `${E(a)} + ${E(b)}`, c: a + b }, { e: `${E(pay)} − {0}`, c: pay - a - b }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Erst alles zusammenrechnen (plus), dann das Rückgeld (minus).' }; },
+  L => { const [N] = fraNames(1), it = pick(FRA_PLAY), T = fraRc(it.lo + 200, it.hi + 300, L); let k, p, g = 0;
+    do { k = ri(2, 6); p = fraRc(100, 300, L); g++; } while (k * p > T - 50 && g < 200); if (k * p > T - 50) { k = 2; p = 100; }
+    return { story: `${N} spart jede Woche ${E(p)}. Nach ${k} Wochen möchte ${N} ${fraAcc(it)} für ${E(T)} kaufen.`, q: `Wie viel Geld fehlt ${N} dann noch?`, w: [`Wie viele Wochen muss ${N} noch sparen?`, `Wie viel Taschengeld bekommt ${N} im Monat?`, `Wie viel Rückgeld bekommt ${N}?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }, { e: `${E(T)} − {0}`, c: T - k * p }], ans: f => `${N} fehlen dann noch ${f}.`, h: 'Erst das gesparte Geld (mal), dann: Preis minus gespartes Geld.' }; },
+  L => { const [N] = fraNames(1), A = pick([...FRA_SCHOOL, ...FRA_SNACK]), k = ri(2, 5), p = fraRc(A.lo, A.hi, L), t = k * p, a = Math.ceil((t + fraRc(100, 800, L)) / 50) * 50;
+    return { story: `${N} hat ${E(a)}. ${N} kauft ${k} ${A.pl} für je ${E(p)}.`, q: `Wie viel Geld bleibt ${N} übrig?`, w: [`Wie viel Taschengeld bekommt ${N} im Monat?`, `Was kostet ${fraNom(A)} in einem anderen Laden?`, `Wie viel Geld hat ${N} zu Hause gespart?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `${E(a)} − {0}`, c: a - t }], ans: f => `${N} bleiben ${f} übrig.`, h: 'Erst die Kosten (mal), dann: Geld minus Kosten.' }; },
+  L => { const [N] = fraNames(1), it = pick(FRA_PLAY), k = ri(2, 5), per = fraRc(150, 400, L), tot = k * per; let c, g = 0;
+    do { c = fraRc(100, 250, L); g++; } while (tot - c < 200 && g < 100);
+    if (tot - c < 200) return FRA2[5](L);
+    const T = tot - c;
+    return { story: `${k} Kinder kaufen zusammen ${fraAcc(it)} für ${E(T)} und eine Karte für ${E(c)}. Jedes Kind zahlt gleich viel.`, q: `Wie viel zahlt jedes Kind?`, w: [`Wie viele Kinder kommen zur Feier?`, `Wie viel Geld hat jedes Kind zu Hause?`, `Wie viel Rückgeld bekommen die Kinder?`],
+      steps: [{ e: `${E(T)} + ${E(c)}`, c: tot }, { e: `{0} : ${k}`, c: per }], ans: f => `Jedes Kind zahlt ${f}.`, h: 'Erst alles zusammenrechnen (plus), dann gerecht teilen (geteilt).' }; },
+  L => { const [N] = fraNames(1), P = pick(FRA_PLACES), p = fraRc(P.lo, P.hi, L), k = ri(3, Math.max(3, Math.min(6, Math.floor(4800 / p)))), t = k * p, pay = fraPayFor(t);
+    return { story: `${k} Kinder gehen ${P.go}. Eine Eintrittskarte kostet ${E(p)}. ${N} bezahlt alle Karten mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: [`Wie lange dauert der Besuch ${P.in}?`, `Wie viele Tiere oder Gäste gibt es dort?`, `Wie viel Taschengeld bekommt ${N} im Monat?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `${E(pay)} − {0}`, c: pay - t }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Erst alle Karten (mal), dann das Rückgeld (minus).' }; },
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems(FRA_PLAY, 2), a = fraRc(Math.max(A.lo, 400), A.hi + 100, L), d = fraRc(100, Math.min(300, a - 200), L);
+    return { story: `${N} möchte beides kaufen. ${fraCap(fraDef(A))} kostet ${E(a)}. ${fraCap(fraDef(B))} ist ${E(d)} billiger.`, q: `Wie viel bezahlt ${N} für beides?`, w: [`Wie viel Rückgeld bekommt ${N}?`, `Wie viel Geld hat ${N} dabei?`, `Wie viel Taschengeld bekommt ${N} im Monat?`],
+      steps: [{ e: `${E(a)} − ${E(d)}`, c: a - d }, { e: `${E(a)} + {0}`, c: a + a - d }], ans: f => `${N} bezahlt für beides ${f}.`, h: 'Erst den Preis des billigeren Teils (minus), dann beide Preise addieren.' }; },
+  L => { const [N] = fraNames(1), s = fraRc(500, 2000, L), p = fraRc(100, 300, L), k = ri(2, 6);
+    return { story: `Im Sparschwein von ${N} sind ${E(s)}. ${N} legt ${k} Wochen lang jede Woche ${E(p)} dazu.`, q: `Wie viel Geld ist danach im Sparschwein?`, w: [`Wofür spart ${N} das Geld? Wie viel kostet es?`, `Wie viel Geld nimmt ${N} im Sommer heraus?`, `Wie viele Münzen sind im Sparschwein?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }, { e: `${E(s)} + {0}`, c: s + k * p }], ans: f => `Danach sind ${f} im Sparschwein.`, h: 'Erst das Geld, das dazukommt (mal), dann zum Sparschwein-Geld addieren.' }; },
+  L => { const [N] = fraNames(1), S = pick(FRA_SELL), B = pick(FRA_PLAY), k = ri(3, 8), p = fraRc(S.lo, S.hi, L), b = fraRc(B.lo, B.hi, L);
+    return { story: `Auf dem Flohmarkt verkauft ${N} ${k} ${S.pl} für je ${E(p)} und ${fraAcc(B)} für ${E(b)}.`, q: `Wie viel Geld nimmt ${N} insgesamt ein?`, w: [`Wie viele Besucher kommen auf den Flohmarkt?`, `Wie viel Geld gibt ${N} danach aus?`, `Wie viel kostete ${fraDef(B)} neu?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }, { e: `{0} + ${E(b)}`, c: k * p + b }], ans: f => `${N} nimmt insgesamt ${f} ein.`, h: 'Erst die gleichen Stücke (mal), dann das andere Stück dazu addieren.' }; },
+  L => { const [N] = fraNames(1), S = pick(FRA_SELL), k = ri(4, 9), p = fraRc(S.lo, S.hi, L), t = k * p, z = fraRc(100, Math.min(600, t - 100), L);
+    return { story: `${N} verkauft ${k} ${S.pl} für je ${E(p)}. Die Zutaten haben ${E(z)} gekostet.`, q: `Wie viel Geld bleibt ${N}, wenn die Zutaten bezahlt sind?`, w: [`Wie viele Zutaten braucht ${N} morgen?`, `Wie viele Besucher kommen zum Verkauf?`, `Wie viel Standgebühr zahlt ${N}?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `{0} − ${E(z)}`, c: t - z }], ans: f => `${N} bleiben ${f}.`, h: `Erst alles, was ${N} einnimmt (mal), dann die Zutaten abziehen (minus).` }; },
+  L => { const [N] = fraNames(1), p = fraRc(80, 200, L), k = ri(3, 5);
+    return { story: `${N} fährt an ${k} Tagen mit dem Bus zur Schule und mittags wieder nach Hause. Eine Fahrt kostet ${E(p)}.`, q: `Wie viel kosten alle Fahrten zusammen?`, w: [`Wie lange dauert eine Busfahrt?`, `Wie weit ist die Schule entfernt?`, `Wie viel Rückgeld bekommt ${N}?`],
+      steps: [{ e: `2 · ${E(p)}`, c: 2 * p }, { e: `${k} · {0}`, c: 2 * p * k }], ans: f => `Alle Fahrten kosten ${f}.`, h: 'Hin und zurück sind 2 Fahrten pro Tag. Dann mal die Anzahl der Tage.' }; },
+  L => { const [N] = fraNames(1), k = ri(3, 8), p = fraRc(200, 400, L), t = k * p; let it = pick(FRA_PLAY), a = fraRc(it.lo, Math.min(it.hi, t - 50), L);
+    if (a >= t) a = t - 50;
+    return { story: `${N} bekommt jede Woche ${E(p)} Taschengeld. Nach ${k} Wochen kauft ${N} ${fraAcc(it)} für ${E(a)}.`, q: `Wie viel Geld bleibt ${N} übrig?`, w: [`Wie viel Geld gibt ${N} pro Woche aus?`, `Was kostet ${fraNom(it)} in einem anderen Laden?`, `Wie viele Wochen hat das Jahr?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `{0} − ${E(a)}`, c: t - a }], ans: f => `${N} bleiben ${f} übrig.`, h: 'Erst das Taschengeld aller Wochen (mal), dann den Kaufpreis abziehen (minus).' }; },
+  L => { const P = pick(FRA_PLACES), a = Math.round(ri(P.lo, P.hi) / 20) * 20;
+    return { story: `${fraCap(P.in)} zahlen Erwachsene ${E(a)}. Kinder zahlen die Hälfte davon.`, q: `Wie viel zahlen 1 Erwachsener und 1 Kind zusammen?`, w: [`Wie viele Besucher kommen jeden Tag?`, `Wie lange dauert der Besuch ${P.in}?`, `Wie viel Geld hat die Familie dabei?`],
+      steps: [{ e: `${E(a)} : 2`, c: a / 2 }, { e: `${E(a)} + {0}`, c: a + a / 2 }], ans: f => `1 Erwachsener und 1 Kind zahlen zusammen ${f}.`, h: 'Erst den Kinderpreis (die Hälfte = geteilt durch 2), dann beide Preise addieren.' }; }
+];
+
+/* ---- Stufe 3: Rückgeld und Vergleich mit Cent (2–3 Rechenschritte) ---- */
+const FRA3 = [
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems([...FRA_SCHOOL, ...FRA_SNACK], 2), k = ri(2, 4), p = fraRc(A.lo, A.hi, 5), b = fraRc(B.lo, B.hi, 5), t = k * p + b, pay = fraPayFor(t);
+    return { story: `${N} kauft ${k} ${A.pl} für je ${E(p)} und ${fraAcc(B)} für ${E(b)}. ${N} bezahlt mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: fraShopW(N, A),
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }, { e: `{0} + ${E(b)}`, c: t }, { e: `${E(pay)} − {1}`, c: pay - t }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Erst die gleichen Dinge (mal), dann das andere dazu (plus), zuletzt das Rückgeld (minus).' }; },
+  L => { const [N] = fraNames(1), [A, B, C] = fraPoolItems(FRA_SNACK, 3), a = fraRc(A.lo, A.hi, 5), b = fraRc(B.lo, B.hi, 5), c = fraRc(C.lo, C.hi, 5), t = a + b + c, pay = fraPayFor(t);
+    return { story: `${N} kauft ${fraAcc(A)} für ${E(a)}, ${fraAcc(B)} für ${E(b)} und ${fraAcc(C)} für ${E(c)}. ${N} bezahlt mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: fraShopW(N, A),
+      steps: [{ e: `${E(a)} + ${E(b)}`, c: a + b }, { e: `{0} + ${E(c)}`, c: t }, { e: `${E(pay)} − {1}`, c: pay - t }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Erst alle drei Preise addieren, dann das Rückgeld ausrechnen (minus).' }; },
+  L => { const [N] = fraNames(1), A = pick([...FRA_SCHOOL, ...FRA_SNACK]), k = ri(3, 8); let pa = fraRc(A.lo, A.hi, 5), pb = fraRc(A.lo, A.hi, 5); if (pa === pb) pb += 10;
+    const ta = k * pa, tb = k * pb, hi = ta > tb ? 0 : 1, lo = 1 - hi;
+    return { story: `${N} braucht ${k} ${A.pl}. Im Laden A kostet ${fraNom(A)} ${E(pa)}, im Laden B kostet ${fraNom(A)} ${E(pb)}.`, q: `Wie viel Geld spart ${N} im günstigeren Laden?`, w: [`Wie weit ist Laden B entfernt?`, `Wie viel Rückgeld bekommt ${N}?`, `Wie viele ${A.pl} gibt es in Laden B?`],
+      steps: [{ e: `${k} · ${E(pa)}`, c: ta }, { e: `${k} · ${E(pb)}`, c: tb }, { e: `{${hi}} − {${lo}}`, c: Math.abs(ta - tb) }], ans: f => `${N} spart ${f}.`, h: 'Rechne beide Läden einzeln aus (mal). Dann: größerer Preis minus kleinerer Preis.' }; },
+  L => { const [N, M] = fraNames(2), [A, B] = fraPoolItems([...FRA_SCHOOL, ...FRA_SNACK], 2); let k1, k2, pa, pb, t1, t2, g = 0;
+    do { k1 = ri(2, 5); k2 = ri(2, 5); pa = fraRc(A.lo, A.hi, 5); pb = fraRc(B.lo, B.hi, 5); t1 = k1 * pa; t2 = k2 * pb; g++; } while (t1 <= t2 && g < 300);
+    if (t1 <= t2) { k1 = 5; k2 = 2; pa = 150; pb = 100; t1 = 750; t2 = 200; }
+    return { story: `${N} kauft ${k1} ${A.pl} für je ${E(pa)}. ${M} kauft ${k2} ${B.pl} für je ${E(pb)}.`, q: `Wie viel mehr bezahlt ${N} als ${M}?`, w: [`Wie viel Rückgeld bekommt ${M}?`, `Wie viele Kinder kaufen heute ein?`, `Wie viel Taschengeld bekommt ${N} im Monat?`],
+      steps: [{ e: `${k1} · ${E(pa)}`, c: t1 }, { e: `${k2} · ${E(pb)}`, c: t2 }, { e: `{0} − {1}`, c: t1 - t2 }], ans: f => `${N} bezahlt ${f} mehr.`, h: 'Rechne erst für jedes Kind den Preis (mal). Dann: größerer Betrag minus kleinerer Betrag.' }; },
+  L => { const A = pick(FRA_SCHOOL.filter(x => /Bleistift|Radiergummi|Klebestift|Textmarker|Heft/.test(x.s))), k = pick([4, 5, 6, 8, 10]), b = fraRc(A.lo, A.hi, 5), full = k * b, d = fraRc(40, Math.min(300, full - 100), 5), a = full - d;
+    return { story: `${fraCap(fraNom(A))} kostet einzeln ${E(b)}. Eine Packung mit ${k} ${A.pl} kostet ${E(a)}.`, q: `Wie viel spart man mit der Packung?`, w: [`Wie viele ${A.pl} braucht ein Kind im Jahr?`, `Was kostet die Packung in einem anderen Laden?`, `Wie lange hält ${fraNom(A)}?`],
+      steps: [{ e: `${k} · ${E(b)}`, c: full }, { e: `{0} − ${E(a)}`, c: d }], ans: f => `Mit der Packung spart man ${f}.`, h: `Rechne erst ${k} einzelne ${A.pl} (mal). Dann: Einzelpreise minus Packungspreis.` }; },
+  L => { const [N] = fraNames(1), [A, B] = fraPoolItems([...FRA_SCHOOL, ...FRA_SNACK], 2), k = ri(2, 4), p = fraRc(A.lo, A.hi, 5), b = fraRc(B.lo, B.hi, 5), t = k * p + b, a = Math.max(50, Math.floor((t - fraRc(60, 300, 5)) / 50) * 50);
+    return { story: `${N} hat ${E(a)}. ${N} möchte ${k} ${A.pl} für je ${E(p)} und ${fraAcc(B)} für ${E(b)} kaufen.`, q: `Wie viel Geld fehlt ${N} noch?`, w: [`Wie viel Rückgeld bekommt ${N}?`, `Wie viel Taschengeld bekommt ${N} im Monat?`, `Wie viele Tage dauert der Einkauf?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: k * p }, { e: `{0} + ${E(b)}`, c: t }, { e: `{1} − ${E(a)}`, c: t - a }], ans: f => `${N} fehlen noch ${f}.`, h: `Erst alles ausrechnen, was ${N} kaufen will (mal, plus). Dann: Kosten minus vorhandenes Geld.` }; },
+  L => { const P = pick(FRA_PLACES), k = ri(2, 4), e = fraRc(P.lo + 300, P.hi + 500, 5), c = fraRc(P.lo, e - 100, 5);
+    return { story: `Eine Familie geht ${P.go}. Eine Karte kostet für Erwachsene ${E(e)} und für Kinder ${E(c)}. Es kommen 2 Erwachsene und ${k} Kinder.`, q: `Wie viel kosten alle Karten zusammen?`, w: [`Wie lange dauert der Besuch ${P.in}?`, `Wie viel Rückgeld bekommt die Familie?`, `Wie viele Gäste gibt es dort jeden Tag?`],
+      steps: [{ e: `2 · ${E(e)}`, c: 2 * e }, { e: `${k} · ${E(c)}`, c: k * c }, { e: `{0} + {1}`, c: 2 * e + k * c }], ans: f => `Alle Karten kosten ${f}.`, h: 'Rechne erst die Erwachsenenkarten (mal), dann die Kinderkarten (mal). Dann beides addieren.' }; },
+  L => { const [N] = fraNames(1), it = pick(FRA_PLAY), a = fraRc(Math.max(it.lo, 500), it.hi + 200, 5), d = fraRc(50, 200, 5), pay = fraPayFor(a - d);
+    return { story: `${fraCap(fraNom(it))} kostet ${E(a)}. Heute ist der Preis um ${E(d)} gesenkt. ${N} kauft ${fraAcc(it)} und bezahlt mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: [`Wie viel kostet ${fraNom(it)} morgen?`, `Wie viel Taschengeld bekommt ${N} im Monat?`, `Wie viele davon gibt es im Laden?`],
+      steps: [{ e: `${E(a)} − ${E(d)}`, c: a - d }, { e: `${E(pay)} − {0}`, c: pay - a + d }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Erst den neuen Preis (minus), dann das Rückgeld (minus).' }; },
+  L => { const [N] = fraNames(1), it = pick(FRA_BIG), a = fraRc(300, 1500, 5), b = fraRc(200, 1000, 5), c = fraRc(200, 1000, 5), s = a + b + c, T = fraRc(Math.max(it.lo, s + 200), Math.max(it.hi, s + 800), 5);
+    return { story: `${N} hat ${E(a)} gespart. Von Oma bekommt ${N} ${E(b)}, von Opa ${E(c)}. ${fraCap(fraNom(it))} kostet ${E(T)}.`, q: `Wie viel Geld fehlt ${N} noch?`, w: [`Wie viele Wochen muss ${N} noch sparen?`, `Wie viel Taschengeld bekommt ${N} im Monat?`, `Wie viel Geld bekommt ${N} zu Weihnachten?`],
+      steps: [{ e: `${E(a)} + ${E(b)}`, c: a + b }, { e: `{0} + ${E(c)}`, c: s }, { e: `${E(T)} − {1}`, c: T - s }], ans: f => `${N} fehlen noch ${f}.`, h: 'Erst alles Geld zusammenzählen (plus, plus). Dann: Preis minus vorhandenes Geld.' }; },
+  L => { const [N] = fraNames(1), k = ri(3, 6), p = fraRc(150, 300, 5), t = k * p, T = t - fraRc(50, Math.min(400, t - 250), 5);
+    return { story: `${k} Kinder legen für ein Geschenk zusammen. Jedes Kind gibt ${E(p)}. Das Geschenk kostet ${E(T)}.`, q: `Wie viel Geld bleibt übrig?`, w: [`Wie viel kostet die Geburtstagskarte?`, `Wie viele Kinder kommen zur Feier?`, `Wie viel Geld hat jedes Kind zu Hause?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `{0} − ${E(T)}`, c: t - T }], ans: f => `Es bleiben ${f} übrig.`, h: 'Erst alles gesammelte Geld (mal), dann das Geschenk abziehen (minus).' }; },
+  L => { const [N] = fraNames(1), A = pick(FRA_SCHOOL.slice(0, 6)), B = pick(FRA_SCHOOL.filter(x => x !== A && x.hi >= 100)), k = ri(2, 5), p = fraRc(A.lo, A.hi, 5), T = k * p, d = fraRc(30, 120, 5);
+    return { story: `${N} kauft ${k} ${A.pl} für zusammen ${E(T)}. ${fraCap(fraDef(B))} kostet ${E(d)} mehr als ${fraNom(A)}.`, q: `Wie viel kostet ${fraNom(B)}?`, w: [`Wie viel Geld hat ${N} dabei?`, `Wie viele Läden verkaufen ${B.pl}?`, `Wie viel Rückgeld bekommt ${N}?`],
+      steps: [{ e: `${E(T)} : ${k}`, c: p }, { e: `{0} + ${E(d)}`, c: p + d }], ans: f => `${fraCap(fraDef(B))} kostet ${f}.`, h: `Erst den Preis für ${fraNom(A)} (geteilt durch ${k}). Dann den Mehrpreis addieren.` }; },
+  L => { const [N] = fraNames(1), p = fraRc(120, 250, 5), k = ri(6, 10), t = k * p, w = fraRc(Math.max(300, t - 500), t - 100, 5);
+    return { story: `Eine Einzelfahrt mit dem Bus kostet ${E(p)}. Eine Wochenkarte kostet ${E(w)}. ${N} fährt in einer Woche ${k}-mal.`, q: `Wie viel spart ${N} mit der Wochenkarte?`, w: [`Wie lange dauert eine Fahrt?`, `Wie viel kostet die Monatskarte?`, `Wie weit fährt ${N} in einer Woche?`],
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `{0} − ${E(w)}`, c: t - w }], ans: f => `${N} spart ${f}.`, h: 'Erst alle Einzelfahrten (mal), dann: Einzelfahrten minus Wochenkarte.' }; },
+  L => { const [N] = fraNames(1), A = pick([...FRA_SCHOOL, ...FRA_SNACK]), k = ri(3, 6), p = fraRc(A.lo, A.hi, 5), t = k * p, g = fraRc(50, Math.min(200, t - 100), 5), pay = fraPayFor(t - g);
+    return { story: `${N} kauft ${k} ${A.pl} für je ${E(p)}. Mit einem Gutschein werden ${E(g)} abgezogen. ${N} bezahlt mit ${FRA_PAY[pay]}.`, q: `Wie viel Rückgeld bekommt ${N}?`, w: fraShopW(N, A),
+      steps: [{ e: `${k} · ${E(p)}`, c: t }, { e: `{0} − ${E(g)}`, c: t - g }, { e: `${E(pay)} − {1}`, c: pay - t + g }], ans: f => `${N} bekommt ${f} zurück.`, h: 'Erst alle Sachen (mal), dann den Gutschein abziehen (minus), zuletzt das Rückgeld (minus).' }; }
+];
+const FRA_T = [FRA1, FRA2, FRA3];
+function g_fra(L) {
+  const r = Math.random(), tier = L <= 2 ? 1 : L === 3 ? (r < .5 ? 1 : 2) : L === 4 ? (r < .55 ? 2 : 3) : 3;
+  return fraBuild(pick(FRA_T[tier - 1])(L));
+}
+
+/* =====================================================================
    EXTRA-TRAINING (nicht aus dem Arbeitsheft) – Module mit extra:true
    Erscheinen unter „Extra-Training“, zählen wie alles andere nur durch echtes Rechnen.
    „Jetzt üben“ (nextUp) schlägt sie nicht vor – sie sind freiwillig.
@@ -810,7 +1034,8 @@ const MODULES = [
       { id: 'angebot', t: 'Was ist günstiger?', wb: 'Angebote', d: 'Einzeln oder im Paket? Finde das beste Angebot', icon: '€ ?', gen: g_angebot },
       { id: 'sach', t: 'Einkaufen & Rückgeld', wb: 'Sachrechnen', d: 'Einkaufen, Rückgeld, knifflige Fälle', icon: '🛒', gen: g_sach },
       { id: 'schaetz', t: 'Was kostet das?', wb: 'Preise schätzen', d: 'Was kostet das ungefähr?', icon: '€', gen: g_schaetzen },
-      { id: 'ticket', t: 'Fahrkarten kaufen', wb: 'Tickets', d: 'Einzel-, Familien- oder Gruppenticket: was lohnt sich?', icon: '🎫', gen: g_ticket }
+      { id: 'ticket', t: 'Fahrkarten kaufen', wb: 'Tickets', d: 'Einzel-, Familien- oder Gruppenticket: was lohnt sich?', icon: '🎫', gen: g_ticket },
+      { id: 'fra', t: 'Frage-Rechnung-Antwort', wb: 'Frage – Rechnung – Antwort finden (Seite 34)', d: 'Frage-Rechnung-Antwort finden: Welche Frage passt zur Geldgeschichte? Rechne und antworte', icon: '? = €', gen: g_fra }
     ]
   },
   /* ---- Extra-Training (extra:true, IDs ohne Kapitel-Buchstabe-Nummer) ---- */
