@@ -18,7 +18,7 @@ with sync_playwright() as p:
     pg.evaluate("()=>go('home')"); pg.wait_for_timeout(100)
     # Start
     ok(pg.locator('.nav, .navbar, nav.bottom, #nav').count() == 0 and pg.locator('[data-act=goHome].tab').count() == 0, 'keine untere Navigationsleiste')
-    ok(pg.locator('.dz-home4 .dz-tile').count() == 4, 'Startseite: 4 Kacheln')
+    ok(pg.locator('.dz-home4 .dz-tile').count() == 5, 'Startseite: 5 Kacheln (Hefte, Europa, Notenheft, Extra, Welt)')
     t = pg.inner_text('#app')
     ok('Europa Entdecker' in t and 'Extra Spaß' in t and 'Meine Hefte' in t and 'Meine Welt' in t, 'Kachel-Namen')
     ok('Heute geschafft' not in t and 'Extra Training' not in t and 'Europa Expedition' not in t, 'alte Namen weg')

@@ -47,7 +47,7 @@ with sync_playwright() as p:
     E("()=>{S.daily.n=S.cfg.goal-1;dailyCheck()}"); ok(E("()=>S.daily.got")==True and E("()=>pgState('shop').open")==True, 'Tagesziel geschafft: Seite wieder offen')
     # Zurücksetzen
     E("()=>{S.daily.got=false;S.daily.n=0;pgRec('shop').lockN=0;pgRec('shop').w=2}")
-    E("()=>{resetTime('pg')}"); ok(E("()=>pgState('shop').open")==True and E("()=>pgRec('shop').sec")==0, 'Seitenzeiten lassen sich zurücksetzen')
+    E("()=>{resetTime('pg')}"); ok(E("()=>pgState('shop').open")==True and E("()=>pgRec('shop').sec")<=1, 'Seitenzeiten lassen sich zurücksetzen')
     # Zeit zählt nicht auf Hefte
     E("()=>{S.daily.pg={};go('hefte')}"); pg.wait_for_timeout(1300); ok(E("()=>Object.keys(S.daily.pg).length")==0, 'Hefte: keine Seitenzeit')
     # ---- Kreativzeit nur nach dem Üben

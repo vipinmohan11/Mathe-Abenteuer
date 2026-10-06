@@ -6,7 +6,7 @@
   "scripts": {
     "build": "python3 build.py",
     "test": "python3 build.py && cd tests && node gen_test.js && node extra_test.js && node flow_test.js",
-    "test:all": "npm test && cd tests && for t in migrate economy avatar musik themes geo world dz packs round5; do python3 ${t}_test.py $(realpath ../dist/Mathe-Abenteuer_Klasse4.html) || exit 1; done"
+    "test:all": "npm test && cd tests && for t in migrate economy avatar musik themes geo world dz packs round5 noten; do python3 ${t}_test.py $(realpath ../dist/Mathe-Abenteuer_Klasse4.html) || exit 1; done"
   },
   "devDependencies": {
     "jsdom": "^29.1.1"
