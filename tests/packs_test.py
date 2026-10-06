@@ -42,7 +42,7 @@ with sync_playwright() as p:
     r = E("""()=>{const out=[];WORDER.forEach(id=>{wS().open[id]=ymd();['arrival','places','life','language','food','quiz'].forEach(st=>{try{UI.wId=id;UI.wSt=st;UI.wQz=null;go('weltReise');const t=document.getElementById('app').innerText;if(t.length<80||/undefined|NaN|\\[object/.test(t))out.push(id+':'+st)}catch(e){out.push(id+':'+st+':'+e.message)}})});return out}""")
     ok(not r, 'Alle 23 × 6 Stationen rendern %s' % r[:5])
     # ---- Auswahlmenü
-    E("()=>{S.starsLife=60;S.stars=60;wS().open={};wS().spent=0;go('home');go('rewards');go('welt')}"); pg.wait_for_timeout(150)
+    E("()=>{S.starsLife=60;S.stars=60;S.daily.n=25;wS().open={};wS().spent=0;go('home');go('rewards');go('welt')}"); pg.wait_for_timeout(150)
     ok(pg.locator('#wDest').count() == 1 and pg.locator('#wDest option').count() == 23, 'Auswahlmenü mit 23 Zielen')
     ok(pg.locator('#wDest optgroup').count() == 2, 'Menü: „Meine Reisen“ und „Noch gesperrt“')
     pg.select_option('#wDest', 'jpn'); pg.click('[data-act=wGoDest]'); pg.wait_for_timeout(200)

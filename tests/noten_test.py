@@ -1,5 +1,7 @@
-"""Notenheft (Musik-Notizbuch): Startseite, Eingabe (Notenbild + Buchstaben), Ändern, Rückgängig/Wiederholen, Farbmodus,
-mehrere Lieder, Löschen nur nach Rückfrage, Speichern nach Neuladen, Web-Audio-Wiedergabe (mit Attrappe), Tablet-Layout, Seitenzeit, kein Netz.
+"""Notenheft (Musik-Notizbuch): Weg Startseite → Ideenwerkstatt, Eingabe (Notenbild + Buchstaben), Ändern,
+Mehrfachauswahl, Kopieren/Einfügen, Rückgängig/Wiederholen, zwei Tonlagen, Farbmodus, mehrere Lieder,
+Löschen nur nach Rückfrage, Speichern nach Neuladen, Web-Audio-Wiedergabe (mit Attrappe), Tablet-Layout,
+Hausaufgaben-Sperre, kein Netz.
 Aufruf: python3 noten_test.py /abs/pfad/Mathe-Abenteuer_Klasse4.html"""
 import sys, re, json, pathlib
 from playwright.sync_api import sync_playwright
@@ -25,29 +27,51 @@ with sync_playwright() as p:
     V = lambda: E("()=>view")
     N = lambda: E("()=>noSong().notes.length")
     names = lambda: E("()=>noSong().notes.map(n=>n.rest?'-':n.name).join('')")
-    E("()=>{S.name='Mira';S.cfg.pageMin=0;S.cfg.shopMin=0;save();go('home')}"); pg.wait_for_timeout(150)
+    sel = lambda: E("()=>JSON.stringify(NO.sel)")
+    E("()=>{S.name='Mira';S.cfg.pageMin=0;S.cfg.shopMin=0;S.daily.n=25;save();go('home')}"); pg.wait_for_timeout(150)
     before = E("()=>JSON.stringify({c:S.coins,l:S.life,s:S.stars,sl:S.starsLife,ca:S.cards,tr:S.trophies,ow:S.owned,decks:S.decks})")
 
-    # ---- Startseite: Kachel unter „Wohin heute?“
+    # ---- Startseite: Ideenwerkstatt (früher Kreativhefte) → Notenheft
     ok(pg.locator('.dz-home4 .dz-tile').count() == 5, 'Startseite: 5 Kacheln')
-    tile = pg.locator('.dz-home4 .dz-tile[data-act=noten]')
-    ok(tile.count() == 1 and 'Notenheft' in tile.inner_text(), 'Kachel „Notenheft“ in „Wohin heute?“')
+    ok(pg.locator('.dz-home4 .dz-tile[data-act=noten]').count() == 0, 'Keine eigene Notenheft-Kachel auf der Startseite')
     ok('Wohin heute?' in pg.inner_text('.dz-sec'), 'Abschnitt „Wohin heute?“ vorhanden')
-    tile.click(); pg.wait_for_timeout(250)
+    wt = pg.locator('.dz-home4 .dz-tile[data-act=kreativhefte]')
+    ok(wt.count() == 1 and 'Ideenwerkstatt' in wt.inner_text(), 'Kachel „Ideenwerkstatt“ auf der Startseite')
+    wt.click(); pg.wait_for_timeout(200)
+    ok(V() == 'kreativhefte', 'Kachel öffnet die Ideenwerkstatt')
+    notentile = pg.locator('.dz-tile[data-act=noten]')
+    ok(notentile.count() == 1 and 'Notenheft' in notentile.inner_text(), 'Kachel „Notenheft“ in der Ideenwerkstatt')
+    ok(pg.locator('.dz-tile[data-act=notiz]').count() == 1, 'Kachel „Notizbuch“ liegt daneben')
+    notentile.click(); pg.wait_for_timeout(250)
     ok(V() == 'noten', 'Kachel öffnet das Notenheft')
-    txt = pg.inner_text('#app')
-    for w in ['Meine Lieder', 'Speichern', 'Abspielen', 'Stopp', 'Note hinzufügen', 'Tempo', 'C–H-Farbcode', 'Kurz', 'Normal', 'Lang', 'Pause', 'Langsam', 'Mittel', 'Schnell']:
+
+    txt = re.sub(r'data-act="[^"]*"', '', pg.locator('#app').inner_html())
+    for w in ['Meine Lieder', 'Speichern', 'Note hinzufügen', 'Tempo', 'C–H-Farbcode', 'Kurz', 'Normal', 'Lang', 'Pause',
+              'Langsam', 'Mittel', 'Schnell', 'Höher', 'Tiefer', 'Kopieren', 'Einfügen', 'Löschen', 'Noten', 'Abspielen']:
         ok(w in txt, 'Deutsch: „%s“' % w)
-    for w in ['Undo', 'Redo', 'My songs', 'Add a note', 'Play speed', 'Saved locally', 'Higher', 'Lower']:
-        ok(w not in txt, 'Kein Englisch: „%s“' % w)
+    for w in ['Undo', 'Redo', 'My songs', 'Add a note', 'Play speed', 'Saved locally', 'Higher', 'Lower', 'Stopp', 'Stop', 'Duplicate']:
+        ok(w not in txt, 'Kein Englisch/kein Stopp-Knopf: „%s“' % w)
     ok('Who can see' not in txt and 'Wer kann das sehen' not in txt, 'Kein „Wer kann das sehen?“-Abschnitt')
     ok(E("()=>NO.view")=='staff' and E("()=>NO.entry")=='symbols', 'Standard: Notenbild-Ansicht + Notenbild-Tasten')
     ok(pg.locator('.no-key').count() == 7, '7 Notenbild-Tasten')
     ok(N() == 7 and names() == 'CDEFGEC', 'Startlied hat 7 Noten')
-    ok(not E("()=>/farbcode|circle/i.test(document.querySelector('.no-side').innerHTML.replace(/C–H-Farbcode/,''))"), 'Keine Farbkreis-Legende')
+    ok(E("()=>!document.querySelector('#noSide [data-act=noColor]')") and E("()=>!!document.querySelector('.no-ribbon [data-act=noColor]')"), 'Farbcode-Schalter steht im Tempo-Ribbon, nicht mehr in der Seitenleiste')
+    ok(E("()=>!!document.querySelector('#noSide .no-add')"), '„Note hinzufügen“ steht in der rechten Seitenleiste')
+    ok(E("()=>{const m=document.querySelector('.no-main');const sc=m.querySelector('#noScoreBox'),tb=m.querySelector('.no-toolbar'),ed=tb&&tb.querySelector('.no-edit-bar'),rb=tb&&tb.querySelector('.no-ribbon');return !!(sc&&tb&&ed&&rb&&(sc.compareDocumentPosition(tb)&4)&&(ed.compareDocumentPosition(rb)&4))}"),
+       'Eine einzige Werkzeugleiste unter dem Notenbild: links „Note ändern“, rechts Tempo + Farbcode')
+    ok(E("()=>{const tb=document.querySelector('.no-toolbar'),r=tb.getBoundingClientRect(),e=tb.querySelector('.no-edit-bar').getBoundingClientRect(),g=tb.querySelector('.no-ribbon').getBoundingClientRect();return e.top<r.top+r.height&&Math.abs((e.top+e.height/2)-(g.top+g.height/2))<30&&e.left<g.left}"), 'Werkzeugleiste: eine Zeile, Änderungs-Symbole links, Tempo/Farbcode rechts')
+    ok(E("()=>{const s=document.querySelector('#noScoreBox').getBoundingClientRect(),a=document.querySelector('#noSide .no-add').getBoundingClientRect(),m=document.querySelector('.no-main').getBoundingClientRect();return Math.abs(s.top-a.top)<2&&Math.abs(a.bottom-m.bottom)<2&&a.right<=innerWidth-8}"), '„Note hinzufügen“ beginnt auf Höhe des Notenbilds, endet bündig mit der Werkzeugleiste, bleibt im Bild')
+    ok(E("()=>!!document.querySelector('.no-head .no-h')") and E("()=>!document.querySelector('#noTitle')"), 'Gespeicherter Titel: kompakte Überschrift statt großem Eingabefeld')
+    ok(E("()=>!!document.querySelector('#noScoreBox .no-playbar')"), 'Abspielen/Anhalten ist in das Notenbild eingebaut')
+    ok(E("()=>!document.querySelector('[data-act=noStop]')"), 'Kein eigener Stopp-Knopf mehr')
+    ok(E("()=>{const b=document.querySelector('.no-playbar [data-act=toggleSound]');return !!b&&b.textContent.trim()===''&&!!b.getAttribute('aria-label')}"),
+       'Klavier/Stumm-Knopf ist reines Symbol mit Beschriftung für Screenreader')
+    ok(E("()=>[...document.querySelectorAll('.no-edit-bar button')].every(b=>b.textContent.trim()==='')"), '„Note ändern“ ist eine reine Symbolleiste')
+    ok(pg.locator('[data-act=noEntry][data-arg=symbols]').inner_text().strip() == 'Noten' and pg.locator('[data-act=noEntry][data-arg=letters]').inner_text().strip() == 'C–H',
+       'Eingabe-Umschalter heißt „Noten“ / „C–H“')
 
     # ---- Tonhöhen auf den Linien (Violinschlüssel): E = unterste Linie, G = zweite Linie, C = Hilfslinie
-    ys = E("()=>{const t=38;return NO_NAMES.map(n=>noY(n,t)-t)}")
+    ys = E("()=>{const t=38;return NO_NAMES.map(n=>noY(n,0,t)-t)}")
     ok(ys == [70, 63, 56, 49, 42, 35, 28], 'Linienposition C70 D63 E56 F49 G42 A35 H28 (E auf unterster Linie 56, G auf 2. Linie 42)')
 
     # ---- Eingabe mit einem Tipp (Notenbild)
@@ -63,20 +87,51 @@ with sync_playwright() as p:
     ok(abs(E("()=>__osc.at(-1).f")-493.88)<0.01, 'H = 493,88 Hz (Pause erzeugt keinen Ton)')
     pg.click('[data-act=noEntry][data-arg=symbols]'); ok(E("()=>NO.dur")=='long' and E("()=>noSong().notes.length")==n0+3, 'Wechsel der Eingabeart behält Länge und Notenzahl')
 
+    # ---- Zweite Tonlage (tief/hoch)
+    ok(E("()=>!!document.querySelector('[data-act=noOct][data-arg=high]')") and E("()=>!!document.querySelector('[data-act=noOct][data-arg=low]')"), 'Umschalter für die Tonlage (tief/hoch) vorhanden')
+    ok(E("()=>NO.oct")==0, 'Voreingestellt: tiefe Tonlage')
+    pg.click('[data-act=noOct][data-arg=high]'); pg.wait_for_timeout(60)
+    ok(E("()=>NO.oct")==1, 'Tonlage „Hoch“ eingeschaltet')
+    cntOct = N(); pg.locator('.no-key').nth(0).click(); pg.wait_for_timeout(60)
+    idxNew = E("()=>NO.cur") - 1
+    ok(N() == cntOct + 1 and E("()=>noSong().notes[%d].oct" % idxNew) == 1, 'In hoher Tonlage eingefügte Note bekommt oct=1')
+    ok(abs(E("()=>noFreq(noSong().notes[%d])" % idxNew) - 523.26) < 0.05, 'Hohe Tonlage klingt eine Oktave höher (hohes C = 523,26 Hz)')
+    pg.locator('.no-n').nth(idxNew).click(); pg.wait_for_timeout(60)
+    pg.click('[data-act=noLower]'); pg.wait_for_timeout(60)
+    ok(E("()=>noSong().notes[%d].oct" % idxNew) == 0 and E("()=>noSong().notes[%d].name" % idxNew) == 'H', 'Tiefer über die Tonlagen-Grenze: hohes C → tiefes H')
+    pg.click('[data-act=noOct][data-arg=low]'); ok(E("()=>NO.oct")==0, 'Tonlage zurück auf „Tief“')
+
     # ---- Auswählen und Ändern
     pg.locator('.no-n').nth(0).click(); pg.wait_for_timeout(60)
-    ok(E("()=>NO.sel")==0 and E("()=>NO.cur")==1, 'Note antippen: gewählt, Einfügemarke dahinter')
-    ok('Gewählt: C' in pg.inner_text('#noSide'), 'Seitenleiste zeigt „Gewählt: C“')
+    ok(sel() == '[0]' and E("()=>NO.cur")==1, 'Note antippen: gewählt, Einfügemarke dahinter')
     pg.click('[data-act=noHigher]'); ok(names().startswith('DDEFGEC'), 'Höher: C → D')
     pg.click('[data-act=noLower]'); pg.click('[data-act=noLower]'); ok(names().startswith('CDEFGEC'), 'Tiefer bleibt bei C (Grenze)')
     pg.click('[data-act=noLonger]'); ok(E("()=>noSong().notes[0].duration")=='long', 'Länger: normal → lang')
     pg.click('[data-act=noLonger]'); ok(E("()=>noSong().notes[0].duration")=='long', 'Länger: Grenze lang')
     pg.click('[data-act=noShorter]'); pg.click('[data-act=noShorter]'); ok(E("()=>noSong().notes[0].duration")=='short', 'Kürzer bis kurz')
-    cnt = N(); pg.click('[data-act=noDup]'); ok(N() == cnt + 1 and names().startswith('CCD'), 'Kopieren fügt direkt dahinter ein')
-    pg.click('[data-act=noDel]'); ok(N() == cnt and E("()=>NO.sel")==None and E("()=>NO.cur")==1, 'Löschen: Marke an alter Stelle')
+
+    # ---- Kopieren & Einfügen (ersetzt das frühere „Duplizieren“)
+    ok(E("()=>document.querySelector('[data-act=noPaste]').disabled")==True, 'Einfügen ist gesperrt, solange nichts kopiert ist')
+    cnt = N(); pg.click('[data-act=noCopy]'); pg.wait_for_timeout(60)
+    ok(E("()=>NO.clip.length")==1, 'Kopieren merkt die gewählte Note vor')
+    ok(E("()=>document.querySelector('[data-act=noPaste]').disabled")==False, 'Einfügen ist jetzt frei')
+    pg.click('[data-act=noPaste]'); pg.wait_for_timeout(60)
+    ok(N() == cnt + 1, 'Einfügen fügt die kopierte Note ein')
+    ok(names()[0] == names()[1], 'Eingefügte Note ist direkt dahinter eine Kopie')
+    pg.click('[data-act=noDel]'); ok(N() == cnt and sel() == '[]', 'Löschen: Auswahl ist danach leer')
     # Pause: kein Höher/Tiefer
     pg.locator('.no-n').nth(E("()=>noSong().notes.findIndex(n=>n.rest)")).click()
     ok(E("()=>document.querySelector('[data-act=noHigher]').disabled")==True, 'Pause: Höher/Tiefer gesperrt')
+
+    # ---- Mehrfachauswahl (kein Tastatur-Modifikator auf dem Tablet nötig)
+    E("()=>{noAdd('C');noAdd('D');noAdd('E');NO.sel=[];noPaintAll()}"); pg.wait_for_timeout(60)
+    pg.click('[data-act=noMulti]'); ok(E("()=>NO.multi")==True, 'Mehrfachauswahl eingeschaltet')
+    nn = E("()=>noSong().notes.length")
+    pg.locator('.no-n').nth(nn - 3).click(); pg.locator('.no-n').nth(nn - 1).click(); pg.wait_for_timeout(60)
+    ok(E("()=>NO.sel.length")==2, 'Zwei Noten in der Mehrfachauswahl gewählt')
+    pg.click('[data-act=noLonger]')
+    ok(E("()=>noSong().notes[%d].duration" % (nn-3))=='long' and E("()=>noSong().notes[%d].duration" % (nn-1))=='long', 'Ändern wirkt auf alle gewählten Noten zugleich')
+    pg.click('[data-act=noMulti]'); ok(E("()=>NO.multi")==False and E("()=>NO.sel.length")<=1, 'Mehrfachauswahl ausschalten lässt höchstens eine Note gewählt')
 
     # ---- Rückgängig / Wiederholen
     a = names(); pg.click('[data-act=noUndo]'); b2 = names(); pg.click('[data-act=noRedo]')
@@ -93,36 +148,42 @@ with sync_playwright() as p:
     ok(E("()=>[...document.querySelectorAll('.no-lk')].some(e=>e.style.color)"), 'Buchstaben-Ansicht: Farben')
     pg.click('[data-act=noView][data-arg=staff]')
 
-    # ---- Wiedergabe (Web Audio)
+    # ---- Wiedergabe (Web Audio), Anhalten/Fortsetzen ohne eigenen Stopp-Knopf
     E("()=>{noStopAll();__osc.length=0}")
     s = E("()=>{const s=noSong();return {n:s.notes.filter(x=>!x.rest).length,all:s.notes.length}}")
-    E("()=>{NO.sel=null;noSong().tempo='fast'}"); pg.click('[data-act=noPlay]'); pg.wait_for_timeout(100)
+    E("()=>{NO.sel=[];noSong().tempo='fast'}"); pg.click('[data-act=noPlay]'); pg.wait_for_timeout(100)
     ok(E("()=>NO.playing")==True and E("()=>NO.idx")==0, 'Abspielen startet, erste Note markiert')
     total = E("()=>noSong().notes.reduce((a,n)=>a+noMs(n),0)")
     pg.wait_for_timeout(int(total) + 400)
     ok(E("()=>NO.playing")==False and E("()=>__osc.length")==s['n'], 'Ganze Melodie: %d Töne, Pausen still' % s['n'])
     ok(E("()=>__osc.every(o=>o.type==='triangle')"), 'Klang: Web Audio Oszillator')
-    ok(E("()=>{const f=noSong();const a={...f};return noMs({duration:'long'})>noMs({duration:'normal'})&&noMs({duration:'normal'})>noMs({duration:'short'})}"), 'Länge wirkt auf die Dauer')
+    ok(E("()=>{return noMs({duration:'long'})>noMs({duration:'normal'})&&noMs({duration:'normal'})>noMs({duration:'short'})}"), 'Länge wirkt auf die Dauer')
     ok(E("()=>{const s=noSong();s.tempo='slow';const a=noMs({duration:'normal'});s.tempo='fast';const b=noMs({duration:'normal'});return a>b}"), 'Tempo wirkt (langsam > schnell)')
     E("()=>{noSong().tempo='slow'}")
     E("()=>__osc.length=0"); pg.click('[data-act=noPlay]'); pg.wait_for_timeout(120)
     pg.click('[data-act=noPlay]'); r = E("()=>NO.res"); pg.wait_for_timeout(50)
-    ok(E("()=>NO.playing")==False and r is not None, 'Anhalten merkt die Stelle')
-    pg.click('[data-act=noStop]'); ok(E("()=>NO.res")==None and E("()=>NO.timer")==None, 'Stopp setzt zurück und bricht ab')
-    k = E("()=>__osc.length"); pg.wait_for_timeout(800); ok(E("()=>__osc.length")==k, 'Nach Stopp kommt kein Ton mehr')
-    E("()=>{S.cfg.sound=false;save();render()}"); E("()=>__osc.length=0"); pg.click('[data-act=noPlay]'); pg.wait_for_timeout(150); pg.click('[data-act=noStop]')
-    ok(E("()=>__osc.length")==0 and 'Ton ist aus' in pg.inner_text('.no-trans'), 'Ton aus: still, mit Hinweis')
-    E("()=>{S.cfg.sound=true;save();render()}")
+    ok(E("()=>NO.playing")==False and r is not None, 'Anhalten (gleicher Knopf) merkt die Stelle')
+    pg.click('[data-act=noPlay]'); pg.wait_for_timeout(50)
+    ok(E("()=>NO.playing")==True and E("()=>NO.res")==None, 'Erneutes Antippen spielt an der gemerkten Stelle weiter')
+    E("()=>noStopAll()")
+    k = E("()=>__osc.length"); pg.wait_for_timeout(800); ok(E("()=>__osc.length")==k, 'Nach dem Anhalten kommt kein Ton mehr')
+    E("()=>{S.cfg.sound=false;NO.hint=false;save();render()}"); E("()=>__osc.length=0")
+    pg.click('[data-act=noPlay]'); pg.wait_for_timeout(200)
+    ok(E("()=>__osc.length")==0 and 'Ton ist aus' in pg.inner_text('.toasts'), 'Ton aus: still, mit Hinweis als Einblendung')
+    E("()=>{noStopAll();S.cfg.sound=true;save();render()}")
 
     # ---- Speichern & Neuladen (Offline)
+    pg.click('[data-act=noTitleEdit]'); ok(E("()=>!!document.querySelector('#noTitle')") and E("()=>!!document.querySelector('[data-act=noTitleOk]')"), 'Stift-Symbol öffnet das Titelfeld')
     E("()=>{const t=document.querySelector('#noTitle');t.value='Mein Testlied';t.dispatchEvent(new Event('input',{bubbles:true}));const d=document.querySelector('#noDesc');d.value='Für Oma';d.dispatchEvent(new Event('input',{bubbles:true}))}")
+    pg.click('[data-act=noTitleOk]'); pg.wait_for_timeout(100)
+    ok(E("()=>!document.querySelector('#noTitle')") and 'Mein Testlied' in pg.inner_text('.no-head .no-h') and 'Für Oma' in pg.inner_text('.no-head'), 'Nach „Fertig“: Titel als Überschrift, Beschreibung klein darunter')
     pg.click('[data-act=noFav]'); pg.wait_for_timeout(700)
     ok('Gespeichert' in pg.inner_text('#noStat'), 'Status „Gespeichert“')
-    sig = E("()=>JSON.stringify(noSong().notes.map(n=>n.name+n.duration+n.rest))")
+    sig = E("()=>JSON.stringify(noSong().notes.map(n=>n.name+n.duration+n.rest+n.oct))")
     pg.reload(); pg.wait_for_timeout(400)
     ok(E("()=>S.noten.songs.some(s=>s.title==='Mein Testlied'&&s.description==='Für Oma'&&s.favorite)"), 'Nach Neuladen: Titel, Beschreibung, Favorit da')
-    E("()=>go('noten')"); pg.wait_for_timeout(200)
-    ok(E("()=>JSON.stringify(noSong().notes.map(n=>n.name+n.duration+n.rest))")==sig, 'Nach Neuladen: Noten unverändert')
+    E("()=>{S.daily.n=25;save();go('home');go('noten')}"); pg.wait_for_timeout(200)
+    ok(E("()=>JSON.stringify(noSong().notes.map(n=>n.name+n.duration+n.rest+n.oct))")==sig, 'Nach Neuladen: Noten unverändert (auch die Tonlage)')
     ok(E("()=>NO.view")=='staff', 'Ansicht gemerkt')
 
     # ---- Mehrere Lieder, Löschen nur nach Rückfrage
@@ -130,6 +191,8 @@ with sync_playwright() as p:
     ok(pg.locator('.no-song').count() == 1 and pg.locator('.no-new').count() == 1, 'Meine Lieder: 1 Lied + „Neues Lied“')
     pg.click('.no-new'); pg.wait_for_timeout(150)
     ok(E("()=>noData().songs.length")==2 and N() == 0 and E("()=>noSong().title")=='Neues Lied' and pg.locator('.no-lib').count()==0, 'Neues Lied angelegt und geöffnet')
+    ok(E("()=>!!document.querySelector('#noTitle')"), 'Neues Lied: Titelfeld ist gleich offen')
+    pg.keyboard.press('Enter'); ok(E("()=>!document.querySelector('#noTitle')"), 'Enter bestätigt den Titel')
     ok('Tippe unten auf eine Note' in pg.text_content('#noScore'), 'Leeres Lied: Hinweis im Notenbild')
     pg.locator('.no-key').nth(0).click(); pg.locator('.no-key').nth(4).click(); ok(N() == 2, 'Neues Lied: Noten einfügen')
     pg.click('[data-act=noLib]'); pg.wait_for_timeout(100)
@@ -146,32 +209,39 @@ with sync_playwright() as p:
     pg.keyboard.press('Escape'); ok(pg.locator('.no-lib').count() == 0, 'Escape schließt „Meine Lieder“')
 
     # ---- Tastatur: Note per Enter wählen
-    E("()=>{noAdd('F');noAdd('G')}"); pg.locator('.no-n').nth(0).focus(); pg.keyboard.press('Enter'); ok(E("()=>NO.sel")==0, 'Tastatur: Enter wählt Note')
+    E("()=>{noAdd('F');noAdd('G')}"); pg.locator('.no-n').nth(0).focus(); pg.keyboard.press('Enter'); ok(sel() == '[0]', 'Tastatur: Enter wählt Note')
     ok(E("()=>[...document.querySelectorAll('#app button')].filter(b=>!b.textContent.trim()&&!b.getAttribute('aria-label')).length")==0, 'Alle Knöpfe haben einen Namen')
 
-    # ---- Kinder-Stand unberührt, Seitenzeit, kein Netz
+    # ---- Kinder-Stand unberührt, Hausaufgaben-Sperre statt der alten Seitenzeit, kein Netz
     after = E("()=>JSON.stringify({c:S.coins,l:S.life,s:S.stars,sl:S.starsLife,ca:S.cards,tr:S.trophies,ow:S.owned,decks:S.decks})")
     ok(after == before, 'Münzen, Sterne, Karten, Pokale, Hefte unverändert')
-    ok(E("()=>pgArea('noten')")=='noten' and E("()=>pgAreas().includes('noten')"), 'Seitenzeit gilt für das Notenheft (wie für alle Seiten außer Hefte/Europa)')
-    E("()=>{S.cfg.pageMin=3;S.cfg.pageNeed=5;S.daily.got=false;S.daily.n=0;S.daily.pg={};save();go('home');go('noten')}"); pg.wait_for_timeout(200)
-    ok(E("()=>!!document.querySelector('#pgT')"), 'Zeit-Anzeige im Notenheft')
-    E("()=>{pgRec('noten').sec=179;NO.playing=false}"); pg.wait_for_timeout(1500)
-    ok(E("()=>!!document.querySelector('.pglock')") and 'Notenheft' in pg.inner_text('.pglock'), 'Nach Ablauf: Pause-Bildschirm „Notenheft“; Lieder bleiben')
-    ok(E("()=>S.noten.songs.length")>=1, 'Lieder nach Sperre noch da')
-    E("()=>{S.cfg.pageMin=0;save()}")
+    ok(E("()=>rgArea('noten')")==None and E("()=>pgArea('noten')")==None, 'Das Notenheft gehört zur Ideenwerkstatt: kein Zeitbereich, nie gesperrt')
+    E("()=>{rgResetAll();S.daily.got=false;S.daily.n=0;S.daily.sec=0;save();go('home');go('noten')}"); pg.wait_for_timeout(200)
+    ok(E("()=>!hwDone()") and E("()=>!document.querySelector('.pglock')") and E("()=>view")=='noten', 'Ohne Hausaufgaben: Notenheft ist trotzdem offen')
+    E("()=>{const d=rgData();d.rg.a.noten=999;d.rg.tot=9999;NO.playing=false}"); pg.wait_for_timeout(1300)
+    ok(E("()=>!document.querySelector('.pglock')") and E("()=>!document.querySelector('#pgT')"), 'Auch bei aufgebrauchter Nutzungszeit: offen, keine Zeitanzeige')
+    ok(E("()=>S.noten.songs.length")>=1, 'Lieder vorhanden')
+    E("()=>{rgResetAll();save()}")
     ok(not reqs, 'Keine Netzwerkanfragen: %s' % reqs[:3])
     src = pathlib.Path(html).parent.parent.joinpath('src/feat_noten.js').read_text() + pathlib.Path(html).parent.parent.joinpath('src/feat_noten.css').read_text()
     ok(not re.search(r'https?://|@import|<script src|fetch\(|XMLHttpRequest|cdn', src), 'Quelltext: keine externen Adressen, Bibliotheken oder Abrufe')
 
     # ---- Layout: kein seitliches Scrollen, alle Tasten erreichbar (Lenovo-Tablet quer/hoch, Handy)
     for name, (w, h) in {'quer 1280x800': (1280, 800), 'quer 1024x600': (1024, 600), 'hoch 800x1280': (800, 1280), 'Handy 360x740': (360, 740)}.items():
-        pg.set_viewport_size({'width': w, 'height': h}); E("()=>{noInit();go('home');go('noten')}"); E("()=>{for(let i=0;i<14;i++)noAdd(NO_NAMES[i%7])}"); pg.wait_for_timeout(200)
+        pg.set_viewport_size({'width': w, 'height': h})
+        E("()=>{S.daily.n=25;save();noInit();go('home');go('noten')}"); E("()=>{for(let i=0;i<14;i++)noAdd(NO_NAMES[i%7])}"); pg.wait_for_timeout(200)
         sw = E("()=>document.documentElement.scrollWidth"); ok(sw <= w + 1, '%s: kein seitliches Scrollen (%d)' % (name, sw))
-        small = E("()=>[...document.querySelectorAll('.no-key,.no-lkey,.no-dur,.no-sm,.no-top .btn,.no-edit .btn,.no-song-o,.no-song-d')].filter(e=>e.offsetParent&&(e.getBoundingClientRect().height<44||e.getBoundingClientRect().width<44)).length")
-        ok(small == 0, '%s: Tasten mindestens 44 px' % name)
+        # .no-sm (Tempo-Leiste) ist bewusst kleiner, aber noch touch-sicher (40 px); .seg-Umschalter (Noten/C-H, Tief/Hoch)
+        # nutzen die App-weit gleiche, bewusst kompakte Leiste (36 px, wie überall sonst in der App).
+        small = E("()=>[...document.querySelectorAll('.no-page button')].filter(e=>e.offsetParent&&!e.closest('.no-sm,.no-seg')&&(e.getBoundingClientRect().height<44||e.getBoundingClientRect().width<44)).length")
+        ok(small == 0, '%s: Tasten mindestens 44 px (außer bewusst kompakten Umschaltern)' % name)
+        tiny = E("()=>[...document.querySelectorAll('.no-page .no-sm')].filter(e=>e.offsetParent&&(e.getBoundingClientRect().height<40||e.getBoundingClientRect().width<40)).length")
+        ok(tiny == 0, '%s: die kompakte Tempo-Leiste bleibt mindestens 40 px' % name)
+        segtiny = E("()=>[...document.querySelectorAll('.no-page .no-seg button')].filter(e=>e.offsetParent&&(e.getBoundingClientRect().height<36||e.getBoundingClientRect().width<36)).length")
+        ok(segtiny == 0, '%s: die Noten/C-H- und Tief/Hoch-Umschalter bleiben mindestens 36 px (wie überall in der App)' % name)
         r = E("()=>{const k=document.querySelector('.no-key');const q=k.getBoundingClientRect();return [Math.round(q.width),Math.round(q.height)]}"); ok(r[0] >= 44 and r[1] >= 44, '%s: Notentaste %s' % (name, r))
         bad = E("()=>[...document.querySelectorAll('.no-page .btn,.no-page button,.no-page .dz-panel')].filter(e=>{const q=e.getBoundingClientRect();return q.right>innerWidth+1||q.left<-1}).length"); ok(bad == 0, '%s: nichts ragt über den Rand' % name)
-    pg.set_viewport_size({'width': 1280, 'height': 800}); E("()=>{go('noten')}")
+    pg.set_viewport_size({'width': 1280, 'height': 800}); E("()=>{S.daily.n=25;save();go('home');go('noten')}")
     # Themes: Nachtmodus lesbar (Notenlinien/Tinte aus Tokens)
     E("()=>{S.eq.theme='nacht';render()}"); pg.wait_for_timeout(150)
     ink = E("()=>getComputedStyle(document.querySelector('.no-clef')).stroke"); bg = E("()=>getComputedStyle(document.body).backgroundColor")

@@ -11,7 +11,7 @@ with sync_playwright() as p:
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto('file://' + html); pg.wait_for_timeout(300)
     # Vorhandener Stand
-    pg.evaluate("""()=>{S.coins=500;S.life=500;S.starsLife=46;S.stars=46;S.chests=2;S.cards={a1:1,a2:1};S.trophies={blk1:1};save();checkTrophies();}""")
+    pg.evaluate("""()=>{S.coins=500;S.life=500;S.starsLife=46;S.stars=46;S.chests=2;S.cards={a1:1,a2:1};S.trophies={blk1:1};S.daily.n=25;save();checkTrophies();}""")
     snap = lambda: pg.evaluate("()=>JSON.stringify({c:S.coins,l:S.life,s:S.stars,sl:S.starsLife,ch:S.chests,cards:S.cards,tr:Object.keys(S.trophies).filter(k=>!/^w/.test(k))})")
     before = snap()
     # Daten

@@ -64,7 +64,7 @@ with sync_playwright() as p:
     ok(not r['bad'] and r['cnt'] > 400, 'Jedes Teil in jeder Stimmung + Müll-Eingaben + 150 Zufalls-Looks werfen nie (%d)' % r['cnt'])
 
     # ---------- Ersteinrichtung (auch nur-ansehen) ----------
-    E("()=>{S.coins=60;S.stats.decks=0;S.stats.blocks=0;S.cfg.creativeMode='after';S.daily.cr.left=0;UI.pinCreative=0;render();ACT.avatar()}"); pg.wait_for_timeout(300)
+    E("()=>{S.coins=60;S.stats.decks=0;S.stats.blocks=0;S.cfg.creativeMode='after';S.daily.cr.left=0;UI.pinCreative=0;S.daily.n=25;render();ACT.avatar()}"); pg.wait_for_timeout(300)
     ok(E("()=>view") == 'avatar' and E("()=>UI.ro") is True, 'Avatar öffnet (ohne Kreativzeit = nur ansehen)')
     ok(E("()=>!S.av.look"), 'Erster Besuch: noch kein Look')
     ok(pg.locator('.av-setup').count() == 1 and pg.locator('.av-pv svg').count() == 1, 'Ersteinrichtung sichtbar, auch bei UI.ro')

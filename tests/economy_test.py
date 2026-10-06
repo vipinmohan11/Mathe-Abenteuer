@@ -30,7 +30,7 @@ with sync_playwright() as p:
     ok(E("()=>view") == 'rewards' and E("()=>S.daily.cr.left") == 0, 'danach Belohnungen, Zeit leer')
     E("()=>{S.daily.cr.left=50;go('home')}"); pg.wait_for_timeout(1300); ok(E("()=>S.daily.cr.left") == 50, 'Zeit läuft nicht außerhalb des Kreativ-Bereichs')
     # --- Shop-Zeit
-    E("()=>{closeModal();S.coins=500;S.cfg.shopMin=5;S.daily.shopSec=298;go('shop')}"); pg.wait_for_timeout(3200)
+    E("()=>{closeModal();S.coins=500;S.cfg.shopMin=5;S.daily.shopSec=298;S.daily.n=25;go('shop')}"); pg.wait_for_timeout(3200)
     ok(E("()=>shopLeft()") == 0, 'Shop-Zeit endet nach 5 Minuten')
     ok('Shop-Zeit für heute ist vorbei' in pg.locator('#app').inner_text(), 'Hinweis im Shop')
     ok(E("()=>{const it=Object.values(CATALOG).find(i=>i.src.t==='shop'&&!hasItem(i.id));return buyItem(it.id)}") is False, 'kein Kauf nach Ablauf')
@@ -74,7 +74,7 @@ with sync_playwright() as p:
     ok(E("()=>payTest(15).c") == 0 and E("()=>S.coins") == 0, 'alter Stand (heute schon belohnt) zahlt nicht doppelt')
     E("()=>go('testSetup')"); ok('Heute schon alles verdient' in pg.locator('#app').inner_text(), 'Mini-Test zeigt ehrlich: heute schon alles verdient')
     # --- Name des Kindes = Name des Avatars (kein getrennter Avatar-Name)
-    E("()=>{S.name='Mia';S.av.look=S.av.look||{};S.av.use=true;S.avName='Kapitänin Komma';go('profile')}")
+    E("()=>{S.name='Mia';S.av.look=S.av.look||{};S.av.use=true;S.avName='Kapitänin Komma';S.daily.n=25;go('profile')}")
     t = pg.locator('#app').inner_text()
     ok('Mia' in t and 'Kapitänin' not in t and 'Name für meinen Avatar' not in t, 'Profil zeigt den Namen des Kindes; kein eigener Avatar-Name')
     E("()=>{UI.bMod='A4';go('urkunde')}"); ok('Mia' in pg.locator('#app').inner_text() and 'Kapitänin' not in pg.locator('#app').inner_text(), 'Urkunde nutzt den Namen')

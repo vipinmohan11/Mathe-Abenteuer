@@ -10,7 +10,7 @@ with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 800}); errs = []
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto('file://' + html); pg.wait_for_timeout(300)
-    pg.evaluate("""()=>{S.coins=321;S.life=321;S.starsLife=37;S.stars=37;S.chests=1;S.cards={a1:1,a2:1};S.trophies={blk1:1};save();checkTrophies();}""")
+    pg.evaluate("""()=>{S.coins=321;S.life=321;S.starsLife=37;S.stars=37;S.chests=1;S.cards={a1:1,a2:1};S.trophies={blk1:1};S.daily.n=25;save();checkTrophies();}""")
     snap = lambda: pg.evaluate("()=>JSON.stringify({c:S.coins,l:S.life,s:S.stars,sl:S.starsLife,ch:S.chests,cards:S.cards,tr:S.trophies})")
     before = snap()
     V = lambda: pg.evaluate("()=>view")
@@ -18,9 +18,9 @@ with sync_playwright() as p:
     pg.evaluate("()=>go('home')"); pg.wait_for_timeout(100)
     # Start
     ok(pg.locator('.nav, .navbar, nav.bottom, #nav').count() == 0 and pg.locator('[data-act=goHome].tab').count() == 0, 'keine untere Navigationsleiste')
-    ok(pg.locator('.dz-home4 .dz-tile').count() == 5, 'Startseite: 5 Kacheln (Hefte, Europa, Notenheft, Extra, Welt)')
+    ok(pg.locator('.dz-home4 .dz-tile').count() == 5, 'Startseite: 5 Kacheln (Hefte, Europa, Extra, Ideenwerkstatt, Welt)')
     t = pg.inner_text('#app')
-    ok('Europa Entdecker' in t and 'Extra Spaß' in t and 'Meine Hefte' in t and 'Meine Welt' in t, 'Kachel-Namen')
+    ok('Europa Entdecker' in t and 'Extra Spaß' in t and 'Meine Hefte' in t and 'Meine Welt' in t and 'Ideenwerkstatt' in t, 'Kachel-Namen')
     ok('Heute geschafft' not in t and 'Extra Training' not in t and 'Europa Expedition' not in t, 'alte Namen weg')
     ok(pg.locator('.dz-head .dz-me').count() == 1 and pg.locator('.dz-head .dz-chip').count() >= 3, 'Profil oben links + Chips')
     # Baum-Stufen
@@ -57,8 +57,8 @@ with sync_playwright() as p:
     click('.top .back[data-act=back]'); ok(V() == 'home', 'Zurück → Start')
     # Meine Welt -> Shop -> zurück
     pg.evaluate("()=>go('rewards')"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 6, 'Meine Welt: 6 Kacheln (Wesen/Buch/Insel verborgen)')
-    ok(pg.inner_text('#app').count('Lustige Fakten') >= 1 and 'Weltreise' in pg.inner_text('#app'), 'Lustige Fakten + Meine Weltreise')
+    ok(pg.locator('.dz-tile').count() == 5, 'Meine Welt: 5 Kacheln (Wesen/Buch/Insel verborgen; die Ideenwerkstatt wohnt jetzt auf der Startseite)')
+    ok(pg.inner_text('#app').count('Lustige Fakten') >= 1 and 'Weltreise' in pg.inner_text('#app') and 'Ideenwerkstatt' not in pg.inner_text('#app'), 'Lustige Fakten + Meine Weltreise, keine Ideenwerkstatt mehr hier')
     click('.dz-tile[data-act=shop], .dz-tile[data-act=go][data-arg=shop]')
     ok(V() == 'shop', 'Shop öffnet'); click('.top .back[data-act=back]'); ok(V() == 'rewards', 'Zurück → Meine Welt')
     # Fakten
@@ -93,9 +93,9 @@ with sync_playwright() as p:
     pg.evaluate("()=>{S.name='';save();go('rewards')}"); pg.wait_for_timeout(120)
     # Schalter
     pg.evaluate("()=>{S.flags={wesen:1,buch:1,insel:1};save();render()}"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 9, 'Schalter an: Wesen/Buch/Insel erscheinen')
+    ok(pg.locator('.dz-tile').count() == 8, 'Schalter an: Wesen/Buch/Insel erscheinen')
     pg.evaluate("()=>{S.flags={};save();render()}"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 6, 'Schalter aus: wieder 6 Kacheln')
+    ok(pg.locator('.dz-tile').count() == 5, 'Schalter aus: wieder 5 Kacheln')
     # Extra Spaß
     pg.evaluate("()=>go('extra')"); pg.wait_for_timeout(100)
     ok(pg.locator('.dz-tile[data-act=mod]').count() == 3, 'Extra Spaß: 3 Kacheln')

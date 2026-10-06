@@ -29,7 +29,7 @@ with sync_playwright() as p:
     # ---- Sperre ohne Kreativzeit
     E("()=>{S.cfg.creativeMode='after';S.daily.cr={left:0,used:0,grants:0};render();ACT.musik()}"); pg.wait_for_timeout(200)
     ok(pg.locator('.lockscr').count() == 1 and pg.locator('.mu-pad').count() == 0, 'Ohne Kreativzeit: Sperrbildschirm, keine Werkstatt')
-    E("()=>{S.cfg.creativeMode='always';render()}"); pg.wait_for_timeout(200)
+    E("()=>{S.cfg.creativeMode='always';S.daily.n=25;render()}"); pg.wait_for_timeout(200)
     # ---- Start: ein Klang, 8 Schritte
     ok(pg.locator('.mu-lane[data-lane]').count() == 1 and pg.locator('.mu-pad').count() == 8, 'Start: 1 Spur, 8 Pads')
     ok(E("()=>S.songs.length")==0 and not E("()=>muHasNotes()"), 'Kein fertiger Beat vorhanden')
