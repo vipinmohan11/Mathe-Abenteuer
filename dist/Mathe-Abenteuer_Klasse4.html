@@ -751,12 +751,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 @media print{.mu{display:none}}
 
 /* NOTENHEFT – nur Design-Tokens (--dz-*), damit alle Farbthemen (auch „nacht“) passen. Klassen heißen no-… */
-.no-page{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:4px;-webkit-user-select:none;user-select:none}
+.no-page{display:flex;flex-direction:column;gap:14px;margin-top:4px;-webkit-user-select:none;user-select:none}
 .no-page input,.no-page textarea{-webkit-user-select:text;user-select:text}
-.no-main,.no-side{display:flex;flex-direction:column;gap:12px;min-width:0}
-.no-side{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
-@media(min-width:900px){.no-page{grid-template-columns:minmax(0,1fr) 264px}.no-side{display:flex;flex-direction:column}}
-@media(max-width:700px){.no-side{display:flex;flex-direction:column}}
+.no-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:stretch}
+.no-main,.no-side{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media(min-width:900px){.no-grid{grid-template-columns:minmax(0,1fr) 288px}}
 
 /* Kopfleiste */
 .no-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -765,78 +764,88 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .no-stat{font-weight:800;font-size:.9rem;color:var(--dz-mute)}
 @media(max-width:560px){.no-hide{display:none}.no-top .btn{padding-left:12px;padding-right:12px}}
 
-/* Lied-Infos */
-.no-info{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;padding:14px 18px}
-.no-info-f{flex:1;min-width:0}
-.no-trow{display:flex;gap:8px;align-items:center}
-.no-title{width:100%;min-width:0;border:0;background:transparent;font:inherit;font-size:1.75rem;font-weight:800;letter-spacing:-.02em;color:var(--dz-ink);padding:2px 0}
+/* Lied-Überschrift (kompakt; Bearbeiten über das Stift-Symbol) */
+.no-head{display:flex;flex-direction:column;gap:4px;min-width:0}
+.no-head-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.no-grow{flex:1 1 0;min-width:0}
+.no-h{margin:0;font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--dz-ink);min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.no-sub{margin:0;color:var(--dz-mute);font-size:.95rem;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.no-title{flex:1 1 200px;min-width:0;border:2px solid var(--dz-line);background:var(--dz-surface);border-radius:var(--dz-r-s);font:inherit;font-size:1.3rem;font-weight:800;color:var(--dz-ink);padding:8px 12px;min-height:48px}
 .no-title:focus-visible,.no-desc:focus-visible{outline:3px solid var(--dz-accent);outline-offset:2px;border-radius:8px}
-.no-fav{flex:none;width:48px;height:48px;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface2);color:var(--dz-ink);font-size:1.4rem;box-shadow:var(--dz-sh-soft)}
+.no-head-edit .btn{min-height:48px}
+.no-ibtn-s{width:44px;height:44px;box-shadow:none;background:transparent;color:var(--dz-mute)}
+.no-fav{font-size:1.4rem}
 .no-fav.on{background:var(--dz-gold);color:#2b2a24}
-.no-drow{display:flex;gap:8px;align-items:flex-start;margin-top:2px;color:var(--dz-mute)}
-.no-desc{width:100%;border:0;background:transparent;font:inherit;font-size:.95rem;line-height:1.4;color:var(--dz-mute);resize:none}
+.no-drow{display:flex;gap:8px;align-items:flex-start;margin-top:4px;color:var(--dz-mute)}
+.no-desc{width:100%;border:2px solid var(--dz-line);background:var(--dz-surface);border-radius:var(--dz-r-s);padding:8px 12px;font:inherit;font-size:.95rem;line-height:1.4;color:var(--dz-ink);resize:none}
 .no-seg{display:inline-flex;flex:none;border-radius:var(--dz-r-pill);background:var(--dz-surface2);padding:4px;gap:4px}
 .no-seg button{letter-spacing:0;text-transform:none;white-space:nowrap;border:0;background:transparent;font:inherit;font-weight:800;font-size:.95rem;min-height:44px;padding:0 16px;border-radius:var(--dz-r-pill);color:var(--dz-mute);display:inline-flex;align-items:center;gap:6px}
 .no-seg button.active{background:var(--dz-accent);color:var(--dz-accent-ink)}
-@media(max-width:700px){.no-info{flex-direction:column}.no-title{font-size:1.45rem}.no-seg{align-self:stretch}.no-seg button{flex:1;justify-content:center}}
+.no-octseg{margin:10px 0 2px}
+@media(max-width:560px){.no-h{font-size:1.25rem}}
 
 /* Notenzeile */
 .no-score{background:var(--dz-surface);border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-card);padding:4px 0;min-width:0}
 #noScore{display:block;width:100%;height:auto}
 .no-ln{stroke:var(--dz-mute);stroke-width:1.5}
+.no-ledger{stroke-width:1.7}
 .no-bar{stroke:var(--dz-mute);stroke-width:2}
 .no-clef{fill:none;stroke:var(--dz-ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 .no-n{cursor:pointer;outline:none}
 .no-hit{fill:transparent}
 .no-selbox{fill:var(--dz-t2);stroke:var(--dz-accent);stroke-width:2}
 .no-n:focus-visible .no-hit{stroke:var(--dz-accent);stroke-width:3}
-.no-cur{stroke:var(--dz-accent2);stroke-width:3}.no-curd{fill:var(--dz-accent2)}
+.no-playdot{fill:var(--dz-accent2)}
+.no-cur{stroke:var(--dz-accent2);stroke-width:3;stroke-dasharray:4 3}
+.no-curflag{fill:var(--dz-accent2)}
 .no-empty{fill:var(--dz-mute)}
-.no-lview{padding:16px 18px}.no-lview h3{margin:0 0 10px;font-size:1rem;color:var(--dz-mute)}
+.no-lview{padding:16px 18px}.no-lview h3{margin:10px 0 10px;font-size:1rem;color:var(--dz-mute)}
 .no-lrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.no-lk{min-width:64px;min-height:72px;border:2px solid var(--dz-line);border-bottom-width:4px;border-radius:var(--dz-r-s);background:var(--dz-surface);font:inherit;font-size:1.6rem;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px}
+.no-lk{position:relative;min-width:64px;min-height:72px;border:2px solid var(--dz-line);border-bottom-width:4px;border-radius:var(--dz-r-s);background:var(--dz-surface);font:inherit;font-size:1.6rem;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 8px}
 .no-lk small{font-size:.7rem;color:var(--dz-mute);font-weight:700}
 .no-lk.sel{background:var(--dz-t2);border-color:var(--dz-accent)}
-.no-lcur{width:5px;height:60px;border-radius:5px;background:var(--dz-accent2)}
+.no-lk.playing::after{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--dz-accent2)}
+.no-lcur{position:relative;width:5px;height:60px;border-radius:5px;background:var(--dz-accent2)}
+.no-lcur::before{content:"";position:absolute;top:-2px;left:5px;border:6px solid transparent;border-left-color:var(--dz-accent2)}
 .no-empty-t{margin:0;color:var(--dz-mute)}
 
-/* Abspielen */
-.no-trans{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px}
-.no-trow2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.no-chip{display:inline-flex;align-items:center;font-weight:800;background:var(--dz-surface2);border-radius:var(--dz-r-pill);padding:8px 14px;min-height:40px}
-.no-snd{border:0;background:transparent;font:inherit;font-weight:800;color:var(--dz-ink);min-height:40px;padding:0}
+/* Abspiel-Leiste, eingebettet im Notenbild */
+.no-playbar{display:flex;align-items:center;gap:10px;padding:10px 14px 2px}
+.no-chip{display:inline-flex;align-items:center;font-weight:800;background:var(--dz-surface2);border-radius:var(--dz-r-pill);padding:6px 12px;min-height:34px;color:var(--dz-mute);font-size:.9rem}
 
-/* Note hinzufügen */
-.no-add{padding:14px 18px;background:var(--dz-t1)}
-.no-add-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.no-add-h h2{margin:0;font-size:1.2rem}.no-add-h p{margin:2px 0 0;color:var(--dz-mute);font-size:.88rem}
-.no-durs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.no-dur{min-width:100px;min-height:52px;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface);box-shadow:var(--dz-sh-soft);font:inherit;font-weight:800;color:var(--dz-ink);padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+/* Symbol-Knöpfe (nur Icon), für Abspielen, Note ändern, Tempo/Farbcode */
+.no-ibtn{min-width:44px;min-height:44px;width:44px;height:44px;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface2);color:var(--dz-ink);display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--dz-sh-soft)}
+.no-ibtn:disabled{opacity:.35}
+.no-ibtn.active,.no-ibtn[aria-pressed="true"],.no-ibtn[aria-checked="true"]{background:var(--dz-accent);color:var(--dz-accent-ink)}
+.no-ibtn-play{width:52px;height:52px;background:var(--dz-accent);color:var(--dz-accent-ink)}
+.no-ibtn.no-danger{color:var(--dz-bad)}
+.no-ibtn:active{transform:scale(.94)}
+.no-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 14px;padding:10px 14px;background:var(--dz-surface);border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-card)}
+.no-edit-bar{display:flex;flex-wrap:wrap;gap:6px}
+.no-paste.active,.no-paste[aria-pressed="true"]{background:var(--dz-surface2)}
+.no-ribbon{display:flex;align-items:center;gap:10px;margin-left:auto;padding-left:12px;border-left:2px solid var(--dz-line)}
+.no-temposeg{display:inline-flex;gap:6px}
+.no-sm{width:40px;height:40px;min-width:40px;min-height:40px;padding:0;font-size:1.15rem;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface2)}
+.no-sm.active{background:var(--dz-accent);color:var(--dz-accent-ink)}
+
+/* Note hinzufügen (Seitenleiste) */
+.no-add{padding:14px 16px;background:var(--dz-surface);border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-card);height:100%;box-sizing:border-box}
+.no-add h2{margin:0 0 10px;font-size:1.1rem}
+.no-durs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.no-dur{min-width:48px;min-height:48px;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface);box-shadow:var(--dz-sh-soft);font:inherit;font-weight:800;color:var(--dz-ink);padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .no-dur.active{background:var(--dz-accent);color:var(--dz-accent-ink)}
-.no-keys{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.no-keys{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.no-keys-sm{grid-template-columns:repeat(4,minmax(0,1fr))}
 .no-key,.no-lkey{border:2px solid var(--dz-line);border-radius:var(--dz-r-s);background:var(--dz-surface);padding:0;overflow:hidden;color:var(--dz-ink)}
 .no-key{height:84px}.no-key svg{width:100%;height:100%;display:block}
 .no-key:hover,.no-lkey:hover{border-color:var(--dz-accent)}
 .no-lkey{min-height:72px;font:inherit;font-size:1.7rem;font-weight:800;border-bottom-width:4px}
 .no-key:active,.no-lkey:active,.no-dur:active,.no-lk:active{transform:scale(.96)}
-@media(max-width:560px){.no-keys{grid-template-columns:repeat(4,minmax(0,1fr))}.no-dur{min-width:0;flex:1 1 calc(50% - 8px)}}
+.no-keys-sm .no-key{height:52px}
+.no-keys-sm .no-lkey{min-height:48px;font-size:1.3rem}
+@media(min-width:900px){.no-keys-sm{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:560px){.no-keys-sm{grid-template-columns:repeat(4,minmax(0,1fr))}.no-durs{justify-content:center}}
 @media(min-width:700px) and (max-height:820px){.no-key{height:72px}.no-lkey{min-height:64px}}
-
-/* Seitenleiste */
-.no-side-c{padding:14px 16px}
-.no-side-c h2{margin:0 0 10px;font-size:1.05rem}
-.no-mute{margin:0;color:var(--dz-mute);font-size:.9rem}
-.no-edit{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.no-edit .btn{min-height:48px;padding:0 8px;font-size:.92rem}
-.no-danger{color:var(--dz-bad)}
-.no-speed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.no-sm{font-size:.88rem;min-width:0;padding:0 4px;min-height:48px;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface2);font:inherit;font-weight:800;color:var(--dz-ink)}
-.no-sm.active{background:var(--dz-accent);color:var(--dz-accent-ink)}
-.no-tg{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:60px;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface2);padding:8px 12px;text-align:left;font:inherit;color:var(--dz-ink)}
-.no-tg small{display:block;color:var(--dz-mute);font-size:.78rem}
-.no-sw{flex:none;width:48px;height:28px;border-radius:99px;background:var(--dz-line);padding:4px;transition:background .2s}
-.no-sw i{display:block;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
-.no-sw.on{background:var(--dz-ok)}.no-sw.on i{transform:translateX(20px)}
 
 /* Meine Lieder */
 .no-lib{position:fixed;inset:0;background:rgba(31,40,44,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:60}
@@ -852,10 +861,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .no-song-d{position:absolute;right:8px;top:8px;width:48px;height:48px;border:0;border-radius:var(--dz-r-s);background:var(--dz-surface2);color:var(--dz-bad);display:grid;place-items:center}
 .no-new{min-height:150px;border:2px dashed var(--dz-line);border-radius:var(--dz-r-m);background:transparent;font:inherit;font-weight:800;font-size:1.05rem;color:var(--dz-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
 .no-new span{font-size:2rem;line-height:1}
-@media(prefers-reduced-motion:reduce){.no-sw,.no-sw i{transition:none}}
-
-.no-edit .btn,.no-trans .btn.sec{background:var(--dz-surface2)}
-.no-edit .btn:disabled{opacity:.4}
+@media(prefers-reduced-motion:reduce){.no-ibtn{transition:none}}
 
 /* ===== Schatzkammer ===== */
 .tkopen{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
@@ -1537,23 +1543,52 @@ body[data-theme="nacht"] .flagstate.on{background:#1f4a2e;color:#bfe9cc}
 .dz-lvb{position:absolute;right:-8px;bottom:-2px;padding:2px 9px;border-radius:99px;background:#e9c35a;color:#3a2a00;font-weight:900;font-size:.72rem;border:2px solid var(--dz-bg,#f2f0ea);white-space:nowrap}
 .dz-head .dz-me strong{max-width:12ch;font-size:.95rem;text-align:center}
 @media(max-width:560px){.dz-ring{width:76px;height:76px}.dz-ring-in{width:64px;height:64px}.dz-ring-in .avwrap{--s:60px;width:60px;height:60px}.dz-head .dz-me{min-width:76px}}
+.hw-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--dz-badBg,#fbe3e1);color:var(--dz-bad,#a4403f);border:2px solid var(--dz-bad,#a4403f);border-radius:var(--dz-r-m);padding:12px 16px;margin:0 0 14px;font-weight:700}
+.hw-notice span{display:flex;align-items:center;gap:8px}
 .pgtbl{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .pgrow{display:grid;grid-template-columns:minmax(110px,1fr) minmax(120px,1.6fr) auto auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid rgba(0,0,0,.07)}
 @media(max-width:620px){.pgrow{grid-template-columns:1fr auto}.pgrow span.small{grid-column:1/3}}
-/* Notizbuch: Zettel-Wand */
+/* Notizbuch: Zettel-Wand (Zettel + Liste, durchgehend scrollbar) */
 .nz-edit textarea{width:100%;min-height:92px;resize:vertical;font-size:1.05rem}
+.nz-edit .txt{width:100%}
+.nz-seg{margin-bottom:10px}
 .nz-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px}
 .nz-btns{display:flex;gap:8px;flex-wrap:wrap}.nz-cnt{font-weight:800;color:var(--dz-mute)}.nz-cnt.full{color:var(--dz-bad,#a4403f)}
-.nz-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;padding:6px 4px 14px}
-.nz-note{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:10px;text-align:left;min-height:130px;padding:18px 16px 12px;border:0;border-radius:4px 4px 24px 4px;box-shadow:2px 6px 12px rgba(0,0,0,.16);transform:rotate(var(--r,0deg));font:inherit;color:#3a3426;transition:transform .15s}
+.nz-tagrow{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+.nz-tag{border:2px solid var(--dz-line);border-radius:var(--dz-r-pill);background:var(--dz-surface);font:inherit;font-weight:800;font-size:.88rem;min-height:40px;padding:0 14px;color:var(--dz-ink)}
+.nz-tag.on{background:var(--dz-accent);color:var(--dz-accent-ink);border-color:var(--dz-accent)}
+.nz-draft-items{list-style:none;margin:8px 0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:160px;overflow:auto}
+.nz-draft-items li{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--dz-surface2);border-radius:var(--dz-r-s);padding:8px 10px}
+.nz-rm{flex:none;width:36px;height:36px;border:0;border-radius:var(--dz-r-s);background:transparent;color:var(--dz-bad);display:grid;place-items:center}
+.nz-additem{display:flex;gap:8px;margin:6px 0 4px}
+.nz-additem .txt{flex:1}
+.nz-additem .btn{flex:none}
+.nz-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;padding:6px 4px 14px}
+.nz-note{position:relative;display:flex;flex-direction:column;gap:8px;text-align:left;min-height:160px;max-height:230px;padding:18px 16px 12px;border:0;border-radius:4px 4px 24px 4px;box-shadow:2px 6px 12px rgba(0,0,0,.16);transform:rotate(var(--r,0deg));font:inherit;color:#3a3426;transition:transform .15s;overflow:hidden}
 .nz-note:hover{transform:rotate(0deg) translateY(-3px)}
-.nz-y{background:#fbeaa0}.nz-m{background:#cfe9d6}.nz-s{background:#cfe3f1}
-.nz-t{font-size:1.05rem;line-height:1.35;font-weight:700;word-break:break-word}
+.nz-y{background:#fbeaa0}.nz-m{background:#cfe9d6}.nz-s{background:#cfe3f1}.nz-p{background:#f6c9dd}.nz-o{background:#f7d9b8}.nz-l{background:#ddd3f0}
+.nz-t{flex:1;font-size:1.05rem;line-height:1.35;font-weight:700;word-break:break-word}
 .nz-note small{color:#6b6450;font-weight:700}
+.nz-chip{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.55);border-radius:var(--dz-r-pill);padding:4px 10px;font-size:.78rem;font-weight:800;color:#3a3426}
 .nz-pin{position:absolute;top:-6px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#e0a823;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-.nz-older ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
-.nz-old{border:0;background:transparent;font:inherit;text-align:left;padding:6px 0;color:inherit;width:100%;border-bottom:1px solid rgba(0,0,0,.08)}
-.nz-old small{color:var(--dz-mute);font-weight:800;margin-right:6px}
+.nz-liste{border-radius:14px}
+.nz-liste .nz-pin{background:#4b91c8}
+.nz-cardhead{display:flex;align-items:center;gap:8px;border:0;background:transparent;font:inherit;color:#3a3426;text-align:left;padding:0;width:100%}
+.nz-cardhead b{font-size:1.02rem;word-break:break-word}
+.nz-listicon{flex:none;display:inline-flex}
+.nz-items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;overflow:auto;flex:1}
+.nz-items li.done .nz-chk span:last-child{text-decoration:line-through;opacity:.6}
+.nz-chk{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;font:inherit;text-align:left;padding:3px 0;color:#3a3426;min-height:30px}
+.nz-box{flex:none;width:20px;height:20px;border-radius:6px;border:2px solid #3a3426;display:grid;place-items:center;color:#3a3426}
+.nz-items li.done .nz-box{background:#3a3426;color:#fff;border-color:#3a3426}
+
+/* „Noch zu“-Abzeichen (gesperrte Kacheln und Sperr-Bildschirme) */
+.dz-lockb{display:inline-flex;align-items:center;gap:4px;font-weight:800;color:var(--dz-mute,#626667)}
+.dz-lockb svg{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:2}
+.lockscr .dz-lockb{background:var(--dz-t2,#e7e3da);border-radius:999px;padding:5px 12px;font-size:.9rem;margin:2px 0 6px}
+.dz-tile.locked .dz-tag{background:var(--dz-surface)}
+
+.nz-new{min-height:44px;padding:0 16px}
 
 </style>
 <!-- Embedded fonts: Baloo 2 + Nunito (subset)
@@ -5256,13 +5291,14 @@ const DEF = () => ({
   buch: { st: {} }, wes: { eggs: [], list: [], warm: 0, given: 0 }, story: { read: {}, done: {}, choices: {} }, songs: [], mus: {},
   streak: { n: 0, last: '', best: 0 }, tests: [],
   stats: { q: 0, c: 0, fixed: 0, bought: 0, goalDays: 0, blocks: 0, perfect: 0, decks: 0, rounds: 0 },
-  daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
+  daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, rg: { tot: 0, a: {} }, rgExt: { tot: 0, a: {} }, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
+  hw: { log: {}, notified: '' },                // Hausaufgaben-Verlauf je Tag (für den „2 Tage“-Hinweis); nichts davon wird je als Lernfortschritt gezählt
   goal: null, earned: [], notes: [], noten: { songs: [], act: null, pref: {} }, mig3: 1,
   geo: { sessions: 0, seen: {}, ok: {}, miss: {}, k: {}, cards: {}, ms: {}, kd: {}, perf: 0, tpf: 0, kpf: 0, best: 0 },
   world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {}, wishes: [], tix: [] },
   flags: {},                                   // ausgeblendete Funktionen (wesen, buch, insel): Eltern können sie einschalten – nur Anzeige, Daten bleiben
   facts: { i: 0, seen: {} },                   // Lustige Fakten: Stelle im Stapel, schon gelesene
-  cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {}, pageMin: 3, pageWin: 2, pageNeed: 10, plang: 'de' }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
+  cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {}, plang: 'de' }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
 });
 function mergeState(raw) {
   const d = DEF();
@@ -5415,9 +5451,13 @@ const bestRound = key => { const t = S.topics[key], d = S.decks[key]; let m = 0;
 /* ---------- rewards ---------- */
 function touchDay() {
   const t = ymd();
-  if (S.daily.d !== t) S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, pg: {}, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } };
+  if (S.daily.d !== t) {
+    if (S.daily.d && typeof onDayRollover === 'function') { try { onDayRollover(S.daily); } catch (e) { console.error(e); } }
+    S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, rg: { tot: 0, a: {} }, rgExt: { tot: 0, a: {} }, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } };
+  }
   if (!S.daily.cr) S.daily.cr = { left: 0, grants: 0, used: 0, lvl: false, goal: false };
-  if (!S.daily.pg || typeof S.daily.pg !== 'object') S.daily.pg = {};
+  if (!S.daily.rg || typeof S.daily.rg !== 'object') S.daily.rg = { tot: 0, a: {} };
+  if (!S.daily.rgExt || typeof S.daily.rgExt !== 'object') S.daily.rgExt = { tot: 0, a: {} };
 }
 const streakNow = () => (S.streak.last === ymd() || S.streak.last === yesterday()) ? S.streak.n : 0;
 /* Protokoll „Neu verdient“: jede Belohnung nennt ihren Grund */
@@ -5688,7 +5728,10 @@ const ICO = {
   next: '<path d="M9 5l7 7-7 7"/>',
   certificate: '<rect x="3.5" y="5" width="17" height="12" rx="2" class="a"/><path d="M7.5 9h9M7.5 12.5h5M15 17l1.2 3.5 1.8-1.5 1.8 1.5L18.5 17"/>',
   wand: '<path d="M5 19L15.5 8.5" /><path d="M14 4l1.2 2.6L18 7.8l-2.8 1.2L14 11.6l-1.2-2.6L10 7.8l2.8-1.2z" class="a"/>',
-  camera: '<path d="M4 8.5h3l1.5-2.5h7L17 8.5h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z" class="a"/><circle cx="12" cy="13.5" r="3.3"/>'
+  camera: '<path d="M4 8.5h3l1.5-2.5h7L17 8.5h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z" class="a"/><circle cx="12" cy="13.5" r="3.3"/>',
+  up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+  paste: '<rect x="6" y="7" width="12" height="14" rx="2" class="a"/><rect x="9" y="3.5" width="6" height="4" rx="1"/><path d="M9 12.5h6M9 16h6"/>'
 };
 const ico = (n, s) => `<svg class="ico" viewBox="0 0 24 24" width="${s || 24}" height="${s || 24}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[n] || ''}</svg>`;
 /* Währungs-Symbole: Münze, Stern, Flamme als eigene Icons (Text-Emojis bleiben in Fließtexten) */
@@ -6422,8 +6465,8 @@ function importData(txt, force) {
 }
 
 /* ----- PIN ----- */
-function requirePin(act, arg) {
-  if (ADMIN || Date.now() < UI.pinUntil) { ACT[act](arg); return; }
+function requirePin(act, arg, always) {
+  if (ADMIN || (!always && Date.now() < UI.pinUntil)) { ACT[act](arg); return; }
   PIN = S.pin ? { act, arg, buf: '', mode: 'enter', msg: 'Eltern-PIN eingeben' }
     : { act, arg, buf: '', mode: 'create1', msg: 'Lege eine PIN für den Eltern-Bereich fest (4 Ziffern).' };
   pinDraw();
@@ -6560,7 +6603,7 @@ const ACT = {
   shopAt: id => shopAt(id), shopAll: () => { UI.shopAll = true; render(); },
   buyItemYes: id => { closeModal(); const it = CATALOG[id]; if (buyItem(id)) { render(); sfx('magic'); toast('🎁', `${esc(it.name)} gehört jetzt dir!`); } },
   trophies: () => go('trophies'),
-  parent: () => requirePin('parentGo'), parentGo: () => go('parent'), print: () => window.print(),
+  parent: () => requirePin('parentGo', undefined, true), parentGo: () => go('parent'), print: () => window.print(),
   dzFlag: id => { S.flags = S.flags || {}; S.flags[id] = !flagOn(id); save(); render(); },
   saveName: () => { S.name = ($('#nameIn').value || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); render(); },
   export: exportData, importYes: () => { closeModal(); importData(UI.pending, true); },
@@ -6659,7 +6702,7 @@ if (typeof MutationObserver !== 'undefined') {
 const NAV = { stack: [], isBack: false, sentinel: false };
 const DZ_TRANSIENT = new Set(['play', 'test', 'result', 'testResult', 'geoPlay', 'geoResult', 'limit', 'storyread']);
 const DZ_PARENT = { storyread: 'story' };                   // Seiten, die nicht im Verlauf stehen: Zurück geht hierhin
-const DZ_LABEL = { home: 'Start', hefte: 'Meine Hefte', extra: 'Extra Spaß', rewards: 'Meine Welt', geo: 'Europa Entdecker', profile: 'Profil', shop: 'Shop', trophies: 'Pokale', schatz: 'Karten', look: 'Farben & Töne', avatar: 'Das bin ich', musik: 'Musik', story: 'Geschichte', welt: 'Weltreise', weltPass: 'Mein Reisepass', weltReise: 'Reise', fakten: 'Lustige Fakten', geoCards: 'Länderkarten', geoPass: 'Stempel', parent: 'Eltern', module: 'Heft', topic: 'Übung', mistakes: 'Fehler-Heft', testSetup: 'Mini-Test', buch: 'Mein Buch', insel: 'Meine Insel', wesen: 'Meine Wesen', notiz: 'Notizbuch' };
+const DZ_LABEL = { home: 'Start', hefte: 'Meine Hefte', extra: 'Extra Spaß', rewards: 'Meine Welt', geo: 'Europa Entdecker', profile: 'Profil', shop: 'Shop', trophies: 'Pokale', schatz: 'Karten', look: 'Farben & Töne', avatar: 'Das bin ich', musik: 'Musik', story: 'Geschichte', welt: 'Weltreise', weltPass: 'Mein Reisepass', weltReise: 'Reise', fakten: 'Lustige Fakten', geoCards: 'Länderkarten', geoPass: 'Stempel', parent: 'Eltern', module: 'Heft', topic: 'Übung', mistakes: 'Fehler-Heft', testSetup: 'Mini-Test', buch: 'Mein Buch', insel: 'Meine Insel', wesen: 'Meine Wesen', notiz: 'Notizbuch', kreativhefte: 'Ideenwerkstatt', noten: 'Notenheft' };
 const DZ_KEEP_UI = k => !['say', 'pending', 'pinUntil', 'pinCreative', 'ro', 'wNew', 'wFlight'].includes(k);
 const dzSnap = () => { const o = {}; Object.keys(UI).forEach(k => { const v = UI[k]; if (DZ_KEEP_UI(k) && (v === null || ['string', 'number', 'boolean'].includes(typeof v))) o[k] = v; }); return o; };
 function dzNavPush(from, to) {
@@ -6966,6 +7009,7 @@ const greetWord = (h = new Date().getHours()) => h >= 5 && h < 11 ? 'Guten Morge
 const homeGreeting = (h) => { const nm = S.name || S.avName || '', w = greetWord(h); return nm ? `${w}, ${esc(nm)}!` : `${w}!`; };
 
 /* ---------- Startseite: der Hub ---------- */
+let HOME_N = 5;                                                   // Spaltenzahl der Startseite – Unterordner der Ideenwerkstatt nutzen dieselbe Kachelgröße
 VIEWS.home = () => {
   const n = S.daily.d === ymd() ? S.daily.n : 0, goal = S.cfg.goal, nu = nextUp();
   const progress = Math.min(n, goal), pct = Math.min(100, Math.round(n / goal * 100)), done = n >= goal;
@@ -6977,9 +7021,12 @@ VIEWS.home = () => {
     { art: 'hefte', title: 'Meine Hefte', sub: nu ? `Weiter: ${nu.mod.id}` : 'Alles geschafft', act: 'hefte' },
     ...subjTiles(),
     { art: 'extra', title: 'Extra Spaß', sub: `${ex.length} Spiele`, act: 'extra' },
+    { art: 'notiz', title: 'Ideenwerkstatt', sub: 'Notizbuch & Notenheft', act: 'kreativhefte' },
     { art: 'welt', title: 'Meine Welt', sub: 'Shop, Musik & mehr', act: 'rewards' }
   ];
-  return dzHead() + dzHero('', hello, sub, tree) + dzSec('Wohin heute?') +
+  tiles.forEach(t => { const lt = t.act ? lockTag(t.act) : ''; if (lt) { t.tag = (t.tag || '') + lt; t.locked = true; } });
+  HOME_N = tiles.length;
+  return dzHead() + hwNoticeHtml() + dzHero('', hello, sub, tree) + dzSec('Wohin heute?') +
     dzGrid(tiles.length, tiles.map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join(''), 'dz-home4') +
     `<div class="dz-foot"><button class="dz-linkbtn dz-snd" data-act="toggleSound" aria-pressed="${S.cfg.sound !== false}" aria-label="${S.cfg.sound !== false ? 'Ton ausschalten' : 'Ton einschalten'}">${ico(S.cfg.sound !== false ? 'speaker' : 'speakerOff', 18)} ${S.cfg.sound !== false ? 'Ton an' : 'Ton aus'}</button><button class="dz-linkbtn" data-act="parent">${ico('gear', 16)} Für Eltern</button></div>
     ${persistOK ? '' : '<p class="ad-save-warning" role="alert">Gerade kann nichts gespeichert werden. Bitte lass einen Erwachsenen eine Sicherung exportieren.</p>'}`;
@@ -7053,7 +7100,6 @@ function worldTile(id, i) {
   const tag = closed ? (f.creative === 'closed' ? `${ico('lock', 13)} Noch zu` : `${ico('eye', 13)} Ansehen`) : '';
   const cls = TILE_CLS[i % 3];
   if (id === 'fakten') return dzTile({ cls, art: 'fakten', title: 'Lustige Fakten', sub: factsSub(), act: 'fakten' });
-  if (id === 'notiz') return dzTile({ cls, art: 'notiz', title: 'Notizbuch', sub: noteSub(), act: 'notiz' });
   if (id === 'shop') return dzTile({ cls, art: 'shop', title: 'Shop', sub: `${S.coins} Münzen`, act: 'shop' });
   if (id === 'musik') return dzTile({ cls, art: 'musik', title: 'Meine Musik', sub: closed ? 'Nach dem Üben' : (f.sub ? f.sub() : ''), act: 'musik', tag });
   if (id === 'story') return dzTile({ cls, art: 'story', title: dzPoss(FN()) + ' Geschichte', sub: (typeof epList === 'function') ? `${epList().filter(epUnlocked).length} von ${epList().length} Episoden` : '', act: 'story' });
@@ -7061,12 +7107,27 @@ function worldTile(id, i) {
   const nm = { wesen: 'Meine Wesen', buch: 'Mein Buch', insel: 'Meine Insel' }[id];
   return dzTile({ cls, art: id === 'wesen' ? 'fino' : id === 'buch' ? 'hefte' : 'welt', title: nm, sub: f && f.sub ? f.sub() : '', act: id, tag });
 }
+const worldTileL = (id, i) => {
+  const h = worldTile(id, i), lt = lockTag(id);
+  if (!lt) return h;
+  const tagged = h.includes('class="dz-tag"') ? h : h.replace('<span class="dz-in">', `<span class="dz-tag">${lt}</span><span class="dz-in">`);
+  return tagged.replace('class="dz-tile ', 'class="dz-tile locked ');
+};
 VIEWS.rewards = () => {
-  const ids = ['fakten', 'musik', 'shop', 'story', 'welt', 'notiz'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
+  const ids = ['fakten', 'musik', 'shop', 'story', 'welt'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
   return topBar('Meine Welt', 'home') + dzHero('', 'Meine Welt', 'Von dir verdient. Für dich gemacht.', '', 'sm') + dzSec('Entdecken & sammeln') +
-    dzGrid(ids.length <= 6 ? ids.length : 4, ids.map(worldTile).join(''), 'dz-welt5') +
+    dzGrid(ids.length <= 6 ? ids.length : 4, ids.map(worldTileL).join(''), 'dz-welt5') +
     `<p class="ad-creative-note">${creativeOK() ? (creativeMode() === 'always' ? 'Deine Kreativbereiche sind offen.' : `Deine Kreativzeit: ${fmtT(creativeLeft())}`) : esc(creativeInfo())}</p>`;
 };
+/* ---------- Ideenwerkstatt (früher „Kreativhefte“): Notizbuch + Notenheft, direkt auf der Startseite, nie gesperrt ---------- */
+VIEWS.kreativhefte = () => {
+  const tiles = [
+    { cls: TILE_CLS[0], art: 'notiz', title: 'Notizbuch', sub: noteSub(), act: 'notiz' },
+    { cls: TILE_CLS[1], art: 'noten', title: 'Notenheft', sub: noSub(), act: 'noten' }
+  ].map(dzTile).join('');
+  return topBar('Ideenwerkstatt', 'home') + dzHero('', 'Ideenwerkstatt', 'Gedanken aufschreiben und kleine Melodien festhalten.', '', 'sm') + dzSec('Was möchtest du festhalten?') + dzGrid(HOME_N, tiles, 'dz-home4 dz-kreativ');
+};
+Object.assign(ACT, { kreativhefte: () => go('kreativhefte') });
 
 /* ---------- Mein Profil: Bild, Level, alles Verdiente, Namen ----------
    S.name   = mein Name (Begrüßung + Urkunde)
@@ -7148,7 +7209,7 @@ function adminFill() {
   try { CARDS.forEach(c => { if (!S.cards[c.id]) S.cards[c.id] = Date.now(); }); } catch (e) { }
   try { const w = wS(); Object.keys(WP).forEach(id => { if (!w.open[id]) w.open[id] = wDay(); }); } catch (e) { }
   try { const f = fSt(); f.early = Math.max(f.early || 0, 50); } catch (e) { }
-  S.cfg.shopMin = 0; S.cfg.limitMin = 0; S.cfg.pageMin = 0;
+  S.cfg.shopMin = 0; S.cfg.limitMin = 0;
   save();
 }
 const adminBar = () => ADMIN
@@ -7972,15 +8033,17 @@ VIEWS.parent = () => {
     ${DZ_FLAGS.map(f => { const t = PT_FLAG[f.id], on = flagOn(f.id); return `<div class="cfg"><div><b>${PT(t[0], t[2])}</b> <span class="flagstate ${on ? 'on' : ''}">${on ? PT('sichtbar', 'visible') : PT('ausgeblendet', 'hidden')}</span><br><span class="small mute">${PT(t[1], t[3])}</span></div>${ptSw(on, 'dzFlag', f.id, PT(t[0], t[2]))}</div>`; }).join('')}
     ${sub(PT('Lernziel', 'Learning goal'))}
     ${ptRow(PT('Tagesziel', 'Daily goal'), PT('So viele Aufgaben pro Tag für Serie, Karte und Kreativzeit. Heute: ', 'Tasks per day for the streak, a card and creative time. Today: ') + `${today}`, ptSel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, PT(n + ' Aufgaben', n + ' tasks')]), S.cfg.goal))}
-    ${sub(PT('Zeiten & Limits', 'Time & limits'))}
-    <p class="small mute" style="margin:0 0 6px">${PT('Jede Zeit lässt sich mit „Zurücksetzen“ für heute auf Anfang stellen. Morgen beginnt alles von selbst neu.', 'Each time can be set back to the start of today with “Reset”. Everything restarts by itself tomorrow.')}</p>
+    ${sub(PT('Hausaufgaben-Sperre', 'Homework gate'))}
+    <p class="small mute" style="margin:0 0 6px">${PT('Jeder Tag beginnt gesperrt: Profil und Meine Welt sind erst offen, wenn 20 Minuten Hausaufgaben gemacht oder 25 Aufgaben gelöst wurden. Danach gilt: höchstens 5 Minuten je Bereich, höchstens 10 Minuten insgesamt – pro Tag. Europa Entdecker und die Ideenwerkstatt (Notizbuch + Notenheft) sind immer offen. Morgen beginnt alles von selbst neu.', 'Every day starts locked: Profile and My World open only once your child has done 20 minutes of homework or solved 25 tasks. Europe Explorer and the Idea Workshop (Notizbuch + Notenheft) are always open. After that: at most 5 minutes per area, at most 10 minutes in total – per day. Everything restarts by itself tomorrow.')}</p>
+    ${(() => { const hw = hwInfo(); return ptRow(PT('Heutiger Stand', "Today's status"), PT(`${hw.n} von ${hw.need} Aufgaben · ${fmtT(hw.sec)} von ${fmtT(hw.needSec)} Übungszeit.`, `${hw.n} of ${hw.need} tasks · ${fmtT(hw.sec)} of ${fmtT(hw.needSec)} practice time.`), hw.done
+      ? `<span class="tag on" style="margin-right:8px">${PT('Heute offen', 'Open today')}</span><button class="btn sm sec" data-act="hwReset">${PT('Wieder sperren', 'Lock again')}</button>`
+      : `<button class="btn sm sec" data-act="hwUnlock">${PT('Heute schon freigeben', 'Unlock for today')}</button>`); })()}
+    <div class="cfg" style="display:block"><b>${PT('Zeit insgesamt heute', 'Total time today')}</b><br><span class="small mute">${PT(`Genutzt: ${fmtT(rgTotalUsed())} von ${fmtT(rgTotalCap())}.`, `Used: ${fmtT(rgTotalUsed())} of ${fmtT(rgTotalCap())}.`)}</span>
+      <div class="row" style="margin-top:8px"><button class="btn sm sec" data-act="rgResetAllAct">${PT('Zurücksetzen', 'Reset')}</button><button class="btn sm sec" data-act="rgExtendAllAct">+5 ${PT('Min', 'min')}</button></div></div>
+    <div class="cfg" style="display:block"><b>${PT('Zeit je Bereich', 'Time per area')}</b><br><span class="small mute">${PT('„Zurücksetzen“ gibt dem Bereich heute neue Zeit. „+5 Min“ verlängert nur heute.', '“Reset” gives the area fresh time today. “+5 min” extends only for today.')}</span>
+      <div class="pgtbl">${rgAreaList().sort((a, b) => rgName(a).localeCompare(rgName(b), 'de')).map(a => { const used = rgAreaUsed(a), cap = rgAreaCap(a); return `<div class="pgrow"><b>${esc(rgName(a))}</b><span class="small mute">${fmtT(used)} / ${fmtT(cap)}</span><button class="btn sm sec" data-act="rgResetAreaAct" data-arg="${a}">${PT('Zurücksetzen', 'Reset')}</button><button class="btn sm sec" data-act="rgExtendAreaAct" data-arg="${a}">+5 ${PT('Min', 'min')}</button></div>`; }).join('')}</div></div>
+    ${sub(PT('Tageslimit (Üben)', 'Daily limit (practice)'))}
     ${ptRow(PT('Tageslimit (Üben)', 'Daily limit (practice)'), PT(`Nach dieser Übungszeit gibt es eine Pause. Heute: ${usedMin()} Min · ${today} Aufgaben${S.daily.unlocked ? ' · heute ohne Limit' : ''}.`, `A break after this much practice. Today: ${usedMin()} min · ${today} tasks${S.daily.unlocked ? ' · no limit today' : ''}.`), ptSel('cfgLimit', [[0, PT('Kein Limit', 'No limit')], [15, ptMin(15)], [20, ptMin(20)], [30, ptMin(30)], [45, ptMin(45)], [60, ptMin(60)], [90, ptMin(90)]], S.cfg.limitMin) + ptReset('limit'))}
-    ${ptRow(PT('Zeit pro Seite', 'Time per page'), PT('Gilt für jede Seite in „Meine Welt“ (Shop, Musik, Geschichte, Weltreise …). Nicht für Meine Hefte und Europa Entdecker. Danach ist die Seite zu, bis gearbeitet wurde. Ist das Tagesziel geschafft, entfällt die Grenze für den Tag.', 'Applies to every page in “My World” (shop, music, story, world trip …). Not to My Workbooks or Europe Explorer. Afterwards the page stays closed until your child has worked. Once the daily goal is reached the limit is lifted for that day.'), ptSel('cfgPageMin', [[0, PT('Aus', 'Off')], [1, ptMin(1)], [2, ptMin(2)], [3, ptMin(3)], [5, ptMin(5)], [10, ptMin(10)]], pgMin()))}
-    ${ptRow(PT('Fenster pro Seite und Tag', 'Windows per page per day'), PT('Wie oft eine Seite sich pro Tag öffnet, solange das Tagesziel fehlt.', 'How often a page opens per day while the daily goal is missing.'), ptSel('cfgPageWin', [1, 2, 3].map(n => [n, PT(n + '× pro Tag', n + '× per day')]), pgWin()))}
-    ${ptRow(PT('Arbeit zum Wiederöffnen', 'Work to reopen'), PT('So viele Aufgaben muss das Kind lösen, bevor sich eine geschlossene Seite wieder öffnet.', 'Tasks your child must solve before a closed page reopens.'), ptSel('cfgPageNeed', [3, 5, 10, 15, 20].map(n => [n, PT(n + ' Aufgaben', n + ' tasks')]), pgNeed()))}
-    ${ptRow(PT('Alle Seiten heute sperren', 'Lock all pages today'), PT('Schließt alle Seiten mit Seitenzeit (auch das Profil) bis morgen – auch wenn das Tagesziel geschafft ist. Üben geht immer. Morgen öffnet sich alles von selbst.', 'Closes every page with page time (including the profile) until tomorrow – even if the daily goal is reached. Practice always works. Everything reopens by itself tomorrow.'), ptSw(pgLockRec().all, 'pgLockAll', null, PT('Alle Seiten heute sperren', 'Lock all pages today')))}
-    <div class="cfg" style="display:block"><b>${PT('Seiten heute', 'Pages today')}</b><br><span class="small mute">${PT('Zeit, Fenster und Sperre je Seite. „Zurücksetzen“ gibt der Seite heute neue Zeit. „Sperren“ schließt nur diese Seite bis morgen.', 'Time, windows and lock per page. “Reset” gives the page fresh time today. “Lock” closes only this page until tomorrow.')}</span>
-      <div class="pgtbl">${pgAreas().map(a => { const st = pgState(a), r = S.daily.pg[a], lk = pgLocked(a), stt = lk ? PT('gesperrt', 'locked') : st.open ? PT('offen', 'open') + (st.left === Infinity ? '' : ` · ${fmtT(st.left)}`) : (st.final ? PT('für heute zu', 'closed today') : PT(`zu – noch ${st.need} Aufgaben`, `closed – ${st.need} more tasks`)); return `<div class="pgrow"><b>${esc(pgName(a))}</b><span class="small mute">${stt}${r ? ` · ${PT('Fenster', 'window')} ${r.w}/${pgWin()}` : ''}</span><button class="btn sm sec" data-act="pgReset" data-arg="${a}">${PT('Zurücksetzen', 'Reset')}</button>${ptSw(!!(pgLockRec().pages[a]), 'pgLockOne', a, PT('Sperren', 'Lock') + ' ' + pgName(a))}</div>`; }).join('')}</div></div>
     ${ptRow(PT('Shop-Zeit pro Tag', 'Shop time per day'), PT(`So lange darf das Kind pro Tag im Shop stöbern und einkaufen. Heute: ${Math.floor((S.daily.shopSec || 0) / 60)} Min.`, `How long your child may browse and buy in the shop per day. Today: ${Math.floor((S.daily.shopSec || 0) / 60)} min.`), ptSel('cfgShop', [[0, PT('Unbegrenzt', 'Unlimited')], [3, ptMin(3)], [5, ptMin(5)], [10, ptMin(10)]], S.cfg.shopMin == null ? 5 : S.cfg.shopMin) + ptReset('shop'))}
     ${sub(PT('Kreativzeit (Avatar, Buch, Musik, Insel, Wesen)', 'Creative time (avatar, book, music, island, creatures)'))}
     ${ptRow(PT('Kreativzeit', 'Creative time'), PT('Kreativzeit gibt es immer erst <b>nach dem Üben</b>: Tagesziel oder eine fertige Stufe öffnet ein Zeitfenster. „Gesperrt“ = nur ansehen, auch nach dem Üben.', 'Creative time always comes <b>after practice</b>: the daily goal or a finished Stufe opens a time window. “Locked” = view only, even after practice.'), ptSel('cfgCrMode', [['after', PT('Nach dem Üben', 'After practice')], ['locked', PT('Gesperrt', 'Locked')]], creativeMode()))}
@@ -8020,9 +8083,12 @@ function resetTime(what) {
 Object.assign(ACT, {
   plang: l => { S.cfg.plang = l === 'en' ? 'en' : 'de'; save(); render(); },
   rstTime: w => { resetTime(w); toast('↩️', PT('Zeit zurückgesetzt', 'Time reset')); render(); },
-  pgLockAll: () => { const l = pgLockRec(); l.all = !l.all; save(); toast(l.all ? '🔒' : '🔓', l.all ? PT('Alle Seiten sind heute gesperrt', 'All pages locked for today') : PT('Sperre aufgehoben', 'Lock removed')); render(); },
-  pgLockOne: a => { const l = pgLockRec(); l.pages[a] = !l.pages[a]; if (!l.pages[a]) delete l.pages[a]; save(); render(); },
-  pgReset: a => { pgReset(a); toast('↩️', PT('Zeit zurückgesetzt', 'Time reset')); render(); },
+  hwUnlock: () => { hwForceDone(true); toast('🔓', PT('Heute freigegeben', 'Unlocked for today')); render(); },
+  hwReset: () => { hwForceDone(false); toast('🔒', PT('Wieder gesperrt', 'Locked again')); render(); },
+  rgResetAllAct: () => { rgResetAll(); toast('↩️', PT('Zeit zurückgesetzt', 'Time reset')); render(); },
+  rgExtendAllAct: () => { rgExtendAll(5 * 60); toast('➕', PT('5 Minuten dazu', '5 minutes added')); render(); },
+  rgResetAreaAct: a => { rgResetArea(a); toast('↩️', PT('Zeit zurückgesetzt', 'Time reset')); render(); },
+  rgExtendAreaAct: a => { rgExtendArea(a, 5 * 60); toast('➕', PT('5 Minuten dazu', '5 minutes added')); render(); },
   dueReset: () => { S.cfg.due = {}; save(); toast('✅', PT('Termine: Ferien-Vorschlag', 'Deadlines: holiday suggestion')); render(); },
   crGrant: () => {
     touchDay(); const c = S.daily.cr, need = Math.min(10, S.cfg.goal || 20);
@@ -8032,12 +8098,6 @@ Object.assign(ACT, {
   },
   dzFlag: id => { S.flags = S.flags || {}; S.flags[id] = !flagOn(id); save(); render(); },
   toggleSound: () => { S.cfg.sound = S.cfg.sound === false; save(); render(); }
-});
-document.addEventListener('change', e => {
-  const t = e.target;
-  if (t.id === 'cfgPageMin') { S.cfg.pageMin = +t.value; save(); toast('✅', +t.value ? PT('Zeit pro Seite: ' + t.value + ' Min', 'Time per page: ' + t.value + ' min') : PT('Seitenzeit aus', 'Page time off')); render(); }
-  else if (t.id === 'cfgPageWin') { S.cfg.pageWin = +t.value; save(); toast('✅', PT('Gespeichert', 'Saved')); render(); }
-  else if (t.id === 'cfgPageNeed') { S.cfg.pageNeed = +t.value; save(); toast('✅', PT('Gespeichert', 'Saved')); render(); }
 });
 
 /* =====================================================================
@@ -9135,13 +9195,14 @@ registerFeature({
 
 /* =====================================================================
    NOTENHEFT · kleine Melodien mit einer Stimme aufschreiben, anhören und speichern
-   (aus „Denkzauber Music Notebook“ übernommen: eigene Seite auf der Startseite unter „Wohin heute?“)
-   - Notenzeilen (Violinschlüssel) ODER Buchstaben C D E F G A H, Eingabe per Notenbild-Tasten oder Buchstaben
-   - kurz · normal · lang · Pause, Ändern (höher/tiefer/länger/kürzer/kopieren/löschen), Rückgängig/Wiederholen
+   (Teil von „Kreativhefte“, erreichbar über Meine Welt)
+   - Notenzeilen (Violinschlüssel) ODER Buchstaben C D E F G A H, zwei Tonlagen (tief/hoch)
+   - kurz · normal · lang · Pause, Ändern (höher/tiefer/länger/kürzer), Mehrfachauswahl, Kopieren/Einfügen, Rückgängig/Wiederholen
    - Abspielen mit Web Audio (kein Download, keine Dateien), Tempo langsam/mittel/schnell, Farbcode C–H
    - mehrere Lieder („Meine Lieder“), Favorit, Beschreibung, Löschen nur nach Rückfrage
-   Zustand: S.noten = { songs:[{ id, title, description, favorite, tempo, colorMode, createdAt, updatedAt, notes:[{ id, name, duration, rest }] }], act: Id, pref:{ view, entry, dur } }
-   Speicherung: im normalen App-Speicher (S) – offline, im Admin-Modus getrennt. Für die Seitenzeit gilt die Regel für alle Seiten außer Hefte/Europa.
+   Zustand: S.noten = { songs:[{ id, title, description, favorite, tempo, colorMode, createdAt, updatedAt, notes:[{ id, name, duration, rest, oct }] }], act: Id, pref:{ view, entry, dur, oct } }
+   `oct` (0 oder 1) ist neu: fehlt er bei alten Liedern, gilt 0 – Ton und Bild bleiben wie vorher (sichere Migration).
+   Speicherung: im normalen App-Speicher (S) – offline, im Admin-Modus getrennt.
    Alles hier heißt no… / NO_… (ein gemeinsames Skript).
    ===================================================================== */
 const NO_NAMES = ['C', 'D', 'E', 'F', 'G', 'A', 'H'];
@@ -9149,7 +9210,7 @@ const NO_PITCH = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, H: 6 };
 const NO_COL = { C: '#E45B5B', D: '#E58A42', E: '#D7AD35', F: '#55A46A', G: '#4B91C8', A: '#706FC5', H: '#A166B5' };
 const NO_FREQ = { C: 261.63, D: 293.66, E: 329.63, F: 349.23, G: 392, A: 440, H: 493.88 };
 const NO_LEN = [{ id: 'short', label: 'Kurz', beats: .5, prev: .22 }, { id: 'normal', label: 'Normal', beats: 1, prev: .4 }, { id: 'long', label: 'Lang', beats: 2, prev: .7 }];
-const NO_TEMPO = { slow: { ms: 700, bpm: 80, label: 'Langsam' }, medium: { ms: 480, bpm: 110, label: 'Mittel' }, fast: { ms: 330, bpm: 140, label: 'Schnell' } };
+const NO_TEMPO = { slow: { ms: 700, bpm: 80, label: 'Langsam', em: '🐢' }, medium: { ms: 480, bpm: 110, label: 'Mittel', em: '🚶' }, fast: { ms: 330, bpm: 140, label: 'Schnell', em: '🐇' } };
 const NO_MAX_NOTES = 200, NO_MAX_SONGS = 60;
 const NO_STARTER = [['C', 'normal'], ['D', 'normal'], ['E', 'short'], ['F', 'short'], ['G', 'long'], ['E', 'normal'], ['C', 'long']];
 
@@ -9157,22 +9218,25 @@ DZ_LABEL.noten = 'Notenheft';
 DZ_ART.noten = '<rect x="6" y="9" width="52" height="34" rx="6" fill="#f4efe4" stroke="#52676c" stroke-width="2"/><path d="M12 19h40M12 25h40M12 31h40M12 37h40" stroke="#8a9a9b" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="22" cy="34" rx="4.6" ry="3.3" fill="#52676c" transform="rotate(-15 22 34)"/><path d="M26.4 33V16" stroke="#52676c" stroke-width="2" stroke-linecap="round"/><ellipse cx="36" cy="28" rx="4.6" ry="3.3" fill="#7f9a9f" transform="rotate(-15 36 28)"/><path d="M40.4 27V12" stroke="#7f9a9f" stroke-width="2" stroke-linecap="round"/><ellipse cx="48" cy="22" rx="4.6" ry="3.3" fill="#9db8a4" transform="rotate(-15 48 22)"/><path d="M52.4 21V10" stroke="#9db8a4" stroke-width="2" stroke-linecap="round"/><path d="M40.4 12 52.4 10" stroke="#52676c" stroke-width="2.2" stroke-linecap="round"/>';
 
 /* ---------- Zustand ---------- */
-const NO = { id: null, hist: [], fut: [], sel: null, cur: 0, view: null, entry: null, dur: null, playing: false, idx: null, res: null, timer: null, saveT: null, lib: false, hint: false };
+/* NO.sel ist jetzt immer eine Liste (auch leer oder mit einem Eintrag) – so geht Mehrfachauswahl. */
+const NO = { id: null, hist: [], fut: [], sel: [], clip: [], multi: false, oct: 0, cur: 0, view: null, entry: null, dur: null, playing: false, idx: null, res: null, timer: null, saveT: null, lib: false, hint: false, te: false };
 const noClone = x => JSON.parse(JSON.stringify(x));
 const noId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const noLen = id => NO_LEN.find(d => d.id === id) || NO_LEN[1];
+const noAbs = n => NO_PITCH[n.name] + 7 * (n.oct || 0);
+const noFreq = n => NO_FREQ[n.name] * (n.oct ? 2 : 1);
 function noNormSong(s) {
   if (!s || typeof s !== 'object') return null;
   s.id = String(s.id || noId()); s.title = String(s.title || 'Mein Lied').slice(0, 40); s.description = String(s.description || '').slice(0, 280);
   s.favorite = !!s.favorite; s.tempo = NO_TEMPO[s.tempo] ? s.tempo : 'medium'; s.colorMode = s.colorMode !== false;
   s.createdAt = +s.createdAt || Date.now(); s.updatedAt = +s.updatedAt || s.createdAt;
   s.notes = (Array.isArray(s.notes) ? s.notes : []).filter(n => n && NO_PITCH[n.name] != null).slice(0, NO_MAX_NOTES)
-    .map(n => ({ id: String(n.id || noId()), name: n.name, duration: NO_LEN.some(d => d.id === n.duration) ? n.duration : 'normal', rest: !!n.rest }));
+    .map(n => ({ id: String(n.id || noId()), name: n.name, duration: NO_LEN.some(d => d.id === n.duration) ? n.duration : 'normal', rest: !!n.rest, oct: n.oct === 1 ? 1 : 0 }));
   return s;
 }
 function noStarter() {
   return { id: noId(), title: 'Regentag-Lied', description: 'Eine kleine Melodie nach dem Klavierüben.', favorite: false, tempo: 'medium', colorMode: true, createdAt: Date.now(), updatedAt: Date.now(),
-    notes: NO_STARTER.map(([name, duration]) => ({ id: noId(), name, duration, rest: false })) };
+    notes: NO_STARTER.map(([name, duration]) => ({ id: noId(), name, duration, rest: false, oct: 0 })) };
 }
 function noNewSong() { return { id: noId(), title: 'Neues Lied', description: '', favorite: false, tempo: 'medium', colorMode: true, createdAt: Date.now(), updatedAt: Date.now(), notes: [] }; }
 function noData() {
@@ -9190,7 +9254,7 @@ function noInit() {                                    // beim Öffnen der Seite
   const d = noData(), s = noSong(), p = d.pref;
   NO.id = s.id; d.act = s.id;
   NO.view = p.view === 'letters' ? 'letters' : 'staff'; NO.entry = p.entry === 'letters' ? 'letters' : 'symbols'; NO.dur = NO_LEN.some(x => x.id === p.dur) ? p.dur : 'normal';
-  NO.hist = [noClone(s.notes)]; NO.fut = []; NO.sel = null; NO.cur = s.notes.length; NO.lib = false; NO.res = null; NO.idx = null; NO.playing = false; NO.hint = false;
+  NO.oct = p.oct === 1 ? 1 : 0; NO.hist = [noClone(s.notes)]; NO.fut = []; NO.sel = []; NO.clip = []; NO.multi = false; NO.cur = s.notes.length; NO.lib = false; NO.res = null; NO.idx = null; NO.playing = false; NO.hint = false; NO.te = false;
 }
 const noSub = () => { const n = noData().songs.length; return n === 1 ? '1 Lied' : n + ' Lieder'; };
 
@@ -9202,7 +9266,7 @@ function noSaveNow() {
   const ti = $('#noTitle'), de = $('#noDesc');
   if (view === 'noten' && ti) { s.title = (ti.value.trim() || 'Mein Lied').slice(0, 40); }
   if (view === 'noten' && de) s.description = de.value.slice(0, 280);
-  s.updatedAt = Date.now(); const p = noData().pref; p.view = NO.view; p.entry = NO.entry; p.dur = NO.dur;
+  s.updatedAt = Date.now(); const p = noData().pref; p.view = NO.view; p.entry = NO.entry; p.dur = NO.dur; p.oct = NO.oct;
   save(); noStat('✓ Gespeichert');
 }
 function noDirty() { noStat('Speichert …'); clearTimeout(NO.saveT); NO.saveT = setTimeout(noSaveNow, 400); }
@@ -9210,10 +9274,10 @@ function noDirty() { noStat('Speichert …'); clearTimeout(NO.saveT); NO.saveT =
 /* ---------- Ton (Web Audio, gemeinsamer Kontext aus rewards.js; respektiert den Ton-Schalter der App) ---------- */
 function noTone(n, sec) {
   if (!n || n.rest) return;
-  const ac = AC(); if (!ac) { if (S.cfg.sound === false && !NO.hint) { NO.hint = true; toast('🔇', 'Der Ton ist aus. Schalte ihn auf der Startseite ein.'); } return; }
+  const ac = AC(); if (!ac) { if (S.cfg.sound === false && !NO.hint) { NO.hint = true; toast('🔇', 'Der Ton ist aus. Schalte ihn mit dem Lautsprecher-Knopf ein.'); } return; }
   try {
     const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
-    o.type = 'triangle'; o.frequency.setValueAtTime(NO_FREQ[n.name], t);
+    o.type = 'triangle'; o.frequency.setValueAtTime(noFreq(n), t);
     g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.22, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + Math.max(.12, sec));
     o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + Math.max(.12, sec) + .03);
   } catch (e) { console.error(e); }
@@ -9230,44 +9294,72 @@ function noPlayFrom(i) {
 function noPlayToggle() {
   const s = noSong(); if (!s.notes.length) { toast('🎵', 'Füge zuerst ein paar Noten hinzu.'); return; }
   if (NO.playing) { NO.res = NO.idx; noHalt(); noPaintScore(); return; }
-  AC(); NO.playing = true; const i = NO.res != null ? NO.res : (NO.sel != null ? NO.sel : 0); NO.res = null; noPlayFrom(Math.min(i, s.notes.length - 1));
+  AC(); NO.playing = true; const i = NO.res != null ? NO.res : (NO.sel.length ? NO.sel[0] : 0); NO.res = null; noPlayFrom(Math.min(i, s.notes.length - 1));
 }
 function noLeave() { noStopAll(); if (NO.saveT || $('#noTitle')) { try { noSaveNow(); } catch (e) { } } NO.lib = false; }
 
-/* ---------- Ändern (alles rückgängig machbar) ---------- */
+/* ---------- Ändern (alles rückgängig machbar, wirkt auf die ganze Auswahl) ---------- */
 function noSet(next, sel, cur) {
   const s = noSong(); NO.hist.push(noClone(next)); if (NO.hist.length > 100) NO.hist.shift(); NO.fut = [];
-  s.notes = next; NO.sel = sel; NO.cur = cur; NO.res = null; noSaveNow(); noPaintAll();
+  s.notes = next; NO.sel = Array.isArray(sel) ? sel.slice() : (sel == null ? [] : [sel]); NO.cur = cur; NO.res = null; noSaveNow(); noPaintAll();
 }
 function noInsert(n) {
   const s = noSong(); if (s.notes.length >= NO_MAX_NOTES) { toast('🎼', 'Das Lied ist voll. Mach ein neues Lied auf.'); return; }
   const next = [...s.notes.slice(0, NO.cur), n, ...s.notes.slice(NO.cur)];
-  noSet(next, NO.cur, NO.cur + 1);
+  noSet(next, [NO.cur], NO.cur + 1);
 }
-const noAdd = name => { if (!NO_PITCH.hasOwnProperty(name)) return; const n = { id: noId(), name, duration: NO.dur, rest: false }; noTone(n, noLen(n.duration).prev); noInsert(n); };
-const noRest = () => noInsert({ id: noId(), name: 'C', duration: NO.dur, rest: true });
-function noSelect(i) { const s = noSong(), n = s.notes[i]; if (!n) return; NO.sel = i; NO.cur = i + 1; noTone(n, noLen(n.duration).prev); noPaintAll(); }
-function noUndo() { if (NO.hist.length < 2) return; NO.fut.unshift(NO.hist.pop()); const s = noSong(); s.notes = noClone(NO.hist[NO.hist.length - 1]); NO.sel = null; NO.cur = Math.min(NO.cur, s.notes.length); NO.res = null; noSaveNow(); noPaintAll(); }
-function noRedo() { if (!NO.fut.length) return; const x = NO.fut.shift(); NO.hist.push(noClone(x)); const s = noSong(); s.notes = noClone(x); NO.sel = null; NO.cur = Math.min(NO.cur, s.notes.length); NO.res = null; noSaveNow(); noPaintAll(); }
+const noAdd = name => { if (!NO_PITCH.hasOwnProperty(name)) return; const n = { id: noId(), name, duration: NO.dur, rest: false, oct: NO.oct || 0 }; noTone(n, noLen(n.duration).prev); noInsert(n); };
+const noRest = () => noInsert({ id: noId(), name: 'C', duration: NO.dur, rest: true, oct: 0 });
+function noSelect(i) {
+  const s = noSong(), n = s.notes[i]; if (!n) return;
+  if (NO.multi) { const k = NO.sel.indexOf(i); if (k >= 0) NO.sel.splice(k, 1); else { NO.sel.push(i); NO.sel.sort((a, b) => a - b); } }
+  else NO.sel = [i];
+  NO.cur = i + 1; noTone(n, noLen(n.duration).prev); noPaintAll();
+}
+function noUndo() { if (NO.hist.length < 2) return; NO.fut.unshift(NO.hist.pop()); const s = noSong(); s.notes = noClone(NO.hist[NO.hist.length - 1]); NO.sel = []; NO.cur = Math.min(NO.cur, s.notes.length); NO.res = null; noSaveNow(); noPaintAll(); }
+function noRedo() { if (!NO.fut.length) return; const x = NO.fut.shift(); NO.hist.push(noClone(x)); const s = noSong(); s.notes = noClone(x); NO.sel = []; NO.cur = Math.min(NO.cur, s.notes.length); NO.res = null; noSaveNow(); noPaintAll(); }
 function noPitch(dir) {
-  const s = noSong(); if (NO.sel == null || s.notes[NO.sel].rest) return;
-  const next = noClone(s.notes), n = next[NO.sel], idx = Math.max(0, Math.min(6, NO_PITCH[n.name] + dir));
-  if (NO_NAMES[idx] === n.name) { toast('🎼', dir > 0 ? 'Höher geht es hier nicht.' : 'Tiefer geht es hier nicht.'); return; }
-  n.name = NO_NAMES[idx]; noTone(n, noLen(n.duration).prev); noSet(next, NO.sel, NO.cur);
+  const s = noSong(); if (!NO.sel.length) return;
+  const next = noClone(s.notes); let changed = false, last = null;
+  NO.sel.forEach(i => {
+    const n = next[i]; if (!n || n.rest) return;
+    const abs = Math.max(0, Math.min(13, NO_PITCH[n.name] + 7 * (n.oct || 0) + dir)), oct = Math.floor(abs / 7), name = NO_NAMES[abs % 7];
+    if (oct === (n.oct || 0) && name === n.name) return;
+    n.oct = oct; n.name = name; changed = true; last = n;
+  });
+  if (!changed) { toast('🎼', dir > 0 ? 'Höher geht es hier nicht.' : 'Tiefer geht es hier nicht.'); return; }
+  if (last) noTone(last, noLen(last.duration).prev); noSet(next, NO.sel, NO.cur);
 }
 function noLength(dir) {
-  const s = noSong(); if (NO.sel == null) return;
-  const next = noClone(s.notes), n = next[NO.sel], i = NO_LEN.findIndex(x => x.id === n.duration), j = Math.max(0, Math.min(2, i + dir));
-  if (j === i) { toast('🎼', dir > 0 ? 'Länger geht es nicht.' : 'Kürzer geht es nicht.'); return; }
-  n.duration = NO_LEN[j].id; noSet(next, NO.sel, NO.cur);
+  const s = noSong(); if (!NO.sel.length) return;
+  const next = noClone(s.notes); let changed = false;
+  NO.sel.forEach(i => {
+    const n = next[i]; if (!n) return;
+    const li = NO_LEN.findIndex(x => x.id === n.duration), j = Math.max(0, Math.min(2, li + dir));
+    if (j === li) return; n.duration = NO_LEN[j].id; changed = true;
+  });
+  if (!changed) { toast('🎼', dir > 0 ? 'Länger geht es nicht.' : 'Kürzer geht es nicht.'); return; }
+  noSet(next, NO.sel, NO.cur);
 }
-function noDup() {
-  const s = noSong(); if (NO.sel == null) return;
-  if (s.notes.length >= NO_MAX_NOTES) { toast('🎼', 'Das Lied ist voll. Mach ein neues Lied auf.'); return; }
-  const c = Object.assign(noClone(s.notes[NO.sel]), { id: noId() }), next = [...s.notes.slice(0, NO.sel + 1), c, ...s.notes.slice(NO.sel + 1)];
-  noTone(c, noLen(c.duration).prev); noSet(next, NO.sel + 1, NO.sel + 2);
+function noCopy() {
+  if (!NO.sel.length) return;
+  const s = noSong(); NO.clip = NO.sel.map(i => s.notes[i]).filter(Boolean).map(noClone);
+  toast('⧉', NO.clip.length === 1 ? 'Note kopiert' : NO.clip.length + ' Noten kopiert'); noPaintAll();
 }
-function noRemove() { const s = noSong(); if (NO.sel == null) return; const i = NO.sel; noSet(s.notes.filter((_, k) => k !== i), null, i); }
+function noPaste() {
+  if (!NO.clip.length) { toast('📋', 'Erst eine Note mit „Kopieren“ wählen.'); return; }
+  const s = noSong(); if (s.notes.length + NO.clip.length > NO_MAX_NOTES) { toast('🎼', 'Das Lied ist voll. Mach ein neues Lied auf.'); return; }
+  const copies = NO.clip.map(n => Object.assign(noClone(n), { id: noId() }));
+  const next = [...s.notes.slice(0, NO.cur), ...copies, ...s.notes.slice(NO.cur)];
+  noSet(next, copies.map((_, k) => NO.cur + k), NO.cur + copies.length);
+  toast('📋', copies.length === 1 ? 'Note eingefügt' : copies.length + ' Noten eingefügt');
+}
+function noRemove() {
+  if (!NO.sel.length) return;
+  const s = noSong(), rm = new Set(NO.sel), first = Math.min(...NO.sel);
+  const next = s.notes.filter((_, k) => !rm.has(k));
+  noSet(next, [], Math.min(first, next.length));
+}
 
 /* ---------- Zeichnen: Bausteine ---------- */
 /* Violinschlüssel und Pause als Linien (keine Spezialschrift nötig – funktioniert auf jedem Tablet offline) */
@@ -9280,15 +9372,22 @@ function noGlyph(kind, sz) {
   return `<svg viewBox="0 0 24 24" width="${sz || 24}" height="${sz || 24}" aria-hidden="true" focusable="false">${body}</svg>`;
 }
 const noColor = (n, colored) => colored && !n.rest ? NO_COL[n.name] : 'var(--dz-ink)';
-/* Tonhöhe auf der Linie: E sitzt auf der untersten Linie, G auf der zweiten (Violinschlüssel), C hat einen kleinen Hilfsstrich */
-const noY = (name, top) => top + 70 - NO_PITCH[name] * 7;
+/* Tonhöhe auf der Linie: zwei Tonlagen (oct 0/1), je 7px pro Schritt; Hilfslinien werden allgemein berechnet (noLedgers) */
+const noY = (name, oct, top) => top + 70 - 7 * (NO_PITCH[name] + 7 * (oct || 0));
+function noLedgers(x, y, top) {
+  let h = '', top1 = top, bot1 = top + 56;
+  if (y < top1 - .1) for (let ly = top1 - 14; ly >= y - .1; ly -= 14) h += `<line class="no-ln no-ledger" x1="${x - 16}" y1="${ly}" x2="${x + 16}" y2="${ly}"/>`;
+  else if (y > bot1 + .1) for (let ly = bot1 + 14; ly <= y + .1; ly += 14) h += `<line class="no-ln no-ledger" x1="${x - 16}" y1="${ly}" x2="${x + 16}" y2="${ly}"/>`;
+  return h;
+}
 function noPerLine() {
   const w = document.documentElement.clientWidth || 800, cw = Math.min(980, w) - 28 - (w >= 900 ? 276 : 0) - 8;
   return Math.max(5, Math.min(12, Math.floor((cw / .8 - 170) / 62.5)));
 }
 function noScoreSvg() {
   const s = noSong(), notes = s.notes, perLine = noPerLine(), gap = 62.5, W = Math.round(115 + perLine * gap + 55), lineH = 145;
-  const lines = Math.max(1, Math.ceil((notes.length + 1) / perLine)), H = lines * lineH + 25, hi = NO.playing ? NO.idx : (NO.res != null ? NO.res : NO.sel);
+  const lines = Math.max(1, Math.ceil((notes.length + 1) / perLine)), H = lines * lineH + 25;
+  const selSet = new Set(NO.sel), playAt = NO.playing ? NO.idx : NO.res;
   let h = '';
   for (let l = 0; l < lines; l++) {
     const top = 38 + l * lineH;
@@ -9296,18 +9395,20 @@ function noScoreSvg() {
     h += `<path class="no-clef" transform="translate(76 ${top})" d="${NO_CLEF}"/><line class="no-bar" x1="108" y1="${top}" x2="108" y2="${top + 56}"/>`;
   }
   notes.forEach((n, i) => {
-    const l = Math.floor(i / perLine), pos = i % perLine, x = 118 + pos * gap + gap / 2, top = 38 + l * lineH, sel = hi === i, col = noColor(n, s.colorMode), d = noLen(n.duration);
-    const y = n.rest ? top + 28 : noY(n.name, top), down = !n.rest && NO_PITCH[n.name] >= 6;
-    const lab = `${i + 1}. ${n.rest ? 'Pause' : 'Note ' + n.name}, ${d.label}${sel ? ', gewählt' : ''}`;
-    h += `<g class="no-n${sel ? ' sel' : ''}" data-act="noSel" data-arg="${i}" role="button" tabindex="0" aria-label="${lab}">`;
+    const l = Math.floor(i / perLine), pos = i % perLine, x = 118 + pos * gap + gap / 2, top = 38 + l * lineH;
+    const sel = selSet.has(i), playing = playAt === i, col = noColor(n, s.colorMode), d = noLen(n.duration);
+    const y = n.rest ? top + 28 : noY(n.name, n.oct, top), down = !n.rest && noAbs(n) >= 6;
+    const lab = `${i + 1}. ${n.rest ? 'Pause' : 'Note ' + n.name + (n.oct ? ' hoch' : '')}, ${d.label}${sel ? ', gewählt' : ''}`;
+    h += `<g class="no-n${sel ? ' sel' : ''}${playing ? ' playing' : ''}" data-act="noSel" data-arg="${i}" role="button" tabindex="0" aria-label="${lab}">`;
     h += `<rect class="no-hit" x="${x - 28}" y="${top - 22}" width="56" height="${lineH - 8}" rx="14"/>`;
     if (sel) h += `<rect class="no-selbox" x="${x - 24}" y="${top - 16}" width="48" height="${lineH - 40}" rx="13"/>`;
+    if (playing) h += `<circle class="no-playdot" cx="${x}" cy="${top - 15}" r="4.5"/>`;
     if (n.rest) {
       h += `<path transform="translate(${x} ${y})" d="${NO_REST}" fill="none" stroke="var(--dz-ink)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`;
       if (d.id === 'short') h += `<path transform="translate(${x} ${y})" d="M-9 12 -2 16" stroke="var(--dz-ink)" stroke-width="3" stroke-linecap="round"/>`;
       if (d.id === 'long') h += `<rect x="${x - 10}" y="${top + 28 - 5}" width="20" height="5" fill="var(--dz-ink)" rx="1"/>`;
     } else {
-      if (NO_PITCH[n.name] === 0) h += `<line class="no-ln" x1="${x - 16}" y1="${y}" x2="${x + 16}" y2="${y}"/>`;
+      h += noLedgers(x, y, top);
       h += `<ellipse cx="${x}" cy="${y}" rx="10" ry="7" transform="rotate(-15 ${x} ${y})" style="fill:${d.id === 'long' ? 'var(--dz-surface)' : col};stroke:${col}" stroke-width="3"/>`;
       if (d.id !== 'long') {
         const sx = down ? x - 8.5 : x + 8.5, e = down ? y + 39 : y - 39;
@@ -9317,31 +9418,31 @@ function noScoreSvg() {
         const sx = down ? x - 9 : x + 9, e = down ? y + 39 : y - 39;
         h += `<line x1="${sx}" y1="${y + (down ? 1 : -1)}" x2="${sx}" y2="${e}" style="stroke:${col}" stroke-width="3" stroke-linecap="round"/>`;
       }
-      if (s.colorMode) h += `<text x="${x}" y="${down ? y - 14 : y + 25}" text-anchor="middle" font-size="13" font-weight="800" style="fill:${col}">${n.name}</text>`;
+      if (s.colorMode) h += `<text x="${x}" y="${down ? y - 14 : y + 25}" text-anchor="middle" font-size="13" font-weight="800" style="fill:${col}">${n.name}${n.oct ? '²' : ''}</text>`;
     }
     h += '</g>';
   });
-  const cl = Math.floor(NO.cur / perLine), cp = NO.cur % perLine, cx = 118 + cp * gap + gap / 2, ct = 38 + cl * lineH;
-  h += `<line class="no-cur" x1="${cx - gap / 2 + 4}" y1="${ct - 6}" x2="${cx - gap / 2 + 4}" y2="${ct + 66}"/><circle class="no-curd" cx="${cx - gap / 2 + 4}" cy="${ct - 11}" r="4"/>`;
+  const cl = Math.floor(NO.cur / perLine), cp = NO.cur % perLine, cx = 118 + cp * gap + gap / 2 - gap / 2 + 4, ct = 38 + cl * lineH;
+  h += `<line class="no-cur" x1="${cx}" y1="${ct - 6}" x2="${cx}" y2="${ct + 66}"/><path class="no-curflag" d="M${cx} ${ct - 6}l15 5.5-15 5.5z"/>`;
   if (!notes.length) h += `<text class="no-empty" x="${W / 2}" y="${38 + 90}" text-anchor="middle" font-size="19">Tippe unten auf eine Note, dann geht es los</text>`;
   return `<svg id="noScore" viewBox="0 0 ${W} ${H}" role="group" aria-label="Notenzeile, ${notes.length} Noten">${h}</svg>`;
 }
 function noLettersHtml() {
-  const s = noSong(), hi = NO.playing ? NO.idx : (NO.res != null ? NO.res : NO.sel);
+  const s = noSong(), selSet = new Set(NO.sel), playAt = NO.playing ? NO.idx : NO.res;
   let h = '';
   s.notes.forEach((n, i) => {
     if (NO.cur === i) h += '<span class="no-lcur" aria-hidden="true"></span>';
-    const col = noColor(n, s.colorMode), d = noLen(n.duration);
-    h += `<button class="no-lk${hi === i ? ' sel' : ''}" style="color:${col}" data-act="noSel" data-arg="${i}" aria-label="${i + 1}. ${n.rest ? 'Pause' : 'Note ' + n.name}, ${d.label}${hi === i ? ', gewählt' : ''}">${n.rest ? '—' : n.name}<small>${n.rest ? 'Pause' : d.label}</small></button>`;
+    const col = noColor(n, s.colorMode), d = noLen(n.duration), sel = selSet.has(i), playing = playAt === i;
+    h += `<button class="no-lk${sel ? ' sel' : ''}${playing ? ' playing' : ''}" style="color:${col}" data-act="noSel" data-arg="${i}" aria-label="${i + 1}. ${n.rest ? 'Pause' : 'Note ' + n.name + (n.oct ? ' hoch' : '')}, ${d.label}${sel ? ', gewählt' : ''}">${n.rest ? '—' : n.name + (n.oct ? '²' : '')}<small>${n.rest ? 'Pause' : d.label}</small></button>`;
   });
   if (NO.cur === s.notes.length) h += '<span class="no-lcur" aria-hidden="true"></span>';
   if (!s.notes.length) h = '<p class="no-empty-t">Tippe unten auf einen Buchstaben, dann geht es los.</p>';
   return h;
 }
-function noMini(name) {
-  const y = 75 - NO_PITCH[name] * 5, d = noLen(NO.dur), ink = 'var(--dz-ink)', down = NO_PITCH[name] >= 6;
-  const sx = down ? 34 : 50, e = down ? y + 28 : y - 28;
-  return `<svg viewBox="0 0 84 88" aria-hidden="true" focusable="false">${[0, 1, 2, 3, 4].map(i => `<line x1="7" y1="${25 + i * 10}" x2="77" y2="${25 + i * 10}" style="stroke:var(--dz-mute)"/>`).join('')}${name === 'C' ? `<line x1="28" y1="${y}" x2="56" y2="${y}" style="stroke:var(--dz-mute)"/>` : ''}<ellipse cx="42" cy="${y}" rx="8.5" ry="5.8" transform="rotate(-15 42 ${y})" style="fill:${d.id === 'long' ? 'var(--dz-surface)' : ink};stroke:${ink}" stroke-width="2.5"/><line x1="${sx}" y1="${y - (down ? -1 : 1)}" x2="${sx}" y2="${e}" style="stroke:${ink}" stroke-width="2.5" stroke-linecap="round"/>${d.id === 'short' ? `<path d="M${sx} ${e}q17 ${down ? -5 : 5} 9 ${down ? -14 : 14}" fill="none" style="stroke:${ink}" stroke-width="2.5"/>` : ''}</svg>`;
+function noMini(name, oct) {
+  const abs = NO_PITCH[name] + 7 * (oct || 0), y = 78 - abs * 5, d = noLen(NO.dur), ink = 'var(--dz-ink)', down = abs >= 6;
+  const sx = down ? 34 : 50, e = down ? y + 26 : y - 26;
+  return `<svg viewBox="0 0 84 88" aria-hidden="true" focusable="false">${[0, 1, 2, 3, 4].map(i => `<line x1="7" y1="${28 + i * 9} " x2="77" y2="${28 + i * 9}" style="stroke:var(--dz-mute)"/>`).join('')}${abs === 0 ? `<line x1="28" y1="${y}" x2="56" y2="${y}" style="stroke:var(--dz-mute)"/>` : ''}${abs >= 13 ? `<line x1="28" y1="${y}" x2="56" y2="${y}" style="stroke:var(--dz-mute)"/>` : ''}<ellipse cx="42" cy="${y}" rx="8.5" ry="5.8" transform="rotate(-15 42 ${y})" style="fill:${d.id === 'long' ? 'var(--dz-surface)' : ink};stroke:${ink}" stroke-width="2.5"/><line x1="${sx}" y1="${y - (down ? -1 : 1)}" x2="${sx}" y2="${e}" style="stroke:${ink}" stroke-width="2.5" stroke-linecap="round"/>${d.id === 'short' ? `<path d="M${sx} ${e}q17 ${down ? -5 : 5} 9 ${down ? -14 : 14}" fill="none" style="stroke:${ink}" stroke-width="2.5"/>` : ''}</svg>`;
 }
 
 /* ---------- Zeichnen: Abschnitte ---------- */
@@ -9349,34 +9450,52 @@ function noBarHtml() {
   return `<div class="no-top"><span id="noStat" class="no-stat" role="status" aria-live="polite">✓ Gespeichert</span>
     <div class="no-top-b"><button class="btn sec" data-act="noUndo" aria-label="Letzte Änderung zurücknehmen" ${NO.hist.length < 2 ? 'disabled' : ''}>↶ <span class="no-hide">Zurück</span></button><button class="btn sec" data-act="noRedo" aria-label="Zurückgenommene Änderung wiederholen" ${NO.fut.length ? '' : 'disabled'}>↷ <span class="no-hide">Wieder</span></button><button class="btn sec" data-act="noLib">${ico('music', 18)} Meine Lieder</button><button class="btn" data-act="noSave">Speichern</button></div></div>`;
 }
-function noInfoHtml() {
-  const s = noSong();
-  return `<section class="dz-panel no-info"><div class="no-info-f"><div class="no-trow"><input id="noTitle" class="no-title" maxlength="40" value="${esc(s.title)}" aria-label="Name des Liedes" autocomplete="off"><button class="no-fav${s.favorite ? ' on' : ''}" data-act="noFav" aria-pressed="${s.favorite}" aria-label="${s.favorite ? 'Lieblingslied: ja' : 'Als Lieblingslied merken'}">${s.favorite ? '★' : '☆'}</button></div>
-    <div class="no-drow"><span aria-hidden="true">✎</span><textarea id="noDesc" class="no-desc" rows="2" maxlength="280" aria-label="Beschreibung, Erinnerung oder Text zum Lied (freiwillig)" placeholder="Beschreibung oder Text (freiwillig)">${esc(s.description)}</textarea></div></div>
-    <div class="seg no-seg" role="group" aria-label="Ansicht"><button data-act="noView" data-arg="staff" class="${NO.view === 'staff' ? 'active' : ''}" aria-pressed="${NO.view === 'staff'}">${noGlyph('normal', 18)} Noten</button><button data-act="noView" data-arg="letters" class="${NO.view === 'letters' ? 'active' : ''}" aria-pressed="${NO.view === 'letters'}">C D E F G A H</button></div></section>`;
+function noHeadHtml() {                                  // kompakte Überschrift; Bearbeiten nur über das Stift-Symbol
+  const s = noSong(), v = NO.view;
+  const seg = `<div class="seg no-seg" role="group" aria-label="Ansicht"><button data-act="noView" data-arg="staff" class="${v === 'staff' ? 'active' : ''}" aria-pressed="${v === 'staff'}">${noGlyph('normal', 18)} Noten</button><button data-act="noView" data-arg="letters" class="${v === 'letters' ? 'active' : ''}" aria-pressed="${v === 'letters'}">C–H</button></div>`;
+  if (NO.te) return `<section class="no-head no-head-edit"><div class="no-head-row"><input id="noTitle" class="no-title" maxlength="40" value="${esc(s.title)}" aria-label="Name des Liedes" autocomplete="off"><button class="btn" data-act="noTitleOk" aria-label="Titel fertig">${ico('check', 18)} Fertig</button><span class="no-grow"></span>${seg}</div>
+    <div class="no-drow"><span aria-hidden="true">✎</span><textarea id="noDesc" class="no-desc" rows="2" maxlength="280" aria-label="Beschreibung, Erinnerung oder Text zum Lied (freiwillig)" placeholder="Beschreibung oder Text (freiwillig)">${esc(s.description)}</textarea></div></section>`;
+  return `<section class="no-head"><div class="no-head-row"><h2 class="no-h" id="noHead">${esc(s.title)}</h2><button class="no-ibtn no-ibtn-s" data-act="noTitleEdit" aria-label="Titel und Beschreibung bearbeiten" title="Bearbeiten">${ico('pen', 18)}</button><button class="no-ibtn no-ibtn-s no-fav${s.favorite ? ' on' : ''}" data-act="noFav" aria-pressed="${s.favorite}" aria-label="${s.favorite ? 'Lieblingslied: ja' : 'Als Lieblingslied merken'}" title="Lieblingslied">${s.favorite ? '★' : '☆'}</button><span class="no-grow"></span>${seg}</div>${s.description ? `<p class="no-sub">${esc(s.description)}</p>` : ''}</section>`;
+}
+function noPlayBarHtml() {
+  const snd = S.cfg.sound !== false, s = noSong();
+  return `<div class="no-playbar"><button class="no-ibtn no-ibtn-play" data-act="noPlay" aria-label="${NO.playing ? 'Anhalten' : 'Lied abspielen'}" title="${NO.playing ? 'Anhalten' : 'Abspielen'}">${ico(NO.playing ? 'pause' : 'play', 22)}</button>
+    <button class="no-ibtn" data-act="toggleSound" aria-pressed="${snd}" aria-label="${snd ? 'Klavier-Ton ausschalten' : 'Klavier-Ton einschalten'}" title="${snd ? 'Klavier' : 'Stumm'}">${ico(snd ? 'speaker' : 'mute', 20)}</button>
+    <span class="no-chip" id="noTempo" aria-hidden="true">♩ ${NO_TEMPO[s.tempo].bpm}</span></div>`;
 }
 function noScoreHtml() {
-  return NO.view === 'staff' ? `<div id="noScoreBox" class="no-score">${noScoreSvg()}</div>` : `<section id="noScoreBox" class="dz-panel no-lview"><h3>Buchstaben-Ansicht</h3><div class="no-lrow">${noLettersHtml()}</div></section>`;
+  const bar = noPlayBarHtml();
+  return NO.view === 'staff' ? `<div id="noScoreBox" class="no-score">${bar}${noScoreSvg()}</div>`
+    : `<section id="noScoreBox" class="dz-panel no-lview">${bar}<h3>Buchstaben-Ansicht</h3><div class="no-lrow">${noLettersHtml()}</div></section>`;
 }
-function noTransHtml() {
-  const s = noSong(), snd = S.cfg.sound !== false;
-  return `<section class="dz-panel no-trans"><div class="no-trow2"><button class="btn big" data-act="noPlay" aria-label="${NO.playing ? 'Abspielen anhalten' : 'Lied abspielen'}">${NO.playing ? 'Ⅱ Anhalten' : '▶ Abspielen'}</button><button class="btn sec big" data-act="noStop" aria-label="Stopp, zurück zum Anfang">■ Stopp</button></div>
-    <div class="no-trow2"><span class="no-chip">${snd ? '🔊 Klavier' : `<button class="no-snd" data-act="toggleSound" aria-label="Ton einschalten">🔇 Ton ist aus – einschalten</button>`}</span><span class="no-chip" id="noTempo">♩ = ${NO_TEMPO[s.tempo].bpm}</span></div></section>`;
+function noEditHtml() {
+  const s = noSong(), has = NO.sel.length > 0, allRest = has && NO.sel.every(i => s.notes[i] && s.notes[i].rest);
+  return `<div class="no-edit-bar" role="toolbar" aria-label="Note ändern">
+    <button class="no-ibtn" data-act="noHigher" ${(!has || allRest) ? 'disabled' : ''} aria-label="Höher" title="Höher">${ico('up', 20)}</button>
+    <button class="no-ibtn" data-act="noLower" ${(!has || allRest) ? 'disabled' : ''} aria-label="Tiefer" title="Tiefer">${ico('down', 20)}</button>
+    <button class="no-ibtn" data-act="noLonger" ${!has ? 'disabled' : ''} aria-label="Länger" title="Länger">${noGlyph('long', 18)}</button>
+    <button class="no-ibtn" data-act="noShorter" ${!has ? 'disabled' : ''} aria-label="Kürzer" title="Kürzer">${noGlyph('short', 18)}</button>
+    <button class="no-ibtn" data-act="noMulti" aria-pressed="${NO.multi}" aria-label="${NO.multi ? 'Mehrfachauswahl beenden' : 'Mehrere Noten auswählen'}" title="Mehrere wählen">${ico('grid', 18)}</button>
+    <button class="no-ibtn" data-act="noCopy" ${!has ? 'disabled' : ''} aria-label="Auswahl kopieren" title="Kopieren">${ico('copy', 20)}</button>
+    <button class="no-ibtn no-paste" data-act="noPaste" ${!NO.clip.length ? 'disabled' : ''} aria-label="Kopierte Noten einfügen" title="Einfügen">${ico('paste', 20)}</button>
+    <button class="no-ibtn no-danger" data-act="noDel" ${!has ? 'disabled' : ''} aria-label="Auswahl löschen" title="Löschen">${ico('trash', 20)}</button></div>`;
+}
+function noRibbonHtml() {
+  const s = noSong();
+  return `<div class="no-ribbon"><div class="no-temposeg" role="group" aria-label="Tempo">${Object.keys(NO_TEMPO).map(k => `<button class="no-sm${s.tempo === k ? ' active' : ''}" data-act="noTempo" data-arg="${k}" aria-pressed="${s.tempo === k}" aria-label="Tempo: ${NO_TEMPO[k].label}" title="${NO_TEMPO[k].label}">${NO_TEMPO[k].em}</button>`).join('')}</div>
+    <button class="no-ibtn no-colorbtn${s.colorMode ? ' active' : ''}" data-act="noColor" role="switch" aria-checked="${s.colorMode}" aria-label="${s.colorMode ? 'C–H-Farbcode ausschalten' : 'C–H-Farbcode einschalten'}" title="C–H-Farbcode">${ico('palette', 20)}</button></div>`;
+}
+function noOctHtml() {
+  return `<div class="seg no-seg no-octseg" role="group" aria-label="Tonlage für neue Noten"><button data-act="noOct" data-arg="low" class="${NO.oct ? '' : 'active'}" aria-pressed="${!NO.oct}" title="Tiefe Töne">${ico('down', 16)} Tief</button><button data-act="noOct" data-arg="high" class="${NO.oct ? 'active' : ''}" aria-pressed="${!!NO.oct}" title="Hohe Töne">${ico('up', 16)} Hoch</button></div>`;
 }
 function noAddHtml() {
   const lk = NO.entry === 'letters';
-  return `<section class="dz-panel no-add"><div class="no-add-h"><div><h2>Note hinzufügen</h2><p>Einmal tippen – schon steht sie im Lied.</p></div>
-    <div class="seg no-seg" role="group" aria-label="Eingabe"><button data-act="noEntry" data-arg="symbols" class="${lk ? '' : 'active'}" aria-pressed="${!lk}">Notenbild</button><button data-act="noEntry" data-arg="letters" class="${lk ? 'active' : ''}" aria-pressed="${lk}">C D E F G A H</button></div></div>
-    <div class="no-durs" role="group" aria-label="Länge der neuen Note">${NO_LEN.map(d => `<button class="no-dur${NO.dur === d.id ? ' active' : ''}" data-act="noDur" data-arg="${d.id}" aria-pressed="${NO.dur === d.id}">${noGlyph(d.id, 24)} ${d.label}</button>`).join('')}<button class="no-dur" data-act="noRest" aria-label="Pause einfügen, ${noLen(NO.dur).label}">${noGlyph('rest', 24)} Pause</button></div>
-    ${lk ? `<div class="no-keys no-lkeys">${NO_NAMES.map(n => `<button class="no-lkey" style="color:${NO_COL[n]}" data-act="noAdd" data-arg="${n}" aria-label="Note ${n} hinzufügen, ${noLen(NO.dur).label}">${n}</button>`).join('')}</div>`
-      : `<div class="no-keys">${NO_NAMES.map(n => `<button class="no-key" data-act="noAdd" data-arg="${n}" aria-label="Note hinzufügen, ${noLen(NO.dur).label}, Linienposition ${NO_PITCH[n] + 1} von 7">${noMini(n)}</button>`).join('')}</div>`}</section>`;
-}
-function noSideHtml() {
-  const s = noSong(), n = NO.sel == null ? null : s.notes[NO.sel];
-  return `<section class="dz-panel no-side-c"><h2>${n ? `Gewählt: ${n.rest ? 'Pause' : n.name}` : 'Note ändern'}</h2>
-    ${n ? `<div class="no-edit"><button class="btn sec" data-act="noHigher" ${n.rest ? 'disabled' : ''}>＋ Höher</button><button class="btn sec" data-act="noLower" ${n.rest ? 'disabled' : ''}>− Tiefer</button><button class="btn sec" data-act="noLonger">Länger</button><button class="btn sec" data-act="noShorter">Kürzer</button><button class="btn sec" data-act="noDup">⧉ Kopieren</button><button class="btn sec no-danger" data-act="noDel">⌫ Löschen</button></div>` : '<p class="no-mute">Tippe eine Note im Lied an.</p>'}</section>
-    <section class="dz-panel no-side-c"><h2>Tempo</h2><div class="no-speed" role="group" aria-label="Abspiel-Tempo">${Object.keys(NO_TEMPO).map(k => `<button class="no-sm${s.tempo === k ? ' active' : ''}" data-act="noTempo" data-arg="${k}" aria-pressed="${s.tempo === k}">${NO_TEMPO[k].label}</button>`).join('')}</div></section>
-    <section class="dz-panel no-side-c"><h2>C–H-Farbcode</h2><button class="no-tg" data-act="noColor" role="switch" aria-checked="${s.colorMode}"><span><b>Buchstaben und Farben zeigen</b><small>Im Notenbild</small></span><span class="no-sw${s.colorMode ? ' on' : ''}" aria-hidden="true"><i></i></span></button></section>`;
+  return `<section class="dz-panel no-add"><h2>Note hinzufügen</h2>
+    <div class="seg no-seg" role="group" aria-label="Eingabe"><button data-act="noEntry" data-arg="symbols" class="${lk ? '' : 'active'}" aria-pressed="${!lk}">Noten</button><button data-act="noEntry" data-arg="letters" class="${lk ? 'active' : ''}" aria-pressed="${lk}">C–H</button></div>
+    ${noOctHtml()}
+    <div class="no-durs" role="group" aria-label="Länge der neuen Note">${NO_LEN.map(d => `<button class="no-dur${NO.dur === d.id ? ' active' : ''}" data-act="noDur" data-arg="${d.id}" aria-pressed="${NO.dur === d.id}" aria-label="Länge: ${d.label}" title="${d.label}">${noGlyph(d.id, 20)}</button>`).join('')}<button class="no-dur" data-act="noRest" aria-label="Pause einfügen, ${noLen(NO.dur).label}" title="Pause">${noGlyph('rest', 20)}</button></div>
+    ${lk ? `<div class="no-keys no-lkeys no-keys-sm">${NO_NAMES.map(n => `<button class="no-lkey" style="color:${NO_COL[n]}" data-act="noAdd" data-arg="${n}" aria-label="Note ${n}${NO.oct ? ' hoch' : ''} hinzufügen, ${noLen(NO.dur).label}">${n}${NO.oct ? '²' : ''}</button>`).join('')}</div>`
+      : `<div class="no-keys no-keys-sm">${NO_NAMES.map(n => `<button class="no-key" data-act="noAdd" data-arg="${n}" aria-label="Note ${n}${NO.oct ? ' hoch' : ''} hinzufügen, ${noLen(NO.dur).label}">${noMini(n, NO.oct)}</button>`).join('')}</div>`}</section>`;
 }
 function noLibHtml() {
   if (!NO.lib) return '';
@@ -9385,9 +9504,9 @@ function noLibHtml() {
     <div class="no-lib-g">${L.map(s => `<div class="no-song${s.id === NO.id ? ' cur' : ''}"><button class="no-song-o" data-act="noOpen" data-arg="${esc(s.id)}" aria-label="Lied öffnen: ${esc(s.title)}"><span class="no-song-i">♫ ${s.favorite ? '★' : ''}</span><b>${esc(s.title)}</b><small>${s.notes.length} ${s.notes.length === 1 ? 'Note' : 'Noten'} · ${new Date(s.updatedAt).toLocaleDateString('de-DE')}</small></button><button class="no-song-d" data-act="noAskDel" data-arg="${esc(s.id)}" aria-label="Lied löschen: ${esc(s.title)}">${ico('trash', 18)}</button></div>`).join('')}
     ${L.length < NO_MAX_SONGS ? '<button class="no-new" data-act="noNew"><span>＋</span>Neues Lied</button>' : ''}</div></div></div>`;
 }
-const noBody = () => noBarHtml() + noInfoHtml() + noScoreHtml() + noTransHtml() + noAddHtml();
-const noMain = () => `<div class="no-main">${noBarHtml()}${noInfoHtml()}${noScoreHtml()}${noTransHtml()}${noAddHtml()}</div><aside class="no-side" id="noSide">${noSideHtml()}</aside>`;
-VIEWS.noten = () => { if (NO.id == null || !noData().songs.some(s => s.id === NO.id)) noInit(); return topBar('Notenheft', 'home') + `<div class="no-page" id="noPage">${noMain()}</div><div id="noLibSlot">${noLibHtml()}</div>`; };
+const noToolbarHtml = () => `<div class="no-toolbar">${noEditHtml()}${noRibbonHtml()}</div>`;      // links: Noten ändern · rechts: Tempo + C–H-Farbcode
+const noMain = () => `${noBarHtml()}${noHeadHtml()}<div class="no-grid"><div class="no-main">${noScoreHtml()}${noToolbarHtml()}</div><aside class="no-side" id="noSide">${noAddHtml()}</aside></div>`;
+VIEWS.noten = () => { if (NO.id == null || !noData().songs.some(s => s.id === NO.id)) noInit(); return topBar('Notenheft', 'kreativhefte') + `<div class="no-page" id="noPage">${noMain()}</div><div id="noLibSlot">${noLibHtml()}</div>`; };
 
 /* Teil-Zeichnen: so bleiben Tasten und Bildlauf ruhig, auch beim Abspielen */
 function noPaintAll() {
@@ -9402,28 +9521,31 @@ function noPaintScore() {
   if (view !== 'noten') return;
   const b = $('#noScoreBox'); if (!b) return;
   const tmp = document.createElement('div'); tmp.innerHTML = noScoreHtml(); b.replaceWith(tmp.firstElementChild);
-  const t = $('.no-trans'); if (t) { const tmp2 = document.createElement('div'); tmp2.innerHTML = noTransHtml(); t.replaceWith(tmp2.firstElementChild); }
-  const sd = $('#noSide'); if (sd && NO.playing === false) { /* Seitenleiste ändert sich beim Abspielen nicht */ }
 }
 
 /* ---------- Aktionen ---------- */
 function noOpenSong(id) {
   noLeave(); const d = noData(), s = d.songs.find(x => x.id === id); if (!s) return;
-  NO.id = s.id; d.act = s.id; NO.hist = [noClone(s.notes)]; NO.fut = []; NO.sel = null; NO.cur = s.notes.length; NO.lib = false; NO.res = null; NO.idx = null; NO.playing = false;
+  NO.id = s.id; d.act = s.id; NO.hist = [noClone(s.notes)]; NO.fut = []; NO.sel = []; NO.lib = false; NO.res = null; NO.idx = null; NO.playing = false; NO.cur = s.notes.length; NO.te = false;
   save(); noPaintAll();
 }
 registerFeature({
-  id: 'noten', title: 'Notenheft', icon: 'music', tint: 'sky', group: 'learn', order: 8, view: 'noten', sub: noSub, leave: noLeave,
+  id: 'noten', title: 'Notenheft', icon: 'music', tint: 'sky', group: 'world', order: 8, view: 'noten', sub: noSub, leave: noLeave,
   acts: {
     noten: () => { NO.id = null; go('noten'); },
     noSel: a => noSelect(+a), noAdd: a => noAdd(a), noRest, noUndo, noRedo,
-    noHigher: () => noPitch(1), noLower: () => noPitch(-1), noLonger: () => noLength(1), noShorter: () => noLength(-1), noDup, noDel: noRemove,
-    noPlay: noPlayToggle, noStop: noStopAll,
+    noHigher: () => noPitch(1), noLower: () => noPitch(-1), noLonger: () => noLength(1), noShorter: () => noLength(-1),
+    noCopy, noPaste, noDel: noRemove,
+    noMulti: () => { NO.multi = !NO.multi; if (!NO.multi && NO.sel.length > 1) NO.sel = [NO.sel[NO.sel.length - 1]]; noPaintAll(); },
+    noOct: a => { NO.oct = a === 'high' ? 1 : 0; noSaveNow(); noPaintAll(); },
+    noPlay: noPlayToggle,
     noView: a => { NO.view = a === 'letters' ? 'letters' : 'staff'; noSaveNow(); noPaintAll(); },
     noEntry: a => { NO.entry = a === 'letters' ? 'letters' : 'symbols'; noSaveNow(); noPaintAll(); },
     noDur: a => { if (NO_LEN.some(d => d.id === a)) { NO.dur = a; noSaveNow(); noPaintAll(); } },
     noTempo: a => { if (!NO_TEMPO[a]) return; noSong().tempo = a; noSaveNow(); noPaintAll(); },
     noColor: () => { const s = noSong(); s.colorMode = !s.colorMode; noSaveNow(); noPaintAll(); },
+    noTitleEdit: () => { NO.te = true; noPaintAll(); const t = $('#noTitle'); if (t) { t.focus(); t.select(); } },
+    noTitleOk: () => { const t = $('#noTitle'); if (t && !t.value.trim()) t.value = 'Mein Lied'; noSaveNow(); NO.te = false; noPaintAll(); },
     noFav: () => { const s = noSong(); s.favorite = !s.favorite; noSaveNow(); noPaintAll(); },
     noSave: () => { noSaveNow(); toast('✅', 'Lied gespeichert'); },
     noLib: () => { noSaveNow(); NO.lib = true; noPaintAll(); const b = $('.no-song.cur .no-song-o') || $('.no-lib .btn'); if (b) b.focus(); },
@@ -9431,19 +9553,17 @@ registerFeature({
     noOpen: a => noOpenSong(a),
     noNew: () => {
       const d = noData(); if (d.songs.length >= NO_MAX_SONGS) return toast('🎼', 'Das Heft ist voll. Lösche erst ein Lied.');
-      noSaveNow(); const s = noNewSong(); d.songs.unshift(s); noOpenSong(s.id);
+      noSaveNow(); const s = noNewSong(); d.songs.unshift(s); noOpenSong(s.id); NO.te = true; noPaintAll(); const t = $('#noTitle'); if (t) { t.focus(); t.select(); }
     },
     noAskDel: a => { const s = noData().songs.find(x => x.id === a); if (!s) return; modal('Lied löschen?', `„${esc(s.title)}“ mit ${s.notes.length} ${s.notes.length === 1 ? 'Note' : 'Noten'}<br><br>Ein gelöschtes Lied ist weg.`, 'Ja, löschen', 'noDelYes', s.id, 'Nein, behalten'); },
     noDelYes: a => {
       closeModal(); const d = noData(), i = d.songs.findIndex(x => x.id === a); if (i < 0) return;
       const wasCur = a === NO.id; d.songs.splice(i, 1); if (!d.songs.length) d.songs.push(noNewSong());
-      if (wasCur) { NO.id = null; noStopAll(); const s = d.songs[0]; NO.id = s.id; d.act = s.id; NO.hist = [noClone(s.notes)]; NO.fut = []; NO.sel = null; NO.cur = s.notes.length; }
+      if (wasCur) { NO.id = null; noStopAll(); const s = d.songs[0]; NO.id = s.id; d.act = s.id; NO.hist = [noClone(s.notes)]; NO.fut = []; NO.sel = []; NO.cur = s.notes.length; NO.te = false; }
       save(); noPaintAll(); toast('🗑️', 'Lied gelöscht');
     }
   }
 });
-/* Fach auf der Startseite (unter „Wohin heute?“) */
-regSubject({ id: 'noten', name: 'Notenheft', ic: '🎼', act: 'noten', sub: noSub, tile: () => ({ art: 'noten', title: 'Notenheft', sub: noSub(), act: 'noten' }) });
 
 /* ---------- Eingaben, Tastatur, Lebenszyklus ---------- */
 document.addEventListener('input', e => {
@@ -9455,6 +9575,7 @@ document.addEventListener('change', e => { if (view === 'noten' && e.target.id =
 document.addEventListener('keydown', e => {
   if (view !== 'noten') return;
   if (e.key === 'Escape' && NO.lib && !$('#modal')) { ACT.noLibClose(); return; }
+  if (e.key === 'Enter' && e.target && e.target.id === 'noTitle') { e.preventDefault(); ACT.noTitleOk(); return; }
   const t = e.target;
   if ((e.key === 'Enter' || e.key === ' ') && t && t.classList && t.classList.contains('no-n')) { e.preventDefault(); ACT.noSel(t.dataset.arg); }
 });
@@ -9464,64 +9585,165 @@ let noLastPL = noPerLine();
 window.addEventListener('resize', () => { if (view === 'noten' && noPerLine() !== noLastPL) { noLastPL = noPerLine(); noPaintScore(); } });
 
 /* =====================================================================
-   NOTIZBUCH · „Zettel-Wand“ in Meine Welt
-   Kurze Zettel (höchstens 140 Zeichen) an einer Wand: die letzten 6 hängen sichtbar, ältere stehen in einer Liste darunter.
-   Zustand: S.notes = [{ id, t (Text), ts (Zeit) }] – nur das Kind schreibt hier; Zettel werden nur gelöscht, wenn das Kind es bestätigt.
-   Farben: gelb, mint, himmelblau (nie rosa).
+   NOTIZBUCH · „Zettel-Wand“ (Teil von „Kreativhefte“, erreichbar über Meine Welt)
+   Zwei Arten, genau eine pro Eintrag beim Anlegen gewählt:
+   - Zettel: kurzer Text (höchstens 140 Zeichen) + genau ein Stichwort (Hilfe/Erledigen/Fragen/Merken/Meine Ideen)
+   - Liste: Titel + Häkchen-Punkte (höchstens 40 Zeichen je Punkt); Häkchen setzen streicht durch und schiebt nach unten
+   Alles hängt durchgehend scrollbar an einer Wand (keine „Ältere Zettel“-Schublade mehr).
+   Zustand: S.notes = [{ id, type:'zettel', t, tag, color, ts, ed? } | { id, type:'liste', title, items:[{id,t,done}], color, ts, ed? }]
+   Alte Zettel ({id,t,ts} ohne type/tag/color) werden beim Laden sicher migriert: type wird „zettel“, tag bleibt leer, eine Farbe wird vergeben – nichts geht verloren.
+   Farben: gelb, mint, himmelblau, rosa, pfirsich, flieder – hier ist Rosa ausdrücklich erlaubt (Ausnahme von der sonstigen Regel).
    ===================================================================== */
-const NOTE_MAX = 140, NOTE_CAP = 200, NOTE_WALL = 6, NOTE_COLS = ['y', 'm', 's'];
+const NOTE_MAX = 140, NOTE_ITEM_MAX = 40, NOTE_LIST_MAX = 30, NOTE_CAP = 200;
+const NOTE_COLORS = ['y', 'm', 's', 'p', 'o', 'l'];
+const NOTE_TAGS = [
+  { id: 'help', label: 'Hilfe', ic: '🆘' },
+  { id: 'do', label: 'Erledigen', ic: '✅' },
+  { id: 'ask', label: 'Fragen', ic: '❓' },
+  { id: 'remember', label: 'Merken', ic: '📌' },
+  { id: 'idea', label: 'Meine Ideen', ic: '💡' }
+];
 DZ_ART.notiz = '<rect x="9" y="9" width="30" height="30" rx="3" fill="#f1e4b6" stroke="#52676c" stroke-width="2" transform="rotate(-6 24 24)"/><path d="M15 19h16M15 25h16M15 31h9" stroke="#8a8f7a" stroke-width="2" stroke-linecap="round" transform="rotate(-6 24 24)"/><rect x="33" y="22" width="22" height="22" rx="3" fill="#cfe9d6" stroke="#52676c" stroke-width="2" transform="rotate(7 44 33)"/><path d="M38 31h12M38 37h8" stroke="#6f9871" stroke-width="2" stroke-linecap="round" transform="rotate(7 44 33)"/><circle cx="24" cy="9" r="3" fill="#e0a823" stroke="#52676c" stroke-width="1.5"/>';
-const noteList = () => { if (!Array.isArray(S.notes)) S.notes = []; return S.notes; };
+const noteTag = id => NOTE_TAGS.find(t => t.id === id);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const noteLen = t => Array.from(t || '').length;
 const noteClip = t => Array.from(String(t || '').replace(/\s+/g, ' ')).slice(0, NOTE_MAX).join('');
 const noteDate = ts => new Date(ts).toLocaleDateString('de-DE', { day: 'numeric', month: 'long' });
-const noteSub = () => { const n = noteList().length; return n ? `${n} ${n === 1 ? 'Zettel' : 'Zettel'}` : 'Schreib etwas auf'; };
-function noteCard(n, big) {
-  const c = NOTE_COLS[(n.id || 0) % 3], rot = ((n.id || 0) % 5 - 2) * 0.9;
-  return `<button class="nz-note nz-${c}" style="--r:${rot}deg" data-act="noteEdit" data-arg="${n.id}" aria-label="Zettel vom ${noteDate(n.ts)} bearbeiten: ${esc(n.t)}"><span class="nz-pin"></span><span class="nz-t">${esc(n.t)}</span><small>${noteDate(n.ts)}</small></button>`;
+function noteNorm(n) {
+  if (!n || typeof n !== 'object') return null;
+  n.id = +n.id || Date.now(); n.ts = +n.ts || Date.now();
+  if (!NOTE_COLORS.includes(n.color)) n.color = NOTE_COLORS[Math.abs(n.id) % NOTE_COLORS.length];
+  if (n.type === 'liste') {
+    n.title = String(n.title || 'Liste').slice(0, 40);
+    n.items = (Array.isArray(n.items) ? n.items : []).slice(0, NOTE_LIST_MAX).map(it => ({ id: String((it && it.id) || uid()), t: String((it && it.t) || '').slice(0, NOTE_ITEM_MAX), done: !!(it && it.done) }));
+  } else {
+    n.type = 'zettel'; n.t = noteClip(n.t || ''); n.tag = NOTE_TAGS.some(x => x.id === n.tag) ? n.tag : null;
+  }
+  return n;
 }
-VIEWS.notiz = () => {
-  const L = noteList(), edit = L.find(n => n.id === UI.noteEdit), draft = UI.noteDraft != null ? UI.noteDraft : (edit ? edit.t : '');
-  const sorted = L.slice().sort((a, b) => b.ts - a.ts || b.id - a.id), wall = sorted.slice(0, NOTE_WALL), older = sorted.slice(NOTE_WALL);
-  return topBar('Notizbuch', 'rewards') + `
-  <section class="dz-panel nz-edit"><h2>${edit ? 'Zettel ändern' : 'Neuer Zettel'}</h2>
+function noteList() { if (!Array.isArray(S.notes)) S.notes = []; S.notes = S.notes.map(noteNorm).filter(Boolean); return S.notes; }
+const noteSub = () => { const n = noteList().length; return n ? `${n} ${n === 1 ? 'Eintrag' : 'Einträge'}` : 'Schreib etwas auf'; };
+const noteRand = () => NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)];
+const noteRot = id => ((id || 0) % 5 - 2) * 0.9;
+
+/* ---------- Zeichnen: eine Karte an der Wand ---------- */
+function noteCard(n) {
+  if (n.type === 'liste') {
+    const open = n.items.filter(it => !it.done), done = n.items.filter(it => it.done), ordered = [...open, ...done];
+    return `<div class="nz-note nz-${n.color} nz-liste" style="--r:${noteRot(n.id)}deg"><span class="nz-pin"></span>
+      <button class="nz-cardhead" data-act="noteEdit" data-arg="${n.id}" aria-label="Liste bearbeiten: ${esc(n.title)}"><span class="nz-listicon">${ico('check', 16)}</span><b>${esc(n.title)}</b></button>
+      <ul class="nz-items">${ordered.length ? ordered.map(it => `<li class="${it.done ? 'done' : ''}"><button class="nz-chk" data-act="noteItemToggle" data-arg="${n.id}:${it.id}" aria-pressed="${it.done}" aria-label="${esc(it.t)}${it.done ? ', erledigt' : ''}"><span class="nz-box">${it.done ? ico('check', 13) : ''}</span><span>${esc(it.t)}</span></button></li>`).join('') : '<li class="small mute">Noch keine Punkte</li>'}</ul>
+      <small>${noteDate(n.ts)}</small></div>`;
+  }
+  const tag = noteTag(n.tag);
+  return `<button class="nz-note nz-${n.color}" style="--r:${noteRot(n.id)}deg" data-act="noteEdit" data-arg="${n.id}" aria-label="Zettel vom ${noteDate(n.ts)} bearbeiten: ${esc(n.t)}"><span class="nz-pin"></span>${tag ? `<span class="nz-chip">${tag.ic} ${tag.label}</span>` : ''}<span class="nz-t">${esc(n.t)}</span><small>${noteDate(n.ts)}</small></button>`;
+}
+
+/* ---------- Zeichnen: Neu/Ändern-Feld ---------- */
+function noteTypeSeg() {
+  const type = UI.noteType || 'zettel';
+  return `<div class="seg nz-seg" role="group" aria-label="Art (genau eine wählen)"><button data-act="noteType" data-arg="zettel" class="${type === 'zettel' ? 'active' : ''}" aria-pressed="${type === 'zettel'}">${ico('notebook', 18)} Zettel</button><button data-act="noteType" data-arg="liste" class="${type === 'liste' ? 'active' : ''}" aria-pressed="${type === 'liste'}">${ico('check', 18)} Liste</button></div>`;
+}
+function noteZettelEditor(edit) {
+  const draft = UI.noteDraft != null ? UI.noteDraft : '';
+  return `<section class="dz-panel nz-edit"><h2>${edit ? 'Zettel ändern' : 'Neuer Zettel'}</h2>${edit ? '' : noteTypeSeg()}
+    <div class="nz-tagrow" role="group" aria-label="Stichwort, genau eins">${NOTE_TAGS.map(t => `<button class="nz-tag${UI.noteTag === t.id ? ' on' : ''}" data-act="noteTagPick" data-arg="${t.id}" aria-pressed="${UI.noteTag === t.id}">${t.ic} ${t.label}</button>`).join('')}</div>
     <label class="sr-only" for="noteIn">Dein Zettel, höchstens ${NOTE_MAX} Zeichen</label>
     <textarea id="noteIn" class="txt" rows="3" maxlength="${NOTE_MAX * 2}" placeholder="Schreib hier etwas auf …" autocomplete="off">${esc(draft)}</textarea>
     <div class="nz-row"><span class="nz-cnt" id="noteCnt" aria-live="polite">${noteLen(draft)} / ${NOTE_MAX}</span>
-      <span class="nz-btns">${edit ? '<button class="btn sec" data-act="noteCancel">Abbrechen</button><button class="btn sec" data-act="noteDel">Zettel löschen</button>' : ''}<button class="btn" data-act="noteSave">${edit ? 'Änderung speichern' : 'Zettel anheften'}</button></span></div>
-  </section>
-  ${dzSec('Meine Zettel-Wand', L.length ? '' : 'Noch hängt nichts an der Wand.')}
-  ${wall.length ? `<div class="nz-wall">${wall.map(n => noteCard(n)).join('')}</div>` : ''}
-  ${older.length ? `<details class="ad-earned nz-older"><summary>${ico('book', 18)} Ältere Zettel <span>${older.length}</span></summary><ul>${older.map(n => `<li><button class="nz-old" data-act="noteEdit" data-arg="${n.id}"><small>${noteDate(n.ts)}</small> ${esc(n.t)}</button></li>`).join('')}</ul></details>` : ''}`;
+      <span class="nz-btns"><button class="btn sec" data-act="noteCancel">Abbrechen</button>${edit ? '<button class="btn sec" data-act="noteDel">Zettel löschen</button>' : ''}<button class="btn" data-act="noteSave">${edit ? 'Änderung speichern' : 'Zettel anheften'}</button></span></div>
+  </section>`;
+}
+function noteListEditor(edit) {
+  const title = UI.noteTitle || '', items = Array.isArray(UI.noteItems) ? UI.noteItems : [];
+  return `<section class="dz-panel nz-edit"><h2>${edit ? 'Liste ändern' : 'Neue Liste'}</h2>${edit ? '' : noteTypeSeg()}
+    <label class="sr-only" for="noteTitleIn">Titel der Liste</label>
+    <input id="noteTitleIn" class="txt" maxlength="40" placeholder="Titel der Liste …" autocomplete="off" value="${esc(title)}">
+    <ul class="nz-draft-items">${items.map((it, i) => `<li><span>${esc(it.t)}</span><button class="nz-rm" data-act="noteItemDel" data-arg="${i}" aria-label="„${esc(it.t)}“ entfernen">${ico('trash', 16)}</button></li>`).join('')}</ul>
+    ${items.length < NOTE_LIST_MAX ? `<div class="nz-additem"><label class="sr-only" for="noteItemIn">Neuer Punkt, höchstens ${NOTE_ITEM_MAX} Zeichen</label><input id="noteItemIn" class="txt" maxlength="${NOTE_ITEM_MAX}" placeholder="Neuer Punkt …" autocomplete="off"><button class="btn sec" data-act="noteItemAdd">${ico('plus', 18)} Hinzufügen</button></div>` : '<p class="small mute">Die Liste ist voll.</p>'}
+    <div class="nz-row"><span></span><span class="nz-btns"><button class="btn sec" data-act="noteCancel">Abbrechen</button>${edit ? '<button class="btn sec" data-act="noteDel">Liste löschen</button>' : ''}<button class="btn" data-act="noteSave">${edit ? 'Änderung speichern' : 'Liste anlegen'}</button></span></div>
+  </section>`;
+}
+const noteEditPanel = () => UI.noteOpen ? (UI.noteType === 'liste' ? noteListEditor : noteZettelEditor)(UI.noteEdit != null) : '';       // Editor nur nach „Neu“ (oder beim Ändern einer Karte)
+
+VIEWS.notiz = () => {
+  const L = noteList(), sorted = L.slice().sort((a, b) => b.ts - a.ts || b.id - a.id);
+  const newBtn = UI.noteOpen ? '' : `<button class="btn nz-new" data-act="noteNew" aria-label="Neuen Zettel oder neue Liste anlegen">${ico('plus', 18)} Neu</button>`;
+  return topBar('Notizbuch', 'kreativhefte') + noteEditPanel() +
+    dzSec('Meine Zettel-Wand', L.length ? '' : 'Noch hängt nichts an der Wand. Tippe auf „Neu“.', newBtn) +
+    (sorted.length ? `<div class="nz-wall">${sorted.map(noteCard).join('')}</div>` : '');
 };
+
+/* ---------- Speichern ---------- */
+function noteResetDraft() { UI.noteOpen = false; UI.noteEdit = null; UI.noteDraft = null; UI.noteTag = null; UI.noteTitle = ''; UI.noteItems = []; UI.noteType = 'zettel'; }
 function noteSaveNow() {
-  const el = $('#noteIn'), t = noteClip(el ? el.value : UI.noteDraft).trim(), L = noteList();
-  if (!t) return toast('✏️', 'Schreib erst etwas auf.');
-  const edit = L.find(n => n.id === UI.noteEdit);
-  if (edit) { edit.t = t; edit.ed = Date.now(); toast('✅', 'Zettel geändert'); }
-  else {
-    if (L.length >= NOTE_CAP) return toast('📌', 'Die Wand ist voll. Lösche erst einen alten Zettel.');
-    const id = L.reduce((m, n) => Math.max(m, n.id || 0), 0) + 1;
-    L.push({ id, t, ts: Date.now() }); toast('📌', 'Zettel angeheftet'); sfx('ok');
+  const L = noteList(), edit = L.find(n => n.id === UI.noteEdit), type = UI.noteType || 'zettel';
+  if (type === 'liste') {
+    const tiEl = $('#noteTitleIn'), title = ((tiEl ? tiEl.value : UI.noteTitle) || '').trim().slice(0, 40) || 'Liste';
+    const items = (Array.isArray(UI.noteItems) ? UI.noteItems : []).slice(0, NOTE_LIST_MAX);
+    if (!items.length) return toast('📋', 'Füge zuerst einen Punkt hinzu.');
+    if (edit) { edit.title = title; edit.items = items; edit.ed = Date.now(); toast('✅', 'Liste geändert'); }
+    else {
+      if (L.length >= NOTE_CAP) return toast('📌', 'Die Wand ist voll. Lösche erst etwas Altes.');
+      const id = L.reduce((m, n) => Math.max(m, n.id || 0), 0) + 1;
+      L.push({ id, type: 'liste', title, items, color: noteRand(), ts: Date.now() }); toast('📋', 'Liste angelegt'); sfx('ok');
+    }
+  } else {
+    const el = $('#noteIn'), t = noteClip(el ? el.value : UI.noteDraft).trim();
+    if (!t) return toast('✏️', 'Schreib erst etwas auf.');
+    if (!UI.noteTag) return toast('🏷️', 'Wähle zuerst ein Stichwort.');
+    if (edit) { edit.t = t; edit.tag = UI.noteTag; edit.ed = Date.now(); toast('✅', 'Zettel geändert'); }
+    else {
+      if (L.length >= NOTE_CAP) return toast('📌', 'Die Wand ist voll. Lösche erst einen alten Zettel.');
+      const id = L.reduce((m, n) => Math.max(m, n.id || 0), 0) + 1;
+      L.push({ id, type: 'zettel', t, tag: UI.noteTag, color: noteRand(), ts: Date.now() }); toast('📌', 'Zettel angeheftet'); sfx('ok');
+    }
   }
-  UI.noteEdit = null; UI.noteDraft = null; save(); render();
+  noteResetDraft(); save(); render();
 }
 registerFeature({
   id: 'notiz', title: 'Notizbuch', icon: 'book', tint: 'butter', group: 'world', order: 6, view: 'notiz', sub: noteSub,
   acts: {
-    notiz: () => { UI.noteEdit = null; UI.noteDraft = null; go('notiz'); },
+    notiz: () => { noteResetDraft(); go('notiz'); },
+    noteNew: () => { noteResetDraft(); UI.noteOpen = true; render(); const t = $('#noteIn'); if (t) t.focus(); },
     noteSave: noteSaveNow,
-    noteEdit: id => { const n = noteList().find(x => x.id === +id); if (!n) return; UI.noteEdit = n.id; UI.noteDraft = null; render(); window.scrollTo(0, 0); },
-    noteCancel: () => { UI.noteEdit = null; UI.noteDraft = null; render(); },
-    noteDel: () => { const n = noteList().find(x => x.id === UI.noteEdit); if (!n) return; modal('Zettel löschen?', `„${esc(n.t)}“<br><br>Ein gelöschter Zettel ist weg.`, 'Ja, löschen', 'noteDelYes', '', 'Nein, behalten'); },
-    noteDelYes: () => { closeModal(); S.notes = noteList().filter(n => n.id !== UI.noteEdit); UI.noteEdit = null; UI.noteDraft = null; save(); render(); toast('🗑️', 'Zettel gelöscht'); }
+    noteType: a => { UI.noteType = a === 'liste' ? 'liste' : 'zettel'; if (UI.noteType === 'liste') { if (UI.noteTitle == null) UI.noteTitle = ''; if (!Array.isArray(UI.noteItems)) UI.noteItems = []; } render(); },
+    noteTagPick: id => { UI.noteTag = id; render(); },
+    noteItemAdd: () => {
+      const el = $('#noteItemIn'); if (!el) return;
+      const t = String(el.value || '').trim().slice(0, NOTE_ITEM_MAX); if (!t) return;
+      if (!Array.isArray(UI.noteItems)) UI.noteItems = []; if (UI.noteItems.length >= NOTE_LIST_MAX) return toast('📋', 'Die Liste ist voll.');
+      UI.noteItems.push({ id: uid(), t, done: false }); render();
+    },
+    noteItemDel: i => { if (Array.isArray(UI.noteItems)) UI.noteItems.splice(+i, 1); render(); },
+    noteItemToggle: a => {
+      const parts = String(a).split(':'), n = noteList().find(x => x.id === +parts[0]); if (!n || n.type !== 'liste') return;
+      const it = n.items.find(x => x.id === parts[1]); if (!it) return;
+      it.done = !it.done; n.ed = Date.now(); save(); render();
+    },
+    noteEdit: id => {
+      const n = noteList().find(x => x.id === +id); if (!n) return;
+      UI.noteOpen = true; UI.noteEdit = n.id; UI.noteType = n.type;
+      if (n.type === 'liste') { UI.noteTitle = n.title; UI.noteItems = n.items.map(it => ({ id: it.id, t: it.t, done: it.done })); }
+      else { UI.noteDraft = n.t; UI.noteTag = n.tag; }
+      render(); window.scrollTo(0, 0);
+    },
+    noteCancel: () => { noteResetDraft(); render(); },
+    noteDel: () => {
+      const n = noteList().find(x => x.id === UI.noteEdit); if (!n) return;
+      const label = n.type === 'liste' ? `Liste „${esc(n.title)}“` : `„${esc(n.t)}“`;
+      modal(n.type === 'liste' ? 'Liste löschen?' : 'Zettel löschen?', `${label}<br><br>Ein gelöschtes Element ist weg.`, 'Ja, löschen', 'noteDelYes', '', 'Nein, behalten');
+    },
+    noteDelYes: () => { closeModal(); S.notes = noteList().filter(n => n.id !== UI.noteEdit); noteResetDraft(); save(); render(); toast('🗑️', 'Gelöscht'); }
   }
 });
 document.addEventListener('input', e => {
-  if (e.target.id !== 'noteIn') return;
-  const t = noteClip(e.target.value.replace(/\n/g, ' ')); if (t !== e.target.value) e.target.value = t;
-  UI.noteDraft = t; const c = $('#noteCnt'); if (c) { c.textContent = `${noteLen(t)} / ${NOTE_MAX}`; c.classList.toggle('full', noteLen(t) >= NOTE_MAX); }
+  if (e.target.id === 'noteIn') {
+    const t = noteClip(e.target.value.replace(/\n/g, ' ')); if (t !== e.target.value) e.target.value = t;
+    UI.noteDraft = t; const c = $('#noteCnt'); if (c) { c.textContent = `${noteLen(t)} / ${NOTE_MAX}`; c.classList.toggle('full', noteLen(t) >= NOTE_MAX); }
+  } else if (e.target.id === 'noteTitleIn') { UI.noteTitle = e.target.value.slice(0, 40); }
 });
+document.addEventListener('keydown', e => { if (e.target && e.target.id === 'noteItemIn' && e.key === 'Enter') { e.preventDefault(); ACT.noteItemAdd(); } });
 
 /* =====================================================================
    SCHATZKAMMER: ein gemischter Haufen Karten (Fakten, Witze, Rätsel, Musik, Denkfragen …).
@@ -10146,76 +10368,125 @@ registerFeature({
 });
 
 /* =====================================================================
-   SEITENZEIT: jede Seite in „Meine Welt“ (Shop, Musik, Geschichte, Weltreise, Fakten, Pokale, Karten, Wesen, Buch, Insel, Avatar)
-   hat ein kurzes Zeitfenster (Standard 3 Minuten). Danach ist die Seite zu, bis das Kind wirklich gearbeitet hat
-   (Standard: 5 gelöste Aufgaben). Höchstens 2 Fenster pro Seite und Tag – es sei denn, das Tagesziel ist geschafft.
-   Frei von dieser Regel: Meine Hefte, Extra Spaß (Übungen), Europa Entdecker mit allen Unterseiten, Start. Das Profil (mit Farben & Töne) zählt als eine Seite.
-   Eltern können einzelne Seiten oder alle Seiten für den Rest des Tages ganz sperren (S.daily.lock = { all, pages:{seite:true} }) – das gilt auch dann, wenn das Tagesziel geschafft ist.
-   Zustand: S.daily.pg[seite] = { sec: Sekunden im jetzigen Fenster, w: Nr. des Fensters, lockN: Aufgabenzahl beim Schließen | null }
-   Der Tagesstand wird jeden Tag neu angelegt (touchDay). Nichts Gesammeltes wird je verändert.
+   HAUSAUFGABEN-SPERRE + NUTZUNGSZEIT: jeder Tag beginnt gesperrt. Frei ist nur der Hausaufgaben-Bereich
+   (Meine Hefte mit Üben/Test/Extra Spaß, dazu Start und die Eltern-Seite). Alles andere – Profil, Meine Welt
+   und alle ihre Unterseiten – ist gesperrt, bis das Kind entweder
+   20 Minuten Hausaufgaben gemacht ODER 25 Aufgaben gelöst hat (je nachdem, was zuerst kommt).
+   Danach gilt für jeden einzelnen Bereich höchstens 5 Minuten, und für alle gesperrten Bereiche zusammen
+   höchstens 10 Minuten pro Tag. Gezählt wird nur, wenn die App sichtbar ist, das Kind wirklich etwas tut
+   (Antippen in den letzten 2 Minuten) und die Seite kein Hausaufgaben-Bereich ist.
+   Alles beruht auf dem Gerätedatum (ymd()); ein neuer Tag beginnt automatisch um 00:00 (touchDay(), store.js).
+   Die Sammel-Seite „Meine Welt“ zählt selbst nicht mit (nur ihre Unterseiten). Europa Entdecker und die Ideenwerkstatt (Notizbuch, Notenheft) sind nie gesperrt und zählen nicht.
+   Zustand: S.daily.rg = { tot: Sekunden gesamt heute, a: { bereich: Sekunden } }
+            S.daily.rgExt = { tot, a:{} }  – heutige Verlängerung durch die Eltern (zusätzlich zu den Grenzen)
+            S.hw = { log: { 'JJJJ-MM-TT': true|false }, notified: 'JJJJ-MM-TT' }  – für den „2 Tage ohne Hausaufgaben“-Hinweis
    ===================================================================== */
-const PG_FREE = /^(home|hefte|module|topic|play|block|review|mistakes|result|testSetup|test|testResult|limit|parent|rewards|extra|weltEltern|geo.*)$/;
-function pgArea(v) {
-  if (PG_FREE.test(v || '')) return null;
+const HW_FREE = /^(home|hefte|extra|module|topic|play|block|review|mistakes|testSetup|test|testResult|result|newRound|parent|weltEltern|limit|kreativhefte|notiz|noten|geo[A-Za-z]*)$/;   // immer offen: Hefte, Europa Entdecker, Ideenwerkstatt (Notizbuch + Notenheft)
+const HW_HUB = /^(rewards)$/;
+const HW_N = 25, HW_SEC = 20 * 60, RG_AREA_CAP = 5 * 60, RG_TOTAL_CAP = 10 * 60;
+
+/* ---------- Hausaufgaben-Status (aus den schon vorhandenen Zählern: Aufgaben heute, Übungszeit heute) ---------- */
+function hwDone() { if (ADMIN) return true; touchDay(); return (S.daily.n || 0) >= HW_N || (S.daily.sec || 0) >= HW_SEC; }
+function hwInfo() { touchDay(); return { n: S.daily.n || 0, need: HW_N, sec: S.daily.sec || 0, needSec: HW_SEC, done: hwDone() }; }
+
+/* ---------- Bereich (Ordner/Unterordner) für eine Ansicht; null = kein Bereich (frei oder Sammel-Seite) ---------- */
+function rgArea(v) {
+  if (HW_FREE.test(v || '') || HW_HUB.test(v || '')) return null;
   if (v === 'profile' || v === 'look') return 'profile';
   const F = featOf(v);
-  return F && F.id !== 'geo' ? F.id : null;
+  return F ? F.id : (v || null);
 }
-const pgMin = () => S.cfg.pageMin == null ? 3 : S.cfg.pageMin;
-const pgOn = () => !ADMIN && pgMin() > 0;
-function pgRec(a) { touchDay(); return S.daily.pg[a] || (S.daily.pg[a] = { sec: 0, w: 1, lockN: null }); }
-const pgWin = () => Math.max(1, S.cfg.pageWin || 2), pgNeed = () => Math.max(1, S.cfg.pageNeed || 10);
-/* Zustand einer Seite: { open:true, left:Sekunden|Infinity } oder { open:false, final, need, goalLeft } */
-function pgLockRec() { touchDay(); const d = S.daily; if (!d.lock || typeof d.lock !== 'object') d.lock = { all: false, pages: {} }; if (!d.lock.pages) d.lock.pages = {}; return d.lock; }
-const pgLocked = a => { const l = pgLockRec(); return !!(l.all || l.pages[a]); };
-function pgState(a) {
-  if (!a || ADMIN) return { open: true, left: Infinity };
-  if (pgLocked(a)) return { open: false, parent: true };                     // von den Eltern für heute gesperrt
-  if (!pgOn()) return { open: true, left: Infinity };
-  touchDay();
-  if (S.daily.got) return { open: true, left: Infinity };                    // Tagesziel geschafft: keine Seitenzeit mehr heute
-  const r = pgRec(a);
-  if (r.lockN != null) {
-    const have = Math.max(0, (S.daily.n || 0) - r.lockN);
-    if (r.w < pgWin() && have >= pgNeed()) { r.w++; r.sec = 0; r.lockN = null; save(); }
-    else return { open: false, final: r.w >= pgWin(), need: Math.max(0, pgNeed() - have), goalLeft: Math.max(0, (S.cfg.goal || 20) - (S.daily.n || 0)) };
-  }
-  return { open: true, left: Math.max(0, pgMin() * 60 - r.sec) };
-}
-function pgReset(a) { touchDay(); if (a) delete S.daily.pg[a]; else S.daily.pg = {}; save(); }
-const pgName = a => a === 'profile' ? 'Mein Profil' : ((FEATS[a] || {}).title || a);
-/* alle Seiten, für die eine Seitenzeit gilt (für die Eltern-Liste) */
-const pgAreas = () => Object.values(FEATS).filter(f => f.view && pgArea(f.view) === f.id).sort((a, b) => a.order - b.order).map(f => f.id).concat(['profile']);
-function pageLock(v, st) {
-  const a = pgArea(v), nm = pgName(a), home = a === 'profile';
-  const msg = st.parent
-    ? 'Deine Eltern haben diese Seite für heute geschlossen. Üben kannst du trotzdem – und morgen ist sie wieder offen!'
-    : st.final
-      ? `Für heute ist hier Schluss. Schaffe dein Tagesziel (noch ${st.goalLeft} Aufgaben) – dann ist die Seite wieder offen. Morgen geht es sowieso weiter!`
-      : `Die Zeit hier ist um. Löse noch <b>${st.need}</b> ${st.need === 1 ? 'Aufgabe' : 'Aufgaben'} beim Üben – dann hast du hier noch einmal ${pgMin()} Minuten.`;
-  return `${topBar(esc(nm), home ? 'home' : 'rewards')}
-  <div class="lockscr pglock"><div class="lockic">${ico('lock', 44)}</div><h2>Kleine Pause von „${esc(nm)}“</h2>
-  <p>${msg}</p><p class="small mute">Alles ist gespeichert.</p>
-  <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="goNext">Jetzt üben</button><button class="btn sec big" data-act="${home ? 'home' : 'rewards'}">${home ? 'Start' : 'Meine Welt'}</button></div></div>`;
-}
-const pgBar = (a, st) => (st.left === Infinity || !a) ? '' : `<div class="crbar on pgbar"><span>⏱ Zeit auf dieser Seite</span><b id="pgT">${fmtT(st.left)}</b></div>`;
+/* Für shell.js: true (ein Bereichs-Name oder „__hub“), solange die Ansicht erst nach der Hausaufgabe erreichbar ist */
+function pgArea(v) { return HW_FREE.test(v || '') ? null : (rgArea(v) || '__hub'); }
 
-/* Uhr: zählt nur, wenn man wirklich auf der Seite ist, die App sichtbar ist und das Kind noch etwas tut (Antippen in den letzten 2 Minuten) */
+/* ---------- Nutzungszeit je Bereich ---------- */
+function rgData() {
+  touchDay(); const d = S.daily;
+  if (!d.rg || typeof d.rg !== 'object') d.rg = { tot: 0, a: {} };
+  if (!d.rg.a) d.rg.a = {};
+  if (!d.rgExt || typeof d.rgExt !== 'object') d.rgExt = { tot: 0, a: {} };
+  if (!d.rgExt.a) d.rgExt.a = {};
+  return d;
+}
+const rgAreaCap = a => RG_AREA_CAP + (rgData().rgExt.a[a] || 0);
+const rgTotalCap = () => RG_TOTAL_CAP + (rgData().rgExt.tot || 0);
+const rgAreaUsed = a => rgData().rg.a[a] || 0;
+const rgTotalUsed = () => rgData().rg.tot || 0;
+const rgName = a => a === 'profile' ? 'Mein Profil' : a === 'geo' ? 'Europa Entdecker' : a === 'geoCards' ? 'Länderkarten' : a === 'geoPass' ? 'Stempel' : a === 'geoMemory' ? 'Gedächtnis' : a === 'geoFacts' ? 'Fakten' : ((FEATS[a] || {}).title || a);
+const pgName = a => rgName(a);
+/* alle Bereiche mit eigener Zeitgrenze (für die Eltern-Liste): Meine-Welt-Funktionen, Profil, Europa Entdecker + Unterseiten */
+const rgAreaList = () => Array.from(new Set([
+  ...Object.values(FEATS).filter(f => f.view && rgArea(f.view) === f.id).map(f => f.id),
+  'profile',
+  ...Object.keys(rgData().rg.a)
+]));
+
+/* Zustand einer Ansicht: { open:true, left } oder { open:false, hw:true, ... } oder { open:false, totLeft, areaLeft } */
+function pgState(a) {
+  if (ADMIN) return { open: true, left: Infinity };
+  if (!hwDone()) return Object.assign({ open: false, hw: true }, hwInfo());
+  if (a === '__hub' || !a) return { open: true, left: Infinity };
+  const totLeft = Math.max(0, rgTotalCap() - rgTotalUsed()), areaLeft = Math.max(0, rgAreaCap(a) - rgAreaUsed(a));
+  return (totLeft > 0 && areaLeft > 0) ? { open: true, left: Math.min(totLeft, areaLeft) } : { open: false, totLeft, areaLeft };
+}
+function pageLock(v, st) {
+  const a = rgArea(v), nm = pgName(a);
+  if (st.hw) {
+    const nLeft = Math.max(0, st.need - st.n), secLeft = Math.max(0, st.needSec - st.sec);
+    return `${topBar('Erst Hausaufgaben', 'home')}
+    <div class="lockscr pglock"><div class="lockic">${ico('lock', 44)}</div>${lockBadge()}<h2>Erst Hausaufgaben, dann der Rest</h2>
+    <p>Löse noch <b>${nLeft}</b> ${nLeft === 1 ? 'Aufgabe' : 'Aufgaben'} oder übe noch <b>${fmtT(secLeft)}</b> in „Meine Hefte“. Dann sind Profil und Meine Welt für heute offen. Europa Entdecker und die Ideenwerkstatt sind immer offen.</p>
+    <p class="small mute">Geschafft: ${st.n} von ${st.need} Aufgaben · ${fmtT(st.sec)} von ${fmtT(st.needSec)}.</p>
+    <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="goNext">Jetzt üben</button><button class="btn sec big" data-act="home">Start</button></div></div>`;
+  }
+  return `${topBar(esc(nm), 'rewards')}
+  <div class="lockscr pglock"><div class="lockic">${ico('lock', 44)}</div>${lockBadge()}<h2>Für heute ist „${esc(nm)}“ zu</h2>
+  <p>Hier ist die Zeit für heute aufgebraucht. Morgen ist „${esc(nm)}“ wieder offen.</p><p class="small mute">Alles ist gespeichert.</p>
+  <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="back" data-arg="rewards">Zurück</button><button class="btn sec big" data-act="home">Start</button></div></div>`;
+}
+/* „Noch zu“-Abzeichen für Kacheln, deren Seite gerade zu ist (Hausaufgaben noch offen oder Zeit für heute aufgebraucht) */
+const lockBadge = () => `<span class="dz-lockb">${ico('lock', 13)} Noch zu</span>`;
+function lockTag(v) { if (ADMIN) return ''; const a = pgArea(v); if (!a) return ''; try { return pgState(a).open ? '' : lockBadge(); } catch (e) { return ''; } }
+const pgBar = (a, st) => (!a || a === '__hub' || st.left === Infinity) ? '' : `<div class="crbar on pgbar"><span>⏱ Zeit in „${esc(pgName(a))}“</span><b id="pgT">${fmtT(st.left)}</b></div>`;
+
+/* ---------- Uhr: zählt nur in einem echten Bereich, nach der Hausaufgabe, bei sichtbarer App und frischem Antippen ---------- */
 setInterval(() => {
-  if (document.hidden) return;
+  if (document.hidden || ADMIN || !hwDone()) return;
   try {
-    const a = pgArea(view); if (!a || !pgOn()) return;
+    const a = rgArea(view); if (!a) return;
     const st = pgState(a); if (!st.open || st.left === Infinity) return;
     if (Date.now() - lastInput > 120000) return;
-    const r = pgRec(a); r.sec++;
-    const left = Math.max(0, pgMin() * 60 - r.sec), el = $('#pgT'); if (el) el.textContent = fmtT(left);
-    if (left === 30) toast('⏳', 'Noch 30 Sekunden auf dieser Seite. Alles wird automatisch gespeichert.');
-    if (left <= 0) {
-      r.lockN = S.daily.n || 0; save(); leaveHook(view);
-      toast('⏳', 'Die Zeit hier ist um. Alles ist gespeichert.'); render();
-    } else if (r.sec % 15 === 0) save();
+    const d = rgData(); d.rg.a[a] = (d.rg.a[a] || 0) + 1; d.rg.tot = (d.rg.tot || 0) + 1;
+    const left = Math.min(Math.max(0, rgTotalCap() - rgTotalUsed()), Math.max(0, rgAreaCap(a) - rgAreaUsed(a)));
+    const el = $('#pgT'); if (el) el.textContent = fmtT(left);
+    if (left === 30) toast('⏳', 'Noch 30 Sekunden hier. Alles wird automatisch gespeichert.');
+    if (left <= 0) { save(); leaveHook(view); toast('⏳', 'Die Zeit hier ist für heute um. Alles ist gespeichert.'); render(); }
+    else if (d.rg.tot % 15 === 0) save();
   } catch (e) { console.error(e); }
 }, 1000);
+
+/* ---------- Eltern: zurücksetzen und verlängern (heute), global oder je Bereich ---------- */
+function rgResetAll() { const d = rgData(); d.rg = { tot: 0, a: {} }; save(); }
+function rgResetArea(a) { const d = rgData(); d.rg.tot = Math.max(0, d.rg.tot - (d.rg.a[a] || 0)); delete d.rg.a[a]; save(); }
+function rgExtendAll(sec) { const d = rgData(); d.rgExt.tot = (d.rgExt.tot || 0) + sec; save(); }
+function rgExtendArea(a, sec) { const d = rgData(); d.rgExt.a[a] = (d.rgExt.a[a] || 0) + sec; save(); }
+function hwForceDone(on) { touchDay(); if (on) S.daily.n = Math.max(S.daily.n || 0, HW_N); else { S.daily.n = 0; S.daily.sec = 0; } save(); }
+
+/* ---------- Tageswechsel: Hausaufgaben-Ergebnis des alten Tages merken (für den „2 Tage“-Hinweis) ---------- */
+function onDayRollover(oldDaily) {
+  if (!S.hw || typeof S.hw !== 'object') S.hw = { log: {}, notified: '' };
+  if (!S.hw.log || typeof S.hw.log !== 'object') S.hw.log = {};
+  S.hw.log[oldDaily.d] = (oldDaily.n || 0) >= HW_N || (oldDaily.sec || 0) >= HW_SEC;
+  const ds = Object.keys(S.hw.log).sort(); while (ds.length > 14) delete S.hw.log[ds.shift()];
+}
+function hwMissed2() {
+  if (!S.hw || !S.hw.log) return false;
+  const d2 = new Date(); d2.setDate(d2.getDate() - 2);
+  return S.hw.log[yesterday()] === false && S.hw.log[ymd(d2)] === false;
+}
+const hwNoticeHtml = () => (hwMissed2() && S.hw.notified !== ymd())
+  ? `<div class="hw-notice" role="alert"><span>${ico('lock', 20)} An den letzten zwei Tagen wurden die Hausaufgaben nicht geschafft.</span><button class="btn sm" data-act="hwNoticeOk">Verstanden</button></div>` : '';
+Object.assign(ACT, { hwNoticeOk: () => { if (!S.hw) S.hw = { log: {}, notified: '' }; S.hw.notified = ymd(); save(); render(); } });
 
 /* BOOT – läuft als Letztes, wenn alle Module (app.js, feat_*.js) geladen sind */
 /* ---------- boot ---------- */
