@@ -48,7 +48,7 @@ const DEF = () => ({
   streak: { n: 0, last: '', best: 0 }, tests: [],
   stats: { q: 0, c: 0, fixed: 0, bought: 0, goalDays: 0, blocks: 0, perfect: 0, decks: 0, rounds: 0 },
   daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
-  goal: null, earned: [], notes: [], mig3: 1,
+  goal: null, earned: [], notes: [], noten: { songs: [], act: null, pref: {} }, mig3: 1,
   geo: { sessions: 0, seen: {}, ok: {}, miss: {}, k: {}, cards: {}, ms: {}, kd: {}, perf: 0, tpf: 0, kpf: 0, best: 0 },
   world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {}, wishes: [], tix: [] },
   flags: {},                                   // ausgeblendete Funktionen (wesen, buch, insel): Eltern können sie einschalten – nur Anzeige, Daten bleiben
