@@ -59,7 +59,10 @@ const ICO = {
   next: '<path d="M9 5l7 7-7 7"/>',
   certificate: '<rect x="3.5" y="5" width="17" height="12" rx="2" class="a"/><path d="M7.5 9h9M7.5 12.5h5M15 17l1.2 3.5 1.8-1.5 1.8 1.5L18.5 17"/>',
   wand: '<path d="M5 19L15.5 8.5" /><path d="M14 4l1.2 2.6L18 7.8l-2.8 1.2L14 11.6l-1.2-2.6L10 7.8l2.8-1.2z" class="a"/>',
-  camera: '<path d="M4 8.5h3l1.5-2.5h7L17 8.5h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z" class="a"/><circle cx="12" cy="13.5" r="3.3"/>'
+  camera: '<path d="M4 8.5h3l1.5-2.5h7L17 8.5h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z" class="a"/><circle cx="12" cy="13.5" r="3.3"/>',
+  up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+  paste: '<rect x="6" y="7" width="12" height="14" rx="2" class="a"/><rect x="9" y="3.5" width="6" height="4" rx="1"/><path d="M9 12.5h6M9 16h6"/>'
 };
 const ico = (n, s) => `<svg class="ico" viewBox="0 0 24 24" width="${s || 24}" height="${s || 24}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[n] || ''}</svg>`;
 /* Währungs-Symbole: Münze, Stern, Flamme als eigene Icons (Text-Emojis bleiben in Fließtexten) */
