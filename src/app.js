@@ -555,8 +555,8 @@ function importData(txt, force) {
 }
 
 /* ----- PIN ----- */
-function requirePin(act, arg) {
-  if (ADMIN || Date.now() < UI.pinUntil) { ACT[act](arg); return; }
+function requirePin(act, arg, always) {
+  if (ADMIN || (!always && Date.now() < UI.pinUntil)) { ACT[act](arg); return; }
   PIN = S.pin ? { act, arg, buf: '', mode: 'enter', msg: 'Eltern-PIN eingeben' }
     : { act, arg, buf: '', mode: 'create1', msg: 'Lege eine PIN für den Eltern-Bereich fest (4 Ziffern).' };
   pinDraw();
@@ -693,7 +693,7 @@ const ACT = {
   shopAt: id => shopAt(id), shopAll: () => { UI.shopAll = true; render(); },
   buyItemYes: id => { closeModal(); const it = CATALOG[id]; if (buyItem(id)) { render(); sfx('magic'); toast('🎁', `${esc(it.name)} gehört jetzt dir!`); } },
   trophies: () => go('trophies'),
-  parent: () => requirePin('parentGo'), parentGo: () => go('parent'), print: () => window.print(),
+  parent: () => requirePin('parentGo', undefined, true), parentGo: () => go('parent'), print: () => window.print(),
   dzFlag: id => { S.flags = S.flags || {}; S.flags[id] = !flagOn(id); save(); render(); },
   saveName: () => { S.name = ($('#nameIn').value || '').trim().slice(0, 20); save(); toast('✅', 'Gespeichert'); render(); },
   export: exportData, importYes: () => { closeModal(); importData(UI.pending, true); },

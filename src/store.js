@@ -47,13 +47,14 @@ const DEF = () => ({
   buch: { st: {} }, wes: { eggs: [], list: [], warm: 0, given: 0 }, story: { read: {}, done: {}, choices: {} }, songs: [], mus: {},
   streak: { n: 0, last: '', best: 0 }, tests: [],
   stats: { q: 0, c: 0, fixed: 0, bought: 0, goalDays: 0, blocks: 0, perfect: 0, decks: 0, rounds: 0 },
-  daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
+  daily: { d: '', n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, rg: { tot: 0, a: {} }, rgExt: { tot: 0, a: {} }, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } },
+  hw: { log: {}, notified: '' },                // Hausaufgaben-Verlauf je Tag (für den „2 Tage“-Hinweis); nichts davon wird je als Lernfortschritt gezählt
   goal: null, earned: [], notes: [], noten: { songs: [], act: null, pref: {} }, mig3: 1,
   geo: { sessions: 0, seen: {}, ok: {}, miss: {}, k: {}, cards: {}, ms: {}, kd: {}, perf: 0, tpf: 0, kpf: 0, best: 0 },
   world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {}, wishes: [], tix: [] },
   flags: {},                                   // ausgeblendete Funktionen (wesen, buch, insel): Eltern können sie einschalten – nur Anzeige, Daten bleiben
   facts: { i: 0, seen: {} },                   // Lustige Fakten: Stelle im Stapel, schon gelesene
-  cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {}, pageMin: 3, pageWin: 2, pageNeed: 10, plang: 'de' }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
+  cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {}, plang: 'de' }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
 });
 function mergeState(raw) {
   const d = DEF();
@@ -206,9 +207,13 @@ const bestRound = key => { const t = S.topics[key], d = S.decks[key]; let m = 0;
 /* ---------- rewards ---------- */
 function touchDay() {
   const t = ymd();
-  if (S.daily.d !== t) S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, pg: {}, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } };
+  if (S.daily.d !== t) {
+    if (S.daily.d && typeof onDayRollover === 'function') { try { onDayRollover(S.daily); } catch (e) { console.error(e); } }
+    S.daily = { d: t, n: 0, sec: 0, got: false, unlocked: false, testRewarded: false, shopSec: 0, rg: { tot: 0, a: {} }, rgExt: { tot: 0, a: {} }, cr: { left: 0, grants: 0, used: 0, lvl: false, goal: false } };
+  }
   if (!S.daily.cr) S.daily.cr = { left: 0, grants: 0, used: 0, lvl: false, goal: false };
-  if (!S.daily.pg || typeof S.daily.pg !== 'object') S.daily.pg = {};
+  if (!S.daily.rg || typeof S.daily.rg !== 'object') S.daily.rg = { tot: 0, a: {} };
+  if (!S.daily.rgExt || typeof S.daily.rgExt !== 'object') S.daily.rgExt = { tot: 0, a: {} };
 }
 const streakNow = () => (S.streak.last === ymd() || S.streak.last === yesterday()) ? S.streak.n : 0;
 /* Protokoll „Neu verdient“: jede Belohnung nennt ihren Grund */

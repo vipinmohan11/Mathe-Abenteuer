@@ -145,6 +145,7 @@ const greetWord = (h = new Date().getHours()) => h >= 5 && h < 11 ? 'Guten Morge
 const homeGreeting = (h) => { const nm = S.name || S.avName || '', w = greetWord(h); return nm ? `${w}, ${esc(nm)}!` : `${w}!`; };
 
 /* ---------- Startseite: der Hub ---------- */
+let HOME_N = 5;                                                   // Spaltenzahl der Startseite – Unterordner der Ideenwerkstatt nutzen dieselbe Kachelgröße
 VIEWS.home = () => {
   const n = S.daily.d === ymd() ? S.daily.n : 0, goal = S.cfg.goal, nu = nextUp();
   const progress = Math.min(n, goal), pct = Math.min(100, Math.round(n / goal * 100)), done = n >= goal;
@@ -156,9 +157,12 @@ VIEWS.home = () => {
     { art: 'hefte', title: 'Meine Hefte', sub: nu ? `Weiter: ${nu.mod.id}` : 'Alles geschafft', act: 'hefte' },
     ...subjTiles(),
     { art: 'extra', title: 'Extra Spaß', sub: `${ex.length} Spiele`, act: 'extra' },
+    { art: 'notiz', title: 'Ideenwerkstatt', sub: 'Notizbuch & Notenheft', act: 'kreativhefte' },
     { art: 'welt', title: 'Meine Welt', sub: 'Shop, Musik & mehr', act: 'rewards' }
   ];
-  return dzHead() + dzHero('', hello, sub, tree) + dzSec('Wohin heute?') +
+  tiles.forEach(t => { const lt = t.act ? lockTag(t.act) : ''; if (lt) { t.tag = (t.tag || '') + lt; t.locked = true; } });
+  HOME_N = tiles.length;
+  return dzHead() + hwNoticeHtml() + dzHero('', hello, sub, tree) + dzSec('Wohin heute?') +
     dzGrid(tiles.length, tiles.map((t, i) => dzTile(Object.assign({ cls: TILE_CLS[i % 3] }, t))).join(''), 'dz-home4') +
     `<div class="dz-foot"><button class="dz-linkbtn dz-snd" data-act="toggleSound" aria-pressed="${S.cfg.sound !== false}" aria-label="${S.cfg.sound !== false ? 'Ton ausschalten' : 'Ton einschalten'}">${ico(S.cfg.sound !== false ? 'speaker' : 'speakerOff', 18)} ${S.cfg.sound !== false ? 'Ton an' : 'Ton aus'}</button><button class="dz-linkbtn" data-act="parent">${ico('gear', 16)} Für Eltern</button></div>
     ${persistOK ? '' : '<p class="ad-save-warning" role="alert">Gerade kann nichts gespeichert werden. Bitte lass einen Erwachsenen eine Sicherung exportieren.</p>'}`;
@@ -232,7 +236,6 @@ function worldTile(id, i) {
   const tag = closed ? (f.creative === 'closed' ? `${ico('lock', 13)} Noch zu` : `${ico('eye', 13)} Ansehen`) : '';
   const cls = TILE_CLS[i % 3];
   if (id === 'fakten') return dzTile({ cls, art: 'fakten', title: 'Lustige Fakten', sub: factsSub(), act: 'fakten' });
-  if (id === 'notiz') return dzTile({ cls, art: 'notiz', title: 'Notizbuch', sub: noteSub(), act: 'notiz' });
   if (id === 'shop') return dzTile({ cls, art: 'shop', title: 'Shop', sub: `${S.coins} Münzen`, act: 'shop' });
   if (id === 'musik') return dzTile({ cls, art: 'musik', title: 'Meine Musik', sub: closed ? 'Nach dem Üben' : (f.sub ? f.sub() : ''), act: 'musik', tag });
   if (id === 'story') return dzTile({ cls, art: 'story', title: dzPoss(FN()) + ' Geschichte', sub: (typeof epList === 'function') ? `${epList().filter(epUnlocked).length} von ${epList().length} Episoden` : '', act: 'story' });
@@ -240,12 +243,27 @@ function worldTile(id, i) {
   const nm = { wesen: 'Meine Wesen', buch: 'Mein Buch', insel: 'Meine Insel' }[id];
   return dzTile({ cls, art: id === 'wesen' ? 'fino' : id === 'buch' ? 'hefte' : 'welt', title: nm, sub: f && f.sub ? f.sub() : '', act: id, tag });
 }
+const worldTileL = (id, i) => {
+  const h = worldTile(id, i), lt = lockTag(id);
+  if (!lt) return h;
+  const tagged = h.includes('class="dz-tag"') ? h : h.replace('<span class="dz-in">', `<span class="dz-tag">${lt}</span><span class="dz-in">`);
+  return tagged.replace('class="dz-tile ', 'class="dz-tile locked ');
+};
 VIEWS.rewards = () => {
-  const ids = ['fakten', 'musik', 'shop', 'story', 'welt', 'notiz'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
+  const ids = ['fakten', 'musik', 'shop', 'story', 'welt'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
   return topBar('Meine Welt', 'home') + dzHero('', 'Meine Welt', 'Von dir verdient. Für dich gemacht.', '', 'sm') + dzSec('Entdecken & sammeln') +
-    dzGrid(ids.length <= 6 ? ids.length : 4, ids.map(worldTile).join(''), 'dz-welt5') +
+    dzGrid(ids.length <= 6 ? ids.length : 4, ids.map(worldTileL).join(''), 'dz-welt5') +
     `<p class="ad-creative-note">${creativeOK() ? (creativeMode() === 'always' ? 'Deine Kreativbereiche sind offen.' : `Deine Kreativzeit: ${fmtT(creativeLeft())}`) : esc(creativeInfo())}</p>`;
 };
+/* ---------- Ideenwerkstatt (früher „Kreativhefte“): Notizbuch + Notenheft, direkt auf der Startseite, nie gesperrt ---------- */
+VIEWS.kreativhefte = () => {
+  const tiles = [
+    { cls: TILE_CLS[0], art: 'notiz', title: 'Notizbuch', sub: noteSub(), act: 'notiz' },
+    { cls: TILE_CLS[1], art: 'noten', title: 'Notenheft', sub: noSub(), act: 'noten' }
+  ].map(dzTile).join('');
+  return topBar('Ideenwerkstatt', 'home') + dzHero('', 'Ideenwerkstatt', 'Gedanken aufschreiben und kleine Melodien festhalten.', '', 'sm') + dzSec('Was möchtest du festhalten?') + dzGrid(HOME_N, tiles, 'dz-home4 dz-kreativ');
+};
+Object.assign(ACT, { kreativhefte: () => go('kreativhefte') });
 
 /* ---------- Mein Profil: Bild, Level, alles Verdiente, Namen ----------
    S.name   = mein Name (Begrüßung + Urkunde)

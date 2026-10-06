@@ -28,7 +28,7 @@ function adminFill() {
   try { CARDS.forEach(c => { if (!S.cards[c.id]) S.cards[c.id] = Date.now(); }); } catch (e) { }
   try { const w = wS(); Object.keys(WP).forEach(id => { if (!w.open[id]) w.open[id] = wDay(); }); } catch (e) { }
   try { const f = fSt(); f.early = Math.max(f.early || 0, 50); } catch (e) { }
-  S.cfg.shopMin = 0; S.cfg.limitMin = 0; S.cfg.pageMin = 0;
+  S.cfg.shopMin = 0; S.cfg.limitMin = 0;
   save();
 }
 const adminBar = () => ADMIN
