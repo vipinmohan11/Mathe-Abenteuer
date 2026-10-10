@@ -8,6 +8,7 @@ def ok(c, m):
     if not c: fails.append(m)
 with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 800, 'height': 1280}); errs = []
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto('file://' + html); pg.wait_for_timeout(300)
     # Vorhandener Stand: Münzen/Sterne/Karten/Pokale setzen

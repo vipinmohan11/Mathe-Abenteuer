@@ -8,6 +8,7 @@ def ok(c, m):
     if not c: fails.append(m)
 with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 800}); errs = []
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto('file://' + html); pg.wait_for_timeout(300)
     # Vorhandener Stand
@@ -22,42 +23,43 @@ with sync_playwright() as p:
     # Meine Welt: Kachel
     pg.evaluate("()=>go('rewards')"); ok(pg.locator('.dz-tile[data-act=welt]').count() == 1, 'Kachel „Meine Weltreise“ in Meine Welt')
     pg.evaluate("()=>go('welt')"); pg.wait_for_timeout(100)
-    ok(pg.locator('.w-card.open').count() == 1 and pg.locator('.w-card.locked').count() == 22, 'Abflug: Deutschland offen, alle 22 anderen gesperrt')
-    pg.evaluate("()=>{wS().miles=460;wS().milesSpent=0;save()}")
+    ok(pg.locator('.w-card.open').count() == 3 and pg.locator('.w-card.locked').count() == 20 and all(pg.locator('.w-card.open[data-arg=%s]' % c).count() == 1 for c in ('deu', 'jpn', 'ind')), 'Abflug: Deutschland, Japan, Indien von Anfang an offen, 20 andere gesperrt')
+    ok('ein Land deiner Wahl' in pg.inner_text('.w-picknote') or 'frei wählen' in pg.inner_text('.w-picknote'), 'Hinweis: heute ein Land frei wählen')
+    pg.evaluate("()=>{S.daily.wpk='schon';wS().picks=0;wS().miles=460;wS().milesSpent=0;save()}")   # freie Wahl heute schon genutzt → Meilen-Weg prüfen
     ok(pg.evaluate("()=>WA.freeMiles()") == 460, '460 freie Reisemeilen')
     # Zu wenig Meilen
     pg.evaluate("()=>{wS().miles=30}")
-    pg.evaluate("()=>ACT.wLock('jpn')"); ok('fehlen' in pg.inner_text('#modal'), 'zu wenig Meilen: Hinweis statt Öffnen')
-    pg.evaluate("()=>{closeModal();ACT.wOpenYes('jpn')}"); ok(pg.evaluate("()=>!WA.isOpen('jpn')&&wS().milesSpent===0"), 'zu wenig Meilen: nichts passiert, nichts abgezogen')
+    pg.evaluate("()=>ACT.wLock('tur')"); ok('fehlen' in pg.inner_text('#modal'), 'zu wenig Meilen: Hinweis statt Öffnen')
+    pg.evaluate("()=>{closeModal();ACT.wOpenYes('tur')}"); ok(pg.evaluate("()=>!WA.isOpen('tur')&&wS().milesSpent===0"), 'zu wenig Meilen: nichts passiert, nichts abgezogen')
     pg.evaluate("()=>{wS().miles=460}")
     # Öffnen
-    pg.evaluate("()=>ACT.wLock('jpn')"); ok('Öffnen' in pg.inner_text('#modal') and '100' in pg.inner_text('#modal'), 'Dialog zeigt Preis 100 Meilen')
-    pg.evaluate("()=>ACT.wOpenYes('jpn')"); pg.wait_for_timeout(150)
+    pg.evaluate("()=>ACT.wLock('tur')"); ok('Öffnen' in pg.inner_text('#modal') and '100' in pg.inner_text('#modal'), 'Dialog zeigt Preis 100 Meilen')
+    pg.evaluate("()=>ACT.wOpenYes('tur')"); pg.wait_for_timeout(150)
     ok(pg.locator('.w-flight').count() == 1, 'Flug-Overlay läuft')
     pg.evaluate("()=>ACT.wFlightSkip()"); pg.wait_for_timeout(150)
-    ok(pg.evaluate("()=>view")=='weltReise' and pg.evaluate("()=>WA.isOpen('jpn')&&wS().milesSpent===100&&WA.freeMiles()===360"), 'Japan offen, 100 Meilen ausgegeben, 360 frei')
+    ok(pg.evaluate("()=>view")=='weltReise' and pg.evaluate("()=>WA.isOpen('tur')&&wS().milesSpent===100&&WA.freeMiles()===360"), 'Türkei offen, 100 Meilen ausgegeben, 360 frei')
     ok(snap() == before, 'Münzen, Sterne (gesammelt), Truhen, Karten, Pokale unverändert')
     ok(pg.evaluate("()=>S.starsLife")==46 and pg.evaluate("()=>S.stars")==46, 'gesammelte Sterne bleiben 46')
     # nochmal öffnen kostet nichts
-    pg.evaluate("()=>{ACT.wOpenYes('jpn')}"); ok(pg.evaluate("()=>wS().milesSpent")==100, 'zweites Öffnen kostet nichts')
+    pg.evaluate("()=>{ACT.wOpenYes('tur')}"); ok(pg.evaluate("()=>wS().milesSpent")==100, 'zweites Öffnen kostet nichts')
     # Stationen frei
     ok(pg.locator('.w-stop').count() == 6, '6 Stationen in der Route')
-    ok(pg.evaluate("()=>WA.marks('jpn')")==1, 'Ankunft zählt als besucht')
+    ok(pg.evaluate("()=>WA.marks('tur')")==1, 'Ankunft zählt als besucht')
     for st in ['quiz', 'food', 'language', 'life', 'places', 'arrival']:
         pg.evaluate("(s)=>ACT.wStation(s)", st); pg.wait_for_timeout(40)
         ok(len(pg.inner_text('#wPanel')) > 60, f'Station {st} offen und gefüllt (beliebige Reihenfolge)')
-    ok(pg.evaluate("()=>WA.stamped('jpn')")==False or True, 'Stempel geprüft')
+    ok(pg.evaluate("()=>WA.stamped('tur')")==False or True, 'Stempel geprüft')
     # Marks: quiz wurde nur geöffnet, nicht gelöst -> kein Mark
-    ok(pg.evaluate("()=>!WA.seen('jpn').quiz")==True, 'Rätsel zählt erst nach Bestehen')
-    ok(pg.evaluate("()=>WA.marks('jpn')")==5 and pg.evaluate("()=>WA.stamped('jpn')"), '5 besuchte Stationen, Stempel nach 4')
-    ok(pg.evaluate("()=>WA.souvs('jpn').length")==5, '5 Souvenirs (eins pro besuchter Station)')
+    ok(pg.evaluate("()=>!WA.seen('tur').quiz")==True, 'Rätsel zählt erst nach Bestehen')
+    ok(pg.evaluate("()=>WA.marks('tur')")==5 and pg.evaluate("()=>WA.stamped('tur')"), '5 besuchte Stationen, Stempel nach 4')
+    ok(pg.evaluate("()=>WA.souvs('tur').length")==5, '5 Souvenirs (eins pro besuchter Station)')
     # Rätsel: durchfallen, dann bestehen
     pg.evaluate("()=>ACT.wStation('quiz')"); pg.evaluate("()=>ACT.wQuizStart()")
     pg.evaluate("""()=>{for(let i=0;i<4;i++){const q=UI.wQz.qs[i];const bad=q.opts.findIndex(o=>o!==q.ok);ACT.wQuizPick(bad);ACT.wQuizNext();}}""")
-    ok(pg.evaluate("()=>UI.wQz.done&&UI.wQz.score===0&&!WA.seen('jpn').quiz&&wS().quiz.jpn.tries===1"), 'alles falsch: kein Souvenir, unbegrenzt wiederholbar')
+    ok(pg.evaluate("()=>UI.wQz.done&&UI.wQz.score===0&&!WA.seen('tur').quiz&&wS().quiz.tur.tries===1"), 'alles falsch: kein Souvenir, unbegrenzt wiederholbar')
     pg.evaluate("()=>ACT.wQuizStart()")
     pg.evaluate("""()=>{for(let i=0;i<4;i++){const q=UI.wQz.qs[i];ACT.wQuizPick(q.opts.indexOf(q.ok));ACT.wQuizNext();}}""")
-    ok(pg.evaluate("()=>WA.seen('jpn').quiz&&WA.souvs('jpn').includes('quiz')&&wS().quiz.jpn.best===4&&WA.marks('jpn')===6&&WA.pct('jpn')===100"), '4 von 4: Souvenir, 100 %')
+    ok(pg.evaluate("()=>WA.seen('tur').quiz&&WA.souvs('tur').includes('quiz')&&wS().quiz.tur.best===4&&WA.marks('tur')===6&&WA.pct('tur')===100"), '4 von 4: Souvenir, 100 %')
     ok(pg.evaluate("()=>S.trophies.wm1&&S.trophies.wquiz===undefined"), 'Länder-Meister-Pokal, geheimer Rätsel-Pokal noch nicht')
     # Pokale
     ok(pg.evaluate("()=>S.trophies.wc1&&S.trophies.wk1&&S.trophies.ws1&&S.trophies.wl1")!=None, 'Pokale für Stempel/Kultur/Sprache/Orte')
@@ -72,7 +74,7 @@ with sync_playwright() as p:
     ok(pg.evaluate("()=>S.coins===500&&S.chests===2&&Object.keys(S.cards).length===2&&S.starsLife===46"), 'nach der ganzen Reise: Münzen, Truhen, Karten, Sterne unverändert (Weltreise zahlt nichts aus)')
     # Persistenz
     pg.reload(); pg.wait_for_timeout(300)
-    ok(pg.evaluate("()=>WA.isOpen('jpn')&&wS().milesSpent===100&&WA.stamped('jpn')&&WA.souvs('jpn').length===6&&WA.freeMiles()===360"), 'nach Neuladen: Land offen, Stempel, Souvenirs, Meilen')
+    ok(pg.evaluate("()=>WA.isOpen('tur')&&wS().milesSpent===100&&WA.stamped('tur')&&WA.souvs('tur').length===6&&WA.freeMiles()===360"), 'nach Neuladen: Land offen, Stempel, Souvenirs, Meilen')
     # Alter Spielstand ohne world
     ok(pg.evaluate("()=>{const m=mergeState({v:2,coins:77,starsLife:12,stars:12,cards:{x:1}});return m.coins===77&&m.starsLife===12&&m.world&&m.world.spent===0&&Object.keys(m.world.open).length===0}"), 'alter Spielstand ohne world: alles erhalten, world mit Standardwerten')
     ok(pg.evaluate("()=>{const m=mergeState({world:{spent:5,open:{jpn:'x'}}});return m.world.spent===5&&m.world.open.jpn==='x'&&m.world.stamps&&m.world.log.length===0}"), 'teilweiser world-Stand wird ergänzt')
@@ -83,14 +85,14 @@ with sync_playwright() as p:
     pg.evaluate("()=>ACT.wParent()"); ok(pg.locator('#modal').count()==1 and 'Eltern' in pg.inner_text('#modal'), 'Elternbereich verlangt PIN')
     pg.evaluate("()=>{closeModal();PIN=null;UI.pinUntil=Date.now()+60000;ACT.wParent()}"); pg.wait_for_timeout(80)
     ok(pg.evaluate("()=>view")=='weltEltern', 'mit PIN: Eltern-Einstellungen')
-    pg.fill('#wpName', 'Mira'); pg.evaluate("()=>{const c=document.querySelector('[data-wpack=ind]');c.checked=false}")
+    pg.fill('#wpName', 'Mira'); pg.evaluate("()=>{const c=document.querySelector('[data-wpack=fra]');c.checked=false}")
     pg.evaluate("()=>ACT.wSaveEltern()"); pg.wait_for_timeout(80)
     pg.evaluate("()=>go('weltPass')"); pg.wait_for_timeout(80)
     ok(pg.evaluate("()=>WA.childName()")=='Mira' and 'MIRA' in pg.inner_text('.rp-data').upper(), 'Name im Pass geändert')
     pg.evaluate("()=>go('welt')")
-    ok(pg.locator('.w-card.locked').count()==20 and pg.locator('.w-card[data-arg=ind]').count()==0 and pg.locator('.w-card.open').count()==2, 'ausgeblendetes gesperrtes Land (Indien) verschwindet, offene bleiben')
-    pg.evaluate("()=>{wS().off.jpn=1}"); pg.evaluate("()=>go('welt')")
-    ok(pg.locator('.w-card.open').count()==2, 'ein schon geöffnetes Land bleibt trotz Eltern-Schalter offen')
+    ok(pg.locator('.w-card.locked').count()==18 and pg.locator('.w-card[data-arg=fra]').count()==0 and pg.locator('.w-card.open').count()==4, 'ausgeblendetes gesperrtes Land (Frankreich) verschwindet, offene bleiben')
+    pg.evaluate("()=>{wS().off.tur=1}"); pg.evaluate("()=>go('welt')")
+    ok(pg.locator('.w-card.open').count()==4, 'ein schon geöffnetes Land bleibt trotz Eltern-Schalter offen')
     # Rückweg
     pg.evaluate("()=>{UI.wId='jpn';go('weltReise')}"); ok(pg.locator('.top .back[data-act=back]').count()==1, 'Rückweg: Zurück-Knopf sichtbar')
     # Layout: Tablet quer – Journey auf einen Blick

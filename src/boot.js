@@ -10,6 +10,7 @@ touchDay();
 if (ADMIN) adminFill();
 Object.values(FEATS).forEach(f => { if (f.boot) { try { f.boot(); } catch (e) { console.error(e); } } });
 try { checkUnlocks(); } catch (e) { console.error(e); }
+try { if (testRestore()) view = 'test'; } catch (e) { console.error(e); }        // Mini-Test nach Neuladen fortsetzen
 render();
 idbGet().then(j => {                                // zweite Kopie: falls der Hauptspeicher leer/älter ist
   try {

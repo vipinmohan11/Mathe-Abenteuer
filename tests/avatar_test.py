@@ -12,6 +12,7 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     ctx = b.new_context(viewport={'width': 1280, 'height': 800}, accept_downloads=True)
     pg = ctx.new_page(); errs = []
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror', lambda e: errs.append('PAGEERR ' + str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto(URL); E = pg.evaluate
     pg.wait_for_timeout(200)

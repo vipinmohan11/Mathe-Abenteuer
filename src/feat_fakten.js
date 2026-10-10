@@ -120,22 +120,10 @@ function factsFirstNew() { const n = factsOpen(), f = fSt(); for (let i = 0; i <
 function factsSub() { return factsUnseen() ? 'Neue Fakten warten' : 'Staunen und wissen'; }
 function factMark() { const f = fSt(), n = factsOpen(); f.i = ((f.i || 0) % n + n) % n; f.seen[f.i] = 1; save(); }
 
-VIEWS.fakten = () => {
-  const f = fSt(), n = factsOpen(), i = ((f.i || 0) % n + n) % n, it = FACTS[i], fresh = f.fresh; f.fresh = false;
-  const all = factsUnseen() === 0 && factsOpen() >= FACTS.length;
-  return topBar('Lustige Fakten', 'rewards') + `<section class="dz-panel dz-fact" aria-live="polite"><div class="dz-fact-art">${dzArt(FACT_ART[it.c] || 'fakten')}</div><h2>${esc(it.c)}</h2><p class="dz-fact-t">${esc(it.t)}</p>
-    ${fresh ? '<p class="dz-fact-new">Neue Fakten sind da!</p>' : ''}
-    ${factsUnseen() === 0 && !all ? '<p class="small mute" style="margin-top:14px">Du hast alles gelesen, was es bis jetzt gibt. Schau bald wieder rein, es kommen neue Fakten dazu.</p>' : ''}
-    <div class="row wrap" style="justify-content:center;margin-top:14px"><button class="btn sec big" data-act="faktStep" data-arg="-1">${ico('back', 20)} Vorheriger</button><button class="btn big" data-act="faktStep" data-arg="1">Nächster Fakt</button></div></section>`;
-};
+/* Die Fakten haben keine eigene Seite mehr: sie liegen als Karten in „Lustige Karten“ (feat_schatz.js), im selben Kartenformat. */
+const FACT_EMOJI = { Tiere: '🐾', Natur: '🌿', Weltraum: '🪐', 'Körper': '❤️', Zahlen: '🔢', Welt: '🌍' };
+const factCards = () => FACTS.slice(0, factsOpen()).map((f, i) => ({ id: 'fk' + i, t: 'fakt', e: FACT_EMOJI[f.c] || '💡', q: esc(f.t), fi: i }));
 registerFeature({
-  id: 'fakten', title: 'Lustige Fakten', icon: 'sparkle', tint: 'butter', group: 'world', order: 5, view: 'fakten', sub: factsSub,
-  acts: {
-    fakten: () => { const f = fSt(); factsTryEarly(); const nw = factsFirstNew(); if (nw >= 0) f.i = nw; factMark(); go('fakten'); },
-    faktStep: d => {
-      const f = fSt(); let n = factsOpen(), nx = (f.i || 0) + (+d);
-      if (+d > 0 && nx >= n && factsTryEarly()) { n = factsOpen(); nx = factsFirstNew(); }        // am Ende angekommen: neues Päckchen, falls möglich
-      f.i = ((nx % n) + n) % n; factMark(); sfx('tap'); render();
-    }
-  }
+  id: 'fakten', title: 'Lustige Fakten', icon: 'sparkle', tint: 'butter', group: 'world', order: 5, sub: factsSub,
+  acts: { fakten: () => ACT.schatz() }
 });

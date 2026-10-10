@@ -108,7 +108,7 @@ function chestRoll() {                                                       // 
 function openChest() {
   if (!S.chests) return;
   S.chests--; UI.reveal = chestRoll(); UI.ans = {};
-  sfx('chest'); checkTrophies(); save(); render(); confetti(70);
+  sfx('chest'); checkTrophies(); save(); render();                  // Karte = ruhiger Moment, kein Konfetti
 }
 
 /* ---------- Stempelpass (pro Heft eine Seite) ---------- */

@@ -1,5 +1,5 @@
 /* =====================================================================
-   NOTIZBUCH · „Zettel-Wand“ (Teil von „Kreativhefte“, erreichbar über Meine Welt)
+   NOTIZBUCH · „Zettel-Wand“ als schwebende Blase auf JEDER Seite (kein Ordner mehr). Antippen öffnet ein Fenster mit allen Zetteln und Listen.
    Zwei Arten, genau eine pro Eintrag beim Anlegen gewählt:
    - Zettel: kurzer Text (höchstens 140 Zeichen) + genau ein Stichwort (Hilfe/Erledigen/Fragen/Merken/Meine Ideen)
    - Liste: Titel + Häkchen-Punkte (höchstens 40 Zeichen je Punkt); Häkchen setzen streicht durch und schiebt nach unten
@@ -55,8 +55,8 @@ function noteCard(n) {
 
 /* ---------- Zeichnen: Neu/Ändern-Feld ---------- */
 function noteTypeSeg() {
-  const type = UI.noteType || 'zettel';
-  return `<div class="seg nz-seg" role="group" aria-label="Art (genau eine wählen)"><button data-act="noteType" data-arg="zettel" class="${type === 'zettel' ? 'active' : ''}" aria-pressed="${type === 'zettel'}">${ico('notebook', 18)} Zettel</button><button data-act="noteType" data-arg="liste" class="${type === 'liste' ? 'active' : ''}" aria-pressed="${type === 'liste'}">${ico('check', 18)} Liste</button></div>`;
+  const type = UI.noteType || 'zettel', opt = (id, name) => `<button role="radio" aria-checked="${type === id}" data-act="noteType" data-arg="${id}" class="nz-opt${type === id ? ' sel' : ''}">${type === id ? ico('check', 14) : ''}${name}</button>`;
+  return `<div class="nz-type" role="radiogroup" aria-label="Was möchtest du anlegen? (genau eins)">${opt('zettel', 'Zettel')}${opt('liste', 'Liste')}</div>`;
 }
 function noteZettelEditor(edit) {
   const draft = UI.noteDraft != null ? UI.noteDraft : '';
@@ -80,13 +80,49 @@ function noteListEditor(edit) {
 }
 const noteEditPanel = () => UI.noteOpen ? (UI.noteType === 'liste' ? noteListEditor : noteZettelEditor)(UI.noteEdit != null) : '';       // Editor nur nach „Neu“ (oder beim Ändern einer Karte)
 
-VIEWS.notiz = () => {
+/* ---------- Fenster (Pop-up) mit allen Zetteln und Listen ---------- */
+function nzBody() {
   const L = noteList(), sorted = L.slice().sort((a, b) => b.ts - a.ts || b.id - a.id);
-  const newBtn = UI.noteOpen ? '' : `<button class="btn nz-new" data-act="noteNew" aria-label="Neuen Zettel oder neue Liste anlegen">${ico('plus', 18)} Neu</button>`;
-  return topBar('Notizbuch', 'kreativhefte') + noteEditPanel() +
-    dzSec('Meine Zettel-Wand', L.length ? '' : 'Noch hängt nichts an der Wand. Tippe auf „Neu“.', newBtn) +
-    (sorted.length ? `<div class="nz-wall">${sorted.map(noteCard).join('')}</div>` : '');
-};
+  if (UI.noteOpen) return noteEditPanel();
+  return `<div class="nz-head2"><p class="nz-lead">${L.length ? `${L.length} ${L.length === 1 ? 'Eintrag' : 'Einträge'} an deiner Wand` : 'Noch hängt nichts an der Wand.'}</p><button class="btn nz-new" data-act="noteNew" aria-label="Neuen Zettel oder neue Liste anlegen">${ico('plus', 18)} Neu</button></div>` +
+    (sorted.length ? `<div class="nz-wall">${sorted.map(noteCard).join('')}</div>` : '<p class="small mute" style="text-align:center;margin:18px 0">Tippe auf „Neu“, um einen Zettel oder eine Liste zu schreiben.</p>');
+}
+function nzRender() {
+  let ov = document.getElementById('nzOv');
+  if (!UI.nzOpen) { if (ov) ov.remove(); nzBubble(); return; }
+  const old = ov && ov.querySelector('.nz-body'), st = old ? old.scrollTop : 0;
+  if (!ov) { ov = document.createElement('div'); ov.id = 'nzOv'; ov.className = 'nz-ov'; document.body.appendChild(ov); }
+  ov.innerHTML = `<div class="nz-modal" role="dialog" aria-modal="true" aria-label="Notizbuch"><div class="nz-mhead"><h2>${ico('notebook', 24)} Notizbuch</h2><button class="nz-x" data-act="nzClose" aria-label="Notizbuch schließen">✕</button></div><div class="nz-body">${nzBody()}</div></div>`;
+  const nb = ov.querySelector('.nz-body'); if (nb) nb.scrollTop = st;
+  nzBubble();
+}
+/* Blase: unten links auf jeder Seite; lässt sich verschieben (Position bleibt auf diesem Gerät). Beim Mini-Test und solange das Fenster offen ist, ist sie weg. */
+const NZ_POS = 'dz_nzpos';
+function nzPosGet() { try { const p = JSON.parse(localStorage.getItem(NZ_POS) || 'null'); if (p && typeof p.x === 'number' && typeof p.y === 'number') return p; } catch (e) { } return null; }
+function nzPlace(b) {
+  const p = nzPosGet(), kp = !p && document.querySelector('#app .keypad'), kr = kp ? kp.getBoundingClientRect() : null, small = !!(kr && kr.height > 0), w = small ? 48 : 58, m = 10;
+  b.classList.toggle('sm', small);
+  let x = p ? p.x : (small ? innerWidth - w - m : m), y = p ? p.y : (small ? kr.top - w - 4 : innerHeight - w - 16 - 70);        // ohne eigene Position: unten links, über dem Ziffernblock rechts oberhalb davon
+  x = Math.max(m, Math.min(innerWidth - w - m, x)); y = Math.max(m, Math.min(innerHeight - w - m, y));
+  b.style.left = x + 'px'; b.style.top = y + 'px';
+}
+function nzBubble() {
+  let b = document.getElementById('nzBubble');
+  const hide = UI.nzOpen || (typeof view !== 'undefined' && view === 'test') || !!document.querySelector('.w-flight');
+  if (hide) { if (b) b.hidden = true; return; }
+  if (!b) {
+    b = document.createElement('button'); b.id = 'nzBubble'; b.className = 'nz-bubble'; b.type = 'button'; b.dataset.act = 'nzOpen'; document.body.appendChild(b);
+    let sx = 0, sy = 0, ox = 0, oy = 0, drag = false, down = false;
+    b.addEventListener('pointerdown', e => { down = true; drag = false; sx = e.clientX; sy = e.clientY; const r = b.getBoundingClientRect(); ox = r.left; oy = r.top; try { b.setPointerCapture(e.pointerId); } catch (x) { } });
+    b.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - sx, dy = e.clientY - sy; if (!drag && Math.hypot(dx, dy) > 8) drag = true; if (drag) { b.style.left = Math.max(8, Math.min(innerWidth - 66, ox + dx)) + 'px'; b.style.top = Math.max(8, Math.min(innerHeight - 66, oy + dy)) + 'px'; } });
+    const end = () => { if (!down) return; down = false; if (drag) { const r = b.getBoundingClientRect(); try { localStorage.setItem(NZ_POS, JSON.stringify({ x: Math.round(r.left), y: Math.round(r.top) })); } catch (x) { } b.dataset.moved = '1'; setTimeout(() => { delete b.dataset.moved; }, 350); } };
+    b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
+    window.addEventListener('resize', () => nzPlace(b));
+  }
+  const n = noteList().length;
+  nzPlace(b); b.hidden = false; b.setAttribute('aria-label', n ? `Notizbuch öffnen, ${n} ${n === 1 ? 'Eintrag' : 'Einträge'}` : 'Notizbuch öffnen');
+  b.innerHTML = `${ico('notebook', 28)}${n ? `<span class="nz-bubble-n">${n > 99 ? '99+' : n}</span>` : ''}`;
+}
 
 /* ---------- Speichern ---------- */
 function noteResetDraft() { UI.noteOpen = false; UI.noteEdit = null; UI.noteDraft = null; UI.noteTag = null; UI.noteTitle = ''; UI.noteItems = []; UI.noteType = 'zettel'; }
@@ -113,42 +149,44 @@ function noteSaveNow() {
       L.push({ id, type: 'zettel', t, tag: UI.noteTag, color: noteRand(), ts: Date.now() }); toast('📌', 'Zettel angeheftet'); sfx('ok');
     }
   }
-  noteResetDraft(); save(); render();
+  noteResetDraft(); save(); nzRender();
 }
 registerFeature({
-  id: 'notiz', title: 'Notizbuch', icon: 'book', tint: 'butter', group: 'world', order: 6, view: 'notiz', sub: noteSub,
+  id: 'notiz', title: 'Notizbuch', icon: 'book', tint: 'butter', group: 'world', order: 6, sub: noteSub,
   acts: {
-    notiz: () => { noteResetDraft(); go('notiz'); },
-    noteNew: () => { noteResetDraft(); UI.noteOpen = true; render(); const t = $('#noteIn'); if (t) t.focus(); },
+    notiz: () => { noteResetDraft(); UI.nzOpen = true; nzRender(); },
+    nzOpen: () => { const b = document.getElementById('nzBubble'); if (b && b.dataset.moved) return; noteResetDraft(); UI.nzOpen = true; nzRender(); sfx('tap'); const x = document.querySelector('#nzOv .nz-x'); if (x) x.focus(); },
+    nzClose: () => { noteResetDraft(); UI.nzOpen = false; nzRender(); const b = document.getElementById('nzBubble'); if (b) b.focus(); },
+    noteNew: () => { noteResetDraft(); UI.noteOpen = true; nzRender(); const t = $('#noteIn'); if (t) t.focus(); },
     noteSave: noteSaveNow,
-    noteType: a => { UI.noteType = a === 'liste' ? 'liste' : 'zettel'; if (UI.noteType === 'liste') { if (UI.noteTitle == null) UI.noteTitle = ''; if (!Array.isArray(UI.noteItems)) UI.noteItems = []; } render(); },
-    noteTagPick: id => { UI.noteTag = id; render(); },
+    noteType: a => { UI.noteType = a === 'liste' ? 'liste' : 'zettel'; if (UI.noteType === 'liste') { if (UI.noteTitle == null) UI.noteTitle = ''; if (!Array.isArray(UI.noteItems)) UI.noteItems = []; } nzRender(); },
+    noteTagPick: id => { UI.noteTag = id; nzRender(); },
     noteItemAdd: () => {
       const el = $('#noteItemIn'); if (!el) return;
       const t = String(el.value || '').trim().slice(0, NOTE_ITEM_MAX); if (!t) return;
       if (!Array.isArray(UI.noteItems)) UI.noteItems = []; if (UI.noteItems.length >= NOTE_LIST_MAX) return toast('📋', 'Die Liste ist voll.');
-      UI.noteItems.push({ id: uid(), t, done: false }); render();
+      UI.noteItems.push({ id: uid(), t, done: false }); nzRender(); const ni = $('#noteItemIn'); if (ni) ni.focus();
     },
-    noteItemDel: i => { if (Array.isArray(UI.noteItems)) UI.noteItems.splice(+i, 1); render(); },
+    noteItemDel: i => { if (Array.isArray(UI.noteItems)) UI.noteItems.splice(+i, 1); nzRender(); },
     noteItemToggle: a => {
       const parts = String(a).split(':'), n = noteList().find(x => x.id === +parts[0]); if (!n || n.type !== 'liste') return;
       const it = n.items.find(x => x.id === parts[1]); if (!it) return;
-      it.done = !it.done; n.ed = Date.now(); save(); render();
+      it.done = !it.done; n.ed = Date.now(); save(); nzRender();
     },
     noteEdit: id => {
       const n = noteList().find(x => x.id === +id); if (!n) return;
       UI.noteOpen = true; UI.noteEdit = n.id; UI.noteType = n.type;
       if (n.type === 'liste') { UI.noteTitle = n.title; UI.noteItems = n.items.map(it => ({ id: it.id, t: it.t, done: it.done })); }
       else { UI.noteDraft = n.t; UI.noteTag = n.tag; }
-      render(); window.scrollTo(0, 0);
+      nzRender(); window.scrollTo(0, 0);
     },
-    noteCancel: () => { noteResetDraft(); render(); },
+    noteCancel: () => { noteResetDraft(); nzRender(); },
     noteDel: () => {
       const n = noteList().find(x => x.id === UI.noteEdit); if (!n) return;
       const label = n.type === 'liste' ? `Liste „${esc(n.title)}“` : `„${esc(n.t)}“`;
       modal(n.type === 'liste' ? 'Liste löschen?' : 'Zettel löschen?', `${label}<br><br>Ein gelöschtes Element ist weg.`, 'Ja, löschen', 'noteDelYes', '', 'Nein, behalten');
     },
-    noteDelYes: () => { closeModal(); S.notes = noteList().filter(n => n.id !== UI.noteEdit); noteResetDraft(); save(); render(); toast('🗑️', 'Gelöscht'); }
+    noteDelYes: () => { closeModal(); S.notes = noteList().filter(n => n.id !== UI.noteEdit); noteResetDraft(); save(); nzRender(); toast('🗑️', 'Gelöscht'); }
   }
 });
 document.addEventListener('input', e => {
@@ -158,3 +196,5 @@ document.addEventListener('input', e => {
   } else if (e.target.id === 'noteTitleIn') { UI.noteTitle = e.target.value.slice(0, 40); }
 });
 document.addEventListener('keydown', e => { if (e.target && e.target.id === 'noteItemIn' && e.key === 'Enter') { e.preventDefault(); ACT.noteItemAdd(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && UI.nzOpen && !document.getElementById('modal')) ACT.nzClose(); });
+window.addEventListener('load', nzBubble);

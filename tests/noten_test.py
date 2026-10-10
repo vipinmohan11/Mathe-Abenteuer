@@ -20,6 +20,7 @@ window.AudioContext=FakeAC;window.webkitAudioContext=FakeAC;
 with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 800}); errs = []; reqs = []
     pg.add_init_script(FAKE_AUDIO)
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.on('request', lambda r: reqs.append(r.url) if not r.url.startswith(('file:', 'data:', 'blob:')) else None)
     pg.goto('file://' + html); pg.wait_for_timeout(300)
@@ -32,7 +33,7 @@ with sync_playwright() as p:
     before = E("()=>JSON.stringify({c:S.coins,l:S.life,s:S.stars,sl:S.starsLife,ca:S.cards,tr:S.trophies,ow:S.owned,decks:S.decks})")
 
     # ---- Startseite: Ideenwerkstatt (früher Kreativhefte) → Notenheft
-    ok(pg.locator('.dz-home4 .dz-tile').count() == 5, 'Startseite: 5 Kacheln')
+    ok(pg.locator('.dz-home4 .dz-tile').count() == 4, 'Startseite: 4 Kacheln')
     ok(pg.locator('.dz-home4 .dz-tile[data-act=noten]').count() == 0, 'Keine eigene Notenheft-Kachel auf der Startseite')
     ok('Wohin heute?' in pg.inner_text('.dz-sec'), 'Abschnitt „Wohin heute?“ vorhanden')
     wt = pg.locator('.dz-home4 .dz-tile[data-act=kreativhefte]')
@@ -41,7 +42,7 @@ with sync_playwright() as p:
     ok(V() == 'kreativhefte', 'Kachel öffnet die Ideenwerkstatt')
     notentile = pg.locator('.dz-tile[data-act=noten]')
     ok(notentile.count() == 1 and 'Notenheft' in notentile.inner_text(), 'Kachel „Notenheft“ in der Ideenwerkstatt')
-    ok(pg.locator('.dz-tile[data-act=notiz]').count() == 1, 'Kachel „Notizbuch“ liegt daneben')
+    ok(pg.locator('.dz-tile[data-act=musik]').count() == 1 and pg.locator('.dz-tile[data-act=story]').count() == 1 and pg.locator('.dz-tile[data-act=notiz]').count() == 0, 'Ideenwerkstatt: Meine Musik, Geschichte und Notenheft (Notizbuch ist jetzt eine Blase)')
     notentile.click(); pg.wait_for_timeout(250)
     ok(V() == 'noten', 'Kachel öffnet das Notenheft')
 
@@ -229,7 +230,7 @@ with sync_playwright() as p:
     # ---- Layout: kein seitliches Scrollen, alle Tasten erreichbar (Lenovo-Tablet quer/hoch, Handy)
     for name, (w, h) in {'quer 1280x800': (1280, 800), 'quer 1024x600': (1024, 600), 'hoch 800x1280': (800, 1280), 'Handy 360x740': (360, 740)}.items():
         pg.set_viewport_size({'width': w, 'height': h})
-        E("()=>{S.daily.n=25;save();noInit();go('home');go('noten')}"); E("()=>{for(let i=0;i<14;i++)noAdd(NO_NAMES[i%7])}"); pg.wait_for_timeout(200)
+        E("()=>{S.daily.n=25;save();noInit();go('home');go('noten')}"); E("()=>{for(let i=0;i<14;i++)noAdd(NO_NAMES[i%7])}"); pg.wait_for_timeout(500)   # Einblende-Animation (0,4 s) abwarten, sonst misst man kleiner
         sw = E("()=>document.documentElement.scrollWidth"); ok(sw <= w + 1, '%s: kein seitliches Scrollen (%d)' % (name, sw))
         # .no-sm (Tempo-Leiste) ist bewusst kleiner, aber noch touch-sicher (40 px); .seg-Umschalter (Noten/C-H, Tief/Hoch)
         # nutzen die App-weit gleiche, bewusst kompakte Leiste (36 px, wie überall sonst in der App).

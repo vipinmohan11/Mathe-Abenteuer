@@ -402,3 +402,54 @@ body[data-theme="nacht"] .flagstate.on{background:#1f4a2e;color:#bfe9cc}
 .dz-tile.locked .dz-tag{background:var(--dz-surface)}
 
 .nz-new{min-height:44px;padding:0 16px}
+
+/* Meine Hefte: Los geht’s, Fehler-Heft, Mini-Test, Einmaleins, Kopfrechnen, Schriftlich Rechnen – immer in einer Reihe */
+.dz-grid.dz-hefte6{max-width:calc(var(--n)*172px + 5*var(--dz-gap))}
+@media(max-width:700px){.dz-grid.dz-hefte6{gap:8px}}
+.dz-hefte6 .dz-tile{border-radius:var(--dz-r-m)}
+/* Freie Zeit (vor der Hausaufgabe) */
+.freenote{display:flex;align-items:center;gap:8px;margin:12px 0 0}
+.freenote svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;flex:none}
+.freebar{background:var(--dz-t3)}
+/* Eltern: Bereiche öffnen/sperren/Zeit */
+.ptareas{display:grid;gap:10px;margin-bottom:6px}
+.ptblock{border:1px solid var(--dz-line);border-radius:var(--dz-r-m);padding:6px 12px;background:var(--dz-surface)}
+.ptarea{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;padding:8px 0}
+.ptarea-t{display:flex;flex-direction:column;gap:2px;min-width:170px;flex:1}
+.ptarea-c{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ptarea.sub{padding-left:14px;border-top:1px dashed var(--dz-line)}
+.ptsubs>summary{cursor:pointer;font-weight:800;font-size:.85rem;min-height:40px;display:flex;align-items:center;color:var(--dz-mute)}
+.ptperm button{min-width:58px}
+@media(max-width:600px){
+  .dz-hefte6 .dz-tile strong{font-size:max(8px,11.5cqw);letter-spacing:-.03em;padding:0 2cqw;-webkit-line-clamp:2;hyphens:auto;-webkit-hyphens:auto}
+  .dz-hefte6 .dz-tile .dz-pct{display:none}
+  .dz-hefte6 .dz-tile .dz-art{width:60cqw;height:50cqw}
+}
+
+/* ---------- Notizbuch: schwebende Blase + Fenster ---------- */
+.nz-bubble{position:fixed;z-index:45;width:58px;height:58px;border-radius:50%;border:3px solid var(--dz-surface);background:var(--dz-accent);color:var(--dz-accent-ink,#fff);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.28);cursor:grab;touch-action:none;padding:0;-webkit-tap-highlight-color:transparent}
+.nz-bubble[hidden]{display:none}
+.nz-bubble:active{cursor:grabbing;transform:scale(.95)}
+.nz-bubble:focus-visible{outline:3px solid var(--dz-gold,#e0b43a);outline-offset:3px}
+.nz-bubble-n{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:var(--dz-gold,#e0b43a);color:#2b2a24;font-weight:900;font-size:.78rem;display:grid;place-items:center;border:2px solid var(--dz-surface)}
+.nz-ov{position:fixed;inset:0;z-index:65;background:rgba(31,40,44,.5);display:flex;align-items:center;justify-content:center;padding:14px}
+.nz-modal{width:min(760px,100%);max-height:min(88vh,100%);display:flex;flex-direction:column;background:var(--dz-bg,var(--bg,#fbf8f1));color:var(--dz-ink);border-radius:var(--dz-r-l,22px);box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden}
+.nz-mhead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px 10px 18px;border-bottom:2px solid var(--dz-line)}
+.nz-mhead h2{margin:0;display:flex;align-items:center;gap:8px;font-size:1.25rem}
+.nz-x{width:44px;height:44px;border-radius:50%;border:2px solid var(--dz-line);background:var(--dz-surface);color:var(--dz-ink);font-size:1.2rem;font-weight:900;cursor:pointer}
+.nz-body{overflow:auto;padding:12px 14px 18px;-webkit-overflow-scrolling:touch}
+.nz-head2{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.nz-lead{margin:0;font-weight:800;color:var(--dz-mute)}
+.nz-body .nz-edit{margin:0;box-shadow:none}
+/* Zettel / Liste: kleiner Schalter, das gewählte ist gefüllt und hat ein Häkchen */
+.nz-type{display:inline-flex;gap:2px;padding:3px;margin:0 0 10px;border-radius:999px;background:var(--dz-surface2,#e8ece8);border:2px solid var(--dz-line)}
+.nz-opt{display:inline-flex;align-items:center;gap:5px;font:inherit;font-weight:800;font-size:.9rem;padding:0 14px;min-height:36px;border-radius:999px;border:0;background:transparent;color:var(--dz-mute);cursor:pointer}
+.nz-opt.sel{background:var(--dz-accent);color:var(--dz-accent-ink,#fff);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.nz-opt:not(.sel):hover{color:var(--dz-ink)}
+.nz-opt:focus-visible{outline:3px solid var(--dz-gold,#e0b43a);outline-offset:2px}
+@media(max-width:420px){.nz-modal{max-height:94vh}.nz-ov{padding:8px}}
+/* Lustige Karten: Filter */
+.sk-seg{margin:0 0 12px}
+.seg button.active,.seg button[aria-pressed=true]{background:var(--dz-accent,#4f6d7a);color:var(--dz-accent-ink,#fff)}
+@media(prefers-reduced-motion:reduce){.nz-bubble{transition:none}}
+.nz-bubble.sm{width:48px;height:48px}.nz-bubble.sm .ico{width:24px;height:24px}

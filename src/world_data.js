@@ -117,7 +117,7 @@ const WP = {
       language: { n: 'Sprechblase', k: 'bubble', bg: '#e0e7df' }, food: { n: 'Brezel', k: 'pretzel', bg: '#e8dec9' }, quiz: { n: 'Goldmedaille', k: 'medal', bg: '#e9e2c9' } }
   },
   jpn: {
-    id: 'jpn', name: 'Japan', cont: 'Asien', cost: 10, sub: 'Fuji, Tokio und Kyoto', speech: 'ja-JP', scene: '#dce8e7', g1: '#e8dcc9', g2: '#d6e3da',
+    id: 'jpn', name: 'Japan', cont: 'Asien', cost: 0, sub: 'Fuji, Tokio und Kyoto', speech: 'ja-JP', scene: '#dce8e7', g1: '#e8dcc9', g2: '#d6e3da',
     guide: { name: 'Haru', svg: wGuide('Haru', '#efc7aa', '#3f3638', '#7d6f82') },
     hero: '<svg class="w-scene-svg" viewBox="0 0 320 240" role="img" aria-label="Berg und rotes Tor"><circle cx="248" cy="50" r="27" fill="#f0dfbd"/><path d="M26 206 155 43l139 163Z" fill="#b7cbcc"/><path d="m155 43-34 44 22-8 13 18 16-15 22 8Z" fill="#f7f4ef"/><path d="M0 199q80-54 166 0T340 198v42H0Z" fill="#bed1c6"/><path d="M215 217h65v8h-65zM227 165h9v58h-9zM260 165h9v58h-9zM217 166h60v8h-60zM224 179h46v7h-46z" fill="#a2573f"/></svg>',
     welcome: 'Eine Inselkette im Pazifik mit Bergen, großen Städten und alten Traditionen.',
@@ -143,7 +143,7 @@ const WP = {
       language: { n: 'Hallo-Sticker', k: 'bubble', bg: '#dce8e7' }, food: { n: 'Essstäbchen', k: 'chop', bg: '#e8dcc9' }, quiz: { n: 'Goldener Fächer', k: 'fan', bg: '#e9e2c9' } }
   },
   ind: {
-    id: 'ind', name: 'Indien', cont: 'Asien', cost: 10, sub: 'Delhi, Himalaya und Kerala', speech: 'hi-IN', scene: '#e9e2d6', g1: '#ead9c4', g2: '#dce6d8',
+    id: 'ind', name: 'Indien', cont: 'Asien', cost: 0, sub: 'Delhi, Himalaya und Kerala', speech: 'hi-IN', scene: '#e9e2d6', g1: '#ead9c4', g2: '#dce6d8',
     guide: { name: 'Kiran', svg: wGuide('Kiran', '#b97852', '#363033', '#a66d4b') },
     hero: '<svg class="w-scene-svg" viewBox="0 0 320 240" role="img" aria-label="Weißes Bauwerk mit Kuppel"><circle cx="250" cy="54" r="28" fill="#efd69d"/><path d="M0 195q80-42 160 0t160 0v45H0Z" fill="#d0c8a9"/><path d="M92 201h138M112 201v-61h98v61M126 140q0-47 35-47t35 47M145 94q16-34 32 0M104 141h114" fill="none" stroke="#ad8065" stroke-width="9" stroke-linecap="round"/><circle cx="161" cy="87" r="6" fill="#ad8065"/><path d="M38 198q22-56 47 0M240 197q20-48 43 0" fill="#98ae88"/></svg>',
     welcome: 'Ein sehr großes Land in Südasien mit vielen Sprachen, Regionen und Lebensweisen.',

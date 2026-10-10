@@ -7,6 +7,10 @@
    - mehrere Lieder („Meine Lieder“), Favorit, Beschreibung, Löschen nur nach Rückfrage
    Zustand: S.noten = { songs:[{ id, title, description, favorite, tempo, colorMode, createdAt, updatedAt, notes:[{ id, name, duration, rest, oct }] }], act: Id, pref:{ view, entry, dur, oct } }
    `oct` (0 oder 1) ist neu: fehlt er bei alten Liedern, gilt 0 – Ton und Bild bleiben wie vorher (sichere Migration).
+   Notenbild (musikalisch korrekt): Violinschlüssel, C4 auf der ersten Hilfslinie unten; Hälse ab der Mittellinie (H4) nach unten, sonst nach oben,
+   Hälse bei Noten mit Hilfslinien reichen bis zur Mittellinie; zwei Achtel hintereinander bekommen einen Balken; Achtel-, Viertel- und halbe Pause
+   in der üblichen Form; am Ende ein Schlussstrich. Kurz = Achtel, Normal = Viertel, Lang = Halbe.
+   Eltern-Schalter: S.cfg.noTone (Ton im Notenheft) und S.cfg.noPlay (Abspielen-Knopf), fehlend = an.
    Speicherung: im normalen App-Speicher (S) – offline, im Admin-Modus getrennt.
    Alles hier heißt no… / NO_… (ein gemeinsames Skript).
    ===================================================================== */
@@ -14,7 +18,8 @@ const NO_NAMES = ['C', 'D', 'E', 'F', 'G', 'A', 'H'];
 const NO_PITCH = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, H: 6 };
 const NO_COL = { C: '#E45B5B', D: '#E58A42', E: '#D7AD35', F: '#55A46A', G: '#4B91C8', A: '#706FC5', H: '#A166B5' };
 const NO_FREQ = { C: 261.63, D: 293.66, E: 329.63, F: 349.23, G: 392, A: 440, H: 493.88 };
-const NO_LEN = [{ id: 'short', label: 'Kurz', beats: .5, prev: .22 }, { id: 'normal', label: 'Normal', beats: 1, prev: .4 }, { id: 'long', label: 'Lang', beats: 2, prev: .7 }];
+const NO_LEN = [{ id: 'short', label: 'Kurz', mus: 'Achtel', beats: .5, prev: .22 }, { id: 'normal', label: 'Normal', mus: 'Viertel', beats: 1, prev: .4 }, { id: 'long', label: 'Lang', mus: 'Halbe', beats: 2, prev: .7 }];
+const noToneOn = () => S.cfg.noTone !== false, noPlayOn = () => S.cfg.noPlay !== false;   // Eltern-Schalter
 const NO_TEMPO = { slow: { ms: 700, bpm: 80, label: 'Langsam', em: '🐢' }, medium: { ms: 480, bpm: 110, label: 'Mittel', em: '🚶' }, fast: { ms: 330, bpm: 140, label: 'Schnell', em: '🐇' } };
 const NO_MAX_NOTES = 200, NO_MAX_SONGS = 60;
 const NO_STARTER = [['C', 'normal'], ['D', 'normal'], ['E', 'short'], ['F', 'short'], ['G', 'long'], ['E', 'normal'], ['C', 'long']];
@@ -78,7 +83,7 @@ function noDirty() { noStat('Speichert …'); clearTimeout(NO.saveT); NO.saveT =
 
 /* ---------- Ton (Web Audio, gemeinsamer Kontext aus rewards.js; respektiert den Ton-Schalter der App) ---------- */
 function noTone(n, sec) {
-  if (!n || n.rest) return;
+  if (!n || n.rest || !noToneOn()) return;
   const ac = AC(); if (!ac) { if (S.cfg.sound === false && !NO.hint) { NO.hint = true; toast('🔇', 'Der Ton ist aus. Schalte ihn mit dem Lautsprecher-Knopf ein.'); } return; }
   try {
     const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
@@ -97,6 +102,7 @@ function noPlayFrom(i) {
   NO.timer = setTimeout(() => { if (i + 1 >= s.notes.length) noStopAll(); else noPlayFrom(i + 1); }, noMs(n));
 }
 function noPlayToggle() {
+  if (!noPlayOn()) return;
   const s = noSong(); if (!s.notes.length) { toast('🎵', 'Füge zuerst ein paar Noten hinzu.'); return; }
   if (NO.playing) { NO.res = NO.idx; noHalt(); noPaintScore(); return; }
   AC(); NO.playing = true; const i = NO.res != null ? NO.res : (NO.sel.length ? NO.sel[0] : 0); NO.res = null; noPlayFrom(Math.min(i, s.notes.length - 1));
@@ -173,6 +179,8 @@ const NO_REST = 'M-3-12 5-4-2 4C-7 8-5 12 3 18 -4 16-8 21-3 26';
 function noGlyph(kind, sz) {
   const st = 'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"';
   const body = kind === 'rest' ? `<path d="M9 3l6 6-5 5c-3 3-2 5 3 8-4-1-6 1-3 4" ${st}/>`
+    : kind === 'rest-long' ? `<path d="M3 13h18" ${st}/><rect x="7" y="8" width="10" height="5" fill="currentColor"/>`
+    : kind === 'rest-short' ? `<circle cx="9" cy="7" r="2.6" fill="currentColor"/><path d="M9 9q4 1.5 7-3L11 21" ${st}/>`
     : `<ellipse cx="9" cy="18" rx="5" ry="3.7" transform="rotate(-18 9 18)" fill="${kind === 'long' ? 'none' : 'currentColor'}" stroke="currentColor" stroke-width="2"/><path d="M13.7 16.6V3.5" ${st}/>${kind === 'short' ? `<path d="M13.7 3.5q6 2 4 8" ${st}/>` : ''}`;
   return `<svg viewBox="0 0 24 24" width="${sz || 24}" height="${sz || 24}" aria-hidden="true" focusable="false">${body}</svg>`;
 }
@@ -189,47 +197,78 @@ function noPerLine() {
   const w = document.documentElement.clientWidth || 800, cw = Math.min(980, w) - 28 - (w >= 900 ? 276 : 0) - 8;
   return Math.max(5, Math.min(12, Math.floor((cw / .8 - 170) / 62.5)));
 }
+/* Balken: zwei Achtel hintereinander (gleiche Zeile, keine Pause) bekommen einen gemeinsamen Balken; ein Rest-Achtel behält sein Fähnchen */
+function noBeams(notes, perLine) {
+  const pair = {};
+  for (let i = 0; i < notes.length; i++) {
+    const a = notes[i], b = notes[i + 1];
+    if (a && b && a.duration === 'short' && b.duration === 'short' && !a.rest && !b.rest && Math.floor(i / perLine) === Math.floor((i + 1) / perLine)) { pair[i] = i + 1; pair[i + 1] = -1; i++; }
+  }
+  return pair;
+}
+const NO_MID = 28, NO_TOP = 50;   // NO_TOP: Platz über der ersten Zeile für hohe Noten mit Buchstaben
+                                                  // Mittellinie (H4) = top + 28
+function noStemEnd(y, down, top) { const e = down ? y + 39 : y - 39; return down ? Math.max(e, top + NO_MID) : Math.min(e, top + NO_MID); }   // Hilfslinien-Noten: Hals bis zur Mittellinie
 function noScoreSvg() {
   const s = noSong(), notes = s.notes, perLine = noPerLine(), gap = 62.5, W = Math.round(115 + perLine * gap + 55), lineH = 145;
-  const lines = Math.max(1, Math.ceil((notes.length + 1) / perLine)), H = lines * lineH + 25;
-  const selSet = new Set(NO.sel), playAt = NO.playing ? NO.idx : NO.res;
+  const lines = Math.max(1, Math.ceil((notes.length + 1) / perLine)), H = lines * lineH + 25 + (NO_TOP - 38);
+  const selSet = new Set(NO.sel), playAt = NO.playing ? NO.idx : NO.res, beams = noBeams(notes, perLine);
+  const pos = i => { const l = Math.floor(i / perLine), p = i % perLine; return { x: 118 + p * gap + gap / 2, top: NO_TOP + l * lineH }; };
+  /* Hals-Richtung: einzeln ab H4 nach unten; im Balkenpaar entscheidet die Note, die weiter von der Mittellinie weg ist */
+  const dirOf = i => {
+    if (beams[i] == null) return noAbs(notes[i]) >= 6;
+    const a = beams[i] > 0 ? i : i - 1, da = noAbs(notes[a]) - 6, db = noAbs(notes[a + 1]) - 6;
+    return Math.abs(da) >= Math.abs(db) ? da >= 0 : db >= 0;
+  };
   let h = '';
   for (let l = 0; l < lines; l++) {
-    const top = 38 + l * lineH;
+    const top = NO_TOP + l * lineH;
     for (let k = 0; k < 5; k++) h += `<line class="no-ln" x1="50" y1="${top + k * 14}" x2="${W - 40}" y2="${top + k * 14}"/>`;
-    h += `<path class="no-clef" transform="translate(76 ${top})" d="${NO_CLEF}"/><line class="no-bar" x1="108" y1="${top}" x2="108" y2="${top + 56}"/>`;
+    h += `<path class="no-clef" transform="translate(76 ${top})" d="${NO_CLEF}"/>`;
   }
   notes.forEach((n, i) => {
-    const l = Math.floor(i / perLine), pos = i % perLine, x = 118 + pos * gap + gap / 2, top = 38 + l * lineH;
+    const { x, top } = pos(i);
     const sel = selSet.has(i), playing = playAt === i, col = noColor(n, s.colorMode), d = noLen(n.duration);
-    const y = n.rest ? top + 28 : noY(n.name, n.oct, top), down = !n.rest && noAbs(n) >= 6;
-    const lab = `${i + 1}. ${n.rest ? 'Pause' : 'Note ' + n.name + (n.oct ? ' hoch' : '')}, ${d.label}${sel ? ', gewählt' : ''}`;
+    const y = n.rest ? top + NO_MID : noY(n.name, n.oct, top), down = !n.rest && dirOf(i);
+    const lab = `${i + 1}. ${n.rest ? d.mus + 'pause' : 'Note ' + n.name + (n.oct ? ' hoch' : '')}, ${d.label} (${d.mus})${sel ? ', gewählt' : ''}`;
     h += `<g class="no-n${sel ? ' sel' : ''}${playing ? ' playing' : ''}" data-act="noSel" data-arg="${i}" role="button" tabindex="0" aria-label="${lab}">`;
     h += `<rect class="no-hit" x="${x - 28}" y="${top - 22}" width="56" height="${lineH - 8}" rx="14"/>`;
     if (sel) h += `<rect class="no-selbox" x="${x - 24}" y="${top - 16}" width="48" height="${lineH - 40}" rx="13"/>`;
     if (playing) h += `<circle class="no-playdot" cx="${x}" cy="${top - 15}" r="4.5"/>`;
     if (n.rest) {
-      h += `<path transform="translate(${x} ${y})" d="${NO_REST}" fill="none" stroke="var(--dz-ink)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`;
-      if (d.id === 'short') h += `<path transform="translate(${x} ${y})" d="M-9 12 -2 16" stroke="var(--dz-ink)" stroke-width="3" stroke-linecap="round"/>`;
-      if (d.id === 'long') h += `<rect x="${x - 10}" y="${top + 28 - 5}" width="20" height="5" fill="var(--dz-ink)" rx="1"/>`;
+      const ink = 'var(--dz-ink)';
+      if (d.id === 'long') h += `<rect class="no-rest" x="${x - 9}" y="${top + NO_MID - 7}" width="18" height="7" style="fill:${ink}"/>`;                    // halbe Pause: liegt auf der Mittellinie
+      else if (d.id === 'short') h += `<g class="no-rest"><circle cx="${x - 4}" cy="${top + 20}" r="3.8" style="fill:${ink}"/><path d="M${x - 4} ${top + 23}q6 2 10-5L${x - 1} ${top + 41}" fill="none" style="stroke:${ink}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></g>`;   // Achtelpause
+      else h += `<path class="no-rest" transform="translate(${x} ${y})" d="${NO_REST}" fill="none" style="stroke:${ink}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`;   // Viertelpause
     } else {
       h += noLedgers(x, y, top);
-      h += `<ellipse cx="${x}" cy="${y}" rx="10" ry="7" transform="rotate(-15 ${x} ${y})" style="fill:${d.id === 'long' ? 'var(--dz-surface)' : col};stroke:${col}" stroke-width="3"/>`;
-      if (d.id !== 'long') {
-        const sx = down ? x - 8.5 : x + 8.5, e = down ? y + 39 : y - 39;
-        h += `<line x1="${sx}" y1="${y + (down ? 1 : -1)}" x2="${sx}" y2="${e}" style="stroke:${col}" stroke-width="3" stroke-linecap="round"/>`;
-        if (d.id === 'short') h += `<path d="M ${sx} ${e} Q ${sx + 22} ${down ? e - 6 : e + 6}, ${sx + 12} ${down ? e - 25 : e + 25}" fill="none" style="stroke:${col}" stroke-width="3"/>`;
-      } else {
-        const sx = down ? x - 9 : x + 9, e = down ? y + 39 : y - 39;
-        h += `<line x1="${sx}" y1="${y + (down ? 1 : -1)}" x2="${sx}" y2="${e}" style="stroke:${col}" stroke-width="3" stroke-linecap="round"/>`;
+      h += `<ellipse class="no-head" cx="${x}" cy="${y}" rx="10" ry="7" transform="rotate(-15 ${x} ${y})" style="fill:${d.id === 'long' ? 'var(--dz-surface)' : col};stroke:${col}" stroke-width="3"/>`;
+      const sx = down ? x - 8.6 : x + 8.6;
+      let e = noStemEnd(y, down, top);
+      if (beams[i] != null) {                                              // Balkenpaar: beide Hälse enden auf dem Balken
+        const a = beams[i] > 0 ? i : i - 1, b = a + 1, pa = pos(a), pb = pos(b), dn = dirOf(a);
+        let ea = noStemEnd(noY(notes[a].name, notes[a].oct, pa.top), dn, pa.top), eb = noStemEnd(noY(notes[b].name, notes[b].oct, pb.top), dn, pb.top);
+        if (dn) { if (eb > ea + 7) ea = eb - 7; else if (ea > eb + 7) eb = ea - 7; }            // Balken höchstens leicht schräg; Hälse werden nur länger
+        else { if (eb < ea - 7) ea = eb + 7; else if (ea < eb - 7) eb = ea + 7; }
+        e = i === a ? ea : eb;
+        if (i === a) {
+          const xa = pa.x + (dn ? -8.6 : 8.6), xb = pb.x + (dn ? -8.6 : 8.6), th = dn ? -6 : 6, bc = noColor(notes[a], s.colorMode) === noColor(notes[b], s.colorMode) ? col : 'var(--dz-ink)';
+          h += `<path class="no-beam" d="M${xa - 1.5} ${ea}L${xb + 1.5} ${eb}L${xb + 1.5} ${eb + th}L${xa - 1.5} ${ea + th}Z" style="fill:${bc}"/>`;
+        }
       }
+      h += `<line class="no-stem" x1="${sx}" y1="${y + (down ? 1 : -1)}" x2="${sx}" y2="${e}" style="stroke:${col}" stroke-width="3" stroke-linecap="round"/>`;
+      if (d.id === 'short' && beams[i] == null) h += `<path class="no-flag" d="M ${sx} ${e} Q ${sx + 22} ${down ? e - 6 : e + 6}, ${sx + 12} ${down ? e - 25 : e + 25}" fill="none" style="stroke:${col}" stroke-width="3"/>`;
       if (s.colorMode) h += `<text x="${x}" y="${down ? y - 14 : y + 25}" text-anchor="middle" font-size="13" font-weight="800" style="fill:${col}">${n.name}${n.oct ? '²' : ''}</text>`;
     }
     h += '</g>';
   });
-  const cl = Math.floor(NO.cur / perLine), cp = NO.cur % perLine, cx = 118 + cp * gap + gap / 2 - gap / 2 + 4, ct = 38 + cl * lineH;
+  if (notes.length) {                                                       // Schlussstrich nach der letzten Note
+    const { x, top } = pos(notes.length - 1), xb = x + gap / 2 - 5;
+    h += `<line class="no-bar" x1="${xb - 6}" y1="${top}" x2="${xb - 6}" y2="${top + 56}"/><rect class="no-endbar" x="${xb - 2}" y="${top}" width="4.5" height="56"/>`;
+  }
+  const cl = Math.floor(NO.cur / perLine), cp = NO.cur % perLine, cx = 118 + cp * gap + gap / 2 - gap / 2 + 4, ct = NO_TOP + cl * lineH;
   h += `<line class="no-cur" x1="${cx}" y1="${ct - 6}" x2="${cx}" y2="${ct + 66}"/><path class="no-curflag" d="M${cx} ${ct - 6}l15 5.5-15 5.5z"/>`;
-  if (!notes.length) h += `<text class="no-empty" x="${W / 2}" y="${38 + 90}" text-anchor="middle" font-size="19">Tippe unten auf eine Note, dann geht es los</text>`;
+  if (!notes.length) h += `<text class="no-empty" x="${W / 2}" y="${NO_TOP + 90}" text-anchor="middle" font-size="19">Tippe unten auf eine Note, dann geht es los</text>`;
   return `<svg id="noScore" viewBox="0 0 ${W} ${H}" role="group" aria-label="Notenzeile, ${notes.length} Noten">${h}</svg>`;
 }
 function noLettersHtml() {
@@ -238,16 +277,17 @@ function noLettersHtml() {
   s.notes.forEach((n, i) => {
     if (NO.cur === i) h += '<span class="no-lcur" aria-hidden="true"></span>';
     const col = noColor(n, s.colorMode), d = noLen(n.duration), sel = selSet.has(i), playing = playAt === i;
-    h += `<button class="no-lk${sel ? ' sel' : ''}${playing ? ' playing' : ''}" style="color:${col}" data-act="noSel" data-arg="${i}" aria-label="${i + 1}. ${n.rest ? 'Pause' : 'Note ' + n.name + (n.oct ? ' hoch' : '')}, ${d.label}${sel ? ', gewählt' : ''}">${n.rest ? '—' : n.name + (n.oct ? '²' : '')}<small>${n.rest ? 'Pause' : d.label}</small></button>`;
+    h += `<button class="no-lk${sel ? ' sel' : ''}${playing ? ' playing' : ''}" style="color:${col}" data-act="noSel" data-arg="${i}" aria-label="${i + 1}. ${n.rest ? 'Pause' : 'Note ' + n.name + (n.oct ? ' hoch' : '')}, ${d.label}${sel ? ', gewählt' : ''}">${n.rest ? '—' : n.name + (n.oct ? '²' : '')}<small>${n.rest ? d.mus + 'pause' : d.label}</small></button>`;
   });
   if (NO.cur === s.notes.length) h += '<span class="no-lcur" aria-hidden="true"></span>';
   if (!s.notes.length) h = '<p class="no-empty-t">Tippe unten auf einen Buchstaben, dann geht es los.</p>';
   return h;
 }
-function noMini(name, oct) {
-  const abs = NO_PITCH[name] + 7 * (oct || 0), y = 78 - abs * 5, d = noLen(NO.dur), ink = 'var(--dz-ink)', down = abs >= 6;
-  const sx = down ? 34 : 50, e = down ? y + 26 : y - 26;
-  return `<svg viewBox="0 0 84 88" aria-hidden="true" focusable="false">${[0, 1, 2, 3, 4].map(i => `<line x1="7" y1="${28 + i * 9} " x2="77" y2="${28 + i * 9}" style="stroke:var(--dz-mute)"/>`).join('')}${abs === 0 ? `<line x1="28" y1="${y}" x2="56" y2="${y}" style="stroke:var(--dz-mute)"/>` : ''}${abs >= 13 ? `<line x1="28" y1="${y}" x2="56" y2="${y}" style="stroke:var(--dz-mute)"/>` : ''}<ellipse cx="42" cy="${y}" rx="8.5" ry="5.8" transform="rotate(-15 42 ${y})" style="fill:${d.id === 'long' ? 'var(--dz-surface)' : ink};stroke:${ink}" stroke-width="2.5"/><line x1="${sx}" y1="${y - (down ? -1 : 1)}" x2="${sx}" y2="${e}" style="stroke:${ink}" stroke-width="2.5" stroke-linecap="round"/>${d.id === 'short' ? `<path d="M${sx} ${e}q17 ${down ? -5 : 5} 9 ${down ? -14 : 14}" fill="none" style="stroke:${ink}" stroke-width="2.5"/>` : ''}</svg>`;
+function noMini(name, oct) {                             // Notenbild auf der Taste: gleiche Lage wie im Notenheft (E4 = unterste Linie, C4 = Hilfslinie)
+  const abs = NO_PITCH[name] + 7 * (oct || 0), y = 73 - abs * 4.5, d = noLen(NO.dur), ink = 'var(--dz-ink)', down = abs >= 6;
+  const sx = down ? 34.2 : 49.8, e = down ? Math.max(y + 26, 46) : Math.min(y - 26, 46);
+  const ledg = (abs <= 0 ? [73] : []).concat(abs >= 12 ? [19] : []);
+  return `<svg viewBox="0 0 84 88" aria-hidden="true" focusable="false">${[0, 1, 2, 3, 4].map(i => `<line x1="7" y1="${28 + i * 9}" x2="77" y2="${28 + i * 9}" style="stroke:var(--dz-mute)"/>`).join('')}${ledg.map(ly => `<line x1="29" y1="${ly}" x2="55" y2="${ly}" style="stroke:var(--dz-mute)" stroke-width="1.4"/>`).join('')}<ellipse cx="42" cy="${y}" rx="8.5" ry="5.8" transform="rotate(-15 42 ${y})" style="fill:${d.id === 'long' ? 'var(--dz-surface)' : ink};stroke:${ink}" stroke-width="2.5"/><line x1="${sx}" y1="${y - (down ? -1 : 1)}" x2="${sx}" y2="${e}" style="stroke:${ink}" stroke-width="2.5" stroke-linecap="round"/>${d.id === 'short' ? `<path d="M${sx} ${e}q17 ${down ? -5 : 5} 9 ${down ? -14 : 14}" fill="none" style="stroke:${ink}" stroke-width="2.5"/>` : ''}</svg>`;
 }
 
 /* ---------- Zeichnen: Abschnitte ---------- */
@@ -263,10 +303,11 @@ function noHeadHtml() {                                  // kompakte Überschrif
   return `<section class="no-head"><div class="no-head-row"><h2 class="no-h" id="noHead">${esc(s.title)}</h2><button class="no-ibtn no-ibtn-s" data-act="noTitleEdit" aria-label="Titel und Beschreibung bearbeiten" title="Bearbeiten">${ico('pen', 18)}</button><button class="no-ibtn no-ibtn-s no-fav${s.favorite ? ' on' : ''}" data-act="noFav" aria-pressed="${s.favorite}" aria-label="${s.favorite ? 'Lieblingslied: ja' : 'Als Lieblingslied merken'}" title="Lieblingslied">${s.favorite ? '★' : '☆'}</button><span class="no-grow"></span>${seg}</div>${s.description ? `<p class="no-sub">${esc(s.description)}</p>` : ''}</section>`;
 }
 function noPlayBarHtml() {
-  const snd = S.cfg.sound !== false, s = noSong();
-  return `<div class="no-playbar"><button class="no-ibtn no-ibtn-play" data-act="noPlay" aria-label="${NO.playing ? 'Anhalten' : 'Lied abspielen'}" title="${NO.playing ? 'Anhalten' : 'Abspielen'}">${ico(NO.playing ? 'pause' : 'play', 22)}</button>
-    <button class="no-ibtn" data-act="toggleSound" aria-pressed="${snd}" aria-label="${snd ? 'Klavier-Ton ausschalten' : 'Klavier-Ton einschalten'}" title="${snd ? 'Klavier' : 'Stumm'}">${ico(snd ? 'speaker' : 'mute', 20)}</button>
-    <span class="no-chip" id="noTempo" aria-hidden="true">♩ ${NO_TEMPO[s.tempo].bpm}</span></div>`;
+  const snd = S.cfg.sound !== false, s = noSong(), pl = noPlayOn(), tn = noToneOn();
+  if (!pl && !tn) return '';
+  return `<div class="no-playbar">${pl ? `<button class="no-ibtn no-ibtn-play" data-act="noPlay" aria-label="${NO.playing ? 'Anhalten' : 'Lied abspielen'}" title="${NO.playing ? 'Anhalten' : 'Abspielen'}">${ico(NO.playing ? 'pause' : 'play', 22)}</button>` : ''}
+    ${tn ? `<button class="no-ibtn" data-act="toggleSound" aria-pressed="${snd}" aria-label="${snd ? 'Klavier-Ton ausschalten' : 'Klavier-Ton einschalten'}" title="${snd ? 'Klavier' : 'Stumm'}">${ico(snd ? 'speaker' : 'mute', 20)}</button>` : ''}
+    ${pl ? `<span class="no-chip" id="noTempo" aria-hidden="true">♩ ${NO_TEMPO[s.tempo].bpm}</span>` : ''}</div>`;
 }
 function noScoreHtml() {
   const bar = noPlayBarHtml();
@@ -287,7 +328,7 @@ function noEditHtml() {
 }
 function noRibbonHtml() {
   const s = noSong();
-  return `<div class="no-ribbon"><div class="no-temposeg" role="group" aria-label="Tempo">${Object.keys(NO_TEMPO).map(k => `<button class="no-sm${s.tempo === k ? ' active' : ''}" data-act="noTempo" data-arg="${k}" aria-pressed="${s.tempo === k}" aria-label="Tempo: ${NO_TEMPO[k].label}" title="${NO_TEMPO[k].label}">${NO_TEMPO[k].em}</button>`).join('')}</div>
+  return `<div class="no-ribbon">${noPlayOn() ? `<div class="no-temposeg" role="group" aria-label="Tempo">${Object.keys(NO_TEMPO).map(k => `<button class="no-sm${s.tempo === k ? ' active' : ''}" data-act="noTempo" data-arg="${k}" aria-pressed="${s.tempo === k}" aria-label="Tempo: ${NO_TEMPO[k].label}" title="${NO_TEMPO[k].label}">${NO_TEMPO[k].em}</button>`).join('')}</div>` : ''}
     <button class="no-ibtn no-colorbtn${s.colorMode ? ' active' : ''}" data-act="noColor" role="switch" aria-checked="${s.colorMode}" aria-label="${s.colorMode ? 'C–H-Farbcode ausschalten' : 'C–H-Farbcode einschalten'}" title="C–H-Farbcode">${ico('palette', 20)}</button></div>`;
 }
 function noOctHtml() {
@@ -298,7 +339,7 @@ function noAddHtml() {
   return `<section class="dz-panel no-add"><h2>Note hinzufügen</h2>
     <div class="seg no-seg" role="group" aria-label="Eingabe"><button data-act="noEntry" data-arg="symbols" class="${lk ? '' : 'active'}" aria-pressed="${!lk}">Noten</button><button data-act="noEntry" data-arg="letters" class="${lk ? 'active' : ''}" aria-pressed="${lk}">C–H</button></div>
     ${noOctHtml()}
-    <div class="no-durs" role="group" aria-label="Länge der neuen Note">${NO_LEN.map(d => `<button class="no-dur${NO.dur === d.id ? ' active' : ''}" data-act="noDur" data-arg="${d.id}" aria-pressed="${NO.dur === d.id}" aria-label="Länge: ${d.label}" title="${d.label}">${noGlyph(d.id, 20)}</button>`).join('')}<button class="no-dur" data-act="noRest" aria-label="Pause einfügen, ${noLen(NO.dur).label}" title="Pause">${noGlyph('rest', 20)}</button></div>
+    <div class="no-durs" role="group" aria-label="Länge der neuen Note">${NO_LEN.map(d => `<button class="no-dur${NO.dur === d.id ? ' active' : ''}" data-act="noDur" data-arg="${d.id}" aria-pressed="${NO.dur === d.id}" aria-label="Länge: ${d.label} (${d.mus}note)" title="${d.label} · ${d.mus}">${noGlyph(d.id, 20)}</button>`).join('')}<button class="no-dur" data-act="noRest" aria-label="Pause einfügen, ${noLen(NO.dur).label} (${noLen(NO.dur).mus}pause)" title="${noLen(NO.dur).mus}pause">${noGlyph(NO.dur === 'normal' ? 'rest' : 'rest-' + NO.dur, 20)}</button></div>
     ${lk ? `<div class="no-keys no-lkeys no-keys-sm">${NO_NAMES.map(n => `<button class="no-lkey" style="color:${NO_COL[n]}" data-act="noAdd" data-arg="${n}" aria-label="Note ${n}${NO.oct ? ' hoch' : ''} hinzufügen, ${noLen(NO.dur).label}">${n}${NO.oct ? '²' : ''}</button>`).join('')}</div>`
       : `<div class="no-keys no-keys-sm">${NO_NAMES.map(n => `<button class="no-key" data-act="noAdd" data-arg="${n}" aria-label="Note ${n}${NO.oct ? ' hoch' : ''} hinzufügen, ${noLen(NO.dur).label}">${noMini(n, NO.oct)}</button>`).join('')}</div>`}</section>`;
 }

@@ -222,9 +222,14 @@ let tcount=0;
 for(const m of A.MODULES)for(const t of m.topics){const d=A.getDeck(A.tk(m.id,t.id));ok(d.qs.length===30,'30 q '+t.id);
   const ks=new Set(d.qs.map(q=>(q.html||q.prompt)+q.title));ok(ks.size>=28,'deck mostly unique '+m.id+'.'+t.id+' '+ks.size);tcount++;}
 // play a first-try pass through every topic quickly
+// Diese Schleife läuft synchron, Timer feuern nie. jsdom hängt an jedes localStorage.setItem einen Timer mit altem und neuem Wert
+// (je ~1 MB) – bei ~1 500 Antworten wären das Gigabytes. Speichern und reine Show-Effekte werden deshalb nur hier stummgeschaltet;
+// die Punkte-/Medaillen-Logik läuft unverändert (Speichern ist in eigenen Abschnitten geprüft).
+const passStub={};['save','confetti','toast','coinPop','rwCoin','rwCard','rwTrophy','sfx'].forEach(f=>{if(typeof E.w[f]==='function'){passStub[f]=E.w[f];E.w[f]=()=>{};}});
 for(const m of A.MODULES)for(const t of m.topics){const k=A.tk(m.id,t.id);A.resetDeck(k);A.startDeck(k);
   for(let b=0;b<3;b++){for(let g=0;g<10;g++){const q=cur(A).q;solve(E,'first');ok(cur(A).res==='first',`${k} b${b} q${g} first-try fail`);A.next();} if(A.view==='block')act(b<2?'blockNext':'toGroup');}
 }
+Object.assign(E.w,passStub);A.save();
 ok(Object.keys(A.S.trophies).length>8,'trophies: '+Object.keys(A.S.trophies).length);
 
 // ================= 12. migration from v1 =================

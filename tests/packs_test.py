@@ -8,6 +8,7 @@ def ok(c, m):
     if not c: fails.append(m)
 with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 900}); errs = []
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto('file://' + html); pg.wait_for_timeout(300)
     E = pg.evaluate
@@ -45,8 +46,8 @@ with sync_playwright() as p:
     E("()=>{S.starsLife=60;S.stars=60;S.daily.n=25;wS().open={};wS().spent=0;go('home');go('rewards');go('welt')}"); pg.wait_for_timeout(150)
     ok(pg.locator('#wDest').count() == 1 and pg.locator('#wDest option').count() == 23, 'Auswahlmenü mit 23 Zielen')
     ok(pg.locator('#wDest optgroup').count() == 2, 'Menü: „Meine Reisen“ und „Noch gesperrt“')
-    pg.select_option('#wDest', 'jpn'); pg.click('[data-act=wGoDest]'); pg.wait_for_timeout(200)
-    ok(pg.locator('#modal').count() == 1 and 'Japan' in pg.inner_text('#modal'), 'Gesperrtes Land im Menü → Frage zum Öffnen (Sterne)')
+    pg.select_option('#wDest', 'fra'); pg.click('[data-act=wGoDest]'); pg.wait_for_timeout(200)
+    ok(pg.locator('#modal').count() == 1 and 'Frankreich' in pg.inner_text('#modal'), 'Gesperrtes Land im Menü → Frage zum Öffnen')
     E("()=>closeModal()")
     pg.select_option('#wDest', 'deu'); pg.click('[data-act=wGoDest]'); pg.wait_for_timeout(2300)
     ok(E("()=>view") == 'weltReise' and E("()=>UI.wId") == 'deu', 'Offenes Land im Menü → Reise startet')
@@ -54,14 +55,16 @@ with sync_playwright() as p:
     E("()=>{S.coins=1000;S.stats.bought=0;S.daily.shopSec=0;S.cfg.shopMin=0;wS().open={};wS().tix=[];save();UI.shopGrp='reisen';go('home');go('shop')}"); pg.wait_for_timeout(150)
     ok(pg.locator('.w-ticket').count() == 2, 'Shop → Reisen: zwei Tickets')
     c0 = E("()=>S.coins"); sp0 = E("()=>wS().spent"); st0 = E("()=>S.starsLife")
-    ok(E("()=>WA.nextLocked()") == 'jpn', 'Nächstes Land der Liste = Japan')
-    pg.click('[data-act=wTixNext]'); pg.wait_for_timeout(150); pg.click('#modal [data-act=wTixNextYes]'); pg.wait_for_timeout(2300)
-    ok(E("()=>WA.isOpen('jpn')") and E("()=>S.coins") == c0 - 250, 'Reise-Ticket: Japan sofort offen, 250 Münzen bezahlt')
+    E("()=>{S.daily.wpk='schon';wS().picks=0}")                                   # die freie Wahl von heute ist schon genutzt
+    pg.click('[data-act=wTixNext]'); pg.wait_for_timeout(150); pg.click('#modal [data-act=wTixNextYes]'); pg.wait_for_timeout(300)
+    ok(E("()=>wS().picks") == 1 and E("()=>S.coins") == c0 - 250 and E("()=>view") == 'welt', 'Reise-Ticket: eine freie Wahl, 250 Münzen bezahlt, weiter zur Abflughalle')
     ok(E("()=>wS().spent") == sp0 and E("()=>S.starsLife") == st0, 'Reise-Ticket kostet keine Sterne')
-    ok(E("()=>WA.nextLocked()") == 'ind', 'Danach ist Indien das nächste')
+    E("()=>ACT.wLock('kor')"); ok('frei wählen' in pg.inner_text('#modal'), 'Ticket: beliebiges Land (Südkorea) wählbar – keine feste Reihenfolge')
+    E("()=>ACT.wPickYes('kor')"); pg.wait_for_timeout(150); E("()=>UI.wFlightEnd&&UI.wFlightEnd()"); pg.wait_for_timeout(150)
+    ok(E("()=>WA.isOpen('kor')") and E("()=>wS().picks") == 0 and not E("()=>WA.isOpen('fra')"), 'Südkorea offen, Ticket verbraucht, sonst nichts geöffnet')
     E("()=>{S.coins=100;UI.shopGrp='reisen';go('shop')}"); pg.wait_for_timeout(100)
     pg.click('[data-act=wTixNext]'); pg.wait_for_timeout(100)
-    ok('fehlen' in pg.inner_text('#modal') and E("()=>S.coins") == 100 and not E("()=>WA.isOpen('ind')"), 'Zu wenig Münzen: nichts passiert')
+    ok('fehlen' in pg.inner_text('#modal') and E("()=>S.coins") == 100 and E("()=>wS().picks") == 0, 'Zu wenig Münzen: nichts passiert')
     E("()=>closeModal()")
     # ---- Wunsch-Ticket: vorhandenes Land
     E("()=>{S.coins=1000;UI.shopGrp='reisen';go('shop')}"); pg.wait_for_timeout(100)
@@ -98,7 +101,7 @@ with sync_playwright() as p:
         E("(v)=>{go('home');go(v)}", v); pg.wait_for_timeout(120)
         t = pg.inner_text('#app')
         ok('Fino' not in t, 'Kein „Fino“ mehr auf: ' + v)
-    E("()=>{go('home');go('rewards')}"); pg.wait_for_timeout(100)
+    E("()=>{go('home');go('kreativhefte')}"); pg.wait_for_timeout(100)
     ok('Alex’ Geschichte' in pg.inner_text('#app') or 'Alexʼ Geschichte' in pg.inner_text('#app'), 'Besitzform: „Alex’ Geschichte“')
     E("()=>{S.name='Mira';save();go('home')}"); pg.wait_for_timeout(100)
     ok('Fino' not in pg.inner_text('#app') and 'Mira' in pg.inner_text('#app'), 'Name ändern wirkt sofort')
@@ -117,9 +120,8 @@ with sync_playwright() as p:
     E("()=>{for(let i=0;i<36;i++)S.facts.seen[i]=1;go('rewards')}"); pg.wait_for_timeout(100)
     E("()=>ACT.fakten()"); pg.wait_for_timeout(100)
     ok(E("()=>factsOpen()") == 36, 'Am selben Tag nur ein früheres Päckchen')
-    E("()=>{go('home');go('rewards')}"); pg.wait_for_timeout(100)
-    sub = pg.locator('.dz-tile', has_text='Lustige Fakten').first.inner_text()
-    ok(not re.search(r'\d', sub), 'Kachel „Lustige Fakten“ ohne Zahl')
+    E("()=>ACT.schatz()"); pg.wait_for_timeout(100)
+    ok(not re.search(r'Fakten\s*\d', pg.inner_text('.sk-seg')), 'Filter „Fakten“ ohne Zahl')
     # ---- Home-Knopf und Marke
     E("()=>{go('home')}"); pg.wait_for_timeout(100)
     ok(pg.locator('.dz-brand').count() >= 1 and 'Denkzauber' in pg.inner_text('#app'), 'Start zeigt „Denkzauber“')
@@ -129,7 +131,7 @@ with sync_playwright() as p:
     ok(E("()=>view") == 'home', 'Home-Knopf führt zum Start')
     for vw in (390, 800, 1280):
         pg.set_viewport_size({'width': vw, 'height': 800})
-        for v in ['home', 'welt', 'shop', 'fakten']:
+        for v in ['home', 'welt', 'shop', 'schatz', 'kopf', 'kreativhefte']:
             E("(v)=>{go('home');go('rewards');go(v)}", v); pg.wait_for_timeout(100)
             ok(E("()=>document.documentElement.scrollWidth<=innerWidth+1"), 'Kein Seitwärts-Scrollen %s @%d' % (v, vw))
     ok(not errs, 'Keine Konsolenfehler %s' % errs[:3])

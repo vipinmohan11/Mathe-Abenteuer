@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm');
-const src=fs.readFileSync('../src/gen.js','utf8');
+const src=(fs.readFileSync('../src/gen.js','utf8')+'\n'+fs.readFileSync('../src/gen_b.js','utf8'));
 const ctx={Math,console,String,Number,Array,Object,JSON};vm.createContext(ctx);
 vm.runInContext(src+';this.MODULES=MODULES;this.eur=eur;this.FRA_T=FRA_T;',ctx);
 const {MODULES,eur,FRA_T}=ctx;
@@ -110,7 +110,7 @@ for(const mod of MODULES)for(const t of mod.topics)for(let L=1;L<=5;L++)for(let 
     if(!(q.correct>=0&&q.correct<q.choices.length))err(id,L,'correct oob',q);
     if(new Set(q.choices).size!==q.choices.length)err(id,L,'dup choices',q);
     if(t.id==='vergl'){const p=strip(q.prompt).replace(/\s+/g,' ').trim();const mm=/^(.+?)\s*\?\s*(.+)$/.exec(p);
-      const ev=s=>{if(!/^[\d ·:+−]+$/.test(s))throw new Error('bad expr '+s);return Function('return '+s.replace(/·/g,'*').replace(/:/g,'/').replace(/−/g,'-'))()};
+      const ev=s=>{if(!/^[\d ·:+−]+$/.test(s))throw new Error('bad expr '+s);return Function('return '+s.replace(/(\d) (?=\d{3}\b)/g,'$1').replace(/·/g,'*').replace(/:/g,'/').replace(/−/g,'-'))()};
       const a=ev(mm[1]),b=ev(mm[2]);const c=a<b?0:a===b?1:2;if(c!==q.correct)err(id,L,'vergleich wrong '+p,q)}
     if(t.id==='ueber'){const p=strip(q.prompt);const mm=/([\d,]+) € ([+−]) ([\d,]+) € = \?/.exec(p);const a=Math.round(num(mm[1])*100),b=Math.round(num(mm[3])*100);const r=mm[2]==='+'?a+b:a-b;if(q.choices[q.correct]!==eur(r)+' €')err(id,L,'ueber choice wrong',q)}
   }

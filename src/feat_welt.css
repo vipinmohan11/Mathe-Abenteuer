@@ -170,3 +170,7 @@
 .w-wish-shop,.w-tix-note{grid-column:1/-1}
 .w-wishes{margin:6px 0 0;padding-left:18px}
 .w-pick{grid-template-columns:minmax(0,1fr)}.w-pick>*{min-width:0}.w-pick-row select{max-width:100%;text-overflow:ellipsis}
+/* freie Wahl eines Landes (statt fester Reihenfolge) */
+.w-picknote{display:flex;gap:10px;align-items:center;border-radius:16px;padding:12px 14px;margin:12px 0;font-size:.95rem;background:var(--dz-t2,#eef0ec);color:var(--dz-ink,#303536)}
+.w-picknote.on{background:var(--dz-ok-bg,#e3efe6);font-weight:700}
+.w-picknote svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2}

@@ -43,7 +43,7 @@ if (typeof MutationObserver !== 'undefined') {
 const NAV = { stack: [], isBack: false, sentinel: false };
 const DZ_TRANSIENT = new Set(['play', 'test', 'result', 'testResult', 'geoPlay', 'geoResult', 'limit', 'storyread']);
 const DZ_PARENT = { storyread: 'story' };                   // Seiten, die nicht im Verlauf stehen: Zurück geht hierhin
-const DZ_LABEL = { home: 'Start', hefte: 'Meine Hefte', extra: 'Extra Spaß', rewards: 'Meine Welt', geo: 'Europa Entdecker', profile: 'Profil', shop: 'Shop', trophies: 'Pokale', schatz: 'Karten', look: 'Farben & Töne', avatar: 'Das bin ich', musik: 'Musik', story: 'Geschichte', welt: 'Weltreise', weltPass: 'Mein Reisepass', weltReise: 'Reise', fakten: 'Lustige Fakten', geoCards: 'Länderkarten', geoPass: 'Stempel', parent: 'Eltern', module: 'Heft', topic: 'Übung', mistakes: 'Fehler-Heft', testSetup: 'Mini-Test', buch: 'Mein Buch', insel: 'Meine Insel', wesen: 'Meine Wesen', notiz: 'Notizbuch', kreativhefte: 'Ideenwerkstatt', noten: 'Notenheft' };
+const DZ_LABEL = { home: 'Start', hefte: 'Meine Hefte', kopf: 'Kopfrechnen', extra: 'Extra Spaß', rewards: 'Meine Welt', geo: 'Europa Entdecker', profile: 'Profil', shop: 'Shop', trophies: 'Pokale', schatz: 'Lustige Karten', look: 'Farben & Töne', avatar: 'Das bin ich', musik: 'Musik', story: 'Geschichte', welt: 'Weltreise', weltPass: 'Mein Reisepass', weltReise: 'Reise', geoCards: 'Länderkarten', geoPass: 'Stempel', parent: 'Eltern', module: 'Heft', topic: 'Übung', mistakes: 'Fehler-Heft', testSetup: 'Mini-Test', buch: 'Mein Buch', insel: 'Meine Insel', wesen: 'Meine Wesen', notiz: 'Notizbuch', kreativhefte: 'Ideenwerkstatt', noten: 'Notenheft' };
 const DZ_KEEP_UI = k => !['say', 'pending', 'pinUntil', 'pinCreative', 'ro', 'wNew', 'wFlight'].includes(k);
 const dzSnap = () => { const o = {}; Object.keys(UI).forEach(k => { const v = UI[k]; if (DZ_KEEP_UI(k) && (v === null || ['string', 'number', 'boolean'].includes(typeof v))) o[k] = v; }); return o; };
 function dzNavPush(from, to) {
@@ -84,6 +84,8 @@ Object.assign(ACT, { back: fb => dzBack(fb) });
 function dzAfterRender(changed) {
   const a = document.getElementById('app'); if (!a) return;
   if (changed) { a.classList.remove('dz-enter'); void a.offsetWidth; a.classList.add('dz-enter'); setTimeout(() => a.classList.remove('dz-enter'), 400); }
+  if (typeof nzBubble === 'function') { try { nzBubble(); } catch (e) { console.error(e); } }
+  if (typeof lockTilesPass === 'function') { try { lockTilesPass(); } catch (e) { console.error(e); } }   // „Noch zu“ auf jeder gesperrten Kachel
 }
 
 /* ---------- Linien-Symbole (32×32, Stil der Weltreise) ---------- */

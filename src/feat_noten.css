@@ -37,7 +37,8 @@
 #noScore{display:block;width:100%;height:auto}
 .no-ln{stroke:var(--dz-mute);stroke-width:1.5}
 .no-ledger{stroke-width:1.7}
-.no-bar{stroke:var(--dz-mute);stroke-width:2}
+.no-bar{stroke:var(--dz-ink);stroke-width:1.6}
+.no-endbar{fill:var(--dz-ink)}
 .no-clef{fill:none;stroke:var(--dz-ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 .no-n{cursor:pointer;outline:none}
 .no-hit{fill:transparent}

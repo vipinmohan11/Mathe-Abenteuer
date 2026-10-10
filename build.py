@@ -16,7 +16,7 @@ fontcss = '\n'.join(f"@font-face{{font-family:'{fam}';font-style:normal;font-wei
 OFL = '<!-- Embedded fonts: Baloo 2 + Nunito (subset)\n' + (src/'fonts'/'OFL.txt').read_text().replace('--', '- -') + '-->'
 # Reihenfolge: Basis → Features → ui.css (innere Seiten) → dz.css (Denkzauber-Design-System, gewinnt)
 css = '\n'.join([(src/'style.css').read_text()] + [f.read_text() for f in sorted(src.glob('feat_*.css'))] + [fontcss, (src/'ui.css').read_text(), (src/'dz.css').read_text()])
-ORDER = ['gen.js', 'mascot.js', 'cards.js', 'story_data.js', 'geo_data.js', 'world_data.js'] + sorted(f.name for f in src.glob('world_pack_*.js')) + ['store.js', 'icons.js', 'rewards.js', 'editor.js', 'app.js', 'dz.js', 'shell.js'] + sorted(f.name for f in src.glob('feat_*.js')) + ['boot.js']
+ORDER = ['gen.js', 'gen_b.js', 'mascot.js', 'cards.js', 'story_data.js', 'geo_data.js', 'world_data.js'] + sorted(f.name for f in src.glob('world_pack_*.js')) + ['store.js', 'icons.js', 'rewards.js', 'editor.js', 'app.js', 'dz.js', 'shell.js'] + sorted(f.name for f in src.glob('feat_*.js')) + ['boot.js']
 js = '\n'.join((src/f).read_text() for f in ORDER if (src/f).exists())
 js = js.replace('</script>', '<\\/script>')
 fav = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E"

@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm');
 const ctx={Math,console,String,Number,Array,Object,JSON};vm.createContext(ctx);
-vm.runInContext(fs.readFileSync('../src/gen.js','utf8')+';this.MODULES=MODULES;',ctx);
+vm.runInContext((fs.readFileSync('../src/gen.js','utf8')+'\n'+fs.readFileSync('../src/gen_b.js','utf8'))+';this.MODULES=MODULES;',ctx);
 const T=id=>ctx.MODULES.flatMap(m=>m.topics).find(t=>t.id===id);
 const c=f=>Math.round(parseFloat(String(f.a).replace(',','.'))*100);
 let bad=0;

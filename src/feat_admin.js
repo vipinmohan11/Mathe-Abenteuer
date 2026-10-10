@@ -3,6 +3,7 @@
    - Eigener Speicher (Endung „_admin“ in localStorage, IndexedDB und Sicherungen). Der Stand des Kindes wird weder gelesen noch geschrieben.
    - Alles ist freigeschaltet, Münzen und Sterne sind immer wieder auf 9999, keine Zeitgrenzen, keine PIN.
    - Umschalten: Eltern-Bereich → „Nutzer“. Beim Umschalten lädt die App neu. Zurück zum Kind: Knopf im orangen Balken.
+   - Sicherheit: Wird der Bildschirm gesperrt (oder die App verlassen), ist der Admin-Modus sofort beendet. Beim Entsperren lädt die App im Kind-Modus.
    ===================================================================== */
 const ADMIN_MAX = 9999;
 function adminSetMode(on) {
@@ -40,3 +41,10 @@ Object.assign(ACT, {
   adminOff: () => adminSetMode(false)
 });
 setInterval(() => { try { if (ADMIN && adminTopUp()) { save(); if (!/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || '') && !['play', 'test'].includes(view)) render(); } } catch (e) { } }, 1500);
+
+/* Bildschirm gesperrt → Admin-Modus aus. Gemerkt wird es sofort (falls das Tablet die App im Hintergrund beendet); beim Zurückkommen lädt die App als Kind. */
+let adminLeft = false;
+function adminLock() { if (!ADMIN || adminLeft) return; adminLeft = true; try { save(); } catch (e) { } try { localStorage.setItem(MODE_KEY, 'child'); } catch (e) { } }
+document.addEventListener('visibilitychange', () => { if (!ADMIN) return; if (document.hidden) adminLock(); else if (adminLeft) location.reload(); });
+window.addEventListener('pagehide', adminLock);
+window.addEventListener('pageshow', e => { if (ADMIN && adminLeft && e.persisted) location.reload(); });

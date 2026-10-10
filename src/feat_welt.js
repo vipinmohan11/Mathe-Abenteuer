@@ -4,7 +4,10 @@
    Daten: world_data.js (WP = Länder, WSTAT = 6 Stationen). Zustand: S.world (Standardwerte in store.js DEF).
    Reisemeilen ✈️ (ab Runde 5): Länder kosten Meilen statt Sterne (Preis = früherer Sternpreis × 10). Meilen gibt es nur für gelöste Aufgaben
            (1 je richtig gelöster Aufgabe, höchstens W_MILES_DAY pro Tag) – S.world.miles (gesammelt, nur mehr) / S.world.milesSpent (ausgegeben).
-           Mini-Test mit mindestens 80 % richtig = Boarding-Pass: öffnet das nächste Land (einmal pro Tag, S.daily.bp).
+           FREIE WAHL (ab Runde 8, keine feste Reihenfolge mehr): Nach der Hausaufgabe (25 Aufgaben ODER 20 Minuten) darf das Kind jeden Tag
+           ein Land seiner Wahl öffnen (S.daily.wpk = Land). Zusätzliche freie Wahlen: S.world.picks (Boarding-Pass aus dem Mini-Test, Reise-Ticket im Shop).
+           Mini-Test mit mindestens 80 % richtig = Boarding-Pass: eine freie Wahl (einmal pro Tag, S.daily.bp).
+           Deutschland, Japan und Indien sind von Anfang an offen (cost 0 in world_data.js).
            S.world.spent (früher für Länder ausgegebene Sterne) bleibt als Altwert erhalten. S.stars / S.starsLife werden hier NIE geschrieben,
            Wesen, Pokale, Münzen und Karten bleiben unberührt. Weltreise zahlt weder Münzen noch Karten aus (nur Souvenirs, Stempel, Pokale).
    Ein geöffnetes Land bleibt für immer offen, alle Stationen frei wählbar. Stempel nach W_STAMP_AT von 6 Stationen.
@@ -22,6 +25,7 @@ function wS() {
   if (typeof w.spent !== 'number' || w.spent < 0) w.spent = 0;
   if (typeof w.miles !== 'number' || w.miles < 0) w.miles = 0;
   if (typeof w.milesSpent !== 'number' || w.milesSpent < 0) w.milesSpent = 0;
+  if (typeof w.picks !== 'number' || w.picks < 0) w.picks = 0;
   return w;
 }
 
@@ -37,10 +41,19 @@ const WA = {
     touchDay(); const d = S.daily, give = Math.max(0, Math.min(n, W_MILES_DAY - (d.mi || 0))); if (!give) return 0;
     d.mi = (d.mi || 0) + give; wS().miles += give; return give;
   },
-  testPass(score, total) {                                                       // Mini-Test ≥ 80 %: Boarding-Pass öffnet das nächste Land (1× pro Tag)
+  testPass(score, total) {                                                       // Mini-Test ≥ 80 %: Boarding-Pass = eine freie Wahl (1× pro Tag)
     touchDay(); if (total < 10 || score / total < W_PASS_PCT || S.daily.bp) return null;
-    const id = WA.nextLocked(); if (!id) return null;
-    S.daily.bp = true; WA.grant(id, 'pass'); return id;
+    if (!WA.anyLocked()) return null;
+    S.daily.bp = true; wS().picks++; save(); return true;
+  },
+  /* ---- freie Wahl: ein Land nach Wunsch, keine Reihenfolge ---- */
+  dayPick: () => { touchDay(); return hwDone() && !S.daily.wpk; },                 // heute: Hausaufgabe geschafft und noch kein Land gewählt
+  picks: () => (wS().picks || 0) + (WA.dayPick() ? 1 : 0),
+  anyLocked: () => WORDER.some(id => WP[id] && !WA.isOpen(id) && WA.shown(id)),
+  usePick(id) {
+    if (!WP[id] || WA.isOpen(id)) return false;
+    if (WA.dayPick()) S.daily.wpk = id; else if (wS().picks > 0) wS().picks--; else return false;
+    WA.grant(id, 'pick'); return true;
   },
   isOpen: id => !!WP[id] && (WP[id].cost === 0 || !!wS().open[id]),
   shown: id => !!WP[id] && (WA.isOpen(id) || !wS().off[id]),                  // vom Elternteil ausgeblendete, noch gesperrte Länder
@@ -139,6 +152,13 @@ function wCard(p) {
   return `<button class="w-card locked ${can ? 'can' : ''}" data-act="wLock" data-arg="${p.id}" aria-label="${esc(p.name)}, gesperrt, kostet ${WA.mcost(p.id)} Reisemeilen${can ? ', du kannst es öffnen' : ''}">
     <span class="w-cflagwrap">${wFlag(p.id, 'w-cflag')}<i class="w-lockic">${ico('lock', 16)}</i></span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small><span class="w-price">${WA.mcost(p.id)} ✈️${can ? ' · bereit' : ''}</span></button>`;
 }
+function wPickNote() {
+  if (!WA.anyLocked()) return '';
+  const n = WA.picks();
+  if (n > 0) return `<div class="w-picknote on">${ico('stamp', 18)}<span><b>Du darfst ${n === 1 ? 'ein Land' : n + ' Länder'} frei wählen!</b> Tippe unten auf ein Land, das du öffnen möchtest.</span></div>`;
+  if (!hwDone()) { const h = hwInfo(); return `<div class="w-picknote">${ico('lock', 18)}<span>Nächste freie Wahl: löse heute 25 Aufgaben <b>oder</b> übe 20 Minuten (geschafft: ${h.n} von 25 · ${fmtT(h.sec)} von 20:00).</span></div>`; }
+  return `<div class="w-picknote">${ico('check', 18)}<span>Heute hast du schon ein Land gewählt. Morgen darfst du wieder eins aussuchen.</span></div>`;
+}
 const W_CONT = ['Europa', 'Asien', 'Afrika', 'Nordamerika', 'Südamerika', 'Ozeanien'];
 VIEWS.welt = () => {
   const all = wList().filter(p => WA.shown(p.id)), open = all.filter(p => WA.isOpen(p.id)), locked = all.filter(p => !WA.isOpen(p.id));
@@ -148,9 +168,9 @@ VIEWS.welt = () => {
   const groups = W_CONT.map(c => [c, locked.filter(p => p.cont === c)]).filter(x => x[1].length);
   const pend = WA.pending();
   return wRoot(wBar(W_NAME, 'rewards', 'Meine Welt', `<button class="w-pill" data-act="wPassGo">${ico('stamp', 18)} ${W_PASS}</button>`)
-    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Für jede richtig gelöste Aufgabe bekommst du eine Reisemeile ✈️. Mit Meilen öffnest du neue Länder – Sterne und Münzen bleiben dabei, wie sie sind. Ein Mini-Test mit 12 von 15 richtig bringt einen Boarding-Pass für das nächste Land. Oder du kaufst im Shop ein Reise-Ticket.</p></div>
+    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Du suchst dir selbst aus, wohin es geht. Jeden Tag nach 25 Aufgaben oder 20 Minuten Üben darfst du ein Land deiner Wahl öffnen. Auch mit Reisemeilen ✈️, einem Boarding-Pass aus dem Mini-Test (12 von 15 richtig) oder einem Reise-Ticket aus dem Shop.</p></div>
       <div class="w-bal"><b>${WA.freeMiles()}</b><span>Reisemeilen ✈️</span><small>${wS().miles} gesammelt${wS().milesSpent ? ` · ${wS().milesSpent} ausgegeben` : ''}</small></div></section>
-    ${pick}
+    ${wPickNote()}${pick}
     <h3 class="w-sec">Meine Reisen</h3><div class="w-grid">${open.map(wCard).join('')}</div>
     ${pend.length ? `<div class="w-wish">${ico('stamp', 18)} <span>Dein Wunschland${pend.length > 1 ? 'länder' : ''}: <b>${pend.map(x => esc(x.n)).join(', ')}</b>. Es kommt bald und wird dann von selbst geöffnet.</span></div>` : ''}
     ${groups.length ? `<h3 class="w-sec">Weitere Ziele</h3>${groups.map(([c, list]) => `<details class="w-cont" ${UI.wCont === c ? 'open' : ''} data-cont="${c}"><summary>${esc(c)} <span>${list.length}</span></summary><div class="w-grid">${list.map(wCard).join('')}</div></details>`).join('')}` : ''}
@@ -161,16 +181,15 @@ VIEWS.welt = () => {
 /* ---------- Shop → Reisen: Reise-Ticket (nächstes Land) und Wunsch-Ticket (frei gewähltes Land) ---------- */
 const W_TIX_ART = '<svg viewBox="0 0 120 64" class="w-tix-svg" aria-hidden="true"><path d="M8 10h104a4 4 0 0 1 4 4v10a8 8 0 0 0 0 16v10a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V40a8 8 0 0 0 0-16V14a4 4 0 0 1 4-4Z" fill="#f1e4b6" stroke="#9b806d" stroke-width="2.4"/><path d="M84 12v40" stroke="#9b806d" stroke-width="2.4" stroke-dasharray="4 4"/><path d="M30 38l24-14-6 15-9 1-5 7-2-6Z" fill="#52676c"/><circle cx="100" cy="32" r="8" fill="#bed1c6" stroke="#52676c" stroke-width="2"/><path d="M96 32h8M100 28v8" stroke="#52676c" stroke-width="1.6"/></svg>';
 function wShopTickets() {
-  const nx = WA.nextLocked(), lock = shopLeft() <= 0, np = nx ? WP[nx] : null;
+  const any = WA.anyLocked(), lock = shopLeft() <= 0;
   const pickable = wList().filter(p => WA.shown(p.id) && !WA.isOpen(p.id));
   const can1 = S.coins >= W_TIX_NEXT, can2 = S.coins >= W_TIX_WISH;
   const pend = WA.pending();
   return `<div class="w-tix">
     <article class="card w-ticket">${W_TIX_ART}<h3>Reise-Ticket</h3>
-      <p>${np ? `Öffnet sofort das nächste Land auf der Liste: <b>${esc(np.name)}</b>.` : 'Du hast schon alle Länder auf der Liste geöffnet. Mehr kommen bald.'}</p>
-      ${np ? `<div class="w-tix-go">${wFlag(np.id, 'w-lflag')}<span>${esc(np.sub)}</span></div>` : ''}
+      <p>${any ? 'Eine freie Wahl: Du suchst dir in Meine Weltreise selbst ein Land aus.' : 'Du hast schon alle Länder geöffnet. Mehr kommen bald.'}</p>
       <div class="price">🪙 ${W_TIX_NEXT}</div>
-      <button class="btn ${np && can1 && !lock ? '' : 'sec'}" data-act="wTixNext" ${np ? '' : 'disabled'}>${!np ? 'Alles geöffnet' : can1 ? 'Kaufen' : 'Noch ' + (W_TIX_NEXT - S.coins) + ' 🪙'}</button></article>
+      <button class="btn ${any && can1 && !lock ? '' : 'sec'}" data-act="wTixNext" ${any ? '' : 'disabled'}>${!any ? 'Alles geöffnet' : can1 ? 'Kaufen' : 'Noch ' + (W_TIX_NEXT - S.coins) + ' 🪙'}</button></article>
     <article class="card w-ticket">${W_TIX_ART}<h3>Wunsch-Ticket</h3>
       <p>Du wünschst dir ein bestimmtes Land. Gibt es das Land schon, ist es sofort offen. Wenn nicht, merken wir es uns und öffnen es, sobald es da ist.</p>
       <label class="sr-only" for="wxSel">Land wählen</label>
@@ -374,7 +393,7 @@ function wSpeak(text, lang) {
 /* ---------- Aktionen ---------- */
 registerFeature({
   id: 'welt', title: W_NAME, icon: 'stamp', tint: 'sky', group: 'world', order: 70, view: 'welt',
-  sub: () => { const n = wList().filter(p => WA.isOpen(p.id)).length; return wList().some(p => WA.shown(p.id) && WA.canOpen(p.id)) ? 'Du kannst ein Land öffnen' : `${n} ${n === 1 ? 'Land' : 'Länder'} offen`; },
+  sub: () => { const n = wList().filter(p => WA.isOpen(p.id)).length; return (WA.anyLocked() && WA.picks() > 0) || wList().some(p => WA.shown(p.id) && WA.canOpen(p.id)) ? 'Du kannst ein Land öffnen' : `${n} ${n === 1 ? 'Land' : 'Länder'} offen`; },
   check: () => { const got = WA.checkWishes(); if (got.length) toast('🎫', `Dein Wunschland ${esc(WP[got[0]].name)} ist da und offen!`); },
   views: { weltReise: VIEWS.weltReise, weltPass: VIEWS.weltPass, weltEltern: VIEWS.weltEltern },
   leave: () => { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
@@ -384,15 +403,15 @@ registerFeature({
     wGoDest: () => { const el = $('#wDest'), id = el && el.value; if (!id || !WP[id]) return; UI.wDest = id; ACT.wLock(id); },
     wTixShop: () => { UI.shopGrp = 'reisen'; go('shop'); },
     wTixNext: () => {
-      const id = WA.nextLocked(); if (!id) return;
+      if (!WA.anyLocked()) return;
       if (shopLeft() <= 0) return toast('⏳', 'Die Shop-Zeit für heute ist vorbei.');
       if (S.coins < W_TIX_NEXT) return modal('Noch nicht genug Münzen', `Das Reise-Ticket kostet <b>${W_TIX_NEXT} 🪙</b>. Dir fehlen noch <b>${W_TIX_NEXT - S.coins} 🪙</b>.`, null, '', '', 'Okay');
-      modal('Reise-Ticket kaufen?', `Das Ticket kostet <b>${W_TIX_NEXT} 🪙</b> und öffnet sofort <b>${esc(WP[id].name)}</b>. Das Land bleibt für immer offen.`, 'Kaufen', 'wTixNextYes', id, 'Später');
+      modal('Reise-Ticket kaufen?', `Das Ticket kostet <b>${W_TIX_NEXT} 🪙</b>. Danach suchst du dir in Meine Weltreise ein Land aus. Es bleibt für immer offen.`, 'Kaufen', 'wTixNextYes', '', 'Später');
     },
-    wTixNextYes: id => {
-      closeModal(); if (WA.nextLocked() !== id || S.coins < W_TIX_NEXT || shopLeft() <= 0) return;
-      S.coins -= W_TIX_NEXT; S.stats.bought++; WA.grant(id, 'next'); wQuietly(() => checkTrophies()); save(); sfx('magic');
-      wFlight(id, () => wLand(id));
+    wTixNextYes: () => {
+      closeModal(); if (!WA.anyLocked() || S.coins < W_TIX_NEXT || shopLeft() <= 0) return;
+      S.coins -= W_TIX_NEXT; S.stats.bought++; wS().picks++; wS().tix.push({ k: 'next', ts: Date.now() }); wQuietly(() => checkTrophies()); save(); sfx('magic');
+      toast('🎫', 'Reise-Ticket gekauft! Such dir jetzt ein Land aus.'); go('welt');
     },
     wTixWish: () => {
       const sel = $('#wxSel'), txt = $('#wxTxt'), typed = ((txt && txt.value) || '').trim().slice(0, 30), pickId = sel && sel.value;
@@ -417,9 +436,11 @@ registerFeature({
       const p = WP[id]; if (!p) return;
       if (WA.isOpen(id)) return wLand(id);
       const free = WA.freeMiles(), cost = WA.mcost(id);
+      if (WA.picks() > 0) return modal(`${esc(p.name)} öffnen?`, `Du darfst ${WA.dayPick() ? 'heute' : 'jetzt'} <b>ein Land frei wählen</b>. Möchtest du <b>${esc(p.name)}</b> öffnen? Es bleibt für immer offen. Deine Meilen, Sterne und Münzen bleiben, wie sie sind.`, 'Öffnen', 'wPickYes', id, 'Anderes Land');
       if (free >= cost) modal(`${esc(p.name)} öffnen?`, `Das kostet <b>einmal ${cost} ✈️ Reisemeilen</b>. Du hast ${free}, danach ${free - cost}.<br>Deine Sterne, Münzen, Wesen und Pokale bleiben. Das Land bleibt danach für immer offen.`, 'Öffnen', 'wOpenYes', id, 'Später');
-      else modal(`${esc(p.name)} ist noch zu`, `Dir fehlen noch <b>${cost - free} ✈️</b> (das Land kostet ${cost} Reisemeilen, du hast ${free}). Meilen bekommst du für jede richtig gelöste Aufgabe. Ein Mini-Test mit 12 von 15 richtig öffnet ein Land sofort.`, null, '', '', 'Okay');
+      else modal(`${esc(p.name)} ist noch zu`, `${hwDone() ? 'Heute hast du schon ein Land gewählt. Morgen darfst du wieder eins aussuchen.' : 'Löse heute <b>25 Aufgaben</b> oder übe <b>20 Minuten</b> – dann darfst du ein Land deiner Wahl öffnen.'}<br>Oder mit Reisemeilen: dir fehlen noch <b>${cost - free} ✈️</b> (das Land kostet ${cost}, du hast ${free}). Ein Mini-Test mit 12 von 15 richtig bringt auch eine freie Wahl.`, null, '', '', 'Okay');
     },
+    wPickYes: id => { closeModal(); if (!WA.usePick(id)) return; wQuietly(() => checkTrophies()); sfx('magic'); wFlight(id, () => wLand(id)); },
     wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; wQuietly(() => checkTrophies()); wFlight(id, () => wLand(id)); },
     wFlightSkip: () => { if (UI.wFlightEnd) UI.wFlightEnd(); },
     wStation: st => {

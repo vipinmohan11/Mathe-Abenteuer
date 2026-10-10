@@ -8,6 +8,7 @@ def ok(c, m):
     if not c: fails.append(m)
 with sync_playwright() as p:
     b = p.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 800}); errs = []
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto(URL); pg.wait_for_timeout(300); E = pg.evaluate
     # --- Kreativzeit gesperrt, solange nicht geübt
@@ -27,7 +28,7 @@ with sync_playwright() as p:
     ok(E("()=>S.daily.cr.left") <= 2, 'Timer zählt im Kreativ-Bereich')
     pg.wait_for_timeout(3500)
     ok(pg.locator('#modal').count() == 1 and 'Kreativzeit vorbei' in pg.locator('#modal').inner_text(), 'Ende-Hinweis erscheint')
-    ok(E("()=>view") == 'rewards' and E("()=>S.daily.cr.left") == 0, 'danach Belohnungen, Zeit leer')
+    ok(E("()=>view") == 'kreativhefte' and E("()=>S.daily.cr.left") == 0, 'danach Ideenwerkstatt, Zeit leer')
     E("()=>{S.daily.cr.left=50;go('home')}"); pg.wait_for_timeout(1300); ok(E("()=>S.daily.cr.left") == 50, 'Zeit läuft nicht außerhalb des Kreativ-Bereichs')
     # --- Shop-Zeit
     E("()=>{closeModal();S.coins=500;S.cfg.shopMin=5;S.daily.shopSec=298;S.daily.n=25;go('shop')}"); pg.wait_for_timeout(3200)
@@ -79,13 +80,14 @@ with sync_playwright() as p:
     ok('Mia' in t and 'Kapitänin' not in t and 'Name für meinen Avatar' not in t, 'Profil zeigt den Namen des Kindes; kein eigener Avatar-Name')
     E("()=>{UI.bMod='A4';go('urkunde')}"); ok('Mia' in pg.locator('#app').inner_text() and 'Kapitänin' not in pg.locator('#app').inner_text(), 'Urkunde nutzt den Namen')
     # --- Extra-Training: Einmaleins & Co. sichtbar, nicht von „Jetzt üben“ vorgeschlagen
-    E("()=>{S.decks={};S.topics={};S.lastKey='';go('extra')}"); t = pg.locator('#app').inner_text()
-    ok('Extra Spaß' in t and 'Einmaleins' in t and 'Kopfrechnen' in t and 'Schriftlich rechnen' in t and pg.locator('.dz-tile[data-act=mod]').count() == 3, 'Extra Spaß: Einmaleins, Kopfrechnen, Schriftlich rechnen (3 Kacheln)')
+    E("()=>{S.decks={};S.topics={};S.lastKey='';go('hefte')}"); t = pg.locator('#app').inner_text()
+    ok('Extra Spaß' not in t and 'Kopfrechnen' in t and pg.locator('.dz-hefte6 .dz-tile[data-act=kopf]').count() == 1 and pg.locator('.dz-hefte6 .dz-tile[data-act=mod]').count() == 0, 'Meine Hefte: EINE Kachel „Kopfrechnen“ (Einmaleins + Kopfrechnen + Schriftlich zusammen, kein „Extra Spaß“)')
     E("()=>go('hefte')"); t = pg.locator('#app').inner_text()
     ok(E("()=>MODULES.filter(isExtra).map(m=>m.id).join()") == 'EMAL,KOPF,SCHR', 'Extras sind extra:true')
     ok(not E("()=>isExtra(nextUp().mod)"), 'Jetzt üben schlägt kein Extra vor')
     ok(pg.locator('.dz-tile.locked').count() >= 3 and 'Bald dabei' in t, 'kommende Hefte gesperrt sichtbar')
-    E("()=>{UI.mod='EMAL';go('module')}"); ok(pg.locator('.topic').count() == 4, 'Einmaleins: 4 Übungen')
+    E("()=>ACT.kopf()"); ok(pg.locator('.topic').count() == 9 and pg.locator('.dz-tile, .acc').count() == 0 and E("()=>view") == 'kopf', 'Kopfrechnen: alle 9 Übungen (4 + 3 + 2) in einer Liste, keine Unterordner')
+    E("()=>{UI.mod='EMAL';go('module')}"); ok(pg.locator('.topic').count() == 9, 'Alte Einsprünge (Heft EMAL) landen in derselben Liste')
     E("()=>{UI.mod='EMAL';ACT.topic('mal');ACT.practice()}"); ok(E("()=>view") == 'play', 'Einmaleins lässt sich üben')
     # --- Kein Zoomen (Tablet)
     ok('user-scalable=no' in E("()=>document.querySelector('meta[name=viewport]').content"), 'kein Pinch-Zoom')

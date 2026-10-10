@@ -1,12 +1,12 @@
 {
   "name": "mathe-abenteuer",
   "version": "3.0.0",
-  "description": "Denkzauber – offline math practice app for German Klasse 4 (workbook chapters A–D + Extra Spaß, Europa Entdecker, Meine Welt)",
+  "description": "Denkzauber – offline math practice app for German Klasse 4 (workbook chapters A–D with Einmaleins, Kopfrechnen and Schriftlich Rechnen, Europa Entdecker, Ideenwerkstatt, Meine Welt)",
   "private": true,
   "scripts": {
     "build": "python3 build.py",
-    "test": "python3 build.py && cd tests && node gen_test.js && node extra_test.js && node flow_test.js",
-    "test:all": "npm test && cd tests && for t in migrate economy avatar musik themes geo world dz packs round5 noten; do python3 ${t}_test.py $(realpath ../dist/Mathe-Abenteuer_Klasse4.html) || exit 1; done"
+    "test": "python3 build.py && cd tests && node gen_test.js && node b_test.js && node extra_test.js && node flow_test.js",
+    "test:all": "npm test && cd tests && for t in migrate economy avatar musik themes geo world dz packs round5 noten round8 round9; do python3 ${t}_test.py $(realpath ../dist/Mathe-Abenteuer_Klasse4.html) || exit 1; done"
   },
   "devDependencies": {
     "jsdom": "^29.1.1"

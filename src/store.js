@@ -222,13 +222,16 @@ function giveCoins(n, why) {
   if (!n) return;
   if (why) noteEarn('🪙', `+${n} Münzen · ${why}`);
   S.coins += n; S.life += n;
+  if (typeof rwCoin === 'function') rwCoin(n);                       // Münzen fliegen in den Beutel (feat_lohn.js)
   const L = levelInfo();
   if (L.n > S.lastLevel) { S.lastLevel = L.n; toast(L.badge, `Neue Stufe: ${L.n} – ${L.title}!`); confetti(90); }
 }
 function giveStars(n) { if (n > 0) { S.stars += n; S.starsLife += n; } }
 function giveFlames(n, why) { if (n > 0) { S.flamesLife += n; giveCoins(n * 3, why); } }        // Flammen sind nur noch eine Anzeige (Serie); der Gegenwert kommt als Münzen
 function giveChest() {
-  S.chests++; noteEarn('🃏', 'Eine neue Karte wartet in der Schatzkammer'); return true;
+  S.chests++; noteEarn('🃏', 'Eine neue Karte wartet bei den Lustigen Karten');
+  if (typeof rwCard === 'function') rwCard();                        // Hinweis „Neue Karte!“ (ohne Konfetti)
+  return true;
 }
 /* ---------- Mini-Test: pro Tag zählt das BESTE Ergebnis ----------
    Ein späterer, besserer Test zahlt nur die Differenz zur schon bezahlten Stufe (wie die Block-Gutschriften).
@@ -364,10 +367,10 @@ function trophyList() {
     { id: 'shop1', i: '🛍️', n: 'Erster Einkauf', d: 'Etwas im Shop gekauft', t: s => s.stats.bought >= 1 },
     { id: 'shop6', i: '🎁', n: 'Großeinkauf', d: '6 Dinge im Shop gekauft', t: s => s.stats.bought >= 6 },
     { id: 'shop12', i: '👑', n: 'Shop-König', d: '12 Dinge im Shop gekauft', t: s => s.stats.bought >= 12 },
-    { id: 'card10', i: '📚', n: 'Kleiner Sammler', d: '10 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 10 },
-    { id: 'card30', i: '📖', n: 'Großer Sammler', d: '30 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 30 },
-    { id: 'cardall', i: '🏛️', n: 'Schatzkönig', d: '100 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 100 },
-    { id: 'card250', i: '🗝️', n: 'Schatzmeister', d: '250 Karten in der Schatzkammer', t: s => Object.keys(s.cards).length >= 250 },
+    { id: 'card10', i: '📚', n: 'Kleiner Sammler', d: '10 Karten bei den Lustigen Karten', t: s => Object.keys(s.cards).length >= 10 },
+    { id: 'card30', i: '📖', n: 'Großer Sammler', d: '30 Karten bei den Lustigen Karten', t: s => Object.keys(s.cards).length >= 30 },
+    { id: 'cardall', i: '🏛️', n: 'Schatzkönig', d: '100 Karten bei den Lustigen Karten', t: s => Object.keys(s.cards).length >= 100 },
+    { id: 'card250', i: '🗝️', n: 'Schatzmeister', d: '250 Karten bei den Lustigen Karten', t: s => Object.keys(s.cards).length >= 250 },
     { id: 'stp1', i: '🔖', n: 'Erster Stempel', d: 'Den ersten Stempel im Buch bekommen', t: s => Object.keys(s.stamps || {}).length >= 1 },
     { id: 'stp10', i: '📔', n: 'Stempel-Sammler', d: '10 Stempel im Buch', t: s => Object.keys(s.stamps || {}).length >= 10 },
     { id: 'wes1', i: '🥚', n: 'Erstes Wesen', d: 'Ein Ei ausgebrütet', t: s => s.starsLife >= 3 },
@@ -393,8 +396,9 @@ function trophyList() {
 }
 function checkTrophies() {
   let any = false; const quiet = typeof UI !== 'undefined' && UI && UI.wQuiet;          // Weltreise: Pokale still vergeben
-  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
-  if (any && !quiet) confetti(60);
+  const pop = typeof rwTrophy === 'function';                       // Pokal: Feier + Fenster (feat_lohn.js), wartet bis nichts anderes offen ist
+  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (pop) rwTrophy({ i: t.i, n: t.n, d: t.d }); else if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
+  if (any && !quiet && !pop) confetti(60);
   if (typeof checkUnlocks === 'function') checkUnlocks();
 }
 
@@ -403,6 +407,10 @@ const normIn = s => String(s || '').trim().replace(/\s+/g, '').replace(/\./g, ',
 function fieldOK(f, v) {
   v = normIn(v); if (v === '') return false;
   if (f.digit || f.strict) return v === f.a;
+  if (f.dec) {                                                       // Kommazahl mit bis zu 3 Nachkommastellen: 4,25 = 4,250
+    const p = x => { const m = /^(\d+)(?:,(\d{1,3}))?$/.exec(x); return m ? (+m[1]) * 1000 + (m[2] ? +(m[2] + '00').slice(0, 3) : 0) : null; };
+    const a = p(v), b = p(f.a); return a !== null && a === b;
+  }
   if (f.money) {
     const p = x => { const m = /^(\d+)(?:,(\d{1,2}))?$/.exec(x); return m ? (+m[1]) * 100 + (m[2] ? +(m[2] + '0').slice(0, 2) : 0) : null; };
     const a = p(v), b = p(f.a); return a !== null && a === b;

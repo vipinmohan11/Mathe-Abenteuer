@@ -10,6 +10,7 @@ def ok(c, m):
 with sync_playwright() as p:
     b = p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
     pg = b.new_page(viewport={'width': 1280, 'height': 800}); errs = []
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
     pg.goto(URL); E = pg.evaluate
     A = 'window.__app.'

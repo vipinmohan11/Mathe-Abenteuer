@@ -4,6 +4,7 @@ URL='file://'+sys.argv[1]
 errs=[]
 with sync_playwright() as p:
     b=p.chromium.launch(); pg=b.new_page(viewport={'width':1280,'height':800})
+    pg.add_init_script('window.__rwOff=1')   # Belohnungs-Fenster nur im eigenen Test
     pg.on('pageerror',lambda e:errs.append(str(e))); pg.on('console',lambda m: errs.append(m.text) if m.type=='error' else None)
     pg.goto(URL); pg.wait_for_function("()=>window.__app")
     themes=pg.evaluate("()=>Object.values(__app.CATALOG).filter(i=>i.kind==='theme').map(i=>i.id).concat(Object.keys(__app.CATALOG).length?[]:[])")

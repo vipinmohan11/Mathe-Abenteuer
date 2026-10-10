@@ -338,7 +338,7 @@ function muLibHTML() {
 VIEWS.musik = () => {
   muInit(); setTimeout(muMount, 0);
   const on = muSoundOn(), n = S.songs.length, has = muHasNotes();
-  return topBar(ico('music', 26) + ' Musik-Werkstatt', 'home', `<button class="btn sec sm" data-act="muSongs">${ico('beat', 20)} Meine Beats <b>${n}</b></button>`) + `
+  return topBar(ico('music', 26) + ' Musik-Werkstatt', 'kreativhefte', `<button class="btn sec sm" data-act="muSongs">${ico('beat', 20)} Meine Beats <b>${n}</b></button>`) + `
   <div class="mu" id="muRoot">
   ${on ? '' : `<div class="mu-note">${ico('mute', 22)} Die Töne sind ausgeschaltet (Eltern-Bereich). Du kannst trotzdem bauen und speichern.</div>`}
   <div class="mu-bar card">

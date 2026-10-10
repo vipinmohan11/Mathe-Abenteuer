@@ -70,6 +70,7 @@ function render() {
   const changed = lastView !== view;
   if (changed) { window.scrollTo(0, 0); lastView = view; }
   if (typeof dzAfterRender === 'function') dzAfterRender(changed);
+  if (view === 'test') testPersist();
 }
 
 /* =====================================================================
@@ -97,12 +98,20 @@ const VIEWS = {}, AFTER = {}, WIDEV = {};                      // AFTER[view]: l
 const TINTS = ['lav', 'mint', 'peach', 'sky', 'butter', 'sage'];
 /* Startseite, Hefte, Belohnungen, Darstellung: siehe shell.js */
 
+const topicBtn = (m, t, index, act, arg) => {
+  const key = tk(m.id, t.id), d = S.decks[key], i = d ? d.i : 0, md = medalOf(key);
+  return `<button class="topic" data-act="${act}" data-arg="${esc(arg)}"><span class="rh-topic-icon" aria-hidden="true">${t.icon}</span><span class="small mute">Übung ${index + 1}</span><h3>${esc(t.t)}</h3><div class="bar"><i style="width:${Math.round(i / DECK_N * 100)}%"></i></div><span class="small mute">${i >= DECK_N ? 'Geschafft!' : `${i} / ${DECK_N} Aufgaben`}${md ? ` · ${MEDALS[md]}` : ''}</span></button>`;
+};
 VIEWS.module = () => {
   const m = MODULES.find(x => x.id === UI.mod);
-  return topBar(esc(m.title), 'hefte') + `<p class="rh-section-note">Heft ${esc(m.id)} · Wähle deine nächste Übung.</p><div class="grid rh-topics">${m.topics.map((t, index) => {
-    const key = tk(m.id, t.id), d = S.decks[key], i = d ? d.i : 0, md = medalOf(key);
-    return `<button class="topic" data-act="topic" data-arg="${esc(t.id)}"><span class="rh-topic-icon" aria-hidden="true">${t.icon}</span><span class="small mute">Übung ${index + 1}</span><h3>${esc(t.t)}</h3><div class="bar"><i style="width:${Math.round(i / DECK_N * 100)}%"></i></div><span class="small mute">${i >= DECK_N ? 'Geschafft!' : `${i} / ${DECK_N} Aufgaben`}${md ? ` · ${MEDALS[md]}` : ''}</span></button>`;
-  }).join('')}</div>`;
+  if (m && isExtra(m)) return VIEWS.kopf();                       // Einmaleins, Kopfrechnen und Schriftlich Rechnen sind EIN Bereich
+  return topBar(esc(m.title), 'hefte') + `<p class="rh-section-note">Heft ${esc(m.id)} · Wähle deine nächste Übung.</p><div class="grid rh-topics">${m.topics.map((t, index) => topicBtn(m, t, index, 'topic', t.id)).join('')}</div>`;
+};
+/* Kopfrechnen: alle Übungen aus Einmaleins (EMAL), Kopfrechnen (KOPF) und Schriftlich Rechnen (SCHR) in einer Liste, ohne Unterordner.
+   Die inneren Heft-Nummern bleiben, damit gespeicherte Fortschritte (Decks „EMAL.mal“ …) unverändert weiterzählen. */
+VIEWS.kopf = () => {
+  const all = MODULES.filter(isExtra).flatMap(m => m.topics.map(t => ({ m, t }))), done = all.filter(x => ((S.decks[tk(x.m.id, x.t.id)] || { i: 0 }).i >= DECK_N)).length;
+  return topBar('Kopfrechnen', 'hefte') + `<p class="rh-section-note">Mal, geteilt, plus, minus und untereinander · ${done} von ${all.length} geschafft</p><div class="grid rh-topics">${all.map((x, index) => topicBtn(x.m, x.t, index, 'kopfTopic', tk(x.m.id, x.t.id))).join('')}</div>`;
 };
 
 /* ----- group screen ----- */
@@ -157,7 +166,7 @@ function qInner(c) {
 }
 const qBody = c => `<div class="qtitle">${c.q.title}</div>` + qInner(c);
 function keypad(c) {
-  const f = c.q.fields[c.focus], comma = f && /,/.test(f.a) && !f.digit;
+  const f = c.q.fields[c.focus], comma = f && (/,/.test(f.a) || f.dec) && !f.digit;
   const k = (v, l, cls) => `<button class="key ${cls || ''}" data-act="key" data-arg="${v}"${(v === ',' && !comma) ? ' disabled' : ''}>${l || v}</button>`;
   const multi = c.q.fields.length > 1;
   return `<div class="keypad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => k(n)).join('')}${k(',', ',', 'fn')}${k(0)}${k('back', '⌫', 'fn')}${multi ? k('tab', '➜ Nächstes Feld', 'fn wide') : ''}</div>`;
@@ -274,7 +283,7 @@ function settle(res) {
     noteAnswer(key, first);
     if (!first) addMistake(key, c.q, c.firstAns);
     R.lastDelta = creditDeckAnswer(key, d, i); R.coins += R.lastDelta; R.bc[b] = (R.bc[b] || 0) + R.lastDelta;
-    if (R.lastDelta) coinPop('+' + R.lastDelta + ' 🪙');
+    /* Münzen: giveCoins() lässt sie in den Beutel fliegen (feat_lohn.js) */
     if (blockDone(d, b)) { R.blockInfo = completeBlock(key, d, b); R.blockInfo.coins = R.bc[b] || 0; R.blockPending = true; }
   } else {
     const tid = R.items[R.idx].tid; noteAnswer(tid, first);
@@ -364,7 +373,7 @@ function testPrizeNote(r) {
   return L.c || L.s || L.ch ? `Heute noch möglich: ${L.c} Münzen, ${L.s} ${L.s === 1 ? 'Stern' : 'Sterne'}${L.ch ? ', eine Karte' : ''}.` : 'Für heute ist die Test-Belohnung komplett.';
 }
 VIEWS.testSetup = () => {
-  const opts = [['all', 'Alle Hefte gemischt']].concat(MODULES.map(m => [m.id, `${m.icon} ${m.title}`]));
+  const opts = [['all', 'Alle angefangenen Hefte']].concat(MODULES.map(m => [m.id, `${m.icon} ${m.title}`]));
   const best = S.tests.length ? Math.max(...S.tests.map(t => t.score)) : null, L = testLeft(), any = L.c || L.s || L.ch;
   const prizes = `<div class="geo-prize1">🎁 ${any ? `Heute noch: ${L.c} 🪙 + ${L.s} ⭐${L.ch ? ' + Karte (ab 12 richtig)' : ''}` : 'Heute schon alles verdient ✓'}</div>`;
   return topBar(ico('stopwatch', 26) + ' Mini-Test', 'home') + `<div class="card result"><div style="margin:auto;width:160px">${avatarHTML(eqAvatar(), 160, 'think')}</div>
@@ -377,7 +386,8 @@ VIEWS.testSetup = () => {
 };
 function startTest() {
   if (limitHit()) return go('limit');
-  const mods = UI.scope === 'all' ? MODULES.filter(m => !isExtra(m)) : MODULES.filter(m => m.id === UI.scope);   // „Alles gemischt“ = nur Arbeitsheft-Stoff
+  const work = MODULES.filter(m => !isExtra(m)), begun = work.filter(m => m.topics.some(t => (S.decks[tk(m.id, t.id)] || { i: 0 }).i > 0));
+  const mods = UI.scope === 'all' ? (begun.length ? begun : work) : MODULES.filter(m => m.id === UI.scope);   // „Alle Hefte gemischt“ = Arbeitsheft-Stoff, den das Kind schon angefangen hat
   const tops = []; mods.forEach(m => m.topics.forEach(t => tops.push(tk(m.id, t.id))));
   const qs = [], seen = new Set(); let pool = [];
   for (let i = 0; i < TEST_N; i++) {
@@ -389,6 +399,27 @@ function startTest() {
   T = { qs, i: 0, start: Date.now(), dur: TEST_SECS, timer: null, scope: UI.scope };
   T.timer = setInterval(testTick, 1000);
   go('test');
+}
+/* Mini-Test übersteht Neuladen / Pull-to-refresh: Aufgaben, Antworten, aktuelle Aufgabe und Startzeit liegen in einem eigenen Schlüssel.
+   Die Uhr läuft weiter wie in der Schule (Startzeit bleibt). Nach Abgabe oder Abbruch wird der Schlüssel gelöscht. */
+const TEST_KEY = KEY + '_test';
+function testPersist() {
+  if (!T || T.done) return;
+  try { localStorage.setItem(TEST_KEY, JSON.stringify({ v: 1, i: T.i, start: T.start, dur: T.dur, scope: T.scope, qs: T.qs.map(x => ({ tid: x.tid, lvl: x.lvl, q: x.q, c: { vals: x.c.vals, sel: x.c.sel, focus: x.c.focus } })) })); } catch (e) { }
+}
+function testClear() { try { localStorage.setItem(TEST_KEY, ''); } catch (e) { } }            // leeren statt löschen (die App löscht nie Schlüssel)
+function testRestore() {
+  let o = null; try { o = JSON.parse(localStorage.getItem(TEST_KEY) || 'null'); } catch (e) { }
+  if (!o || !Array.isArray(o.qs) || !o.qs.length || !+o.start || !+o.dur) return false;
+  if (Date.now() - o.start > (o.dur + 600) * 1000) { testClear(); return false; }          // längst vorbei: nicht wiederherstellen
+  try {
+    T = { qs: o.qs.map(x => { const c = newCtx(x.q), a = x.c || {};
+      if (Array.isArray(a.vals) && a.vals.length === c.vals.length) c.vals = a.vals.map(v => String(v == null ? '' : v));
+      c.sel = a.sel == null ? null : +a.sel; c.focus = Math.max(0, Math.min((c.vals.length || 1) - 1, +a.focus || 0));
+      return { tid: x.tid, lvl: x.lvl, q: x.q, c }; }), i: Math.max(0, Math.min(o.qs.length - 1, +o.i || 0)), start: +o.start, dur: +o.dur, timer: null, scope: o.scope || 'all' };
+    T.timer = setInterval(testTick, 1000);
+    return true;
+  } catch (e) { console.error(e); T = null; testClear(); return false; }
 }
 const remaining = () => Math.max(0, T.dur - Math.floor((Date.now() - T.start) / 1000));
 const fmtT = s => Math.floor(s / 60) + ':' + pad2(s % 60);
@@ -414,7 +445,7 @@ function testAsk() {
   modal('Test abgeben?', open ? `Du hast noch <b>${open}</b> Aufgabe${open === 1 ? '' : 'n'} ohne Antwort.` : 'Alle Aufgaben sind beantwortet.', 'Ja, abgeben', 'testFinish', '', 'Weiter rechnen');
 }
 function finishTest(timeUp) {
-  if (!T || T.done) return; T.done = true; clearInterval(T.timer); closeModal();
+  if (!T || T.done) return; T.done = true; clearInterval(T.timer); closeModal(); testClear();
   let score = 0; const secs = Math.min(T.dur, Math.floor((Date.now() - T.start) / 1000)), left = T.dur - secs;
   T.qs.forEach(x => {
     const c = x.c, ok = isCorrect(c); x.ok = ok; if (ok) score++;
@@ -438,7 +469,7 @@ VIEWS.testResult = () => {
   <h2>${r.score} von ${T.qs.length} richtig</h2>
   <p style="font-weight:700">${r.timeUp ? 'Die Zeit ist um! ' : ''}${esc(rnd(SAY['r' + r.stars]))}</p>
   <div class="rewards">${r.coins ? chip('🪙', '+' + r.coins) : ''}${r.stars2 ? chip('⭐', '+' + r.stars2) : ''}${r.chest ? chip('📦', 'Schatztruhe!') : ''}${chip('⏱️', fmtT(r.secs))}</div>
-  ${r.pass ? `<div class="fb ok" style="margin:10px auto;max-width:520px">✈️ <b>Boarding-Pass!</b> ${esc(WP[r.pass].name)} ist jetzt für dich offen. Du findest es in Meine Weltreise.</div>` : ''}
+  ${r.pass ? `<div class="fb ok" style="margin:10px auto;max-width:520px">✈️ <b>Boarding-Pass!</b> Du darfst dir in Meine Weltreise ein Land aussuchen.</div>` : ''}
   <p class="small mute">${testPrizeNote(r)}</p>
   <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="testSetup">Neuer Test</button><button class="btn sec big" data-act="home">Fertig</button></div></div>
   <h3 style="margin:18px 4px 8px">So war dein Test</h3>
@@ -615,7 +646,7 @@ function press(k) {
       else { for (let t = 1; t < fs.length; t++) { const p = (c.focus - t + fs.length) % fs.length; if (!c.locked[p] && p < c.focus) { c.focus = p; break; } } }   // zurück zum vorigen Feld
     }
   } else if (k === ',') {
-    if (/,/.test(fo.a) && !fo.digit && c.vals[c.focus] !== '' && !c.vals[c.focus].includes(',')) { c.vals[c.focus] += ','; c.marks[c.focus] = null; }
+    if ((/,/.test(fo.a) || fo.dec) && !fo.digit && c.vals[c.focus] !== '' && !c.vals[c.focus].includes(',')) { c.vals[c.focus] += ','; c.marks[c.focus] = null; }
   } else if (/^\d$/.test(k)) {
     if (fo.digit) { c.vals[c.focus] = k; c.marks[c.focus] = null; if (fo.next != null) c.focus = fo.next; }
     else if (c.vals[c.focus].replace(',', '').length < 8) {
@@ -638,8 +669,10 @@ const curCtx = () => view === 'play' ? R.ctx : view === 'test' ? T.qs[T.i].c : n
 
 const ACT = {
   home: () => { if (T && T.timer) clearInterval(T.timer); go('home', { say: '' }); },
-  mod: id => go('module', { mod: id }),
-  backMod: () => go('module', { mod: UI.key ? UI.key.split('.')[0] : UI.mod }),
+  mod: id => { const m = MODULES.find(x => x.id === id); return m && isExtra(m) ? go('kopf', { mod: id }) : go('module', { mod: id }); },
+  kopf: () => go('kopf'),
+  kopfTopic: key => { if (findTopic(key)) go('topic', { mod: key.split('.')[0], key }); },
+  backMod: () => { const id = UI.key ? UI.key.split('.')[0] : UI.mod, m = MODULES.find(x => x.id === id); return m && isExtra(m) ? go('kopf') : go('module', { mod: id }); },
   topic: id => go('topic', { key: tk(UI.mod, id) }),
   toGroup: () => go('topic', { key: R.key }),
   practice: () => startDeck(UI.key),
@@ -670,7 +703,7 @@ const ACT = {
   quit: () => view === 'test'
     ? modal('Test abbrechen?', 'Dein Test wird nicht gewertet.', 'Ja, abbrechen', 'quitYes', '', 'Weiter rechnen')
     : modal('Pause machen?', 'Alles ist gespeichert. Du kannst jederzeit genau hier weitermachen.', 'Ja, Pause', 'quitYes', '', 'Weiter üben'),
-  quitYes: () => { closeModal(); if (view === 'test') { if (T && T.timer) clearInterval(T.timer); go('home', { say: '' }); } else if (R && R.kind === 'deck') go('topic', { key: R.key }); else go('mistakes'); },
+  quitYes: () => { closeModal(); if (view === 'test') { if (T && T.timer) clearInterval(T.timer); if (T) T.done = true; testClear(); go('home', { say: '' }); } else if (R && R.kind === 'deck') go('topic', { key: R.key }); else go('mistakes'); },
   testSetup: () => go('testSetup'), scope: s => { UI.scope = s; render(); }, testStart: startTest,
   testAsk, testFinish: () => finishTest(false),
   goQ: i => { T.i = +i; render(); }, nextQ: () => { if (T.i < T.qs.length - 1) { T.i++; render(); } }, prevQ: () => { if (T.i > 0) { T.i--; render(); } },

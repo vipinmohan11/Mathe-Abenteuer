@@ -26,7 +26,7 @@ const epLeft = ep => Math.max(0, ep.need - (S.stats.decks || 0));
 const grp = n => n + ' Gruppe' + (n === 1 ? '' : 'n');
 VIEWS.story = () => {
   const E = epList(), nx = E.find(ep => !epUnlocked(ep)), un = E.filter(epUnlocked).length;
-  return topBar(ico('story', 26) + ' Story') + `
+  return topBar(ico('story', 26) + ' Story', 'kreativhefte') + `
   <div class="card insnx"><b>Die Zahleninsel und die verschwundenen Töne</b><span class="small mute">${nx ? `Noch ${grp(epLeft(nx))} bis zur nächsten Episode.` : 'Alle Episoden sind freigeschaltet.'} ${un} von ${E.length} Episoden.</span></div>
   <div class="eplist">${E.map((ep, i) => { const u = epUnlocked(ep), dn = S.story.done[ep.id], rd = S.story.read[ep.id] || 0;
     return `<button class="epc ${u ? '' : 'lk'} ${dn ? 'dn' : ''}" ${u ? `data-act="storyOpen" data-arg="${ep.id}"` : ''}>${u ? `<span class="epn">${ep.icon}</span>` : `<span class="epn rh-story-preview">${ep.icon}<i class="rh-lock" aria-label="Gesperrt">${ico('lock', 13)}</i></span>`}<span class="epb"><b>${i + 1}. ${u ? nameIn(ep.title) : 'Noch ein Geheimnis'}</b><span class="small mute">${u ? nameIn(ep.summary) : `Noch ${grp(epLeft(ep))} beenden`}</span></span><span class="ept">${dn ? '✔ gelesen' : u ? (rd ? 'Weiterlesen' : 'Lesen') : ''}</span></button>`; }).join('')}</div>`;
