@@ -24,7 +24,7 @@ npm test             # build + generator and flow tests
 npm run test:all     # plus the Playwright suites (python3, playwright, Chromium)
 ```
 
-Source lives in `src/`; `build.py` concatenates it into one HTML file. Detailed notes: [`docs/FEATURES.md`](docs/FEATURES.md), [`HANDOFF.md`](HANDOFF.md).
+Source lives in `src/`; `build.py` concatenates it into one HTML file.
 
 ## Notes
 

@@ -47,7 +47,8 @@ with sync_playwright() as p:
     for w in (1280, 360):
         pg.set_viewport_size({'width': w, 'height': 800}); pg.wait_for_timeout(100)
         ys = pg.evaluate("()=>[...document.querySelectorAll('.dz-acc-item.open .dz-tile')].slice(0,5).map(e=>Math.round(e.getBoundingClientRect().top))")
-        ok(len(ys) == 5 and len(set(ys)) == 1, f'A1–A5 in einer Reihe bei {w}px {ys}')
+        n6 = pg.evaluate("()=>document.querySelectorAll('.dz-acc-item.open .dz-tile').length") == 6
+        ok(len(ys) == 5 and (len(set(ys)) == 1 or (n6 and w == 360 and len(set(ys[:3])) == 1)), f'Hefte-Kacheln einer Reihe bei {w}px (Kapitel mit 6 Heften: 3 pro Reihe auf dem Handy) {ys}')
     pg.set_viewport_size({'width': 1280, 'height': 800})
     # Heft öffnen und zurück
     pg.locator('.dz-acc-head').nth(0).click(); pg.wait_for_timeout(100)

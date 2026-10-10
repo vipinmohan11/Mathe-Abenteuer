@@ -543,53 +543,53 @@ function g_b_fett(L) {
    REGISTRIEREN: Kapitel B vor dem Extra-Training
    ===================================================================== */
 const B_MODULES = [
-  { id: 'B1', title: 'Bis zur Million', sub: 'Große Zahlen lesen und schreiben', wb: 'Bis zur Million (S. 5–14)', icon: '1 000 000', topics: [
-    { id: 'buendeln', t: 'Bündeln', wb: 'E, Z, H, T, ZT, HT, M (S. 6–7)', d: 'Zehn Kleine sind ein Großer', icon: '10', gen: g_b_buendeln },
-    { id: 'bauen', t: 'Zahlen bauen', wb: 'Wie heißen die Zahlen? (S. 8, 12)', d: 'Tausender, Hunderter, Zehner, Einer zusammensetzen', icon: 'T H Z E', gen: g_b_bauen },
-    { id: 'tafel', t: 'Stellentafel', wb: 'Zahlen an der Stellentafel (S. 10)', d: 'Plättchen zählen und die Zahl schreiben', icon: '▦', gen: g_b_tafel },
-    { id: 'zerleg', t: 'Plus-Zerlegung', wb: 'Schreibe die Zahlen in die Stellentafel (S. 10)', d: 'Stellenwerte zusammenrechnen und zerlegen', icon: '+', gen: g_b_zerleg },
-    { id: 'woerter', t: 'Zahlwörter', wb: 'Lies und schreibe die Zahlen mit Ziffern (S. 11)', d: 'Vom Wort zur Zahl', icon: 'Abc', gen: g_b_woerter },
-    { id: 'vergl', t: 'Größer oder kleiner?', wb: '< oder >? (S. 12)', d: 'Große Zahlen vergleichen', icon: '< >', gen: g_b_vergl },
-    { id: 'karten', t: 'Ziffernkarten', wb: 'Sechsstellige Zahlen mit Ziffernkarten (S. 13)', d: 'Die größte und die kleinste Zahl legen', icon: '1 3 4', gen: g_b_karten },
-    { id: 'plaett', t: 'Plättchen-Rätsel', wb: 'Sechsstellige Zahlen mit Plättchen (S. 14)', d: 'Ein Plättchen weg oder verschoben', icon: '●', gen: g_b_plaett }
+  { id: 'B1', title: 'Bis zur Million', sub: 'Große Zahlen lesen und schreiben', wb: 'Bis zur Million (S. 5–14)', icon: '🔢', topics: [
+    { id: 'buendeln', t: 'Bündeln', wb: 'E, Z, H, T, ZT, HT, M (S. 6–7)', d: 'Zehn Kleine sind ein Großer', icon: '📦', gen: g_b_buendeln },
+    { id: 'bauen', t: 'Zahlen bauen', wb: 'Wie heißen die Zahlen? (S. 8, 12)', d: 'Tausender, Hunderter, Zehner, Einer zusammensetzen', icon: '🧱', gen: g_b_bauen },
+    { id: 'tafel', t: 'Stellentafel', wb: 'Zahlen an der Stellentafel (S. 10)', d: 'Plättchen zählen und die Zahl schreiben', icon: '📋', gen: g_b_tafel },
+    { id: 'zerleg', t: 'Plus-Zerlegung', wb: 'Schreibe die Zahlen in die Stellentafel (S. 10)', d: 'Stellenwerte zusammenrechnen und zerlegen', icon: '➕', gen: g_b_zerleg },
+    { id: 'woerter', t: 'Zahlwörter', wb: 'Lies und schreibe die Zahlen mit Ziffern (S. 11)', d: 'Vom Wort zur Zahl', icon: '🔤', gen: g_b_woerter },
+    { id: 'vergl', t: 'Größer oder kleiner?', wb: '< oder >? (S. 12)', d: 'Große Zahlen vergleichen', icon: '↔️', gen: g_b_vergl },
+    { id: 'karten', t: 'Ziffernkarten', wb: 'Sechsstellige Zahlen mit Ziffernkarten (S. 13)', d: 'Die größte und die kleinste Zahl legen', icon: '🃏', gen: g_b_karten },
+    { id: 'plaett', t: 'Plättchen-Rätsel', wb: 'Sechsstellige Zahlen mit Plättchen (S. 14)', d: 'Ein Plättchen weg oder verschoben', icon: '🔴', gen: g_b_plaett }
   ] },
-  { id: 'B2', title: 'Vorgänger und Nachfolger', sub: 'Zahlenstrahl und Nachbarzahlen', wb: 'Vorgänger und Nachfolger (S. 15–24)', icon: '← →', topics: [
-    { id: 'strahl', t: 'Zahlenstrahl', wb: 'Zahlenstrahl (S. 15)', d: 'Welche Zahl zeigt der Pfeil?', icon: '|—|', gen: g_b_strahl },
-    { id: 'nachbar', t: 'Nachbarzahlen', wb: 'Nachbarzahlen (S. 16)', d: 'Eins davor, eins danach', icon: '±1', gen: g_b_nachbar },
-    { id: 'nzehn', t: 'Nachbarzehner', wb: 'Nachbarzehner, Nachbarhunderter (S. 17–18)', d: 'Nachbarzehner und Nachbarhunderter: zurück und vorwärts zur glatten Zahl', icon: 'VZ NZ', gen: g_b_nzehn },
-    { id: 'ntaus', t: 'Nachbartausender & mehr', wb: 'Nachbartausender bis -hunderttausender (S. 18–20)', d: 'Große Nachbarn finden', icon: 'VT NT', gen: g_b_ntaus },
-    { id: 'mitte', t: 'Die Mitte', wb: 'Zahlen am Rechenstrich: Mitte (S. 22)', d: 'Welche Zahl liegt genau dazwischen?', icon: '↔', gen: g_b_mitte },
-    { id: 'schritte', t: 'In Schritten zählen', wb: 'In Schritten zählen (S. 23)', d: 'Vorwärts und rückwärts hüpfen', icon: '+10', gen: g_b_schritte },
-    { id: 'stufen', t: 'Stufenzahlen', wb: 'Stufenzahlen (S. 24)', d: '+1, +10, +100 … Stufe für Stufe', icon: '1 10 100', gen: g_b_stufen }
+  { id: 'B2', title: 'Vorgänger und Nachfolger', sub: 'Zahlenstrahl und Nachbarzahlen', wb: 'Vorgänger und Nachfolger (S. 15–24)', icon: '📏', topics: [
+    { id: 'strahl', t: 'Zahlenstrahl', wb: 'Zahlenstrahl (S. 15)', d: 'Welche Zahl zeigt der Pfeil?', icon: '📏', gen: g_b_strahl },
+    { id: 'nachbar', t: 'Nachbarzahlen', wb: 'Nachbarzahlen (S. 16)', d: 'Eins davor, eins danach', icon: '🏘️', gen: g_b_nachbar },
+    { id: 'nzehn', t: 'Nachbarzehner', wb: 'Nachbarzehner, Nachbarhunderter (S. 17–18)', d: 'Nachbarzehner und Nachbarhunderter: zurück und vorwärts zur glatten Zahl', icon: '🔟', gen: g_b_nzehn },
+    { id: 'ntaus', t: 'Nachbartausender & mehr', wb: 'Nachbartausender bis -hunderttausender (S. 18–20)', d: 'Große Nachbarn finden', icon: '🧮', gen: g_b_ntaus },
+    { id: 'mitte', t: 'Die Mitte', wb: 'Zahlen am Rechenstrich: Mitte (S. 22)', d: 'Welche Zahl liegt genau dazwischen?', icon: '🎯', gen: g_b_mitte },
+    { id: 'schritte', t: 'In Schritten zählen', wb: 'In Schritten zählen (S. 23)', d: 'Vorwärts und rückwärts hüpfen', icon: '🐸', gen: g_b_schritte },
+    { id: 'stufen', t: 'Stufenzahlen', wb: 'Stufenzahlen (S. 24)', d: '+1, +10, +100 … Stufe für Stufe', icon: '🪜', gen: g_b_stufen }
   ] },
-  { id: 'B3', title: 'Zerlegen und runden', sub: 'Zerlegen, vergleichen, runden', wb: 'Zahlen zerlegen, vergleichen, runden (S. 25–32)', icon: '≈', topics: [
-    { id: 'tue', t: 'Tausender und Einer', wb: 'Zahlen in Tausender und Einer zerlegen (S. 25–26)', d: '38 064 = 38 T + 64 E', icon: 'T E', gen: g_b_tue },
-    { id: 'teilen', t: 'Große Zahlen teilen', wb: 'Zahlen zerlegen und vergleichen (S. 27)', d: 'In gleich große Teile teilen', icon: ':', gen: g_b_teilen },
-    { id: 'haus', t: 'Zahlenhäuser', wb: 'Zahlenhäuser (S. 27)', d: 'Malaufgaben mit großen Zahlen', icon: '⌂', gen: g_b_haus },
+  { id: 'B3', title: 'Zerlegen und runden', sub: 'Zerlegen, vergleichen, runden', wb: 'Zahlen zerlegen, vergleichen, runden (S. 25–32)', icon: '🎯', topics: [
+    { id: 'tue', t: 'Tausender und Einer', wb: 'Zahlen in Tausender und Einer zerlegen (S. 25–26)', d: '38 064 = 38 T + 64 E', icon: '✂️', gen: g_b_tue },
+    { id: 'teilen', t: 'Große Zahlen teilen', wb: 'Zahlen zerlegen und vergleichen (S. 27)', d: 'In gleich große Teile teilen', icon: '🍕', gen: g_b_teilen },
+    { id: 'haus', t: 'Zahlenhäuser', wb: 'Zahlenhäuser (S. 27)', d: 'Malaufgaben mit großen Zahlen', icon: '🏠', gen: g_b_haus },
     { id: 'laender', t: 'Bundesländer', wb: 'Einwohnerzahlen der Bundesländer (S. 28–29)', d: 'Wo wohnen die meisten Menschen?', icon: '🗺️', gen: g_b_laender },
-    { id: 'rundM', t: 'Auf Millionen runden', wb: 'Auf Millionen runden (S. 29)', d: 'Abrunden oder aufrunden?', icon: '≈ Mio', gen: g_b_rundM },
-    { id: 'rundT', t: 'Auf Tausender runden', wb: 'Auf Tausender runden (S. 30)', d: 'Auf glatte Tausender runden', icon: '≈ T', gen: g_b_rundT },
-    { id: 'mitrund', t: 'Mit gerundeten Zahlen', wb: 'Mit gerundeten Zahlen rechnen (S. 31–32)', d: 'Sportvereine: erst runden, dann rechnen', icon: '≈ +', gen: g_b_mitrund }
+    { id: 'rundM', t: 'Auf Millionen runden', wb: 'Auf Millionen runden (S. 29)', d: 'Abrunden oder aufrunden?', icon: '🏙️', gen: g_b_rundM },
+    { id: 'rundT', t: 'Auf Tausender runden', wb: 'Auf Tausender runden (S. 30)', d: 'Auf glatte Tausender runden', icon: '🎯', gen: g_b_rundT },
+    { id: 'mitrund', t: 'Mit gerundeten Zahlen', wb: 'Mit gerundeten Zahlen rechnen (S. 31–32)', d: 'Sportvereine: erst runden, dann rechnen', icon: '⚽', gen: g_b_mitrund }
   ] },
-  { id: 'B4', title: 'Gewichte vergleichen', sub: 'Schwerer, leichter, Waagen', wb: 'Gewichte vergleichen und wiegen (S. 33–37)', icon: '⚖', topics: [
-    { id: 'schwerer', t: 'Schwerer oder leichter?', wb: 'Gewichte von Gegenständen vergleichen (S. 33)', d: 'Was wiegt mehr?', icon: '⚖', gen: g_b_schwerer },
-    { id: 'waage', t: 'Welche Waage?', wb: 'Unterschiedliche Waagen, Messgrenzen (S. 34–35)', d: 'Die richtige Waage für jede Sache', icon: '⚖ ?', gen: g_b_waage },
+  { id: 'B4', title: 'Gewichte vergleichen', sub: 'Schwerer, leichter, Waagen', wb: 'Gewichte vergleichen und wiegen (S. 33–37)', icon: '⚖️', topics: [
+    { id: 'schwerer', t: 'Schwerer oder leichter?', wb: 'Gewichte von Gegenständen vergleichen (S. 33)', d: 'Was wiegt mehr?', icon: '⚖️', gen: g_b_schwerer },
+    { id: 'waage', t: 'Welche Waage?', wb: 'Unterschiedliche Waagen, Messgrenzen (S. 34–35)', d: 'Die richtige Waage für jede Sache', icon: '🏷️', gen: g_b_waage },
     { id: 'einkauf', t: 'Einkauf wiegen', wb: 'Gramm und Kilogramm – Einkaufen (S. 36)', d: 'Wie schwer ist die Einkaufstüte?', icon: '🛒', gen: g_b_einkauf },
-    { id: 'tonne', t: 'Kilogramm und Tonne', wb: 'Kilogramm und Tonne (S. 37)', d: 'Richtig schwere Sachen', icon: 't', gen: g_b_tonne }
+    { id: 'tonne', t: 'Kilogramm und Tonne', wb: 'Kilogramm und Tonne (S. 37)', d: 'Richtig schwere Sachen', icon: '🐘', gen: g_b_tonne }
   ] },
-  { id: 'B5', title: 'Gewichte umwandeln', sub: 'g, kg und t', wb: 'Gewichte umwandeln (S. 38–41)', icon: 'kg', topics: [
-    { id: 'beisp', t: 'Wie schwer ungefähr?', wb: 'Beispiele für Gewichte (S. 38)', d: 'Schätzen mit Gewichten, die du kennst', icon: '≈ g', gen: g_b_beisp },
-    { id: 'gkg', t: 'g und kg', wb: 'Umwandeln: g und kg (S. 39)', d: 'Drei Schreibweisen für ein Gewicht', icon: 'g kg', gen: g_b_gkg },
-    { id: 'ordnen', t: 'Gewichte ordnen', wb: 'Ordne nach dem Gewicht (S. 39)', d: 'Am leichtesten, am schwersten', icon: '↑', gen: g_b_ordnen },
-    { id: 'gleich', t: 'Gleich schwer', wb: 'Gleiche Gewichtsangaben (S. 39)', d: 'Finde dieselbe Angabe in anderer Schreibweise', icon: '=', gen: g_b_gleich },
-    { id: 'tabelle', t: 'Gewichte-Stellentafel', wb: 'g und kg (S. 40)', d: 'kg, 100 g, 10 g, 1 g', icon: '▦ kg', gen: g_b_tabelle },
-    { id: 'kgt', t: 'kg und t', wb: 'Umwandeln: kg und t (S. 41)', d: 'Tonnen in drei Schreibweisen', icon: 'kg t', gen: g_b_kgt },
-    { id: 'tvergl', t: 'Tonnen vergleichen', wb: 'Vergleiche: <, > oder = (S. 41)', d: 't oder kg – was ist mehr?', icon: '< t', gen: g_b_tvergl },
+  { id: 'B5', title: 'Gewichte umwandeln', sub: 'g, kg und t', wb: 'Gewichte umwandeln (S. 38–41)', icon: '🔄', topics: [
+    { id: 'beisp', t: 'Wie schwer ungefähr?', wb: 'Beispiele für Gewichte (S. 38)', d: 'Schätzen mit Gewichten, die du kennst', icon: '🍎', gen: g_b_beisp },
+    { id: 'gkg', t: 'g und kg', wb: 'Umwandeln: g und kg (S. 39)', d: 'Drei Schreibweisen für ein Gewicht', icon: '🔄', gen: g_b_gkg },
+    { id: 'ordnen', t: 'Gewichte ordnen', wb: 'Ordne nach dem Gewicht (S. 39)', d: 'Am leichtesten, am schwersten', icon: '↕️', gen: g_b_ordnen },
+    { id: 'gleich', t: 'Gleich schwer', wb: 'Gleiche Gewichtsangaben (S. 39)', d: 'Finde dieselbe Angabe in anderer Schreibweise', icon: '🟰', gen: g_b_gleich },
+    { id: 'tabelle', t: 'Gewichte-Stellentafel', wb: 'g und kg (S. 40)', d: 'kg, 100 g, 10 g, 1 g', icon: '📋', gen: g_b_tabelle },
+    { id: 'kgt', t: 'kg und t', wb: 'Umwandeln: kg und t (S. 41)', d: 'Tonnen in drei Schreibweisen', icon: '🚛', gen: g_b_kgt },
+    { id: 'tvergl', t: 'Tonnen vergleichen', wb: 'Vergleiche: <, > oder = (S. 41)', d: 't oder kg – was ist mehr?', icon: '🆚', gen: g_b_tvergl },
     { id: 'lkw', t: 'LKW beladen', wb: 'Wie viele Tonnen haben die LKWs geladen? (S. 41)', d: 'Ladung als Kommazahl', icon: '🚚', gen: g_b_lkw }
   ] },
   { id: 'B6', title: 'Mit Gewichten rechnen', sub: 'Sachaufgaben mit Gewichten', wb: 'Mit Gewichten rechnen, Sachaufgaben (S. 42–45)', icon: '🧺', topics: [
     { id: 'korb', t: 'Einkaufskorb', wb: 'Wie schwer ist der Einkauf? (S. 42)', d: 'Alles zusammen wiegen', icon: '🧺', gen: g_b_korb },
-    { id: 'ergaenz', t: 'Ergänzen', wb: 'Ergänze (S. 42)', d: 'Bis 1 kg, ½ kg, ¼ kg, 2 t …', icon: '+ ?', gen: g_b_ergaenz },
+    { id: 'ergaenz', t: 'Ergänzen', wb: 'Ergänze (S. 42)', d: 'Bis 1 kg, ½ kg, ¼ kg, 2 t …', icon: '➕', gen: g_b_ergaenz },
     { id: 'fahrzeug', t: 'Gesamtgewicht & Nutzlast', wb: 'Fehlende Gewichtsangaben (S. 43)', d: 'Leergewicht + Nutzlast = Gesamtgewicht', icon: '🚌', gen: g_b_fahrzeug },
     { id: 'personen', t: 'Wie viele Personen?', wb: 'Verkehrsmittel und Nutzlast (S. 43)', d: 'Jede Person mit Gepäck: 100 kg', icon: '👥', gen: g_b_personen },
     { id: 'saecke', t: 'Säcke zählen', wb: 'Sachaufgabe Zement (S. 44)', d: 'Wie viele Säcke sind eine Ladung?', icon: '🧱', gen: g_b_saecke },

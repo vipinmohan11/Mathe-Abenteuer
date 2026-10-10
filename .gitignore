@@ -2,3 +2,11 @@ node_modules/
 __pycache__/
 *.pyc
 node_modules
+
+# internal notes / scratch files: never publish
+CODEX_HANDOFF.md
+HANDOFF.md
+*HANDOFF*.md
+docs/
+tests/shots*.py
+tests/compare_save.py

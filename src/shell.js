@@ -197,7 +197,7 @@ const dueInfo = c => {
 };
 const chapterOf = m => isExtra(m) ? 'Extra' : m.id[0];
 const heftTile = (m, cls) => {
-  const p = modProgress(m), art = { EMAL: 'mal', KOPF: 'kopf', SCHR: 'schrift', A4: 'teilen', A5: 'geld' }[m.id];
+  const p = modProgress(m), art = { EMAL: 'mal', KOPF: 'kopf', SCHR: 'schrift', A4: 'teilen', A5: 'geld', B1: 'b1', B2: 'b2', B3: 'b3', B4: 'b4', B5: 'b5', B6: 'b6' }[m.id];
   return dzTile({ cls, html: art ? dzArt(art) : `<span class="dz-glyph">${esc(m.icon)}</span>`, title: m.extra ? ({ SCHR: 'Schriftlich Rechnen' }[m.id] || m.title) : m.id, sub: m.extra ? ({ EMAL: 'Mal & geteilt', KOPF: 'Plus & minus', SCHR: 'Untereinander' }[m.id] || '') : m.title, act: 'mod', arg: m.id, pct: p.pct, label: `${m.extra ? '' : 'Heft ' + m.id + ': '}${m.title}, ${p.pct} Prozent geschafft` });
 };
 function kopfTile() {

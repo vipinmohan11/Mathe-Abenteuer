@@ -1,6 +1,6 @@
 /* =====================================================================
    RECHENHELDEN-OBERFLÄCHE (zuletzt geladen, überschreibt style.css / feat_*.css)
-   Ursprünglich als Codex-Layer gebaut, jetzt fester Teil des Builds.
+   Fester Teil des Builds.
    Themes: nur die 8 Theme-IDs (sonne, butter, ocean, wald, sunset, nacht, regen, tuerkis) setzen Farben.
    HINWEIS: Die ID "sonne" wird als "Himmelblau" angezeigt – die ID NICHT umbenennen (gespeicherte Daten/Besitz hängen daran).
    Schriften (Baloo 2, Nunito, OFL) werden von build.py aus src/fonts/*.woff2 eingebettet.

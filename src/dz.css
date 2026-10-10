@@ -453,3 +453,6 @@ body[data-theme="nacht"] .flagstate.on{background:#1f4a2e;color:#bfe9cc}
 .seg button.active,.seg button[aria-pressed=true]{background:var(--dz-accent,#4f6d7a);color:var(--dz-accent-ink,#fff)}
 @media(prefers-reduced-motion:reduce){.nz-bubble{transition:none}}
 .nz-bubble.sm{width:48px;height:48px}.nz-bubble.sm .ico{width:24px;height:24px}
+.dz-glyph:not(:has(*)){font-size:18cqw}
+/* Kapitel B (6 Hefte): auf dem Handy 3 pro Reihe, damit die Bilder größer sind */
+@media(max-width:600px){.dz-grid.dz-hefte5[style*="--n:6"]{grid-template-columns:repeat(3,minmax(0,1fr))}}
