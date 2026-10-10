@@ -174,6 +174,8 @@ with sync_playwright() as p:
     E("()=>{ACT.mmMenu();ACT.mmLvl(1);ACT.mmTime(0);ACT.mmStart();ACT.mmFlip(0)}"); pg.wait_for_timeout(1200)
     ok(E("()=>UI.mm.st")=='play' and 'Ohne Zeit' in pg.inner_text('.mm-clock'), 'Memory: Zeit „Aus“ läuft nie ab')
     E("()=>go('home')"); ok(E("()=>UI.mm")==None, 'Memory: beim Verlassen wird die Runde beendet')
+    E("()=>{S.memory={lvl:4,wins:3,plays:5,best:{},sel:3,selDay:'2000-01-01'};UI.mmSet=null;UI.mm=null;go('memory')}"); ok(E("()=>UI.mmSet.lvl")==1 and E("()=>S.memory.lvl")==4 and pg.locator('.mm-lv.lock').count()==0, 'Memory: neuer Tag beginnt bei 4×4, freigeschaltete Stufen bleiben')
+    E("()=>{S.memory.selDay=ymd();UI.mmSet=null;go('home');go('memory')}"); ok(E("()=>UI.mmSet.lvl")==3, 'Memory: am selben Tag bleibt die zuletzt gespielte Stufe')
     E("()=>{go('welt')}"); ok(pg.locator('.w-card[data-arg=isl]').count()==1, 'Island steht bei den Reisezielen')
     # Stand des Kindes
     kid1 = E("()=>JSON.stringify([S.coins,S.starsLife,Object.keys(S.trophies)])")
