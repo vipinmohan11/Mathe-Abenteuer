@@ -737,6 +737,10 @@ button.av-chip:active{transform:scale(.96)}
 body[data-calm="1"] .rw-rays,body[data-calm="1"] .rw-tro{animation:none}
 @media(prefers-reduced-motion:reduce){.rw-rays,.rw-tro,.rw-pop-c,.rw-bag.gulp svg{animation:none}}
 
+.chip.rw-pulse,.dz-chip.rw-pulse{animation:rwPulse .5s ease-out}
+@keyframes rwPulse{40%{transform:scale(1.14)}}
+@media(prefers-reduced-motion:reduce){.rw-pulse{animation:none}}
+
 /* ===== Musik-Werkstatt: ruhig, flach, ein Akzent (--pri) ===== */
 body{--mu1:#A9794B;--mu2:#5E9B7C}
 body[data-theme="nacht"]{--mu1:#D9A068;--mu2:#7FC4A0}
@@ -1741,6 +1745,21 @@ body[data-theme="nacht"] .flagstate.on{background:#1f4a2e;color:#bfe9cc}
 .dz-glyph:not(:has(*)){font-size:18cqw}
 /* Kapitel B (6 Hefte): auf dem Handy 3 pro Reihe, damit die Bilder größer sind */
 @media(max-width:600px){.dz-grid.dz-hefte5[style*="--n:6"]{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* ---------- Pokale: kleines Abzeichen-Raster ---------- */
+.pk-head{margin-bottom:12px}
+.pk-meds{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pk-med{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;background:var(--dz-t2);border-radius:999px;padding:3px 10px}.pk-med b{font-weight:900;color:var(--dz-mute)}
+.pk-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;padding-bottom:110px}
+.pk-b{aspect-ratio:1;display:grid;place-items:center;font:inherit;font-size:clamp(1.5rem,6vw,2.5rem);border-radius:18px;border:2px solid var(--dz-line);background:var(--dz-surface);padding:0;cursor:pointer;min-width:0}
+.pk-b.got{background:var(--dz-t1);border-color:var(--dz-accent2,var(--dz-line))}
+.pk-b.lock{filter:grayscale(1);opacity:.45;background:var(--dz-surface2,#e8ece8)}
+.pk-b.sel{outline:3px solid var(--dz-accent);outline-offset:2px;opacity:1}
+.pk-b:focus-visible{outline:3px solid var(--dz-gold,#e0b43a);outline-offset:2px}
+.pk-pop{position:fixed;z-index:60;left:50%;bottom:18px;transform:translateX(-50%);width:min(380px,calc(100% - 24px));display:flex;align-items:center;gap:12px;background:var(--dz-surface);color:var(--dz-ink);border:2px solid var(--dz-line);border-radius:20px;padding:10px 6px 10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.pk-pop-ic{flex:none;font-size:2.4rem;width:56px;height:56px;display:grid;place-items:center;border-radius:16px;background:var(--dz-t1)}.pk-pop-ic.lock{filter:grayscale(1);opacity:.6}
+.pk-pop-t{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.pk-pop-t span{color:var(--dz-mute);font-size:.92rem}.pk-pop-t small{font-weight:800;color:var(--dz-accent)}
+@media(max-width:380px){.pk-grid{gap:6px}}
 
 </style>
 <!-- Embedded fonts: Baloo 2 + Nunito (subset)
@@ -6394,7 +6413,7 @@ function trophyList() {
 function checkTrophies() {
   let any = false; const quiet = typeof UI !== 'undefined' && UI && UI.wQuiet;          // Weltreise: Pokale still vergeben
   const pop = typeof rwTrophy === 'function';                       // Pokal: Feier + Fenster (feat_lohn.js), wartet bis nichts anderes offen ist
-  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (pop) rwTrophy({ i: t.i, n: t.n, d: t.d }); else if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
+  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (pop) rwTrophy({ id: t.id, i: t.i, n: t.n, d: t.d }); else if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
   if (any && !quiet && !pop) confetti(60);
   if (typeof checkUnlocks === 'function') checkUnlocks();
 }
@@ -6915,19 +6934,13 @@ VIEWS.play = () => {
   </div>`;
 };
 
-/* Kleine Feier für jede richtige Antwort (auch verbessert). Keine Münzen extra. Kurz (≤ 0,9 s), aus bei „Ruhig“ / reduzierter Bewegung. */
+/* Richtige Antwort: nur der grüne Haken und ein leiser Ton – kein Sternenregen mehr. */
 const XMARK = '<span class="ad-cross" aria-hidden="true" style="font-size:23px">✕</span>';
 const celebrated = new WeakSet();
 AFTER.play = () => {
   if (!R || !R.ctx || R.ctx.state !== 'right' || celebrated.has(R.ctx)) return;
   celebrated.add(R.ctx);
   sfx('ok');
-  if (S.cfg.calm || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-  const target = $('.ad-question'); if (!target) return;
-  const burst = document.createElement('div'); burst.className = 'ad-answer-stars'; burst.setAttribute('aria-hidden', 'true');
-  const n = R.ctx.res === 'first' ? 10 : 7;
-  burst.innerHTML = Array.from({ length: n }, (_, i) => `<i style="--dx:${Math.round(Math.cos(i * 2.4) * 150)}px;--dy:${Math.round(-40 - Math.abs(Math.sin(i * 2.4)) * 120)}px;--star:${['#ffcf32', '#58b947', '#2e96f1', '#ff942c'][i % 4]}">★</i>`).join('');
-  target.appendChild(burst); setTimeout(() => burst.remove(), 900);
 };
 
 /* ----- engine ----- */
@@ -7204,14 +7217,15 @@ function equip(slot, id) { if (id && !S.owned[slot].includes(id)) return; S.eq[s
 /* ----- Pokale ----- */
 VIEWS.trophies = () => {
   const L = trophyList(), got = L.filter(t => S.trophies[t.id]).length;
-  const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0));
-  const mp = MODULES.map(m => `<div class="card tro"><span class="ic">${m.icon}</span><div style="flex:1"><b>${m.title}</b><div class="d">${m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '▫️').join(' ')}</div></div></div>`).join('');
-  return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card" style="margin-bottom:12px"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
-  <div class="small mute" style="margin-top:8px">Medaillen pro Gruppe: 🥉 Stufe 1 fertig · 🥈 Stufe 2 fertig · 🥇 alle 30 Aufgaben · 💎 alle 30 mit mindestens 54 von 60 Punkten. Pokale mit ❓ sind geheim – findest du sie?</div></div>
-  <div class="grid" style="margin-bottom:14px">${mp}</div>
-  <div class="grid">${sorted.map(t => { const has = S.trophies[t.id]; return (t.s && !has)
-    ? `<div class="card tro lock"><span class="ic">❓</span><div><b>Geheimer Pokal</b><div class="d">Finde heraus, wie man ihn bekommt!</div></div></div>`
-    : `<div class="card tro ${has ? '' : 'lock'}"><span class="ic">${t.i}</span><div><b>${t.n}</b><div class="d">${t.d}</div></div></div>`; }).join('')}</div>`;
+  const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0) || ((a.s && !S.trophies[a.id]) ? 1 : 0) - ((b.s && !S.trophies[b.id]) ? 1 : 0));
+  const mp = MODULES.map(m => { const md = m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '').join(''); return md ? `<span class="pk-med"><b>${esc(m.id)}</b>${md}</span>` : ''; }).join('');
+  const sel = UI.pkSel && L.find(t => t.id === UI.pkSel), has = sel && S.trophies[sel.id];
+  const when = ts => new Date(ts).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
+  const pop = sel ? `<div class="pk-pop" role="dialog" aria-label="Pokal"><span class="pk-pop-ic${has ? '' : ' lock'}">${sel.s && !has ? '❓' : sel.i}</span><div class="pk-pop-t"><b>${sel.s && !has ? 'Geheimer Pokal' : esc(sel.n)}</b><span>${sel.s && !has ? 'Finde heraus, wie man ihn bekommt!' : esc(sel.d)}</span><small>${has ? 'Bekommen am ' + when(has) : 'Noch nicht geschafft'}</small></div><button class="rw-x" data-act="pkClose" aria-label="Schließen">✕</button></div>` : '';
+  return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card pk-head"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
+  ${mp ? `<div class="pk-meds" aria-label="Medaillen pro Gruppe">${mp}</div>` : ''}
+  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten. Tippe einen Pokal an.</div></div>
+  <div class="pk-grid">${sorted.map(t => { const h = S.trophies[t.id], hid = t.s && !h; return `<button class="pk-b${h ? ' got' : ' lock'}${UI.pkSel === t.id ? ' sel' : ''}" data-act="pkOpen" data-arg="${esc(t.id)}" aria-label="${hid ? 'Geheimer Pokal' : esc(t.n) + (h ? '' : ', noch nicht geschafft')}">${hid ? '❓' : t.i}</button>`; }).join('')}</div>${pop}`;
 };
 
 /* ----- limit ----- */
@@ -7977,6 +7991,9 @@ Object.assign(ACT, {
   toggleCalm: () => { S.cfg.calm = !S.cfg.calm; save(); render(); },
   toggleSound: () => { S.cfg.sound = S.cfg.sound === false; save(); render(); }
 });
+
+/* Pokale-Seite: Abzeichen antippen = kleines Fenster */
+Object.assign(ACT, { pkOpen: id => { UI.pkSel = UI.pkSel === id ? null : id; render(); }, pkClose: () => { UI.pkSel = null; render(); } });
 
 /* =====================================================================
    ADMIN-MODUS (nur für Eltern, zum Ausprobieren)
@@ -9518,15 +9535,28 @@ registerFeature({
    Fenster warten, bis nichts anderes offen ist (kein Mini-Test, kein anderes Fenster, kein Abflug in der Weltreise).
    „Ruhige Darstellung“ (S.cfg.calm) und „Bewegung reduzieren“ des Geräts: keine fliegenden Münzen, kein Konfetti – die Hinweise bleiben.
    ===================================================================== */
-const RW = { coins: 0, coinT: null, bagT: null, q: [], wait: null, noteT: null };
+const RW = { coins: 0, acc: 0, cross: false, coinT: null, bagT: null, q: [], wait: null, noteT: null };
 const RW_BAG = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M23 9h18l-3.5 9h-11Z" fill="#c9a86a" stroke="#6b5434" stroke-width="2.4" stroke-linejoin="round"/><path d="M26.5 18C14 24 9 35 9 43c0 9 9 14 23 14s23-5 23-14c0-8-5-19-17.5-25Z" fill="#d9b878" stroke="#6b5434" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 18.5h16" stroke="#6b5434" stroke-width="3.2" stroke-linecap="round"/><circle cx="32" cy="40" r="8" fill="#f2cf5b" stroke="#a87b12" stroke-width="2.2"/><path d="M29 40h6" stroke="#a87b12" stroke-width="2" stroke-linecap="round"/></svg>';
 const RW_COIN = '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="#f2cf5b" stroke="#a87b12" stroke-width="2.4"/><circle cx="14" cy="14" r="7.5" fill="none" stroke="#c99a2e" stroke-width="1.6"/><path d="M11 14h6" stroke="#a87b12" stroke-width="2" stroke-linecap="round"/></svg>';
+const RW_BIG_IDS = new Set(['blk1', 'deck1', 'deck5', 'perf5', 'perf15', 'q100', 'q500', 'q1000', 'st3', 'st7', 'st14', 'st30', 'c400', 'c800', 's100', 'test1', 'test13', 'test15', 'gold', 'dia', 'shop1', 'shop12', 'card30', 'cardall', 'card250', 'stp10', 'fix30', 'ins10', 'owl', 'early', 'wknd', 'comeb', 'mara', 'blitz']);
+const RW_BIG = { has: id => RW_BIG_IDS.has(id) || /_[md]$/.test(String(id || '')) };   // Konfetti + Fenster: Meilensteine, geheime Pokale, Meister/Diamant je Heft; der Rest bekommt nur einen kleinen Hinweis
 const rwCalm = () => !!(S.cfg && S.cfg.calm) || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 
 /* ---------- Münzen: in den Beutel ---------- */
-function rwCoin(n) { if (!(n > 0)) return; RW.coins += n; clearTimeout(RW.coinT); RW.coinT = setTimeout(rwCoinFly, 90); }
+function rwCoin(n) {
+  if (!(n > 0)) return; RW.coins += n; RW.acc += n;
+  if (Math.floor((S.life || 0) / 10) > Math.floor(((S.life || 0) - n) / 10)) RW.cross = true;          // jede 10. Münze (insgesamt verdient) bekommt die Beutel-Animation
+  clearTimeout(RW.coinT); RW.coinT = setTimeout(rwCoinFly, 90);
+}
+/* sonst nur ein leiser Puls am Münz-Zähler */
+function rwCoinPulse() {
+  const chip = Array.from(document.querySelectorAll('.top .chip.cb, .dz-wallet [data-act=shop]')).find(e => e.getBoundingClientRect().width > 0);
+  if (!chip || rwCalm()) return; chip.classList.remove('rw-pulse'); void chip.offsetWidth; chip.classList.add('rw-pulse');
+}
 function rwCoinFly() {
-  const n = RW.coins; RW.coins = 0; if (!n || document.hidden) return;
+  const batch = RW.coins; RW.coins = 0; if (!batch || document.hidden) return;
+  if (!RW.cross) { rwCoinPulse(); return; }
+  const n = RW.acc; RW.acc = 0; RW.cross = false;
   let bag = document.getElementById('rwBag');
   if (!bag) { bag = document.createElement('div'); bag.id = 'rwBag'; bag.className = 'rw-bag'; bag.setAttribute('role', 'status'); bag.innerHTML = `${RW_BAG}<b class="rw-bag-n"></b>`; document.body.appendChild(bag); }
   bag.querySelector('.rw-bag-n').textContent = '+' + n;
@@ -9565,14 +9595,19 @@ function rwNext() {
   if (!rwReady()) { RW.wait = setTimeout(rwNext, 700); return; }
   const tro = RW.q.filter(x => x.k === 'tro'), cards = RW.q.filter(x => x.k === 'card').length;
   RW.q = [];
-  if (cards) rwCardNote(cards);
-  if (tro.length) rwTrophyPop(tro.map(x => x.t));
+  const big = tro.filter(x => RW_BIG.has(x.t.id)), small = tro.filter(x => !RW_BIG.has(x.t.id));
+  if (big.length) rwTrophyPop(big.map(x => x.t));                                  // große Feier nur für besondere Pokale
+  if (small.length) rwNote({ ic: dzIc('trophy', 30), t: small.length === 1 ? `Neuer Pokal: ${small[0].t.n}` : `${small.length} neue Pokale!`, s: 'Du findest sie bei „Meine Pokale“.', go: 'trophies' });
+  else if (cards) rwCardNote(cards);                                               // zwei Hinweise gleichzeitig wären zu viel: der Pokal-Hinweis gewinnt
+  if (big.length && cards) setTimeout(() => rwCardNote(cards), 400);
 }
 /* Karte: nur eine Einblendung, kein Konfetti */
-function rwCardNote(n) {
+function rwCardNote(n) { rwNote({ ic: dzIc('cards', 30), t: n === 1 ? 'Neue Karte!' : n + ' neue Karten!', s: (n === 1 ? 'Sie wartet' : 'Sie warten') + ' bei den Lustigen Karten.', go: 'schatz' }); }
+function rwNote(o) {
   let el = document.getElementById('rwNote');
   if (!el) { el = document.createElement('div'); el.id = 'rwNote'; el.className = 'rw-note'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
-  el.innerHTML = `<span class="rw-note-ic">${dzIc('cards', 30)}</span><span class="rw-note-t"><b>${n === 1 ? 'Neue Karte!' : n + ' neue Karten!'}</b><small>${n === 1 ? 'Sie wartet' : 'Sie warten'} bei den Lustigen Karten.</small></span><button class="btn sm sec" data-act="rwNoteGo">Ansehen</button><button class="rw-x" data-act="rwNoteClose" aria-label="Hinweis schließen">✕</button>`;
+  el.dataset.go = o.go;
+  el.innerHTML = `<span class="rw-note-ic">${o.ic}</span><span class="rw-note-t"><b>${esc(o.t)}</b><small>${esc(o.s)}</small></span><button class="btn sm sec" data-act="rwNoteGo">Ansehen</button><button class="rw-x" data-act="rwNoteClose" aria-label="Hinweis schließen">✕</button>`;
   el.classList.remove('out'); void el.offsetWidth; el.classList.add('in');
   clearTimeout(RW.noteT); RW.noteT = setTimeout(rwNoteClose, 5000);
 }
@@ -9594,7 +9629,7 @@ Object.assign(ACT, {
   rwPopClose,
   rwPopGo: () => { rwPopClose(); go('trophies'); },
   rwNoteClose,
-  rwNoteGo: () => { rwNoteClose(); go('schatz'); }
+  rwNoteGo: () => { const el = document.getElementById('rwNote'), g = (el && el.dataset.go) || 'schatz'; rwNoteClose(); go(g); }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('rwPop')) rwPopClose(); });
 

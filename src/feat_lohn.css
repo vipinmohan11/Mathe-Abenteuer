@@ -35,3 +35,7 @@
 @keyframes rwSpin{to{transform:rotate(360deg)}}
 body[data-calm="1"] .rw-rays,body[data-calm="1"] .rw-tro{animation:none}
 @media(prefers-reduced-motion:reduce){.rw-rays,.rw-tro,.rw-pop-c,.rw-bag.gulp svg{animation:none}}
+
+.chip.rw-pulse,.dz-chip.rw-pulse{animation:rwPulse .5s ease-out}
+@keyframes rwPulse{40%{transform:scale(1.14)}}
+@media(prefers-reduced-motion:reduce){.rw-pulse{animation:none}}

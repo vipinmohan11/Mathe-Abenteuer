@@ -397,7 +397,7 @@ function trophyList() {
 function checkTrophies() {
   let any = false; const quiet = typeof UI !== 'undefined' && UI && UI.wQuiet;          // Weltreise: Pokale still vergeben
   const pop = typeof rwTrophy === 'function';                       // Pokal: Feier + Fenster (feat_lohn.js), wartet bis nichts anderes offen ist
-  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (pop) rwTrophy({ i: t.i, n: t.n, d: t.d }); else if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
+  trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (pop) rwTrophy({ id: t.id, i: t.i, n: t.n, d: t.d }); else if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
   if (any && !quiet && !pop) confetti(60);
   if (typeof checkUnlocks === 'function') checkUnlocks();
 }

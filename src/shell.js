@@ -317,3 +317,6 @@ Object.assign(ACT, {
   toggleCalm: () => { S.cfg.calm = !S.cfg.calm; save(); render(); },
   toggleSound: () => { S.cfg.sound = S.cfg.sound === false; save(); render(); }
 });
+
+/* Pokale-Seite: Abzeichen antippen = kleines Fenster */
+Object.assign(ACT, { pkOpen: id => { UI.pkSel = UI.pkSel === id ? null : id; render(); }, pkClose: () => { UI.pkSel = null; render(); } });

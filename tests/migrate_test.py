@@ -1,10 +1,10 @@
-"""Migrationstest: Daten aus der alten Version (v2, Commit f108561) müssen in der neuen Version komplett erhalten bleiben.
+"""Migrationstest: Daten aus der alten Version (v2, Commit 5f9c70d) müssen in der neuen Version komplett erhalten bleiben.
 Gestartete und fertige Gruppen werden NICHT neu gebaut; Münzen/Sterne/Pokale/Shop bleiben unverändert."""
 import subprocess, threading, http.server, socketserver, os, json, sys, pathlib, functools, shutil
 from playwright.sync_api import sync_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 W = pathlib.Path('/tmp/mig'); shutil.rmtree(W, ignore_errors=True); W.mkdir()
-(W/'old.html').write_bytes(subprocess.check_output(['git', 'show', 'f108561:dist/Mathe-Abenteuer_Klasse4.html'], cwd=ROOT))
+(W/'old.html').write_bytes(subprocess.check_output(['git', 'show', '5f9c70d:dist/Mathe-Abenteuer_Klasse4.html'], cwd=ROOT))
 shutil.copy(ROOT/'dist'/'Mathe-Abenteuer_Klasse4.html', W/'new.html')
 class Q(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass

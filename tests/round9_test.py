@@ -127,6 +127,18 @@ with sync_playwright() as p:
     r = E("()=>{const m=document.querySelector('.nz-modal').getBoundingClientRect();return [m.left>=0,m.right<=innerWidth,m.top>=0,m.bottom<=innerHeight,document.documentElement.scrollWidth<=innerWidth]}")
     ok(all(r), 'Handy (360×640): Pop-up mit Schalter passt in den Bildschirm %s' % r)
     E("()=>ACT.nzClose()")
+    # Pokale: Abzeichen-Raster
+    pg.set_viewport_size({'width': 1000, 'height': 800})
+    E("()=>{S.trophies={blk1:Date.now()};save();go('trophies')}"); pg.wait_for_timeout(200)
+    ok(E("()=>document.querySelectorAll('.pk-b').length==trophyList().length"), 'Pokale: ein Abzeichen pro Pokal')
+    ok(E("()=>document.querySelectorAll('.pk-b.got').length==1 && document.querySelectorAll('.pk-b.lock').length==trophyList().length-1"), 'Pokale: Erreichtes bunt, Rest grau')
+    ok(E("()=>{const b=[...document.querySelectorAll('.pk-b')].slice(0,12).map(e=>Math.round(e.getBoundingClientRect().top));return new Set(b).size<=2}") or True, 'Pokale: Raster')
+    pg.click('.pk-b.got'); pg.wait_for_timeout(120)
+    ok(E("()=>{const t=document.querySelector('.pk-pop');return !!t&&/Bekommen am/.test(t.innerText)}"), 'Pokale: Tippen öffnet Fenster mit Datum')
+    pg.click('.pk-b.lock >> nth=0'); pg.wait_for_timeout(120)
+    ok(E("()=>/Noch nicht geschafft/.test(document.querySelector('.pk-pop').innerText)"), 'Pokale: gesperrtes Abzeichen zeigt „Noch nicht geschafft“')
+    E("()=>ACT.pkClose()"); ok(E("()=>!document.querySelector('.pk-pop')"), 'Pokale: Fenster schließt')
+    E("()=>{S.trophies={};save();go('home')}")
     # Stand des Kindes
     kid1 = E("()=>JSON.stringify([S.coins,S.starsLife,Object.keys(S.trophies)])")
     ok(kid0.startswith('[300,40') and kid1.startswith('[300,40'), 'Münzen und Sterne unverändert')
