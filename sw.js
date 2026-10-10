@@ -1,5 +1,5 @@
-// offline cache (version 8b42a4d2) – Lernstand liegt im Browser (localStorage/IndexedDB), nicht hier
-const C = 'denkzauber-8b42a4d2';
+// offline cache (version 1676f46b) – Lernstand liegt im Browser (localStorage/IndexedDB), nicht hier
+const C = 'denkzauber-1676f46b';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(C).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => (k.startsWith('mathe-') || k.startsWith('rechenhelden-') || k.startsWith('denkzauber-')) && k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

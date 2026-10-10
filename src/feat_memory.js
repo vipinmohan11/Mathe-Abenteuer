@@ -8,7 +8,10 @@
 const MM_SIZES = [{ n: 4, t: 15 }, { n: 5, t: 30 }, { n: 6, t: 60 }, { n: 7, t: 60 }];
 const MM_TIMES = [0, 10, 15, 20, 30, 60];
 const MM_THEMES = [['zufall', 'Zufall', '🎲'], ['laender', 'Länder', '🌍'], ['mathe', 'Mathe', '🔢'], ['deutsch', 'Deutsch', '✏️'], ['wissen', 'Wissen', '💡']];
-const mmS = () => { const m = S.memory || (S.memory = {}); if (!(m.lvl >= 1)) m.lvl = 1; if (!(m.wins >= 0)) m.wins = 0; if (!m.best) m.best = {}; return m; };
+const mmS = () => { const m = S.memory || (S.memory = {}); if (!(m.lvl >= 1)) m.lvl = 1; if (!(m.wins >= 0)) m.wins = 0; if (!(m.plays >= 0)) m.plays = 0; if (!m.best) m.best = {}; return m; };
+const MM_THEME_AFTER = 2;                                            // ab der 3. Runde frei: 2 gespielte Runden genügen (gewonnen oder nicht)
+const mmThemesOpen = () => mmS().plays >= MM_THEME_AFTER;
+const mmDayLvl = () => { const g = mmS(); return g.selDay === ymd() ? Math.min(g.sel || 1, g.lvl) : 1; };   // jeden Tag beginnt die Auswahl wieder bei 4 × 4; freigeschaltete Stufen bleiben
 const mmRnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const mmCnt = lvl => Math.floor(MM_SIZES[lvl - 1].n ** 2 / 2);
 function mmSub() { const m = mmS(); return m.wins ? `Stufe ${m.lvl} von 4` : 'Paare finden'; }
@@ -66,6 +69,8 @@ function mmNew(lvl, tm, theme) {
   if (N % 2) sh.splice(Math.floor(N * N / 2), 0, { j: true, h: '⭐', p: 'Joker' });
   return { st: 'play', lvl, tm, theme: b.theme, cards: sh, open: [], done: {}, moves: 0, lock: false, started: false, end: 0, left: tm, pairs: b.pairs.length, found: 0, last: '' };
 }
+/* zählt eine gestartete Runde (gewonnen oder nicht) und merkt sich die Stufe für heute; true = Themen sind frei */
+function mmCount(lvl) { const g = mmS(), open = g.plays >= MM_THEME_AFTER; g.plays++; g.sel = lvl; g.selDay = ymd(); save(); return open; }
 function mmStop() { if (UI.mmT) { clearInterval(UI.mmT); UI.mmT = null; } }
 function mmTick() {
   const m = UI.mm;
@@ -82,17 +87,19 @@ function mmWin() {
   save(); sfx('ok'); try { if (!rwCalm()) confetti(60); } catch (e) { }
 }
 function mmSetup() {
-  const g = mmS(), u = UI.mmSet || (UI.mmSet = { lvl: g.lvl, theme: 'zufall', tm: null });
+  const g = mmS(), u = UI.mmSet || (UI.mmSet = { lvl: mmDayLvl(), theme: 'zufall', tm: null });
+  if (g.selDay !== ymd() && !u.day) { u.lvl = 1; } u.day = ymd();
   if (u.lvl > g.lvl) u.lvl = g.lvl;
+  if (!mmThemesOpen()) u.theme = 'zufall';
   const tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm;
   const lv = MM_SIZES.map((z, i) => { const ok = i + 1 <= g.lvl, c = z.n * z.n;
     return `<button class="mm-lv${u.lvl === i + 1 ? ' on' : ''}${ok ? '' : ' lock'}" data-act="mmLvl" data-arg="${i + 1}" ${ok ? '' : 'disabled'} aria-pressed="${u.lvl === i + 1}"><b>${z.n} × ${z.n}</b><small>${ok ? c + ' Karten' : ico('lock', 14) + ' Noch zu'}</small></button>`; }).join('');
   const tms = MM_TIMES.map(t => `<button class="mm-chip${tm === t ? ' on' : ''}" data-act="mmTime" data-arg="${t}" aria-pressed="${tm === t}">${t ? t + ' s' : 'Aus'}</button>`).join('');
-  const ths = MM_THEMES.map(t => `<button class="mm-chip${u.theme === t[0] ? ' on' : ''}" data-act="mmTheme" data-arg="${t[0]}" aria-pressed="${u.theme === t[0]}">${t[2]} ${t[1]}</button>`).join('');
+  const tOpen = mmThemesOpen(), ths = MM_THEMES.map(t => { const dis = !tOpen && t[0] !== 'zufall'; return `<button class="mm-chip${u.theme === t[0] ? ' on' : ''}${dis ? ' lock' : ''}" data-act="mmTheme" data-arg="${t[0]}" aria-pressed="${u.theme === t[0]}" ${dis ? 'disabled' : ''}>${dis ? ico('lock', 13) : t[2]} ${t[1]}</button>`; }).join('');
   const best = g.best[String(u.lvl)];
   return topBar('Memory', 'rewards') + `<section class="card mm-setup"><h3>Stufe</h3><div class="mm-lvs">${lv}</div>
     <h3>Zeit</h3><div class="mm-chips">${tms}</div><p class="small mute">Die Zeit läuft für die ganze Runde und startet beim ersten Aufdecken.</p>
-    <h3>Thema</h3><div class="mm-chips">${ths}</div>
+    <h3>Thema</h3><div class="mm-chips">${ths}</div>${tOpen ? '' : `<p class="small mute">Die ersten 2 Runden gibt es zufällige Themen. Danach darfst du selbst wählen (noch ${MM_THEME_AFTER - mmS().plays}).</p>`}
     ${best ? `<p class="small mute">Dein Rekord in dieser Stufe: <b>${best}</b> Züge</p>` : ''}
     <div class="center" style="margin-top:12px"><button class="btn big" data-act="mmStart">Los geht’s</button></div></section>`;
 }
@@ -121,8 +128,8 @@ registerFeature({
     memory: () => { mmStop(); UI.mm = null; go('memory'); },
     mmLvl: l => { const u = UI.mmSet; u.lvl = +l; if (!u.tmSet) u.tm = null; render(); },
     mmTime: t => { UI.mmSet.tm = +t; UI.mmSet.tmSet = true; render(); },
-    mmTheme: t => { UI.mmSet.theme = t; render(); },
-    mmStart: () => { const u = UI.mmSet, tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm; mmStop(); UI.mm = mmNew(u.lvl, tm, u.theme); sfx('tap'); render(); },
+    mmTheme: t => { if (mmThemesOpen() || t === 'zufall') UI.mmSet.theme = t; render(); },
+    mmStart: () => { const u = UI.mmSet, tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm; mmStop(); UI.mm = mmNew(u.lvl, tm, mmCount(u.lvl) ? u.theme : 'zufall'); sfx('tap'); render(); },
     mmFlip: a => {
       const m = UI.mm, i = +a; if (!m || m.st !== 'play' || m.lock) return;
       const c = m.cards[i]; if (!c || c.j || m.done[i] || m.open.includes(i)) return;
@@ -135,7 +142,7 @@ registerFeature({
       }
       render();
     },
-    mmAgain: () => { const m = UI.mm, g = mmS(), lvl = m.st === 'win' && m.fresh ? g.lvl : m.lvl; mmStop(); UI.mm = mmNew(lvl, m.tm && lvl !== m.lvl ? MM_SIZES[lvl - 1].t : m.tm, UI.mmSet ? UI.mmSet.theme : 'zufall'); render(); },
+    mmAgain: () => { const m = UI.mm, g = mmS(), lvl = m.st === 'win' && m.fresh ? g.lvl : m.lvl; mmStop(); UI.mm = mmNew(lvl, m.tm && lvl !== m.lvl ? MM_SIZES[lvl - 1].t : m.tm, mmCount(lvl) && UI.mmSet ? UI.mmSet.theme : 'zufall'); render(); },
     mmMenu: () => { mmStop(); UI.mm = null; if (UI.mmSet) { UI.mmSet.lvl = Math.min(mmS().lvl, UI.mmSet.lvl); } render(); }
   }
 });

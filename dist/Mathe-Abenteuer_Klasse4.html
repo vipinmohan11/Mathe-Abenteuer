@@ -1769,10 +1769,12 @@ body[data-theme="nacht"] .flagstate.on{background:#1f4a2e;color:#bfe9cc}
 .pk-head{margin-bottom:12px}
 .pk-meds{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .pk-med{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;background:var(--dz-t2);border-radius:999px;padding:3px 10px}.pk-med b{font-weight:900;color:var(--dz-mute)}
-.pk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding-bottom:40px}
-.pk-b{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;border-radius:18px;border:2px solid var(--dz-line);background:var(--dz-surface);padding:12px 8px 10px;min-width:0}
+.pk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding-bottom:0}.pk-grid:last-child{padding-bottom:40px}
+.pk-yr{margin:16px 4px 8px;font-size:1.05rem;color:var(--dz-mute)}.pk-grid+.pk-yr{margin-top:18px}
+.pk-b{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;border-radius:18px;border:2px solid var(--dz-line);background:var(--dz-surface);padding:12px 8px 10px;min-width:0}
 .pk-b .pk-i{font-size:2.2rem;line-height:1.1}.pk-b b{font-size:.88rem;line-height:1.2}
 .pk-b .pk-d{color:var(--dz-mute);font-size:.76rem;line-height:1.25}.pk-b small{margin-top:auto;padding-top:4px;font-weight:800;font-size:.72rem;color:var(--dz-accent)}
+.pk-dt{position:absolute;top:7px;right:9px;font-size:.72rem;font-weight:800;color:var(--dz-accent)}
 .pk-b.got{background:var(--dz-t1);border-color:var(--dz-accent2,var(--dz-line))}
 .pk-b.lock{background:var(--dz-surface2,#e8ece8)}.pk-b.lock .pk-i{filter:grayscale(1);opacity:.5}.pk-b.lock b,.pk-b.lock .pk-d{opacity:.7}.pk-b.lock small{color:var(--dz-mute)}
 @media(max-width:480px){.pk-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
@@ -1780,6 +1782,12 @@ body[data-theme="nacht"] .flagstate.on{background:#1f4a2e;color:#bfe9cc}
 .gift-card>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.gift-card .bar{margin-top:4px}
 .gift-card.on{border-style:solid;border-color:var(--dz-gold,#e0b43a);background:var(--dz-t1)}.gift-ic{font-size:2rem}
 .gift-reveal{text-align:center}.gift-th{width:110px;height:110px;margin:6px auto;display:grid;place-items:center;font-size:4rem;border-radius:24px;background:var(--dz-t1)}.gift-th svg,.gift-th img{max-width:100%;max-height:100%}
+.gq-t{display:block;font-weight:800;margin-bottom:6px}.gq-q{display:block;font-size:1.25rem;margin:6px 0 12px}.gq-note{display:block;color:var(--dz-accent);font-weight:800;margin-bottom:8px;font-size:.9rem}
+.gq-blank{display:inline-block;min-width:1.6em;border-bottom:3px solid var(--dz-accent);text-align:center}
+.gq-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gq-o{font-size:1.1rem;padding:12px 8px}
+.gift-bubble{position:fixed;right:14px;bottom:16px;z-index:40;width:52px;height:52px;border-radius:50%;border:2px solid var(--dz-gold,#e0b43a);background:var(--dz-surface);box-shadow:0 3px 10px rgba(0,0,0,.18);font-size:1.5rem;display:grid;place-items:center;cursor:pointer;padding:0}
+.gift-bubble[hidden]{display:none}.gift-bubble i{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:99px;background:var(--dz-accent);color:#fff;font:800 .72rem/20px system-ui,sans-serif;font-style:normal;text-align:center;padding:0 5px}
+@media(prefers-reduced-motion:no-preference){.gift-bubble span{animation:giftBob 3.2s ease-in-out infinite}@keyframes giftBob{0%,86%,100%{transform:none}93%{transform:rotate(-12deg)}}}
 
 </style>
 <!-- Embedded fonts: Baloo 2 + Nunito (subset)
@@ -7296,11 +7304,17 @@ VIEWS.trophies = () => {
   const L = trophyList(), got = L.filter(t => S.trophies[t.id]).length;
   const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0) || (S.trophies[a.id] && S.trophies[b.id] ? (+S.trophies[b.id] || 0) - (+S.trophies[a.id] || 0) : 0) || ((a.s && !S.trophies[a.id]) ? 1 : 0) - ((b.s && !S.trophies[b.id]) ? 1 : 0));
   const mp = MODULES.map(m => { const md = m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '').join(''); return md ? `<span class="pk-med"><b>${esc(m.id)}</b>${md}</span>` : ''; }).join('');
-  const when = ts => new Date(+ts || Date.now()).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' });
+  const ddmm = ts => { const d = new Date(+ts); return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0'); };
+  const yrOf = ts => (+ts > 1e11 ? new Date(+ts).getFullYear() : 0);
   return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card pk-head"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
   ${mp ? `<div class="pk-meds" aria-label="Medaillen pro Gruppe">${mp}</div>` : ''}
   <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten.</div></div>
-  <div class="pk-grid">${sorted.map(t => { const h = S.trophies[t.id], hid = t.s && !h; return `<div class="pk-b${h ? ' got' : ' lock'}"><span class="pk-i">${hid ? '❓' : t.i}</span><b>${hid ? 'Geheimer Pokal' : esc(t.n)}</b><span class="pk-d">${hid ? 'Finde heraus, wie man ihn bekommt!' : esc(t.d)}</span><small>${h ? 'Bekommen am ' + when(h) : 'Noch nicht geschafft'}</small></div>`; }).join('')}</div>`;
+  ${(() => {
+    const tile = t => { const h = S.trophies[t.id], hid = t.s && !h; return `<div class="pk-b${h ? ' got' : ' lock'}">${h && yrOf(h) ? `<time class="pk-dt" datetime="${new Date(+h).toISOString().slice(0, 10)}">${ddmm(h)}</time>` : ''}<span class="pk-i">${hid ? '❓' : t.i}</span><b>${hid ? 'Geheimer Pokal' : esc(t.n)}</b><span class="pk-d">${hid ? 'Finde heraus, wie man ihn bekommt!' : esc(t.d)}</span>${h ? '' : '<small>Noch nicht geschafft</small>'}</div>`; };
+    const earned = sorted.filter(t => S.trophies[t.id]), open = sorted.filter(t => !S.trophies[t.id]), yrs = [...new Set(earned.map(t => yrOf(S.trophies[t.id])))].sort((a, b) => b - a);
+    const sec = (title, list) => `<h3 class="pk-yr">${title}</h3><div class="pk-grid">${list.map(tile).join('')}</div>`;
+    return yrs.map(y => sec(y || 'Früher', earned.filter(t => yrOf(S.trophies[t.id]) === y))).join('') + (open.length ? sec('Noch offen', open) : '');
+  })()}`;
 };
 
 /* ----- limit ----- */
@@ -7627,6 +7641,7 @@ function dzAfterRender(changed) {
   const a = document.getElementById('app'); if (!a) return;
   if (changed) { a.classList.remove('dz-enter'); void a.offsetWidth; a.classList.add('dz-enter'); setTimeout(() => a.classList.remove('dz-enter'), 400); }
   if (typeof nzBubble === 'function') { try { nzBubble(); } catch (e) { console.error(e); } }
+  if (typeof giftBubble === 'function') { try { giftBubble(); } catch (e) { console.error(e); } }
   if (typeof lockTilesPass === 'function') { try { lockTilesPass(); } catch (e) { console.error(e); } }   // „Noch zu“ auf jeder gesperrten Kachel
 }
 
@@ -9556,8 +9571,50 @@ function giftCard() {
   const pct = Math.max(4, Math.min(100, Math.round((1 - nx.left / nx.m.n) * 100)));
   return `<div class="gift-card"><span class="gift-ic" aria-hidden="true">🎁</span><div><b>Nächste Überraschung</b><span class="small mute">${esc(nx.m.t)} – noch ${nx.left}</span><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
 }
+/* ---------- Türsteher: Vor dem Aufmachen eine Rechenfrage mit 4 Antworten aus einem begonnenen Heft oder dem Fehler-Heft ---------- */
+function giftMC(q) {
+  if (!q) return null;
+  if (q.choices) {
+    if (q.choices.length < 4 || typeof q.correct !== 'number') return null;
+    const o = q.choices.map((t, i) => ({ t, ok: i === q.correct })); return { title: q.title || '', body: q.prompt || '', opts: shuffle(o) };
+  }
+  if (q.fields && q.fields.length === 1 && q.html) {
+    const f = q.fields[0], a = String(f.a);
+    if (f.money || f.dec || !/^\d{1,6}$/.test(a)) return null;
+    const n = +a, cand = shuffle([n + 1, n - 1, n + 10, n - 10, n + 2, n - 2, n + 100, n - 100, n * 2, Math.floor(n / 2), +a.split('').reverse().join('')]), set = [];
+    cand.forEach(v => { if (v >= 0 && v !== n && !set.includes(v) && set.length < 3) set.push(v); });
+    for (let k = 3; set.length < 3 && k < 40; k++) if (n + k !== n && !set.includes(n + k)) set.push(n + k);
+    const fmt = v => String(v), o = shuffle([{ t: fmt(n), ok: true }, ...set.map(v => ({ t: fmt(v), ok: false }))]);
+    return { title: q.title || '', body: q.html.replace(/\[\[0\]\]/g, '<span class="gq-blank">?</span>'), opts: o };
+  }
+  return null;
+}
+function giftQ() {
+  const keys = Object.keys(S.decks || {}).filter(k => S.decks[k] && S.decks[k].i > 0 && findTopic(k));
+  const miss = (S.mistakes || []).filter(m => m && m.q && findTopic(m.tid));
+  const all = allTopics().map(x => x.key);
+  for (let i = 0; i < 80; i++) {
+    let q;
+    if (miss.length && (!keys.length || Math.random() < .5)) q = pick(miss).q;
+    else q = makeQ(keys.length ? pick(keys) : pick(all), ri(2, 4));
+    const mc = giftMC(q); if (mc) return mc;
+  }
+  const a = ri(3, 9), b = ri(3, 9);
+  return giftMC({ title: 'Rechne aus', html: `${a} × ${b} = [[0]]`, fields: [{ a: String(a * b) }] });
+}
+function giftAsk(note) {
+  const g = UI.gq = UI.gq || giftQ();
+  modal('Erst knobeln, dann aufmachen', `${note ? `<span class="gq-note">${note}</span>` : ''}<span class="gq-t">${g.title}</span><span class="gq-q">${g.body}</span><span class="gq-opts">${g.opts.map((o, i) => `<button class="btn sec gq-o" data-act="giftPick" data-arg="${i}">${o.t}</button>`).join('')}</span>`, null, '', '', 'Später');
+}
 Object.assign(ACT, {
-  giftOpen: () => {
+  giftOpen: () => { if (!giftS().open.length) return; UI.gq = null; giftAsk(''); },
+  giftPick: i => {
+    const g = UI.gq; if (!g || !g.opts[+i]) return;
+    if (g.opts[+i].ok) { UI.gq = null; closeModal(); ACT.giftGo(); }
+    else { UI.gq = null; sfx('no'); giftAsk('Nicht ganz. Hier ist eine neue Frage – dein Geschenk wartet.'); }
+  },
+  giftBubble: () => { UI.shopGrp = 'fino'; go('shop'); },
+  giftGo: () => {
     const g = giftS(); if (!g.open.length) return;
     const mid = g.open.shift(), pool = giftPool(), it = pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
     let body, title = 'Überraschung!';
@@ -9568,6 +9625,15 @@ Object.assign(ACT, {
     if (view === 'shop') render();
   }
 });
+/* kleine Blase auf der Startseite, solange eine Überraschung ungeöffnet ist: Tippen führt in den Shop */
+function giftBubble() {
+  let b = document.getElementById('giftBubble');
+  const n = giftS().open.length, show = n > 0 && typeof view !== 'undefined' && view === 'home';
+  if (!show) { if (b) b.hidden = true; return; }
+  if (!b) { b = document.createElement('button'); b.id = 'giftBubble'; b.className = 'gift-bubble'; b.type = 'button'; b.dataset.act = 'giftBubble'; document.body.appendChild(b); }
+  b.hidden = false; b.setAttribute('aria-label', n === 1 ? 'Eine Überraschung wartet im Shop' : n + ' Überraschungen warten im Shop');
+  b.innerHTML = `<span aria-hidden="true">🎁</span><i>${n}</i>`;
+}
 
 /* =====================================================================
    INSEL: ein Lern-Rückblick, kein Baukasten. Jede fertige Übungsgruppe (S.stats.decks) bringt den nächsten
@@ -9759,7 +9825,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.g
 const MM_SIZES = [{ n: 4, t: 15 }, { n: 5, t: 30 }, { n: 6, t: 60 }, { n: 7, t: 60 }];
 const MM_TIMES = [0, 10, 15, 20, 30, 60];
 const MM_THEMES = [['zufall', 'Zufall', '🎲'], ['laender', 'Länder', '🌍'], ['mathe', 'Mathe', '🔢'], ['deutsch', 'Deutsch', '✏️'], ['wissen', 'Wissen', '💡']];
-const mmS = () => { const m = S.memory || (S.memory = {}); if (!(m.lvl >= 1)) m.lvl = 1; if (!(m.wins >= 0)) m.wins = 0; if (!m.best) m.best = {}; return m; };
+const mmS = () => { const m = S.memory || (S.memory = {}); if (!(m.lvl >= 1)) m.lvl = 1; if (!(m.wins >= 0)) m.wins = 0; if (!(m.plays >= 0)) m.plays = 0; if (!m.best) m.best = {}; return m; };
+const MM_THEME_AFTER = 2;                                            // ab der 3. Runde frei: 2 gespielte Runden genügen (gewonnen oder nicht)
+const mmThemesOpen = () => mmS().plays >= MM_THEME_AFTER;
+const mmDayLvl = () => { const g = mmS(); return g.selDay === ymd() ? Math.min(g.sel || 1, g.lvl) : 1; };   // jeden Tag beginnt die Auswahl wieder bei 4 × 4; freigeschaltete Stufen bleiben
 const mmRnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const mmCnt = lvl => Math.floor(MM_SIZES[lvl - 1].n ** 2 / 2);
 function mmSub() { const m = mmS(); return m.wins ? `Stufe ${m.lvl} von 4` : 'Paare finden'; }
@@ -9817,6 +9886,8 @@ function mmNew(lvl, tm, theme) {
   if (N % 2) sh.splice(Math.floor(N * N / 2), 0, { j: true, h: '⭐', p: 'Joker' });
   return { st: 'play', lvl, tm, theme: b.theme, cards: sh, open: [], done: {}, moves: 0, lock: false, started: false, end: 0, left: tm, pairs: b.pairs.length, found: 0, last: '' };
 }
+/* zählt eine gestartete Runde (gewonnen oder nicht) und merkt sich die Stufe für heute; true = Themen sind frei */
+function mmCount(lvl) { const g = mmS(), open = g.plays >= MM_THEME_AFTER; g.plays++; g.sel = lvl; g.selDay = ymd(); save(); return open; }
 function mmStop() { if (UI.mmT) { clearInterval(UI.mmT); UI.mmT = null; } }
 function mmTick() {
   const m = UI.mm;
@@ -9833,17 +9904,19 @@ function mmWin() {
   save(); sfx('ok'); try { if (!rwCalm()) confetti(60); } catch (e) { }
 }
 function mmSetup() {
-  const g = mmS(), u = UI.mmSet || (UI.mmSet = { lvl: g.lvl, theme: 'zufall', tm: null });
+  const g = mmS(), u = UI.mmSet || (UI.mmSet = { lvl: mmDayLvl(), theme: 'zufall', tm: null });
+  if (g.selDay !== ymd() && !u.day) { u.lvl = 1; } u.day = ymd();
   if (u.lvl > g.lvl) u.lvl = g.lvl;
+  if (!mmThemesOpen()) u.theme = 'zufall';
   const tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm;
   const lv = MM_SIZES.map((z, i) => { const ok = i + 1 <= g.lvl, c = z.n * z.n;
     return `<button class="mm-lv${u.lvl === i + 1 ? ' on' : ''}${ok ? '' : ' lock'}" data-act="mmLvl" data-arg="${i + 1}" ${ok ? '' : 'disabled'} aria-pressed="${u.lvl === i + 1}"><b>${z.n} × ${z.n}</b><small>${ok ? c + ' Karten' : ico('lock', 14) + ' Noch zu'}</small></button>`; }).join('');
   const tms = MM_TIMES.map(t => `<button class="mm-chip${tm === t ? ' on' : ''}" data-act="mmTime" data-arg="${t}" aria-pressed="${tm === t}">${t ? t + ' s' : 'Aus'}</button>`).join('');
-  const ths = MM_THEMES.map(t => `<button class="mm-chip${u.theme === t[0] ? ' on' : ''}" data-act="mmTheme" data-arg="${t[0]}" aria-pressed="${u.theme === t[0]}">${t[2]} ${t[1]}</button>`).join('');
+  const tOpen = mmThemesOpen(), ths = MM_THEMES.map(t => { const dis = !tOpen && t[0] !== 'zufall'; return `<button class="mm-chip${u.theme === t[0] ? ' on' : ''}${dis ? ' lock' : ''}" data-act="mmTheme" data-arg="${t[0]}" aria-pressed="${u.theme === t[0]}" ${dis ? 'disabled' : ''}>${dis ? ico('lock', 13) : t[2]} ${t[1]}</button>`; }).join('');
   const best = g.best[String(u.lvl)];
   return topBar('Memory', 'rewards') + `<section class="card mm-setup"><h3>Stufe</h3><div class="mm-lvs">${lv}</div>
     <h3>Zeit</h3><div class="mm-chips">${tms}</div><p class="small mute">Die Zeit läuft für die ganze Runde und startet beim ersten Aufdecken.</p>
-    <h3>Thema</h3><div class="mm-chips">${ths}</div>
+    <h3>Thema</h3><div class="mm-chips">${ths}</div>${tOpen ? '' : `<p class="small mute">Die ersten 2 Runden gibt es zufällige Themen. Danach darfst du selbst wählen (noch ${MM_THEME_AFTER - mmS().plays}).</p>`}
     ${best ? `<p class="small mute">Dein Rekord in dieser Stufe: <b>${best}</b> Züge</p>` : ''}
     <div class="center" style="margin-top:12px"><button class="btn big" data-act="mmStart">Los geht’s</button></div></section>`;
 }
@@ -9872,8 +9945,8 @@ registerFeature({
     memory: () => { mmStop(); UI.mm = null; go('memory'); },
     mmLvl: l => { const u = UI.mmSet; u.lvl = +l; if (!u.tmSet) u.tm = null; render(); },
     mmTime: t => { UI.mmSet.tm = +t; UI.mmSet.tmSet = true; render(); },
-    mmTheme: t => { UI.mmSet.theme = t; render(); },
-    mmStart: () => { const u = UI.mmSet, tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm; mmStop(); UI.mm = mmNew(u.lvl, tm, u.theme); sfx('tap'); render(); },
+    mmTheme: t => { if (mmThemesOpen() || t === 'zufall') UI.mmSet.theme = t; render(); },
+    mmStart: () => { const u = UI.mmSet, tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm; mmStop(); UI.mm = mmNew(u.lvl, tm, mmCount(u.lvl) ? u.theme : 'zufall'); sfx('tap'); render(); },
     mmFlip: a => {
       const m = UI.mm, i = +a; if (!m || m.st !== 'play' || m.lock) return;
       const c = m.cards[i]; if (!c || c.j || m.done[i] || m.open.includes(i)) return;
@@ -9886,7 +9959,7 @@ registerFeature({
       }
       render();
     },
-    mmAgain: () => { const m = UI.mm, g = mmS(), lvl = m.st === 'win' && m.fresh ? g.lvl : m.lvl; mmStop(); UI.mm = mmNew(lvl, m.tm && lvl !== m.lvl ? MM_SIZES[lvl - 1].t : m.tm, UI.mmSet ? UI.mmSet.theme : 'zufall'); render(); },
+    mmAgain: () => { const m = UI.mm, g = mmS(), lvl = m.st === 'win' && m.fresh ? g.lvl : m.lvl; mmStop(); UI.mm = mmNew(lvl, m.tm && lvl !== m.lvl ? MM_SIZES[lvl - 1].t : m.tm, mmCount(lvl) && UI.mmSet ? UI.mmSet.theme : 'zufall'); render(); },
     mmMenu: () => { mmStop(); UI.mm = null; if (UI.mmSet) { UI.mmSet.lvl = Math.min(mmS().lvl, UI.mmSet.lvl); } render(); }
   }
 });

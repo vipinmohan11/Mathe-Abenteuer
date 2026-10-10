@@ -85,6 +85,7 @@ function dzAfterRender(changed) {
   const a = document.getElementById('app'); if (!a) return;
   if (changed) { a.classList.remove('dz-enter'); void a.offsetWidth; a.classList.add('dz-enter'); setTimeout(() => a.classList.remove('dz-enter'), 400); }
   if (typeof nzBubble === 'function') { try { nzBubble(); } catch (e) { console.error(e); } }
+  if (typeof giftBubble === 'function') { try { giftBubble(); } catch (e) { console.error(e); } }
   if (typeof lockTilesPass === 'function') { try { lockTilesPass(); } catch (e) { console.error(e); } }   // „Noch zu“ auf jeder gesperrten Kachel
 }
 
