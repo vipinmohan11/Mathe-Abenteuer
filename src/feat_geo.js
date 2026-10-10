@@ -215,7 +215,7 @@ const gDay = () => { const d = new Date(), n = Math.floor(Date.UTC(d.getFullYear
 VIEWS.geo = () => {
   const n = gKnownN('europa'), total = gList('europa').length, nx = gNextMs(), d = gDay();
   const T = (art, t, sub, act, arg, i) => dzTile({ cls: ['t1', 't2', 't3'][i % 3], art, title: t, sub, act, arg });
-  const play = [['quiz', 'Quiz', '10 oder 15 Fragen', 'geoGo', 'mix'], ['flaggen', 'Flaggen', 'Welches Land?', 'geoGo', 'flag'], ['groesser', 'Größer?', 'Zwei Länder', 'geoGo', 'size'], ['route', 'Reiseroute', 'Wer liegt dazwischen?', 'geoGo', 'route'], ['memory', 'Memory', 'Paare finden', 'geoMemory']]
+  const play = [['quiz', 'Quiz', '10 oder 15 Fragen', 'geoGo', 'mix'], ['flaggen', 'Flaggen', 'Welches Land?', 'geoGo', 'flag'], ['groesser', 'Größer?', 'Zwei Länder', 'geoGo', 'size'], ['route', 'Reiseroute', 'Wer liegt dazwischen?', 'geoGo', 'route']]
     .map((x, i) => T(x[0], x[1], x[2], x[3], x[4], i)).join('');
   const disc = [T('laender', 'Länderkarten', 'Flagge, Hauptstadt', 'geoCards', null, 0), T('fakten', 'Wusstest du?', 'Lustige Fakten', 'geoFacts', null, 1), T('stempel', GEO_PASS, 'Deine Länder', 'geoPass', null, 2),
     dzTile({ cls: 't1', html: flagSVG(d.id, 'geo-tflag'), title: 'Land des Tages', sub: d.name, act: 'gCard', arg: d.id })].join('');
@@ -303,32 +303,13 @@ VIEWS.geoPass = () => {
     <div class="geo-stamps">${l.slice().sort((a, b) => (gKnown(b.id) - gKnown(a.id)) || a.name.localeCompare(b.name, 'de')).map(stamp).join('')}</div>`;
 };
 
-/* ---------- Memory: Flagge + Land ↔ Hauptstadt, ohne Zeit, ohne Belohnung ---------- */
-function gMemNew() {
-  const ids = shuffle(gList('europa')).slice(0, 8);
-  UI.mem = { cards: shuffle(ids.flatMap(c => [{ id: c.id, t: 'f' }, { id: c.id, t: 'c' }])), open: [], done: {}, moves: 0, lock: false };
-}
-VIEWS.geoMemory = () => {
-  const m = UI.mem || (gMemNew(), UI.mem), all = Object.keys(m.done).length === m.cards.length;
-  return topBar('Memory', 'geo') + `<p class="small mute" style="text-align:center">Finde zu jedem Land seine Hauptstadt. Züge: <b>${m.moves}</b></p>
-  <div class="geo-mem">${m.cards.map((c, i) => {
-    const up = m.done[i] || m.open.includes(i), cc = CBY[c.id];
-    return `<button class="geo-mc ${up ? 'up' : ''} ${m.done[i] ? 'done' : ''}" data-act="gMem" data-arg="${i}" aria-label="Karte ${i + 1}">${up ? (c.t === 'f' ? flagSVG(c.id, 'geo-mflag') + '<b>' + esc(cc.name) + '</b>' : '<b>' + esc(cc.cap) + '</b>') : '<span>?</span>'}</button>`;
-  }).join('')}</div>
-  ${all ? `<div class="card result" style="margin-top:14px"><h2>Geschafft in ${m.moves} Zügen!</h2><div class="row wrap" style="justify-content:center"><button class="btn big" data-act="gMemNew">Noch mal</button><button class="btn sec big" data-act="geo">Fertig</button></div></div>` : ''}`;
-};
-
 /* ---------- Aktionen ---------- */
 registerFeature({
   id: 'geo', title: GEO_NAME, icon: 'island', tint: 'sky', group: 'learn', order: 5, view: 'geo',
   views: {},
   acts: {
-    geoCards: () => go('geoCards'), geoPass: () => go('geoPass'), geoMemory: () => { gMemNew(); go('geoMemory'); }, gMemNew: () => { gMemNew(); render(); },
-    gMem: a => { const m = UI.mem, i = +a; if (!m || m.lock || m.done[i] || m.open.includes(i)) return; sfx('tap'); m.open.push(i);
-      if (m.open.length === 2) { m.moves++; const [x, y] = m.open;
-        if (m.cards[x].id === m.cards[y].id && m.cards[x].t !== m.cards[y].t) { m.done[x] = m.done[y] = 1; m.open = []; if (Object.keys(m.done).length === m.cards.length) { sfx('ok'); confetti(60); } }
-        else { m.lock = true; render(); setTimeout(() => { m.open = []; m.lock = false; if (view === 'geoMemory') render(); }, 900); return; } }
-      render(); }, geoFacts: () => { UI.gf = gFactDeck(); go('geoFacts'); }, gFactNext: () => { UI.gf.i++; render(); },
+    geoCards: () => go('geoCards'), geoPass: () => go('geoPass'), geoMemory: () => ACT.memory(),
+    geoFacts: () => { UI.gf = gFactDeck(); go('geoFacts'); }, gFactNext: () => { UI.gf.i++; render(); },
     geoGo: m => geoStart(gAutoCfg(m)), geoSetup: () => geoStart(gAutoCfg()),
     geoRetry: () => { const qs = GQ.qs.filter(q => !q.ok).map(q => (q.t === 'size' || q.t === 'route') ? gRebuildPair(q) : gQuestion(CBY[q.cid], q.t, q.tricky)); geoStart(GQ.cfg, qs); },
     gPick: k => { const q = GQ.qs[GQ.i]; q.pick = k; sfx('tap'); render(); },

@@ -13,7 +13,7 @@ with sync_playwright() as p:
     pg.goto('file://' + html); pg.wait_for_timeout(300)
     E = pg.evaluate
     # ---- Pakete
-    ok(E("()=>WORDER.length") == 23 and E("()=>wList().length") == 23, '23 Länder (3 + 20 neue)')
+    ok(E("()=>WORDER.length") == 24 and E("()=>wList().length") == 24, '24 Länder (3 + 20 + Island)')
     bad = E("""()=>{const out=[];const pink=h=>{const m=/^#([0-9a-f]{6})$/i.exec(h);if(!m)return false;const n=parseInt(m[1],16),r=n>>16,g=(n>>8)&255,b=n&255,mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mx-mn<40)return false;let h2;if(mx===r)h2=((g-b)/(mx-mn)+6)%6*60;else if(mx===g)h2=((b-r)/(mx-mn)+2)*60;else h2=((r-g)/(mx-mn)+4)*60;return h2>=300&&h2<=345&&(mx-mn)/mx>.18&&mx>170};
       WORDER.forEach(id=>{const p=WP[id];const e=(m)=>out.push(id+': '+m);
         if(!p)return e('fehlt');
@@ -35,7 +35,7 @@ with sync_playwright() as p:
       });return out}""")
     ok(not bad, 'Alle Pakete vollständig, keine rosa Farben %s' % bad[:6])
     names = E("()=>WORDER.map(id=>WP[id].name)")
-    ok(len(set(names)) == 23, 'Namen eindeutig')
+    ok(len(set(names)) == 24, 'Namen eindeutig')
     cnt = {}
     for n in E("()=>WORDER.map(id=>WP[id].cont)"): cnt[n] = cnt.get(n, 0) + 1
     ok(len(cnt) >= 6, 'Kontinente: %s' % cnt)
@@ -44,7 +44,7 @@ with sync_playwright() as p:
     ok(not r, 'Alle 23 × 6 Stationen rendern %s' % r[:5])
     # ---- Auswahlmenü
     E("()=>{S.starsLife=60;S.stars=60;S.daily.n=25;wS().open={};wS().spent=0;go('home');go('rewards');go('welt')}"); pg.wait_for_timeout(150)
-    ok(pg.locator('#wDest').count() == 1 and pg.locator('#wDest option').count() == 23, 'Auswahlmenü mit 23 Zielen')
+    ok(pg.locator('#wDest').count() == 1 and pg.locator('#wDest option').count() == 24, 'Auswahlmenü mit 24 Zielen')
     ok(pg.locator('#wDest optgroup').count() == 2, 'Menü: „Meine Reisen“ und „Noch gesperrt“')
     pg.select_option('#wDest', 'fra'); pg.click('[data-act=wGoDest]'); pg.wait_for_timeout(200)
     ok(pg.locator('#modal').count() == 1 and 'Frankreich' in pg.inner_text('#modal'), 'Gesperrtes Land im Menü → Frage zum Öffnen')

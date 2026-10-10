@@ -59,7 +59,7 @@ with sync_playwright() as p:
     click('.top .back[data-act=back]'); ok(V() == 'home', 'Zurück → Start')
     # Meine Welt -> Shop -> zurück
     pg.evaluate("()=>go('rewards')"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 2, 'Meine Welt: 2 Kacheln (Shop, Weltreise; Musik/Geschichte wohnen in der Ideenwerkstatt, Fakten bei den Lustigen Karten)')
+    ok(pg.locator('.dz-tile').count() == 3, 'Meine Welt: 3 Kacheln (Shop, Weltreise, Memory; Musik/Geschichte wohnen in der Ideenwerkstatt, Fakten bei den Lustigen Karten)')
     ok('Weltreise' in pg.inner_text('#app') and 'Lustige Fakten' not in pg.inner_text('#app') and 'Musik' not in pg.inner_text('#app') and 'Geschichte' not in pg.inner_text('#app'), 'Meine Weltreise ja; Lustige Fakten, Musik, Geschichte nicht mehr hier')
     click('.dz-tile[data-act=shop], .dz-tile[data-act=go][data-arg=shop]')
     ok(V() == 'shop', 'Shop öffnet'); click('.top .back[data-act=back]'); ok(V() == 'rewards', 'Zurück → Meine Welt')
@@ -94,9 +94,9 @@ with sync_playwright() as p:
     pg.evaluate("()=>{S.name='';save();go('rewards')}"); pg.wait_for_timeout(120)
     # Schalter
     pg.evaluate("()=>{S.flags={wesen:1,buch:1,insel:1};save();render()}"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 5, 'Schalter an: Wesen/Buch/Insel erscheinen')
+    ok(pg.locator('.dz-tile').count() == 6, 'Schalter an: Wesen/Buch/Insel erscheinen')
     pg.evaluate("()=>{S.flags={};save();render()}"); pg.wait_for_timeout(100)
-    ok(pg.locator('.dz-tile').count() == 2, 'Schalter aus: wieder 2 Kacheln')
+    ok(pg.locator('.dz-tile').count() == 3, 'Schalter aus: wieder 3 Kacheln')
     # früher „Extra Spaß“: alte Links landen in Meine Hefte, dort 6 Kacheln in einer Reihe
     pg.evaluate("()=>go('extra')"); pg.wait_for_timeout(100)
     ok(pg.locator('.dz-hefte6 .dz-tile').count() == 4 and pg.locator('.dz-tile[data-act=kopf]').count() == 1, 'Alter „Extra Spaß“-Link zeigt Meine Hefte (4 Kacheln oben)')

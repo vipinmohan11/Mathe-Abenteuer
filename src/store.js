@@ -52,6 +52,7 @@ const DEF = () => ({
   goal: null, earned: [], notes: [], noten: { songs: [], act: null, pref: {} }, mig3: 1,
   geo: { sessions: 0, seen: {}, ok: {}, miss: {}, k: {}, cards: {}, ms: {}, kd: {}, perf: 0, tpf: 0, kpf: 0, best: 0 },
   world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {}, wishes: [], tix: [] },
+  gifts: { got: {}, open: [], log: [] },        // Überraschungsgeschenke: erreichte Meilensteine, ungeöffnete, Verlauf
   flags: {},                                   // ausgeblendete Funktionen (wesen, buch, insel): Eltern können sie einschalten – nur Anzeige, Daten bleiben
   facts: { i: 0, seen: {} },                   // Lustige Fakten: Stelle im Stapel, schon gelesene
   cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {}, plang: 'de' }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
@@ -399,6 +400,7 @@ function checkTrophies() {
   const pop = typeof rwTrophy === 'function';                       // Pokal: Feier + Fenster (feat_lohn.js), wartet bis nichts anderes offen ist
   trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (pop) rwTrophy({ id: t.id, i: t.i, n: t.n, d: t.d }); else if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
   if (any && !quiet && !pop) confetti(60);
+  if (typeof giftCheck === 'function') giftCheck();
   if (typeof checkUnlocks === 'function') checkUnlocks();
 }
 

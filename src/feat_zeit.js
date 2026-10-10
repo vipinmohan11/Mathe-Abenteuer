@@ -47,7 +47,7 @@ const rgAreaCap = a => RG_AREA_CAP + (rgData().rgExt.a[a] || 0);
 const rgTotalCap = () => RG_TOTAL_CAP + (rgData().rgExt.tot || 0);
 const rgAreaUsed = a => rgData().rg.a[a] || 0;
 const rgTotalUsed = () => rgData().rg.tot || 0;
-const rgName = a => (a === 'profile' ? 'Mein Profil' : a === 'geo' ? 'Europa Entdecker' : a === 'geoCards' ? 'Länderkarten' : a === 'geoPass' ? 'Stempel' : a === 'geoMemory' ? 'Gedächtnis' : a === 'geoFacts' ? 'Fakten' : ((FEATS[a] || {}).title || secName(a) || a));
+const rgName = a => (a === 'profile' ? 'Mein Profil' : a === 'geo' ? 'Europa Entdecker' : a === 'geoCards' ? 'Länderkarten' : a === 'geoPass' ? 'Stempel' : a === 'geoFacts' ? 'Fakten' : ((FEATS[a] || {}).title || secName(a) || a));
 const pgName = a => rgName(a);
 /* alle Bereiche mit eigener Zeitgrenze (für die Eltern-Liste): Meine-Welt-Funktionen, Profil, Europa Entdecker + Unterseiten */
 const rgAreaList = () => Array.from(new Set([
@@ -114,9 +114,9 @@ function freeNoteHtml() {
 /* ---------- Bereiche für die Eltern-Freigaben (Haupt- und Unterbereiche) ---------- */
 const SEC_TREE = () => [
   { id: 'm_hefte', de: 'Meine Hefte', en: 'My workbooks', free: true, subs: [['mistakes', 'Fehler-Heft', 'Mistakes book'], ['minitest', 'Mini-Test', 'Mini test'], ['KOPF', 'Kopfrechnen', 'Mental arithmetic']] },
-  { id: 'm_geo', de: 'Europa Entdecker', en: 'Europe Explorer', free: true, subs: [['geoPlay', 'Spiele (Quiz, Flaggen …)', 'Games (quiz, flags …)'], ['geoMemory', 'Memory', 'Memory'], ['geoCards', 'Länderkarten', 'Country cards'], ['geoFacts', 'Wusstest du?', 'Did you know?'], ['geoPass', 'Stempelpass', 'Stamp passport']] },
+  { id: 'm_geo', de: 'Europa Entdecker', en: 'Europe Explorer', free: true, subs: [['geoPlay', 'Spiele (Quiz, Flaggen …)', 'Games (quiz, flags …)'], ['geoCards', 'Länderkarten', 'Country cards'], ['geoFacts', 'Wusstest du?', 'Did you know?'], ['geoPass', 'Stempelpass', 'Stamp passport']] },
   { id: 'm_kreativ', de: 'Ideenwerkstatt', en: 'Idea workshop', free: true, subs: [['musik', 'Meine Musik', 'My music'], ['story', 'Geschichte', 'Story'], ['noten', 'Notenheft', 'Music book']] },
-  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip']]
+  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip'], ['memory', 'Memory', 'Memory']]
       .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island' })[f.id] || f.label])) },
   { id: 'm_profil', de: 'Mein Profil', en: 'My profile', subs: [['profile', 'Profilseite & Farben', 'Profile page & colours'], ['avatar', 'Das bin ich (Avatar)', 'Avatar'], ['trophies', 'Pokale', 'Trophies'], ['schatz', 'Lustige Karten', 'Fun cards']] }
 ];

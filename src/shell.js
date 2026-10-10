@@ -243,6 +243,7 @@ function worldTile(id, i) {
   if (id === 'shop') return dzTile({ cls, art: 'shop', title: 'Shop', sub: `${S.coins} Münzen`, act: 'shop' });
   if (id === 'musik') return dzTile({ cls, art: 'musik', title: 'Meine Musik', sub: closed ? 'Nach dem Üben' : (f.sub ? f.sub() : ''), act: 'musik', tag });
   if (id === 'story') return dzTile({ cls, art: 'story', title: dzPoss(FN()) + ' Geschichte', sub: (typeof epList === 'function') ? `${epList().filter(epUnlocked).length} von ${epList().length} Episoden` : '', act: 'story' });
+  if (id === 'memory') return dzTile({ cls, art: 'memory', title: 'Memory', sub: (typeof mmSub === 'function') ? mmSub() : 'Paare finden', act: 'memory' });
   if (id === 'welt') return dzTile({ cls, html: dzPassport(), title: 'Meine Weltreise', sub: (typeof wList === 'function') ? `${wList().filter(p => WA.isOpen(p.id)).length} Länder offen` : 'Entdeckerpass', act: 'welt' });
   const nm = { wesen: 'Meine Wesen', buch: 'Mein Buch', insel: 'Meine Insel' }[id];
   return dzTile({ cls, art: id === 'wesen' ? 'fino' : id === 'buch' ? 'hefte' : 'welt', title: nm, sub: f && f.sub ? f.sub() : '', act: id, tag });
@@ -254,7 +255,7 @@ const worldTileL = (id, i) => {
   return tagged.replace('class="dz-tile ', 'class="dz-tile locked ');
 };
 VIEWS.rewards = () => {
-  const ids = ['shop', 'welt'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
+  const ids = ['shop', 'welt', 'memory'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || id === 'memory' || FEATS[id]);
   return topBar('Meine Welt', 'home') + dzHero('', 'Meine Welt', 'Von dir verdient. Für dich gemacht.', '', 'sm') + dzSec('Entdecken & sammeln') +
     dzGrid(HOME_N, ids.map(worldTileL).join(''), 'dz-home4 dz-kreativ') +
     `<p class="ad-creative-note">${creativeOK() ? (creativeMode() === 'always' ? 'Deine Kreativbereiche sind offen.' : `Deine Kreativzeit: ${fmtT(creativeLeft())}`) : esc(creativeInfo())}</p>`;
@@ -319,4 +320,4 @@ Object.assign(ACT, {
 });
 
 /* Pokale-Seite: Abzeichen antippen = kleines Fenster */
-Object.assign(ACT, { pkOpen: id => { UI.pkSel = UI.pkSel === id ? null : id; render(); }, pkClose: () => { UI.pkSel = null; render(); } });
+

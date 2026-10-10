@@ -38,8 +38,7 @@ const WA = {
   freeMiles: () => { const w = wS(); return Math.max(0, w.miles - w.milesSpent); },
   mcost: id => WP[id].cost * W_MILE_X,
   addMiles(n) {                                                                  // nur für gelöste Aufgaben; Tagesgrenze schützt vor Dauer-Klicken
-    touchDay(); const d = S.daily, give = Math.max(0, Math.min(n, W_MILES_DAY - (d.mi || 0))); if (!give) return 0;
-    d.mi = (d.mi || 0) + give; wS().miles += give; return give;
+    return 0;                                                                    // keine neuen Meilen mehr
   },
   testPass(score, total) {                                                       // Mini-Test ≥ 80 %: Boarding-Pass = eine freie Wahl (1× pro Tag)
     touchDay(); if (total < 10 || score / total < W_PASS_PCT || S.daily.bp) return null;
@@ -57,7 +56,7 @@ const WA = {
   },
   isOpen: id => !!WP[id] && (WP[id].cost === 0 || !!wS().open[id]),
   shown: id => !!WP[id] && (WA.isOpen(id) || !wS().off[id]),                  // vom Elternteil ausgeblendete, noch gesperrte Länder
-  canOpen: id => !!WP[id] && !WA.isOpen(id) && WA.freeMiles() >= WA.mcost(id),
+  canOpen: () => false,                                                          // Reisemeilen sind abgeschafft: Länder öffnen nur über freie Wahl, Boarding-Pass oder Ticket (alte Meilen-Zähler bleiben unberührt gespeichert)
   openCountry(id) {
     if (!WA.canOpen(id)) return false;
     const w = wS(); w.milesSpent += WA.mcost(id); w.open[id] = wDay(); save(); return true;
@@ -149,8 +148,8 @@ function wCard(p) {
   if (open) return `<button class="w-card open" data-act="wBoard" data-arg="${p.id}" aria-label="${esc(p.name)}, Reise starten, ${WA.marks(p.id)} von ${WSTAT.length} Stationen besucht${WA.stamped(p.id) ? ', Stempel erhalten' : ''}">
     ${wFlag(p.id, 'w-cflag')}<b>${esc(p.name)}</b><small>${esc(p.sub)}</small>${wDots(p.id)}${WA.stamped(p.id) ? `<span class="w-cstamp">${ico('stamp', 14)} Stempel</span>` : ''}</button>`;
   const can = WA.canOpen(p.id);
-  return `<button class="w-card locked ${can ? 'can' : ''}" data-act="wLock" data-arg="${p.id}" aria-label="${esc(p.name)}, gesperrt, kostet ${WA.mcost(p.id)} Reisemeilen${can ? ', du kannst es öffnen' : ''}">
-    <span class="w-cflagwrap">${wFlag(p.id, 'w-cflag')}<i class="w-lockic">${ico('lock', 16)}</i></span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small><span class="w-price">${WA.mcost(p.id)} ✈️${can ? ' · bereit' : ''}</span></button>`;
+  return `<button class="w-card locked ${can ? 'can' : ''}" data-act="wLock" data-arg="${p.id}" aria-label="${esc(p.name)}, gesperrt, noch nicht geöffnet">
+    <span class="w-cflagwrap">${wFlag(p.id, 'w-cflag')}<i class="w-lockic">${ico('lock', 16)}</i></span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small></button>`;
 }
 function wPickNote() {
   if (!WA.anyLocked()) return '';
@@ -163,19 +162,18 @@ const W_CONT = ['Europa', 'Asien', 'Afrika', 'Nordamerika', 'Südamerika', 'Ozea
 VIEWS.welt = () => {
   const all = wList().filter(p => WA.shown(p.id)), open = all.filter(p => WA.isOpen(p.id)), locked = all.filter(p => !WA.isOpen(p.id));
   const sel = UI.wDest && WP[UI.wDest] ? UI.wDest : (open[0] || all[0] || {}).id;
-  const opt = p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(p.name)}${WA.isOpen(p.id) ? '' : ' · ' + WA.mcost(p.id) + ' ✈️ Meilen'}</option>`;
+  const opt = p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(p.name)}</option>`;
   const pick = `<section class="w-pick" aria-label="Reiseziel wählen"><label for="wDest">Reiseziel wählen</label><div class="w-pick-row"><select id="wDest" class="txt">${open.length ? `<optgroup label="Meine Reisen">${open.map(opt).join('')}</optgroup>` : ''}${locked.length ? `<optgroup label="Noch gesperrt">${locked.map(opt).join('')}</optgroup>` : ''}</select><button class="btn" data-act="wGoDest">Los geht’s</button></div></section>`;
   const groups = W_CONT.map(c => [c, locked.filter(p => p.cont === c)]).filter(x => x[1].length);
   const pend = WA.pending();
   return wRoot(wBar(W_NAME, 'rewards', 'Meine Welt', `<button class="w-pill" data-act="wPassGo">${ico('stamp', 18)} ${W_PASS}</button>`)
-    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Du suchst dir selbst aus, wohin es geht. Jeden Tag nach 25 Aufgaben oder 20 Minuten Üben darfst du ein Land deiner Wahl öffnen. Auch mit Reisemeilen ✈️, einem Boarding-Pass aus dem Mini-Test (12 von 15 richtig) oder einem Reise-Ticket aus dem Shop.</p></div>
-      <div class="w-bal"><b>${WA.freeMiles()}</b><span>Reisemeilen ✈️</span><small>${wS().miles} gesammelt${wS().milesSpent ? ` · ${wS().milesSpent} ausgegeben` : ''}</small></div></section>
+    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Du suchst dir selbst aus, wohin es geht. Jeden Tag nach 25 Aufgaben oder 20 Minuten Üben darfst du ein Land deiner Wahl öffnen. Außerdem öffnen ein Boarding-Pass aus dem Mini-Test (12 von 15 richtig) oder ein Reise-Ticket aus dem Shop ein Land.</p></div></section>
     ${wPickNote()}${pick}
     <h3 class="w-sec">Meine Reisen</h3><div class="w-grid">${open.map(wCard).join('')}</div>
     ${pend.length ? `<div class="w-wish">${ico('stamp', 18)} <span>Dein Wunschland${pend.length > 1 ? 'länder' : ''}: <b>${pend.map(x => esc(x.n)).join(', ')}</b>. Es kommt bald und wird dann von selbst geöffnet.</span></div>` : ''}
     ${groups.length ? `<h3 class="w-sec">Weitere Ziele</h3>${groups.map(([c, list]) => `<details class="w-cont" ${UI.wCont === c ? 'open' : ''} data-cont="${c}"><summary>${esc(c)} <span>${list.length}</span></summary><div class="w-grid">${list.map(wCard).join('')}</div></details>`).join('')}` : ''}
     <div class="w-foot2"><button class="btn sec" data-act="wTixShop">${ico('bag', 18)} Reise-Ticket im Shop</button></div>
-    <p class="w-foot">Reisemeilen bekommst du für richtig gelöste Aufgaben. Deine Sterne, Münzen, Wesen und Pokale bleiben, wie sie sind.</p>`);
+    <p class="w-foot">Deine Sterne, Münzen, Wesen und Pokale bleiben, wie sie sind.</p>`);
 };
 
 /* ---------- Shop → Reisen: Reise-Ticket (nächstes Land) und Wunsch-Ticket (frei gewähltes Land) ---------- */
@@ -393,7 +391,7 @@ function wSpeak(text, lang) {
 /* ---------- Aktionen ---------- */
 registerFeature({
   id: 'welt', title: W_NAME, icon: 'stamp', tint: 'sky', group: 'world', order: 70, view: 'welt',
-  sub: () => { const n = wList().filter(p => WA.isOpen(p.id)).length; return (WA.anyLocked() && WA.picks() > 0) || wList().some(p => WA.shown(p.id) && WA.canOpen(p.id)) ? 'Du kannst ein Land öffnen' : `${n} ${n === 1 ? 'Land' : 'Länder'} offen`; },
+  sub: () => { const n = wList().filter(p => WA.isOpen(p.id)).length; return (WA.anyLocked() && WA.picks() > 0) ? 'Du kannst ein Land öffnen' : `${n} ${n === 1 ? 'Land' : 'Länder'} offen`; },
   check: () => { const got = WA.checkWishes(); if (got.length) toast('🎫', `Dein Wunschland ${esc(WP[got[0]].name)} ist da und offen!`); },
   views: { weltReise: VIEWS.weltReise, weltPass: VIEWS.weltPass, weltEltern: VIEWS.weltEltern },
   leave: () => { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
@@ -435,10 +433,8 @@ registerFeature({
     wLock: id => {
       const p = WP[id]; if (!p) return;
       if (WA.isOpen(id)) return wLand(id);
-      const free = WA.freeMiles(), cost = WA.mcost(id);
-      if (WA.picks() > 0) return modal(`${esc(p.name)} öffnen?`, `Du darfst ${WA.dayPick() ? 'heute' : 'jetzt'} <b>ein Land frei wählen</b>. Möchtest du <b>${esc(p.name)}</b> öffnen? Es bleibt für immer offen. Deine Meilen, Sterne und Münzen bleiben, wie sie sind.`, 'Öffnen', 'wPickYes', id, 'Anderes Land');
-      if (free >= cost) modal(`${esc(p.name)} öffnen?`, `Das kostet <b>einmal ${cost} ✈️ Reisemeilen</b>. Du hast ${free}, danach ${free - cost}.<br>Deine Sterne, Münzen, Wesen und Pokale bleiben. Das Land bleibt danach für immer offen.`, 'Öffnen', 'wOpenYes', id, 'Später');
-      else modal(`${esc(p.name)} ist noch zu`, `${hwDone() ? 'Heute hast du schon ein Land gewählt. Morgen darfst du wieder eins aussuchen.' : 'Löse heute <b>25 Aufgaben</b> oder übe <b>20 Minuten</b> – dann darfst du ein Land deiner Wahl öffnen.'}<br>Oder mit Reisemeilen: dir fehlen noch <b>${cost - free} ✈️</b> (das Land kostet ${cost}, du hast ${free}). Ein Mini-Test mit 12 von 15 richtig bringt auch eine freie Wahl.`, null, '', '', 'Okay');
+      if (WA.picks() > 0) return modal(`${esc(p.name)} öffnen?`, `Du darfst ${WA.dayPick() ? 'heute' : 'jetzt'} <b>ein Land frei wählen</b>. Möchtest du <b>${esc(p.name)}</b> öffnen? Es bleibt für immer offen. Deine Sterne und Münzen bleiben, wie sie sind.`, 'Öffnen', 'wPickYes', id, 'Anderes Land');
+      modal(`${esc(p.name)} ist noch zu`, `${hwDone() ? 'Heute hast du schon ein Land gewählt. Morgen darfst du wieder eins aussuchen.' : 'Löse heute <b>25 Aufgaben</b> oder übe <b>20 Minuten</b> – dann darfst du ein Land deiner Wahl öffnen.'}<br>Ein Mini-Test mit 12 von 15 richtig oder ein Reise-Ticket aus dem Shop öffnet auch ein Land.`, null, '', '', 'Okay');
     },
     wPickYes: id => { closeModal(); if (!WA.usePick(id)) return; wQuietly(() => checkTrophies()); sfx('magic'); wFlight(id, () => wLand(id)); },
     wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; wQuietly(() => checkTrophies()); wFlight(id, () => wLand(id)); },

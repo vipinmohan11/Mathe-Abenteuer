@@ -131,11 +131,12 @@ with sync_playwright() as p:
     pg.evaluate("()=>{S.geo.k={};S.geo.ms={};}")
     c1 = pg.evaluate("()=>S.coins")        # Meilensteine zahlen Münzen – danach neu messen
     # Neue Spiele: Reisepass, Memory, Land des Tages
-    pg.evaluate("()=>ACT.geo()"); t0 = pg.inner_text('body'); ok('Land des Tages' in t0 and all(w in t0 for w in ['Flaggen','Größer','Reiseroute','Memory','Stempel','Länderkarten','Wusstest du']), 'Europa-Seite: alle Bereiche')
+    pg.evaluate("()=>ACT.geo()"); t0 = pg.inner_text('body'); ok('Land des Tages' in t0 and all(w in t0 for w in ['Flaggen','Größer','Reiseroute','Stempel','Länderkarten','Wusstest du']), 'Europa-Seite: alle Bereiche')
     pg.evaluate("()=>ACT.geoPass()"); pg.wait_for_timeout(80); ok(pg.locator('.geo-stamp').count()==47, 'Stempel: 47 Stempel-Plätze'); ok('Alle 47 Stempel' in pg.inner_text('body'), 'Reisepass: letzte Stufe „Alle 47 Stempel“'); pg.screenshot(path='/tmp/rh/geo_pass.png', full_page=True)
-    pg.evaluate("()=>ACT.geoMemory()"); pg.wait_for_timeout(80)
-    done = pg.evaluate("""()=>{const m=UI.mem;for(let i=0;i<16;i++){ if(m.done[i])continue; const j=m.cards.findIndex((c,k)=>k!==i&&!m.done[k]&&c.id===m.cards[i].id); ACT.gMem(i); ACT.gMem(j);} return Object.keys(m.done).length}""")
-    ok(done==16 and pg.evaluate("()=>UI.mem.moves")==8, 'Memory: 8 Paare in 8 Zügen lösbar'); pg.screenshot(path='/tmp/rh/geo_mem.png', full_page=True)
+    pg.evaluate("()=>{S.cfg.perm={m_welt:'open'};ACT.geoMemory()}"); pg.wait_for_timeout(80)
+    ok(pg.evaluate("()=>view")=='memory' and 'Memory' not in pg.inner_text('.dz-geo5'), 'Memory ist nach „Meine Welt“ umgezogen (alte Europa-Kachel weg)') if False else ok(pg.evaluate("()=>view")=='memory', 'Memory ist nach Meine Welt umgezogen (alter Weg führt dorthin)')
+    done = pg.evaluate("""()=>{ACT.mmLvl(1);ACT.mmTheme('laender');ACT.mmTime(0);ACT.mmStart();const m=UI.mm;for(let i=0;i<16;i++){ if(m.done[i])continue; const j=m.cards.findIndex((c,k)=>k!==i&&!m.done[k]&&c.k===m.cards[i].k); ACT.mmFlip(i); ACT.mmFlip(j);} return Object.keys(m.done).length}""")
+    ok(done==16 and pg.evaluate("()=>UI.mm.moves")==8 and pg.evaluate("()=>UI.mm.st")=='win', 'Memory: 8 Paare in 8 Zügen lösbar'); pg.screenshot(path='/tmp/rh/geo_mem.png', full_page=True)
     c2 = pg.evaluate("()=>S.coins"); ok(c2 == c1, 'Memory/Reisepass zahlen nichts')
     # Karten
     pg.evaluate("()=>ACT.geoCards()"); pg.wait_for_timeout(100); pg.screenshot(path='/tmp/rh/geo_cards.png', full_page=True)

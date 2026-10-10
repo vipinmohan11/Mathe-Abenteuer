@@ -24,17 +24,17 @@ with sync_playwright() as p:
       const kinds={};L.forEach(i=>kinds[i.kind]=(kinds[i.kind]||0)+1);
       return {n:L.length,uniq:new Set(L.map(i=>i.id)).size,mix,kinds,grp:L.every(i=>KIND[i.kind].group==='avatar'),
         cur:sh.every(i=>i.src.cur==='c'),min:Math.min(...pr),max:Math.max(...pr),
-        ms:ms.map(i=>[i.id,i.src.why]),msOk:ms.every(i=>/^Beende \\d+ (Gruppe|Gruppen|Stufen)$/.test(i.src.why)),
+        ms:ms.map(i=>[i.id,i.src.why]),msOk:ms.every(i=>(/^Beende \\d+ (Gruppe|Gruppen|Stufen)$/.test(i.src.why)||i.src.why==='Überraschungsgeschenk aus dem Shop')),
         thumbs:L.every(i=>{const t=KIND[i.kind].thumb(i);return typeof t==='string'&&t.indexOf('<svg')>=0&&t.indexOf('undefined')<0&&t.indexOf('NaN')<0}),
         old:['avbrow','avnose','avface','avextra'].some(k=>KIND[k]),
         freeSkin:L.filter(i=>i.id.startsWith('col.skin.')).every(i=>i.src.t==='free'),
         feat:FEATS.avatar&&FEATS.avatar.creative}}""")
     print(r)
-    ok(90 <= r['n'] <= 110 and r['uniq'] == r['n'], 'Katalog 90-110 Stück, IDs eindeutig (%d)' % r['n'])
+    ok(90 <= r['n'] <= 125 and r['uniq'] == r['n'], 'Katalog 90-125 Stück, IDs eindeutig (%d)' % r['n'])
     ok(r['grp'] and r['cur'], 'Gruppe avatar, nur Münzen')
     ok(set(r['mix']) <= {'free', 'shop', 'milestone'}, 'Quellen nur free/shop/milestone %s' % r['mix'])
     ok(25 <= r['mix']['free'] <= 35, 'Gratis-Grundausstattung 25-35 (%d)' % r['mix']['free'])
-    ok(5 <= r['mix']['milestone'] <= 8 and r['msOk'], 'Meilensteine 5-8 mit Text (%d)' % r['mix']['milestone'])
+    ok(5 <= r['mix']['milestone'] - 10 <= 8 and r['msOk'], 'Meilensteine 5-8 (+10 Geschenke) mit Text (%d)' % r['mix']['milestone'])
     ok(15 <= r['min'] and r['max'] <= 400 and r['min'] <= 20, 'Münzpreise 15..400 (%s..%s), billig zuerst' % (r['min'], r['max']))
     ok(r['freeSkin'] and not r['old'], 'Hautfarben frei, alte Arten entfernt')
     ok(r['thumbs'], 'Jede Vorschau (Thumb) rendert')

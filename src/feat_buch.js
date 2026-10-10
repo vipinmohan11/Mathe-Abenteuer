@@ -14,9 +14,12 @@ const BS_DATA = [
   ['sonnenbl', 'Sonnenblume', '🌻', 15], ['klee', 'Glücksklee', '🍀', 20], ['pizza', 'Pizza', '🍕', 20], ['eis', 'Eis', '🍦', 25], ['kuchen', 'Cupcake', '🧁', 30],
   ['ball', 'Fußball', '⚽', 20], ['rakete', 'Rakete', '🚀', 40], ['zug', 'Zug', '🚂', 30], ['burg', 'Burg', '🏰', 50], ['gitarre', 'Gitarre', '🎸', 35],
   ['farben', 'Farbpalette', '🎨', 35], ['fernrohr', 'Fernrohr', '🔭', 45], ['diamant', 'Diamant', '💎', 60],
-  ['medaille', 'Medaille', '🏅', 'Beende eine Gruppe'], ['pokal', 'Pokal', '🏆', 'Sammle 3 Stempel'], ['gehirn', 'Gehirn', '🧠', 'Sammle 6 Stempel'], ['krone', 'Krone', '👑', 'Sammle 12 Stempel']
+  ['medaille', 'Medaille', '🏅', 'Beende eine Gruppe'], ['pokal', 'Pokal', '🏆', 'Sammle 3 Stempel'], ['gehirn', 'Gehirn', '🧠', 'Sammle 6 Stempel'], ['krone', 'Krone', '👑', 'Sammle 12 Stempel'],
+  ['loewe', 'Löwe', '🦁', 'G'], ['elefant', 'Elefant', '🐘', 'G'], ['hai', 'Hai', '🦈', 'G'], ['papagei', 'Papagei', '🦜', 'G'], ['frosch', 'Frosch', '🐸', 'G'], ['ufo', 'Ufo', '🛸', 'G'],
+  ['roboter', 'Roboter', '🤖', 'G'], ['zauberer', 'Zauberer', '🧙', 'G'], ['vulkan', 'Vulkan', '🌋', 'G'], ['wal', 'Wal', '🐋', 'G'], ['ballon', 'Ballon', '🎈', 'G'], ['teddy', 'Teddy', '🧸', 'G'],
+  ['karussell', 'Karussell', '🎠', 'G'], ['kristall', 'Kristallkugel', '🔮', 'G'], ['planet', 'Planet', '🪐', 'G'], ['krabbe', 'Krabbe', '🦀', 'G']
 ];
-regItems(BS_DATA.map(([id, name, e, q]) => ({ id: 'bs.' + id, kind: 'bsticker', name, e, src: q === 0 ? { t: 'free' } : typeof q === 'number' ? { t: 'shop', cur: 'c', price: q } : { t: 'milestone', why: q } })));
+regItems(BS_DATA.map(([id, name, e, q]) => ({ id: 'bs.' + id, kind: 'bsticker', name, e, src: q === 0 ? { t: 'free' } : q === 'G' ? { t: 'milestone', why: 'Überraschungsgeschenk aus dem Shop' } : typeof q === 'number' ? { t: 'shop', cur: 'c', price: q } : { t: 'milestone', why: q } })));
 
 const fmtDate = ts => new Date(ts).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
 const bkPage = m => { const B = S.buch || (S.buch = { st: {} }); if (!B.st) B.st = {}; let a = B.st[m.id]; if (!Array.isArray(a)) a = B.st[m.id] = []; while (a.length < BK_SPACES) a.push(null); return a; };

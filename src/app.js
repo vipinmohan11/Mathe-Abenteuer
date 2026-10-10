@@ -218,7 +218,6 @@ VIEWS.play = () => {
     let pts = '';
     if (deck) pts = R.lastDelta ? ` <b>+${R.lastDelta} 🪙</b>` : pt ? ` <span class="small">(${pt} Punkt${pt > 1 ? 'e' : ''} – Münzen-Bestwert dieser Stufe schon erreicht)</span>` : ` <span class="small">(Beim 2. Versuch zählt eine 1-Punkt-Aufgabe nicht mehr.)</span>`;
     else pts = c.res === 'first' ? ' Die Aufgabe verschwindet aus dem Fehler-Heft.' : ' Noch einmal gleich richtig – dann verschwindet sie.';
-    if (R.lastMile) pts += ' <b class="mile">+1 ✈️</b>';
     fb = `<div class="fb ok" role="status"><strong class="ad-feedback-title">${ico('check', 23)} ${c.res === 'first' ? 'Ja! Richtig gerechnet!' : 'Jetzt stimmt’s! Gut verbessert.'}</strong>${pts}<span class="ex">${q.explain}</span></div>`;
   } else {
     mood = 'sad'; fb = `<div class="fb bad" role="status"><strong class="ad-feedback-title">${XMARK} Noch nicht richtig. Schau mal:</strong><span class="ex">${q.explain}</span></div>`;
@@ -493,7 +492,7 @@ const goalCard = () => {
 VIEWS.shop = () => {
   const grp = UI.shopGrp || 'fino', groups = shopGroups(), lock = shopLeft() <= 0;
   const gtabs = `<div class="tabs">${groups.map(g => `<button class="${g === grp ? 'on' : ''}" data-act="shopGrp" data-arg="${g}">${ico((SHOP_GROUPS[g] || {}).ic || 'sparkle', 18)} ${(SHOP_GROUPS[g] || { label: g }).label}</button>`).join('')}</div>`;
-  const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
+  const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${typeof giftCard === 'function' ? giftCard() : ''}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
   if (grp === 'reisen' && typeof wShopTickets === 'function') return head + gtabs + wShopTickets();
   if (grp !== 'fino') {
     const kinds = Object.keys(KIND).filter(k => KIND[k].group === grp);
@@ -527,15 +526,13 @@ function equip(slot, id) { if (id && !S.owned[slot].includes(id)) return; S.eq[s
 /* ----- Pokale ----- */
 VIEWS.trophies = () => {
   const L = trophyList(), got = L.filter(t => S.trophies[t.id]).length;
-  const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0) || ((a.s && !S.trophies[a.id]) ? 1 : 0) - ((b.s && !S.trophies[b.id]) ? 1 : 0));
+  const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0) || (S.trophies[a.id] && S.trophies[b.id] ? (+S.trophies[b.id] || 0) - (+S.trophies[a.id] || 0) : 0) || ((a.s && !S.trophies[a.id]) ? 1 : 0) - ((b.s && !S.trophies[b.id]) ? 1 : 0));
   const mp = MODULES.map(m => { const md = m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '').join(''); return md ? `<span class="pk-med"><b>${esc(m.id)}</b>${md}</span>` : ''; }).join('');
-  const sel = UI.pkSel && L.find(t => t.id === UI.pkSel), has = sel && S.trophies[sel.id];
-  const when = ts => new Date(ts).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
-  const pop = sel ? `<div class="pk-pop" role="dialog" aria-label="Pokal"><span class="pk-pop-ic${has ? '' : ' lock'}">${sel.s && !has ? '❓' : sel.i}</span><div class="pk-pop-t"><b>${sel.s && !has ? 'Geheimer Pokal' : esc(sel.n)}</b><span>${sel.s && !has ? 'Finde heraus, wie man ihn bekommt!' : esc(sel.d)}</span><small>${has ? 'Bekommen am ' + when(has) : 'Noch nicht geschafft'}</small></div><button class="rw-x" data-act="pkClose" aria-label="Schließen">✕</button></div>` : '';
+  const when = ts => new Date(+ts || Date.now()).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' });
   return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card pk-head"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
   ${mp ? `<div class="pk-meds" aria-label="Medaillen pro Gruppe">${mp}</div>` : ''}
-  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten. Tippe einen Pokal an.</div></div>
-  <div class="pk-grid">${sorted.map(t => { const h = S.trophies[t.id], hid = t.s && !h; return `<button class="pk-b${h ? ' got' : ' lock'}${UI.pkSel === t.id ? ' sel' : ''}" data-act="pkOpen" data-arg="${esc(t.id)}" aria-label="${hid ? 'Geheimer Pokal' : esc(t.n) + (h ? '' : ', noch nicht geschafft')}">${hid ? '❓' : t.i}</button>`; }).join('')}</div>${pop}`;
+  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten.</div></div>
+  <div class="pk-grid">${sorted.map(t => { const h = S.trophies[t.id], hid = t.s && !h; return `<div class="pk-b${h ? ' got' : ' lock'}"><span class="pk-i">${hid ? '❓' : t.i}</span><b>${hid ? 'Geheimer Pokal' : esc(t.n)}</b><span class="pk-d">${hid ? 'Finde heraus, wie man ihn bekommt!' : esc(t.d)}</span><small>${h ? 'Bekommen am ' + when(h) : 'Noch nicht geschafft'}</small></div>`; }).join('')}</div>`;
 };
 
 /* ----- limit ----- */

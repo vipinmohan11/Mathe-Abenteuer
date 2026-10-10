@@ -741,6 +741,29 @@ body[data-calm="1"] .rw-rays,body[data-calm="1"] .rw-tro{animation:none}
 @keyframes rwPulse{40%{transform:scale(1.14)}}
 @media(prefers-reduced-motion:reduce){.rw-pulse{animation:none}}
 
+.mm-setup h3{margin:14px 0 8px}.mm-setup h3:first-child{margin-top:0}
+.mm-lvs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.mm-lv{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:16px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;color:inherit;cursor:pointer}
+.mm-lv b{font-size:1.05rem}.mm-lv small{font-size:.72rem;color:var(--dz-mute);display:inline-flex;align-items:center;gap:3px}
+.mm-lv.on{border-color:var(--dz-accent);background:var(--dz-t1)}.mm-lv.lock{opacity:.5;cursor:not-allowed}
+.mm-chips{display:flex;flex-wrap:wrap;gap:8px}
+.mm-chip{padding:8px 14px;border-radius:999px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:700;color:inherit;cursor:pointer}
+.mm-chip.on{border-color:var(--dz-accent);background:var(--dz-t1)}
+.mm-clock{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0}.mm-clock b{font-size:1.3rem;min-width:3.4ch;text-align:center}
+.mm-bar{flex:1;max-width:260px;height:10px;border-radius:99px;background:var(--dz-t2);overflow:hidden}.mm-bar i{display:block;height:100%;background:var(--dz-accent);transition:width .25s linear}
+.mm-info{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;font-size:.9rem;color:var(--dz-mute);margin-bottom:6px}
+.mm-last{min-height:1.4em;text-align:center;font-size:.85rem;margin:2px 0 8px;color:var(--dz-accent);font-weight:700}
+.mm-grid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:6px;max-width:min(100%,640px);margin:0 auto}
+.mm-c{aspect-ratio:1;display:grid;place-items:center;padding:2px;border-radius:12px;border:2px solid var(--dz-line);background:var(--dz-t1);color:var(--dz-ink);font:inherit;font-weight:800;font-size:1.3rem;cursor:pointer;overflow:hidden;min-width:0}
+.mm-c.up{background:var(--dz-surface);font-size:.8rem}.mm-c.done{background:var(--dz-t2);border-color:var(--dz-accent2,var(--dz-line));cursor:default}.mm-c.joker{font-size:1.6rem}
+.mm-t{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.1;text-align:center;word-break:break-word;hyphens:auto;max-width:100%}
+.mm-flag{width:100%;max-width:44px;height:auto}.mm-t b{font-size:.9em}
+.mm-grid.n4 .mm-c.up{font-size:clamp(.72rem,3.4vw,1rem)}.mm-grid.n5 .mm-c.up{font-size:clamp(.62rem,2.8vw,.9rem)}
+.mm-grid.n6 .mm-c.up{font-size:clamp(.5rem,2.2vw,.8rem)}.mm-grid.n7 .mm-c.up{font-size:clamp(.44rem,1.9vw,.72rem)}
+.mm-grid.n6 .mm-flag,.mm-grid.n7 .mm-flag{max-width:28px}.mm-grid.n6 .mm-c,.mm-grid.n7 .mm-c{border-radius:9px;border-width:1.5px;font-size:1rem}
+.mm-res{margin-top:14px}
+@media(prefers-reduced-motion:no-preference){.mm-c{transition:background .15s}}
+
 /* ===== Musik-Werkstatt: ruhig, flach, ein Akzent (--pri) ===== */
 body{--mu1:#A9794B;--mu2:#5E9B7C}
 body[data-theme="nacht"]{--mu1:#D9A068;--mu2:#7FC4A0}
@@ -1750,16 +1773,17 @@ body[data-theme="nacht"] .flagstate.on{background:#1f4a2e;color:#bfe9cc}
 .pk-head{margin-bottom:12px}
 .pk-meds{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .pk-med{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;background:var(--dz-t2);border-radius:999px;padding:3px 10px}.pk-med b{font-weight:900;color:var(--dz-mute)}
-.pk-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;padding-bottom:110px}
-.pk-b{aspect-ratio:1;display:grid;place-items:center;font:inherit;font-size:clamp(1.5rem,6vw,2.5rem);border-radius:18px;border:2px solid var(--dz-line);background:var(--dz-surface);padding:0;cursor:pointer;min-width:0}
+.pk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding-bottom:40px}
+.pk-b{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;border-radius:18px;border:2px solid var(--dz-line);background:var(--dz-surface);padding:12px 8px 10px;min-width:0}
+.pk-b .pk-i{font-size:2.2rem;line-height:1.1}.pk-b b{font-size:.88rem;line-height:1.2}
+.pk-b .pk-d{color:var(--dz-mute);font-size:.76rem;line-height:1.25}.pk-b small{margin-top:auto;padding-top:4px;font-weight:800;font-size:.72rem;color:var(--dz-accent)}
 .pk-b.got{background:var(--dz-t1);border-color:var(--dz-accent2,var(--dz-line))}
-.pk-b.lock{filter:grayscale(1);opacity:.45;background:var(--dz-surface2,#e8ece8)}
-.pk-b.sel{outline:3px solid var(--dz-accent);outline-offset:2px;opacity:1}
-.pk-b:focus-visible{outline:3px solid var(--dz-gold,#e0b43a);outline-offset:2px}
-.pk-pop{position:fixed;z-index:60;left:50%;bottom:18px;transform:translateX(-50%);width:min(380px,calc(100% - 24px));display:flex;align-items:center;gap:12px;background:var(--dz-surface);color:var(--dz-ink);border:2px solid var(--dz-line);border-radius:20px;padding:10px 6px 10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
-.pk-pop-ic{flex:none;font-size:2.4rem;width:56px;height:56px;display:grid;place-items:center;border-radius:16px;background:var(--dz-t1)}.pk-pop-ic.lock{filter:grayscale(1);opacity:.6}
-.pk-pop-t{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.pk-pop-t span{color:var(--dz-mute);font-size:.92rem}.pk-pop-t small{font-weight:800;color:var(--dz-accent)}
-@media(max-width:380px){.pk-grid{gap:6px}}
+.pk-b.lock{background:var(--dz-surface2,#e8ece8)}.pk-b.lock .pk-i{filter:grayscale(1);opacity:.5}.pk-b.lock b,.pk-b.lock .pk-d{opacity:.7}.pk-b.lock small{color:var(--dz-mute)}
+@media(max-width:480px){.pk-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
+.gift-card{display:flex;align-items:center;gap:12px;margin:10px 0;padding:12px 14px;border-radius:18px;border:2px dashed var(--dz-line);background:var(--dz-surface)}
+.gift-card>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.gift-card .bar{margin-top:4px}
+.gift-card.on{border-style:solid;border-color:var(--dz-gold,#e0b43a);background:var(--dz-t1)}.gift-ic{font-size:2rem}
+.gift-reveal{text-align:center}.gift-th{width:110px;height:110px;margin:6px auto;display:grid;place-items:center;font-size:4rem;border-radius:24px;background:var(--dz-t1)}.gift-th svg,.gift-th img{max-width:100%;max-height:100%}
 
 </style>
 <!-- Embedded fonts: Baloo 2 + Nunito (subset)
@@ -6015,6 +6039,62 @@ const wList = () => WORDER.map(id => WP[id]).filter(Boolean);
 }
 
 /* =====================================================================
+   WELT: Länder-Paket E – Island
+   Gleiche Struktur wie world_pack_b.js. Nur sichere Fakten, Beispiele als Beispiele, kein Pink.
+   Sprachwörter vor dem Veröffentlichen von Muttersprachlern prüfen lassen. Bildchen tragen das Präfix isl_.
+   Die Flagge FLAGS.isl kommt aus geo_data.js.
+   ===================================================================== */
+(function () {
+  Object.assign(W_ART, {
+    isl_reykjavik: '<path d="M0 74h140v21H0z" fill="#9fbac3"/><g stroke="#7d8b86" stroke-width="2.2" stroke-linejoin="round"><path d="M10 74V56h22v18z" fill="#c9a678"/><path d="M8 56l13-11 13 11z" fill="#a95040"/><path d="M104 74V54h24v20z" fill="#8fae95"/><path d="M102 54l14-11 14 11z" fill="#b4493d"/><path d="M52 74V30h8V16l6-8 6 8v14h8v44z" fill="#ece8dc"/><path d="M42 74V48h10M80 74V48h10" fill="#ece8dc"/></g><path d="M66 8V2" stroke="#7d8b86" stroke-width="2" stroke-linecap="round"/>',
+    isl_geysir: '<path d="M0 78q40-8 70-4t70-2v23H0z" fill="#b9c9b0"/><ellipse cx="70" cy="76" rx="26" ry="7" fill="#9fc3cc" stroke="#7d9aa3" stroke-width="2"/><path d="M70 74V30M60 74q-8-30 2-52M80 74q8-30-2-52" stroke="#eaf3f5" stroke-width="9" stroke-linecap="round" fill="none"/><g fill="#eaf3f5"><circle cx="70" cy="22" r="9"/><circle cx="56" cy="30" r="6"/><circle cx="84" cy="30" r="6"/><circle cx="62" cy="14" r="5"/><circle cx="80" cy="12" r="5"/></g>',
+    isl_volcano: '<path d="M0 80h140v15H0z" fill="#7d8b86"/><path d="M14 80 56 34h28l42 46z" fill="#6f7c78" stroke="#55615d" stroke-width="2.4" stroke-linejoin="round"/><path d="M56 34q14 8 28 0l-4-6H60z" fill="#c9784a"/><path d="M70 30q-6 20 2 40M70 34q10 14 10 36" stroke="#d98b4a" stroke-width="3.2" fill="none" stroke-linecap="round"/><g fill="#a9b3b0" opacity=".85"><circle cx="72" cy="18" r="8"/><circle cx="84" cy="10" r="6"/><circle cx="62" cy="10" r="5"/></g>',
+    isl_pony: '<path d="M0 82h140v13H0z" fill="#b9c9b0"/><g stroke="#6b5240" stroke-width="2.4" stroke-linejoin="round"><path d="M30 60Q30 44 46 44H78Q90 44 92 34L94 22Q96 14 104 16L110 20Q112 28 106 32L102 38Q102 52 98 60V80H88V64H54V80H44V64Q30 68 30 60Z" fill="#a4764f"/><path d="M92 22q-8 6-6 20" fill="none" stroke="#e8dcc3" stroke-width="5" stroke-linecap="round"/><path d="M30 56q-12 4-14 18" fill="none" stroke="#e8dcc3" stroke-width="5" stroke-linecap="round"/></g>',
+    isl_skyr: '<ellipse cx="70" cy="76" rx="44" ry="8" fill="#e5e8e4"/><path d="M26 44h88q-4 32-44 32T26 44Z" fill="#fbfaf7" stroke="#b9b3a6" stroke-width="2.5"/><ellipse cx="70" cy="44" rx="44" ry="9" fill="#f3f0e6" stroke="#b9b3a6" stroke-width="2.5"/><g fill="#4e6a8a"><circle cx="58" cy="41" r="4.5"/><circle cx="72" cy="44" r="4.5"/><circle cx="84" cy="40" r="4.5"/><circle cx="66" cy="38" r="4"/></g>',
+    isl_soup: '<ellipse cx="70" cy="76" rx="46" ry="8" fill="#e5e8e4"/><path d="M20 46h100q-6 32-50 32T20 46Z" fill="#8c7765"/><ellipse cx="70" cy="46" rx="50" ry="11" fill="#d1b27a"/><g fill="#c9784a"><circle cx="52" cy="46" r="5"/><circle cx="70" cy="49" r="5"/><circle cx="88" cy="45" r="5"/></g><g fill="#7a9a6c"><circle cx="62" cy="43" r="3"/><circle cx="80" cy="50" r="3"/></g>',
+    isl_ice: '<path d="M0 80h140v15H0z" fill="#9fbac3"/><path d="M10 80 46 36l22 22 20-30 42 52z" fill="#eaf3f5" stroke="#9fb3bd" stroke-width="2.4" stroke-linejoin="round"/><path d="M46 36 40 80M68 58l-6 22M88 28l10 52" stroke="#bcd4dc" stroke-width="2.4" fill="none"/>',
+    isl_fish: '<ellipse cx="70" cy="70" rx="56" ry="12" fill="#f3efe6" stroke="#b9b3a6" stroke-width="2.5"/><path d="M26 50q30-24 62 0 10-8 26-10-4 10-4 20 4 10 4 20-16-2-26-10-32 24-62 0 8-10 0-20z" fill="#9fb3bd" stroke="#6b7f89" stroke-width="2.4" stroke-linejoin="round"/><circle cx="40" cy="48" r="3" fill="#2f3b40"/>'
+  });
+  W_INFO.isl_ice = '<path d="M16 3 28 14 24 29H8L4 14z"/><path d="M4 14h24M16 3v26"/>';
+  Object.assign(W_SV, {
+    isl_geysir: () => '<ellipse cx="32" cy="52" rx="18" ry="5" fill="#9fc3cc" stroke="#7d9aa3" stroke-width="2"/><path d="M32 50V22M26 50q-4-18 2-30M38 50q4-18-2-30" stroke="#eaf3f5" stroke-width="6" stroke-linecap="round" fill="none"/><g fill="#eaf3f5" stroke="#9fb3bd" stroke-width="1.4"><circle cx="32" cy="16" r="7"/><circle cx="22" cy="22" r="4.5"/><circle cx="42" cy="22" r="4.5"/></g>',
+    isl_skyr: () => '<path d="M12 28h40q-2 22-20 22T12 28Z" fill="#fbfaf7" stroke="#b9b3a6" stroke-width="2.2"/><ellipse cx="32" cy="28" rx="20" ry="6" fill="#f3f0e6" stroke="#b9b3a6" stroke-width="2.2"/><g fill="#4e6a8a"><circle cx="26" cy="26" r="3"/><circle cx="35" cy="28" r="3"/><circle cx="40" cy="25" r="2.6"/></g>'
+  });
+
+  Object.assign(WP, {
+    isl: {
+      id: 'isl', name: 'Island', cont: 'Europa', cost: 6, sub: 'Vulkane, Geysire und Gletscher', speech: 'is-IS', scene: '#dce8ea', g1: '#d6e6ec', g2: '#e4e3d6',
+      guide: { name: 'Katla', svg: wGuide('Katla', '#f3d3b8', '#c98f4e', '#52737c') },
+      hero: '<svg class="w-scene-svg" viewBox="0 0 320 240" role="img" aria-label="Vulkan und Gletscher an der Küste"><circle cx="248" cy="58" r="22" fill="#f0e6c4"/><path d="M0 196q80-22 160 0t160 0v44H0Z" fill="#b9c9b0"/><path d="M0 218q80-16 160 0t160 0v22H0Z" fill="#9fbac3"/><path d="M20 196 96 84h40l76 112z" fill="#7a8783" stroke="#55615d" stroke-width="4" stroke-linejoin="round"/><path d="M96 84q20 12 40 0l-6-10h-28z" fill="#c9784a"/><path d="M116 80q-6 30 4 70" stroke="#d98b4a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M196 196 232 128l30 24 40 44z" fill="#eaf3f5" stroke="#9fb3bd" stroke-width="4" stroke-linejoin="round"/><g fill="#a9b3b0" opacity=".85"><circle cx="118" cy="56" r="14"/><circle cx="142" cy="42" r="10"/></g></svg>',
+      welcome: 'Eine große Insel im Nordatlantik mit Vulkanen, heißen Quellen und Gletschern.',
+      story: 'Hallo, ich bin Katla und wohne in Reykjavik. Heute zeige ich dir ein paar Dinge aus meinem Alltag. Andere Kinder auf Island erzählen dir vielleicht etwas ganz anderes.',
+      st: {
+        arrival: { title: 'Ankunft auf Island', lead: 'Island ist eine Insel im Nordatlantik, weit im Norden Europas.', guide: 'Wir starten mit einem schnellen Überblick. Danach kannst du jede Station frei öffnen.',
+          items: [['capital', 'Hauptstadt', 'Reykjavik'], ['coin_b', 'Währung', 'Isländische Krone'], ['map', 'Lage', 'Eine Insel im Nordatlantik'], ['time', 'Zeit', 'Island stellt die Uhr nicht um (keine Sommerzeit)'], ['language', 'Sprache', 'Isländisch'], ['island', 'Insel', 'Island ist rundherum von Meer umgeben']],
+          rich: [['Feuer und Eis', 'Auf Island gibt es Vulkane und große Gletscher.'], ['Heiße Quellen', 'Viele Häuser werden mit heißem Wasser aus der Erde geheizt.'], ['Natur', 'Es gibt Wasserfälle, Lavafelder und Küsten.']] },
+        places: { title: 'Orte auf deiner Route', lead: 'Vier Orte zeigen unterschiedliche Seiten von Island.', guide: 'Das Wetter kann sich schnell ändern. Warme Kleidung ist wichtig.',
+          cards: [['isl_reykjavik', 'Reykjavik', 'Die Hauptstadt am Meer hat bunte Häuser und eine hohe Kirche.'], ['isl_geysir', 'Geysir', 'Ein Geysir schleudert heißes Wasser hoch in die Luft.'], ['isl_volcano', 'Vulkane', 'Auf Island gibt es viele Vulkane, manche sind heute ruhig.'], ['isl_ice', 'Gletscher', 'Gletscher sind riesige Flächen aus Eis.']],
+          rich: [['Natur erleben', 'Viele Menschen wandern oder baden in warmen Quellen.'], ['Entfernung', 'Zwischen den Orten liegen oft weite Strecken ohne Dorf.']] },
+        life: { title: 'Alltag und Feste', lead: 'Beispiele helfen beim Verstehen, sind aber keine Regeln für alle.', guide: 'Meine Familie hat eigene Gewohnheiten. Andere Familien machen manches anders.',
+          items: [['home', 'Schwimmbad', 'Viele Menschen gehen gern in warme Schwimmbäder, auch im Winter.'], ['light', 'Nordlichter', 'Im Winter sieht man manchmal grüne Lichter am Himmel.'], ['time', 'Licht', 'Im Sommer wird es kaum dunkel, im Winter sehr früh.'], ['festival', 'Weihnachten', 'In der Weihnachtszeit gibt es viele Lichter und Bücher als Geschenk.'], ['flower', 'Natur', 'Viele Familien sind am Wochenende draußen unterwegs.'], ['isl_ice', 'Winter', 'Im Winter liegt oft Schnee und es ist windig.']] },
+        language: { title: 'Isländische Wörter hören', lead: 'Tippe auf den Lautsprecher. Höre zuerst zu und sprich dann langsam nach.', guide: 'Isländisch hat besondere Buchstaben wie ð und þ.',
+          words: [['Halló', '', 'Hallo', 'Hal-loh'], ['Góðan daginn', '', 'Guten Tag', 'Goh-than dai-in'], ['Takk', '', 'Danke', 'Tak'], ['Já', '', 'Ja', 'Jau'], ['Nei', '', 'Nein', 'Nei'], ['Bless', '', 'Tschüss', 'Bless'], ['Vatn', '', 'Wasser', 'Wat-n'], ['Vinur', '', 'Freund', 'Wi-nur'], ['Fyrirgefðu', '', 'Entschuldigung', 'Fi-rir-gev-thu'], ['Góða nótt', '', 'Gute Nacht', 'Goh-tha noht']] },
+        food: { title: 'Essen auf Island', lead: 'Gerichte unterscheiden sich nach Familie, Region, Jahreszeit und Anlass.', guide: '„Ungewohnt“ ist freundlicher und genauer als „seltsam“.',
+          cards: [['isl_skyr', 'Skyr', 'Ein cremiges Milchprodukt, oft mit Beeren gegessen.'], ['isl_soup', 'Lammsuppe', 'Eine warme Suppe mit Fleisch und Gemüse.'], ['isl_fish', 'Fisch', 'Fisch aus dem Meer ist auf Island sehr wichtig.'], ['isl_pony', 'Islandpferd', 'Ein kleines, kräftiges Pferd, das es seit langer Zeit auf Island gibt.']] }
+      },
+      quiz: [{ q: 'Wie heißt die Hauptstadt von Island?', ok: 'Reykjavik', bad: ['Oslo', 'Helsinki'] }, { q: 'Was ist ein Geysir?', ok: 'Eine heiße Quelle, die Wasser hochspritzt', bad: ['Ein Berg aus Eis', 'Ein Fisch'] },
+        { q: 'Was bedeutet „Takk“?', ok: 'Danke', bad: ['Hallo', 'Wasser'] }, { q: 'Was ist Skyr?', ok: 'Ein cremiges Milchprodukt', bad: ['Ein Vulkan', 'Ein Pferd'] }],
+      souv: {
+        arrival: { n: 'Postkarte', k: 'card', bg: '#dce8ea', c: ['', '#9fb3bd', '#f0e6c4'] }, places: { n: 'Geysir', k: 'isl_geysir', bg: '#e4e3d6' }, life: { n: 'Nordlicht-Lampe', k: 'lamp', bg: '#d6e6ec' },
+        language: { n: 'Halló-Sticker', k: 'bubble', bg: '#dce8ea' }, food: { n: 'Skyr', k: 'isl_skyr', bg: '#e4e3d6' }, quiz: { n: 'Goldmedaille', k: 'medal', bg: '#e9e2c9' } }
+    }
+  });
+  WORDER.push('isl');
+  Object.assign(WX.iso, { isl: 'ISL' });
+  Object.assign(WX.ap, { isl: 'KEF' });
+})();
+
+/* =====================================================================
    STORE: state, permanent storage, decks, rewards, trophies
    ---------------------------------------------------------------------
    Daten gehen NIE durch die App verloren. Es gibt absichtlich keine
@@ -6068,6 +6148,7 @@ const DEF = () => ({
   goal: null, earned: [], notes: [], noten: { songs: [], act: null, pref: {} }, mig3: 1,
   geo: { sessions: 0, seen: {}, ok: {}, miss: {}, k: {}, cards: {}, ms: {}, kd: {}, perf: 0, tpf: 0, kpf: 0, best: 0 },
   world: { spent: 0, open: {}, seen: {}, stamps: {}, souv: {}, quiz: {}, log: [], pass: {}, off: {}, wishes: [], tix: [] },
+  gifts: { got: {}, open: [], log: [] },        // Überraschungsgeschenke: erreichte Meilensteine, ungeöffnete, Verlauf
   flags: {},                                   // ausgeblendete Funktionen (wesen, buch, insel): Eltern können sie einschalten – nur Anzeige, Daten bleiben
   facts: { i: 0, seen: {} },                   // Lustige Fakten: Stelle im Stapel, schon gelesene
   cfg: { goal: 20, limitMin: 0, sound: true, creativeMode: 'after', creativeMin: 5, creativeMax: 2, shopMin: 5, due: {}, plang: 'de' }, pin: null, log: {}, lastLevel: 1, lastActive: '', lastBackup: 0
@@ -6415,6 +6496,7 @@ function checkTrophies() {
   const pop = typeof rwTrophy === 'function';                       // Pokal: Feier + Fenster (feat_lohn.js), wartet bis nichts anderes offen ist
   trophyList().forEach(t => { if (!S.trophies[t.id] && t.t(S)) { S.trophies[t.id] = Date.now(); any = true; if (pop) rwTrophy({ id: t.id, i: t.i, n: t.n, d: t.d }); else if (!quiet) toast(t.i, `Neuer Pokal: ${t.n}`); } });
   if (any && !quiet && !pop) confetti(60);
+  if (typeof giftCheck === 'function') giftCheck();
   if (typeof checkUnlocks === 'function') checkUnlocks();
 }
 
@@ -6908,7 +6990,6 @@ VIEWS.play = () => {
     let pts = '';
     if (deck) pts = R.lastDelta ? ` <b>+${R.lastDelta} 🪙</b>` : pt ? ` <span class="small">(${pt} Punkt${pt > 1 ? 'e' : ''} – Münzen-Bestwert dieser Stufe schon erreicht)</span>` : ` <span class="small">(Beim 2. Versuch zählt eine 1-Punkt-Aufgabe nicht mehr.)</span>`;
     else pts = c.res === 'first' ? ' Die Aufgabe verschwindet aus dem Fehler-Heft.' : ' Noch einmal gleich richtig – dann verschwindet sie.';
-    if (R.lastMile) pts += ' <b class="mile">+1 ✈️</b>';
     fb = `<div class="fb ok" role="status"><strong class="ad-feedback-title">${ico('check', 23)} ${c.res === 'first' ? 'Ja! Richtig gerechnet!' : 'Jetzt stimmt’s! Gut verbessert.'}</strong>${pts}<span class="ex">${q.explain}</span></div>`;
   } else {
     mood = 'sad'; fb = `<div class="fb bad" role="status"><strong class="ad-feedback-title">${XMARK} Noch nicht richtig. Schau mal:</strong><span class="ex">${q.explain}</span></div>`;
@@ -7183,7 +7264,7 @@ const goalCard = () => {
 VIEWS.shop = () => {
   const grp = UI.shopGrp || 'fino', groups = shopGroups(), lock = shopLeft() <= 0;
   const gtabs = `<div class="tabs">${groups.map(g => `<button class="${g === grp ? 'on' : ''}" data-act="shopGrp" data-arg="${g}">${ico((SHOP_GROUPS[g] || {}).ic || 'sparkle', 18)} ${(SHOP_GROUPS[g] || { label: g }).label}</button>`).join('')}</div>`;
-  const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
+  const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${typeof giftCard === 'function' ? giftCard() : ''}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
   if (grp === 'reisen' && typeof wShopTickets === 'function') return head + gtabs + wShopTickets();
   if (grp !== 'fino') {
     const kinds = Object.keys(KIND).filter(k => KIND[k].group === grp);
@@ -7217,15 +7298,13 @@ function equip(slot, id) { if (id && !S.owned[slot].includes(id)) return; S.eq[s
 /* ----- Pokale ----- */
 VIEWS.trophies = () => {
   const L = trophyList(), got = L.filter(t => S.trophies[t.id]).length;
-  const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0) || ((a.s && !S.trophies[a.id]) ? 1 : 0) - ((b.s && !S.trophies[b.id]) ? 1 : 0));
+  const sorted = L.slice().sort((a, b) => (S.trophies[b.id] ? 1 : 0) - (S.trophies[a.id] ? 1 : 0) || (S.trophies[a.id] && S.trophies[b.id] ? (+S.trophies[b.id] || 0) - (+S.trophies[a.id] || 0) : 0) || ((a.s && !S.trophies[a.id]) ? 1 : 0) - ((b.s && !S.trophies[b.id]) ? 1 : 0));
   const mp = MODULES.map(m => { const md = m.topics.map(t => medalOf(tk(m.id, t.id)) ? MEDALS[medalOf(tk(m.id, t.id))] : '').join(''); return md ? `<span class="pk-med"><b>${esc(m.id)}</b>${md}</span>` : ''; }).join('');
-  const sel = UI.pkSel && L.find(t => t.id === UI.pkSel), has = sel && S.trophies[sel.id];
-  const when = ts => new Date(ts).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
-  const pop = sel ? `<div class="pk-pop" role="dialog" aria-label="Pokal"><span class="pk-pop-ic${has ? '' : ' lock'}">${sel.s && !has ? '❓' : sel.i}</span><div class="pk-pop-t"><b>${sel.s && !has ? 'Geheimer Pokal' : esc(sel.n)}</b><span>${sel.s && !has ? 'Finde heraus, wie man ihn bekommt!' : esc(sel.d)}</span><small>${has ? 'Bekommen am ' + when(has) : 'Noch nicht geschafft'}</small></div><button class="rw-x" data-act="pkClose" aria-label="Schließen">✕</button></div>` : '';
+  const when = ts => new Date(+ts || Date.now()).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' });
   return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card pk-head"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
   ${mp ? `<div class="pk-meds" aria-label="Medaillen pro Gruppe">${mp}</div>` : ''}
-  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten. Tippe einen Pokal an.</div></div>
-  <div class="pk-grid">${sorted.map(t => { const h = S.trophies[t.id], hid = t.s && !h; return `<button class="pk-b${h ? ' got' : ' lock'}${UI.pkSel === t.id ? ' sel' : ''}" data-act="pkOpen" data-arg="${esc(t.id)}" aria-label="${hid ? 'Geheimer Pokal' : esc(t.n) + (h ? '' : ', noch nicht geschafft')}">${hid ? '❓' : t.i}</button>`; }).join('')}</div>${pop}`;
+  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten.</div></div>
+  <div class="pk-grid">${sorted.map(t => { const h = S.trophies[t.id], hid = t.s && !h; return `<div class="pk-b${h ? ' got' : ' lock'}"><span class="pk-i">${hid ? '❓' : t.i}</span><b>${hid ? 'Geheimer Pokal' : esc(t.n)}</b><span class="pk-d">${hid ? 'Finde heraus, wie man ihn bekommt!' : esc(t.d)}</span><small>${h ? 'Bekommen am ' + when(h) : 'Noch nicht geschafft'}</small></div>`; }).join('')}</div>`;
 };
 
 /* ----- limit ----- */
@@ -7917,6 +7996,7 @@ function worldTile(id, i) {
   if (id === 'shop') return dzTile({ cls, art: 'shop', title: 'Shop', sub: `${S.coins} Münzen`, act: 'shop' });
   if (id === 'musik') return dzTile({ cls, art: 'musik', title: 'Meine Musik', sub: closed ? 'Nach dem Üben' : (f.sub ? f.sub() : ''), act: 'musik', tag });
   if (id === 'story') return dzTile({ cls, art: 'story', title: dzPoss(FN()) + ' Geschichte', sub: (typeof epList === 'function') ? `${epList().filter(epUnlocked).length} von ${epList().length} Episoden` : '', act: 'story' });
+  if (id === 'memory') return dzTile({ cls, art: 'memory', title: 'Memory', sub: (typeof mmSub === 'function') ? mmSub() : 'Paare finden', act: 'memory' });
   if (id === 'welt') return dzTile({ cls, html: dzPassport(), title: 'Meine Weltreise', sub: (typeof wList === 'function') ? `${wList().filter(p => WA.isOpen(p.id)).length} Länder offen` : 'Entdeckerpass', act: 'welt' });
   const nm = { wesen: 'Meine Wesen', buch: 'Mein Buch', insel: 'Meine Insel' }[id];
   return dzTile({ cls, art: id === 'wesen' ? 'fino' : id === 'buch' ? 'hefte' : 'welt', title: nm, sub: f && f.sub ? f.sub() : '', act: id, tag });
@@ -7928,7 +8008,7 @@ const worldTileL = (id, i) => {
   return tagged.replace('class="dz-tile ', 'class="dz-tile locked ');
 };
 VIEWS.rewards = () => {
-  const ids = ['shop', 'welt'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || FEATS[id]);
+  const ids = ['shop', 'welt', 'memory'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || id === 'memory' || FEATS[id]);
   return topBar('Meine Welt', 'home') + dzHero('', 'Meine Welt', 'Von dir verdient. Für dich gemacht.', '', 'sm') + dzSec('Entdecken & sammeln') +
     dzGrid(HOME_N, ids.map(worldTileL).join(''), 'dz-home4 dz-kreativ') +
     `<p class="ad-creative-note">${creativeOK() ? (creativeMode() === 'always' ? 'Deine Kreativbereiche sind offen.' : `Deine Kreativzeit: ${fmtT(creativeLeft())}`) : esc(creativeInfo())}</p>`;
@@ -7993,7 +8073,7 @@ Object.assign(ACT, {
 });
 
 /* Pokale-Seite: Abzeichen antippen = kleines Fenster */
-Object.assign(ACT, { pkOpen: id => { UI.pkSel = UI.pkSel === id ? null : id; render(); }, pkClose: () => { UI.pkSel = null; render(); } });
+
 
 /* =====================================================================
    ADMIN-MODUS (nur für Eltern, zum Ausprobieren)
@@ -8328,6 +8408,17 @@ add('acc', { k: 'wizard', n: 'Zauberhut', s: 'c180', slot: 'head', d: () => `<pa
 add('acc', { k: 'bunny', n: 'Hasenohren', s: 'x', slot: 'head', d: () => `<path d="M62 56Q60 22 76 18Q90 20 88 56Z" fill="#fff" stroke="#E3E6F0" stroke-width="1.6"/><path d="M68 52Q68 30 76 26Q82 30 82 52Z" fill="#DCD3F7"/><path d="M138 56Q140 22 124 18Q110 20 112 56Z" fill="#fff" stroke="#E3E6F0" stroke-width="1.6"/><path d="M132 52Q132 30 124 26Q118 30 118 52Z" fill="#DCD3F7"/><path d="M58 70Q100 40 142 70" stroke="#C9CFE0" stroke-width="5" fill="none"/>` });
 add('acc', { k: 'cat', n: 'Katzenohren', s: 'x', slot: 'head', d: () => `<path d="M58 70Q100 42 142 70" stroke="#3b3b4f" stroke-width="5" fill="none"/><path d="M58 62L62 26L88 48Z" fill="#3b3b4f"/><path d="M142 62L138 26L112 48Z" fill="#3b3b4f"/><path d="M65 54L66 36L80 48Z" fill="#8a82b8"/><path d="M135 54L134 36L120 48Z" fill="#8a82b8"/>` });
 add('acc', { k: 'laurel', n: 'Lorbeerkranz', s: 'S90', slot: 'head', d: () => { let s = ''; for (let i = 0; i < 9; i++) { const a = (200 + i * 17.5) * Math.PI / 180; [1, -1].forEach(k => { const x = 100 + k * 44 * Math.cos(a) * -1, y = 82 + 44 * Math.sin(a) * 1.05; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="3.8" ry="8" transform="rotate(${f1(k * (i * 17.5 - 70))} ${f1(x)} ${f1(y)})" fill="${gold()}" stroke="#C98A00" stroke-width="1"/>`; }); } return s; } });
+/* ---------- Geschenk-Zubehör: nur als Überraschung aus dem Shop (Meilensteine, siehe feat_geschenk.js) ---------- */
+add('acc', { k: 'party', n: 'Partyhut', s: 'x', slot: 'head', d: () => `<path d="M78 66L100 6L122 66Q100 74 78 66Z" fill="#FFD43B" stroke="#C98A00" stroke-width="1.4"/><path d="M84 50Q100 57 116 50M89 34Q100 40 111 34" stroke="#E5504A" stroke-width="4" fill="none"/><circle cx="100" cy="7" r="6" fill="#3CCFA0"/>` });
+add('acc', { k: 'pirate', n: 'Piratenhut', s: 'x', slot: 'head', d: () => `<path d="M46 72Q54 30 100 26Q146 30 154 72Q100 84 46 72Z" fill="#2B2D3A"/><path d="M50 66Q100 78 150 66" stroke="#F4F5FA" stroke-width="2.4" fill="none" opacity=".6"/><circle cx="100" cy="50" r="9" fill="#F4F5FA"/><circle cx="96.5" cy="49" r="2.2" fill="#2B2D3A"/><circle cx="103.5" cy="49" r="2.2" fill="#2B2D3A"/><path d="M90 62L110 56M90 56L110 62" stroke="#F4F5FA" stroke-width="3" stroke-linecap="round"/>` });
+add('acc', { k: 'unicorn', n: 'Einhorn-Horn', s: 'x', slot: 'head', d: () => `<path d="M58 72Q100 36 142 72" stroke="#B7A8FF" stroke-width="5.4" fill="none"/><path d="M91 56L100 6L109 56Z" fill="${gold()}" stroke="#C98A00" stroke-width="1.6" stroke-linejoin="round"/><path d="M93 46l14-5M94 36l12-4M96 26l8-3" stroke="#C98A00" stroke-width="2.2"/><path d="${star5(122, 40, 6, 2.6)}" fill="#FFD43B"/>` });
+add('acc', { k: 'antenna', n: 'Alien-Fühler', s: 'x', slot: 'head', d: () => `<path d="M58 72Q100 36 142 72" stroke="#2B2D3A" stroke-width="4.4" fill="none"/><path d="M82 52Q72 34 64 20M118 52Q128 34 136 20" stroke="#3CCFA0" stroke-width="3.6" fill="none" stroke-linecap="round"/><circle cx="63" cy="19" r="6.4" fill="#FFD43B" stroke="#C98A00" stroke-width="1.4"/><circle cx="137" cy="19" r="6.4" fill="#FFD43B" stroke="#C98A00" stroke-width="1.4"/>` });
+add('acc', { k: 'chef', n: 'Kochmütze', s: 'x', slot: 'head', d: () => `<path d="M64 68V50Q54 32 76 30Q80 12 100 18Q120 12 124 30Q146 32 136 50V68Z" fill="#fff" stroke="#E3E6F0" stroke-width="2"/><path d="M64 60H136" stroke="#E3E6F0" stroke-width="2.4"/><path d="M86 34Q88 46 86 56M114 34Q112 46 114 56" stroke="#E3E6F0" stroke-width="2" fill="none"/>` });
+add('acc', { k: 'viking', n: 'Wikingerhelm', s: 'x', slot: 'head', d: () => `<path d="M60 56Q42 52 40 26Q54 40 66 44Z" fill="#F4F5FA" stroke="#C9CFE0" stroke-width="1.6"/><path d="M140 56Q158 52 160 26Q146 40 134 44Z" fill="#F4F5FA" stroke="#C9CFE0" stroke-width="1.6"/><path d="M57 72C55 40 78 30 100 30C122 30 145 40 143 72Z" fill="#9AA3B5" stroke="#6C768C" stroke-width="1.6"/><path d="M57 64H143" stroke="#6C768C" stroke-width="5"/><path d="M100 30V64" stroke="#6C768C" stroke-width="3"/>` });
+add('acc', { k: 'shades', n: 'Sonnenbrille', s: 'x', slot: 'glass', d: () => `<rect x="64" y="86" width="31" height="20" rx="8" fill="#23232e"/><rect x="105" y="86" width="31" height="20" rx="8" fill="#23232e"/><path d="M95 91H105" stroke="#23232e" stroke-width="3.4"/><path d="M64 91L56 88M136 91L144 88" stroke="#23232e" stroke-width="3" stroke-linecap="round"/><path d="M69 90l8-1M110 90l8-1" stroke="#fff" stroke-width="2.2" opacity=".4" stroke-linecap="round"/>` });
+add('acc', { k: 'starglass', n: 'Sternenbrille', s: 'x', slot: 'glass', d: () => `<path d="${star5(80, 97, 17, 8)}" fill="#FFD43B" fill-opacity=".55" stroke="#C98A00" stroke-width="2.4" stroke-linejoin="round"/><path d="${star5(120, 97, 17, 8)}" fill="#FFD43B" fill-opacity=".55" stroke="#C98A00" stroke-width="2.4" stroke-linejoin="round"/><path d="M95 95H105" stroke="#C98A00" stroke-width="2.6"/>` });
+add('acc', { k: 'scarf', n: 'Schal Rot', s: 'x', slot: 'neck', d: () => `<path d="M74 146Q100 162 126 146L128 160Q100 176 72 160Z" fill="#E5504A" stroke="#B93A34" stroke-width="1.4"/><path d="M110 160L122 190L106 192L100 166Z" fill="#E5504A" stroke="#B93A34" stroke-width="1.4"/><path d="M107 176H120M105 184H118" stroke="#fff" stroke-width="2.4" opacity=".7"/>` });
+add('acc', { k: 'starneck', n: 'Sternenkette', s: 'x', slot: 'neck', d: () => `<path d="M80 144Q100 170 120 144" stroke="#C98A00" stroke-width="2.2" fill="none"/><path d="${star5(100, 170, 10, 4.6)}" fill="${gold()}" stroke="#C98A00" stroke-width="1.4" stroke-linejoin="round"/>` });
 /* Haarschmuck */
 add('acc', { k: 'hairband', n: 'Haarreif Mint', s: 'c15', slot: 'hair', d: () => `<path d="M58 72Q100 24 142 72" stroke="#3CCFA0" stroke-width="5.4" fill="none"/><path d="M70 52Q86 40 102 38" stroke="#fff" stroke-width="2" fill="none" opacity=".5"/>` });
 const flowerD = (c, c2, x, y) => `<g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-7" rx="4.6" ry="6" transform="rotate(${a})" fill="${c}"/>`).join('')}<circle r="3.6" fill="${c2}"/></g>`;
@@ -8403,7 +8494,9 @@ const MS = {                                                       // id -> [Tex
 'acc.laurel': ['Beende 8 Gruppen', 'decks', 8], 'acc.crown': ['Beende 10 Gruppen', 'decks', 10],
 'eyes.sparkle': ['Beende 10 Stufen', 'blocks', 10], 'col.hair.gold': ['Beende 30 Stufen', 'blocks', 30]
 };
-const SRC = id => MS[id] ? { t: 'milestone', why: MS[id][0] } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
+const GIFT_WHY = 'Überraschungsgeschenk aus dem Shop';
+const GIFT_ACC = ['acc.party', 'acc.pirate', 'acc.unicorn', 'acc.antenna', 'acc.chef', 'acc.viking', 'acc.shades', 'acc.starglass', 'acc.scarf', 'acc.starneck'];
+const SRC = id => MS[id] ? { t: 'milestone', why: MS[id][0] } : GIFT_ACC.includes(id) ? { t: 'milestone', why: GIFT_WHY } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
 function avCheck() {                                               // Meilensteine freischalten (leise Hinweise kommen von unlock)
 let any = false;
 Object.keys(MS).forEach(id => { if (!S.unl[id] && ((S.stats || {})[MS[id][1]] || 0) >= MS[id][2]) { unlock(id); any = true; } });
@@ -8447,7 +8540,7 @@ return `<svg class="mascot" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/sv
 KINDS.forEach(k => regKind(k[1], { group: 'avatar', label: k[2], ic: k[3], thumb: k[0] === 'color' ? colorThumb : it => thumbOf(k[0], it) }));
 KINDS.forEach(k => {
 if (k[0] === 'color') return;
-regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id)).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
+regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id) || GIFT_ACC.includes(p.id)).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
 });
 regItems([].concat(...Object.keys(PAL).map(sl => PAL[sl][1].map(c => ({ id: c.id, kind: 'avcolor', name: PAL[sl][0] + ': ' + c[1], src: SRC(c.id), av: 1, slot: sl, v: c[2] })))));
 /* =====================================================================
@@ -8737,9 +8830,12 @@ const BS_DATA = [
   ['sonnenbl', 'Sonnenblume', '🌻', 15], ['klee', 'Glücksklee', '🍀', 20], ['pizza', 'Pizza', '🍕', 20], ['eis', 'Eis', '🍦', 25], ['kuchen', 'Cupcake', '🧁', 30],
   ['ball', 'Fußball', '⚽', 20], ['rakete', 'Rakete', '🚀', 40], ['zug', 'Zug', '🚂', 30], ['burg', 'Burg', '🏰', 50], ['gitarre', 'Gitarre', '🎸', 35],
   ['farben', 'Farbpalette', '🎨', 35], ['fernrohr', 'Fernrohr', '🔭', 45], ['diamant', 'Diamant', '💎', 60],
-  ['medaille', 'Medaille', '🏅', 'Beende eine Gruppe'], ['pokal', 'Pokal', '🏆', 'Sammle 3 Stempel'], ['gehirn', 'Gehirn', '🧠', 'Sammle 6 Stempel'], ['krone', 'Krone', '👑', 'Sammle 12 Stempel']
+  ['medaille', 'Medaille', '🏅', 'Beende eine Gruppe'], ['pokal', 'Pokal', '🏆', 'Sammle 3 Stempel'], ['gehirn', 'Gehirn', '🧠', 'Sammle 6 Stempel'], ['krone', 'Krone', '👑', 'Sammle 12 Stempel'],
+  ['loewe', 'Löwe', '🦁', 'G'], ['elefant', 'Elefant', '🐘', 'G'], ['hai', 'Hai', '🦈', 'G'], ['papagei', 'Papagei', '🦜', 'G'], ['frosch', 'Frosch', '🐸', 'G'], ['ufo', 'Ufo', '🛸', 'G'],
+  ['roboter', 'Roboter', '🤖', 'G'], ['zauberer', 'Zauberer', '🧙', 'G'], ['vulkan', 'Vulkan', '🌋', 'G'], ['wal', 'Wal', '🐋', 'G'], ['ballon', 'Ballon', '🎈', 'G'], ['teddy', 'Teddy', '🧸', 'G'],
+  ['karussell', 'Karussell', '🎠', 'G'], ['kristall', 'Kristallkugel', '🔮', 'G'], ['planet', 'Planet', '🪐', 'G'], ['krabbe', 'Krabbe', '🦀', 'G']
 ];
-regItems(BS_DATA.map(([id, name, e, q]) => ({ id: 'bs.' + id, kind: 'bsticker', name, e, src: q === 0 ? { t: 'free' } : typeof q === 'number' ? { t: 'shop', cur: 'c', price: q } : { t: 'milestone', why: q } })));
+regItems(BS_DATA.map(([id, name, e, q]) => ({ id: 'bs.' + id, kind: 'bsticker', name, e, src: q === 0 ? { t: 'free' } : q === 'G' ? { t: 'milestone', why: 'Überraschungsgeschenk aus dem Shop' } : typeof q === 'number' ? { t: 'shop', cur: 'c', price: q } : { t: 'milestone', why: q } })));
 
 const fmtDate = ts => new Date(ts).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
 const bkPage = m => { const B = S.buch || (S.buch = { st: {} }); if (!B.st) B.st = {}; let a = B.st[m.id]; if (!Array.isArray(a)) a = B.st[m.id] = []; while (a.length < BK_SPACES) a.push(null); return a; };
@@ -9315,7 +9411,7 @@ const gDay = () => { const d = new Date(), n = Math.floor(Date.UTC(d.getFullYear
 VIEWS.geo = () => {
   const n = gKnownN('europa'), total = gList('europa').length, nx = gNextMs(), d = gDay();
   const T = (art, t, sub, act, arg, i) => dzTile({ cls: ['t1', 't2', 't3'][i % 3], art, title: t, sub, act, arg });
-  const play = [['quiz', 'Quiz', '10 oder 15 Fragen', 'geoGo', 'mix'], ['flaggen', 'Flaggen', 'Welches Land?', 'geoGo', 'flag'], ['groesser', 'Größer?', 'Zwei Länder', 'geoGo', 'size'], ['route', 'Reiseroute', 'Wer liegt dazwischen?', 'geoGo', 'route'], ['memory', 'Memory', 'Paare finden', 'geoMemory']]
+  const play = [['quiz', 'Quiz', '10 oder 15 Fragen', 'geoGo', 'mix'], ['flaggen', 'Flaggen', 'Welches Land?', 'geoGo', 'flag'], ['groesser', 'Größer?', 'Zwei Länder', 'geoGo', 'size'], ['route', 'Reiseroute', 'Wer liegt dazwischen?', 'geoGo', 'route']]
     .map((x, i) => T(x[0], x[1], x[2], x[3], x[4], i)).join('');
   const disc = [T('laender', 'Länderkarten', 'Flagge, Hauptstadt', 'geoCards', null, 0), T('fakten', 'Wusstest du?', 'Lustige Fakten', 'geoFacts', null, 1), T('stempel', GEO_PASS, 'Deine Länder', 'geoPass', null, 2),
     dzTile({ cls: 't1', html: flagSVG(d.id, 'geo-tflag'), title: 'Land des Tages', sub: d.name, act: 'gCard', arg: d.id })].join('');
@@ -9403,32 +9499,13 @@ VIEWS.geoPass = () => {
     <div class="geo-stamps">${l.slice().sort((a, b) => (gKnown(b.id) - gKnown(a.id)) || a.name.localeCompare(b.name, 'de')).map(stamp).join('')}</div>`;
 };
 
-/* ---------- Memory: Flagge + Land ↔ Hauptstadt, ohne Zeit, ohne Belohnung ---------- */
-function gMemNew() {
-  const ids = shuffle(gList('europa')).slice(0, 8);
-  UI.mem = { cards: shuffle(ids.flatMap(c => [{ id: c.id, t: 'f' }, { id: c.id, t: 'c' }])), open: [], done: {}, moves: 0, lock: false };
-}
-VIEWS.geoMemory = () => {
-  const m = UI.mem || (gMemNew(), UI.mem), all = Object.keys(m.done).length === m.cards.length;
-  return topBar('Memory', 'geo') + `<p class="small mute" style="text-align:center">Finde zu jedem Land seine Hauptstadt. Züge: <b>${m.moves}</b></p>
-  <div class="geo-mem">${m.cards.map((c, i) => {
-    const up = m.done[i] || m.open.includes(i), cc = CBY[c.id];
-    return `<button class="geo-mc ${up ? 'up' : ''} ${m.done[i] ? 'done' : ''}" data-act="gMem" data-arg="${i}" aria-label="Karte ${i + 1}">${up ? (c.t === 'f' ? flagSVG(c.id, 'geo-mflag') + '<b>' + esc(cc.name) + '</b>' : '<b>' + esc(cc.cap) + '</b>') : '<span>?</span>'}</button>`;
-  }).join('')}</div>
-  ${all ? `<div class="card result" style="margin-top:14px"><h2>Geschafft in ${m.moves} Zügen!</h2><div class="row wrap" style="justify-content:center"><button class="btn big" data-act="gMemNew">Noch mal</button><button class="btn sec big" data-act="geo">Fertig</button></div></div>` : ''}`;
-};
-
 /* ---------- Aktionen ---------- */
 registerFeature({
   id: 'geo', title: GEO_NAME, icon: 'island', tint: 'sky', group: 'learn', order: 5, view: 'geo',
   views: {},
   acts: {
-    geoCards: () => go('geoCards'), geoPass: () => go('geoPass'), geoMemory: () => { gMemNew(); go('geoMemory'); }, gMemNew: () => { gMemNew(); render(); },
-    gMem: a => { const m = UI.mem, i = +a; if (!m || m.lock || m.done[i] || m.open.includes(i)) return; sfx('tap'); m.open.push(i);
-      if (m.open.length === 2) { m.moves++; const [x, y] = m.open;
-        if (m.cards[x].id === m.cards[y].id && m.cards[x].t !== m.cards[y].t) { m.done[x] = m.done[y] = 1; m.open = []; if (Object.keys(m.done).length === m.cards.length) { sfx('ok'); confetti(60); } }
-        else { m.lock = true; render(); setTimeout(() => { m.open = []; m.lock = false; if (view === 'geoMemory') render(); }, 900); return; } }
-      render(); }, geoFacts: () => { UI.gf = gFactDeck(); go('geoFacts'); }, gFactNext: () => { UI.gf.i++; render(); },
+    geoCards: () => go('geoCards'), geoPass: () => go('geoPass'), geoMemory: () => ACT.memory(),
+    geoFacts: () => { UI.gf = gFactDeck(); go('geoFacts'); }, gFactNext: () => { UI.gf.i++; render(); },
     geoGo: m => geoStart(gAutoCfg(m)), geoSetup: () => geoStart(gAutoCfg()),
     geoRetry: () => { const qs = GQ.qs.filter(q => !q.ok).map(q => (q.t === 'size' || q.t === 'route') ? gRebuildPair(q) : gQuestion(CBY[q.cid], q.t, q.tricky)); geoStart(GQ.cfg, qs); },
     gPick: k => { const q = GQ.qs[GQ.i]; q.pick = k; sfx('tap'); render(); },
@@ -9452,6 +9529,49 @@ document.addEventListener('keydown', e => {
 /* Fach auf der Startseite */
 regSubject({ id: 'geo', name: GEO_NAME, ic: '🌍', act: 'geo', sub: () => `${gKnownN('europa')} von ${gList('europa').length} Ländern sicher`,
   tile: () => ({ art: 'europa', title: GEO_NAME, sub: `${gKnownN('europa')} von ${gList('europa').length} Ländern`, act: 'geo' }) });
+
+/* =====================================================================
+   ÜBERRASCHUNGSGESCHENKE: Wer beim Lernen Meilensteine schafft (Aufgaben, Stufen, Gruppen, Volltreffer, Serie),
+   bekommt im Shop ein Geschenk, das er aufmachen darf. Inhalt: ein Sticker oder ein Zubehör für den Avatar,
+   das es nur als Geschenk gibt (src: milestone „Überraschungsgeschenk aus dem Shop“). Nichts wird abgezogen.
+   Zustand: S.gifts = { got: { meilenstein-id: Zeit }, open: [ungeöffnete Meilenstein-ids], log: [{ m, item, ts }] }
+   Ist alles gesammelt, gibt es stattdessen 30 Münzen.
+   ===================================================================== */
+const GIFT_WHY2 = 'Überraschungsgeschenk aus dem Shop';
+const GIFT_MS = [
+  ...[40, 100, 200, 350, 550, 800, 1100, 1500].map(n => ({ id: 'gq' + n, t: `Löse ${n} Aufgaben`, v: s => s.stats.q || 0, n })),
+  ...[4, 12, 25, 45, 70].map(n => ({ id: 'gb' + n, t: `Beende ${n} Stufen`, v: s => s.stats.blocks || 0, n })),
+  ...[2, 4, 6, 9].map(n => ({ id: 'gd' + n, t: `Beende ${n} Gruppen`, v: s => s.stats.decks || 0, n })),
+  ...[2, 6, 12].map(n => ({ id: 'gp' + n, t: `${n} Stufen mit 10 von 10`, v: s => s.stats.perfect || 0, n })),
+  ...[3, 7, 14].map(n => ({ id: 'gs' + n, t: `${n} Tage in Folge üben`, v: s => (s.streak && s.streak.best) || 0, n }))
+];
+const giftS = () => { const g = S.gifts || (S.gifts = {}); if (!g.got) g.got = {}; if (!Array.isArray(g.open)) g.open = []; if (!Array.isArray(g.log)) g.log = []; return g; };
+function giftCheck() {
+  const g = giftS(); let n = 0;
+  GIFT_MS.forEach(m => { if (!g.got[m.id] && m.v(S) >= m.n) { g.got[m.id] = Date.now(); g.open.push(m.id); n++; } });
+  if (n) { save(); if (!(typeof UI !== 'undefined' && UI && UI.wQuiet)) toast('🎁', n === 1 ? 'Eine Überraschung wartet im Shop!' : n + ' Überraschungen warten im Shop!'); }
+}
+const giftPool = () => Object.values(CATALOG).filter(i => i.src && i.src.t === 'milestone' && i.src.why === GIFT_WHY2 && !hasItem(i.id));
+const giftNext = () => { const g = giftS(); return GIFT_MS.filter(m => !g.got[m.id]).map(m => ({ m, left: m.n - m.v(S) })).sort((a, b) => a.left / a.m.n - b.left / b.m.n)[0] || null; };
+function giftCard() {
+  const g = giftS(), n = g.open.length;
+  if (n) return `<div class="gift-card on"><span class="gift-ic" aria-hidden="true">🎁</span><div><b>${n === 1 ? 'Eine Überraschung wartet!' : n + ' Überraschungen warten!'}</b><span class="small mute">Sticker und Avatar-Zubehör, nur als Geschenk.</span></div><button class="btn" data-act="giftOpen">Aufmachen</button></div>`;
+  const nx = giftNext(); if (!nx) return '';
+  const pct = Math.max(4, Math.min(100, Math.round((1 - nx.left / nx.m.n) * 100)));
+  return `<div class="gift-card"><span class="gift-ic" aria-hidden="true">🎁</span><div><b>Nächste Überraschung</b><span class="small mute">${esc(nx.m.t)} – noch ${nx.left}</span><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
+}
+Object.assign(ACT, {
+  giftOpen: () => {
+    const g = giftS(); if (!g.open.length) return;
+    const mid = g.open.shift(), pool = giftPool(), it = pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+    let body, title = 'Überraschung!';
+    if (it) { unlock(it.id, true); g.log.push({ m: mid, item: it.id, ts: Date.now() }); body = `<div class="gift-reveal"><div class="gift-th">${(KIND[it.kind] || { thumb: x => x.e }).thumb(it)}</div><p><b>${esc(it.name)}</b><br><span class="small mute">${it.kind === 'bsticker' ? 'Ein neuer Sticker für dein Heft.' : 'Neues Zubehör für deinen Avatar.'}</span></p></div>`; }
+    else { S.coins += 30; S.life = (S.life || 0) + 30; g.log.push({ m: mid, item: 'coins30', ts: Date.now() }); body = '<p>Du hast schon alle Geschenke! Dafür gibt es <b>30 🪙</b>.</p>'; }
+    save(); sfx('magic'); try { if (!rwCalm()) confetti(50); } catch (e) { }
+    modal(title, body, g.open.length ? 'Nächstes aufmachen' : null, 'giftOpen', '', g.open.length ? 'Später' : 'Toll!');
+    if (view === 'shop') render();
+  }
+});
 
 /* =====================================================================
    INSEL: ein Lern-Rückblick, kein Baukasten. Jede fertige Übungsgruppe (S.stats.decks) bringt den nächsten
@@ -9632,6 +9752,148 @@ Object.assign(ACT, {
   rwNoteGo: () => { const el = document.getElementById('rwNote'), g = (el && el.dataset.go) || 'schatz'; rwNoteClose(); go(g); }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('rwPop')) rwPopClose(); });
+
+/* =====================================================================
+   MEMORY (in Meine Welt): Paare finden mit Zeit nach Wahl, vier Stufen (4×4, 5×5, 6×6, 7×7) und wechselnden Themen
+   (Länder, Mathe, Deutsch, Wissen aus „Lustige Karten“, oder Zufall). Keine Belohnung – nur Spaß; gespeichert wird
+   die höchste freigeschaltete Stufe und der beste Zug-Rekord je Stufe: S.memory = { lvl, wins, best: { '1': Züge } }.
+   Zeit: ganze Runde, startet beim ersten Aufdecken. Aus / 10 / 15 / 20 / 30 / 60 Sekunden; Vorgabe je nach Größe.
+   Bei 5×5 und 7×7 liegt in der Mitte ein Joker-Stern (schon aufgedeckt).
+   ===================================================================== */
+const MM_SIZES = [{ n: 4, t: 15 }, { n: 5, t: 30 }, { n: 6, t: 60 }, { n: 7, t: 60 }];
+const MM_TIMES = [0, 10, 15, 20, 30, 60];
+const MM_THEMES = [['zufall', 'Zufall', '🎲'], ['laender', 'Länder', '🌍'], ['mathe', 'Mathe', '🔢'], ['deutsch', 'Deutsch', '✏️'], ['wissen', 'Wissen', '💡']];
+const mmS = () => { const m = S.memory || (S.memory = {}); if (!(m.lvl >= 1)) m.lvl = 1; if (!(m.wins >= 0)) m.wins = 0; if (!m.best) m.best = {}; return m; };
+const mmRnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const mmCnt = lvl => Math.floor(MM_SIZES[lvl - 1].n ** 2 / 2);
+function mmSub() { const m = mmS(); return m.wins ? `Stufe ${m.lvl} von 4` : 'Paare finden'; }
+
+/* ---------- Themen: jede Funktion liefert n Paare [{h, p}, {h, p}] (h = Anzeige, p = Klartext) ---------- */
+const mmPlain = (a, b) => [{ h: esc(a), p: a }, { h: esc(b), p: b }];
+function mmMathPairs(n) {
+  const out = [], seenA = new Set(), seenQ = new Set();
+  const put = (q, a) => { q = String(q); a = String(a); if (seenQ.has(q) || seenA.has(a) || q === a) return false; seenQ.add(q); seenA.add(a); out.push(mmPlain(q, a)); return true; };
+  const UNITS = [['1 m', '100 cm'], ['1 kg', '1000 g'], ['1 h', '60 min'], ['1 km', '1000 m'], ['1 l', '1000 ml'], ['1 €', '100 ct'], ['½', '0,5'], ['¼', '0,25'], ['¾', '0,75'], ['1 min', '60 s']];
+  shuffle(UNITS).slice(0, Math.max(2, Math.round(n / 5))).forEach(u => put(u[0], u[1]));
+  let guard = 0;
+  while (out.length < n && guard++ < 600) {
+    const t = mmRnd(0, 5), a = mmRnd(2, 10), b = mmRnd(2, 10);
+    if (t === 0) put(`${a} × ${b}`, a * b);
+    else if (t === 1) put(`${a * b} : ${b}`, a);
+    else if (t === 2) { const x = mmRnd(12, 98) * 10, y = mmRnd(11, 90) * 10; put(`${x} + ${y}`, x + y); }
+    else if (t === 3) { const x = mmRnd(30, 99) * 10, y = mmRnd(11, 29) * 10; put(`${x} − ${y}`, x - y); }
+    else if (t === 4) { const x = mmRnd(12, 49); put(`Doppeltes von ${x}`, x * 2); }
+    else { const x = mmRnd(12, 49); put(`Hälfte von ${x * 2}`, x); }
+  }
+  return shuffle(out).slice(0, n);
+}
+const MM_DE = [
+  ['groß', 'klein'], ['heiß', 'kalt'], ['hell', 'dunkel'], ['alt', 'jung'], ['laut', 'leise'], ['schnell', 'langsam'], ['dick', 'dünn'], ['nass', 'trocken'], ['leicht', 'schwer'], ['früh', 'spät'], ['hart', 'weich'], ['arm', 'reich'], ['stark', 'schwach'], ['oben', 'unten'], ['billig', 'teuer'],
+  ['Kind', 'Kinder'], ['Haus', 'Häuser'], ['Baum', 'Bäume'], ['Buch', 'Bücher'], ['Maus', 'Mäuse'], ['Fuß', 'Füße'], ['Apfel', 'Äpfel'], ['Dach', 'Dächer'], ['Vogel', 'Vögel'], ['Stuhl', 'Stühle'], ['Hand', 'Hände'], ['Wald', 'Wälder'], ['Zahn', 'Zähne'], ['Blatt', 'Blätter'],
+  ['laufen', 'lief'], ['gehen', 'ging'], ['sehen', 'sah'], ['essen', 'aß'], ['trinken', 'trank'], ['schreiben', 'schrieb'], ['fahren', 'fuhr'], ['geben', 'gab'], ['nehmen', 'nahm'], ['finden', 'fand'], ['singen', 'sang'], ['schlafen', 'schlief'],
+  ['Tisch', 'Fisch'], ['Hose', 'Rose'], ['Katze', 'Tatze'], ['Sonne + Blume', 'Sonnenblume'], ['Hand + Schuh', 'Handschuh'], ['Wasser + Ball', 'Wasserball'], ['Apfel + Baum', 'Apfelbaum'], ['Regen + Bogen', 'Regenbogen'], ['Haus + Tür', 'Haustür'], ['Schule + Tasche', 'Schultasche']
+];
+const MM_WISSEN = [   // aus „Lustige Karten“ (feat_fakten.js)
+  ['Oktopus', '3 Herzen'], ['Giraffe', '7 Halswirbel'], ['Spinne', '8 Beine'], ['Insekt', '6 Beine'], ['Blauwal', 'größtes Tier'], ['Gepard', 'schnellstes Landtier'], ['Elefant', 'größtes Landtier'], ['Biene', '5 Augen'],
+  ['Pazifik', 'größter Ozean'], ['Mount Everest', 'höchster Berg'], ['Sahara', 'größte heiße Wüste'], ['Antarktis', 'kältester Kontinent'], ['Jupiter', 'größter Planet'], ['Merkur', 'kleinster Planet'], ['Sonnensystem', '8 Planeten'],
+  ['Mars', 'roter Planet'], ['Gagarin', 'erster im Weltraum'], ['Armstrong', 'erster auf dem Mond'], ['Haut', 'größtes Organ'], ['Steigbügel', 'kleinster Knochen'], ['Oberschenkel', 'längster Knochen'], ['Zähne (Erwachsene)', '32'],
+  ['Knochen (Erwachsene)', '206'], ['Dreieck', '180° Winkelsumme'], ['Würfel', '12 Kanten'], ['Schachbrett', '64 Felder'], ['Milliarde', '9 Nullen'], ['Russland', 'größtes Land'], ['Vatikan', 'kleinster Staat'], ['Baikalsee', 'tiefster See'],
+  ['Kilimandscharo', 'höchster Berg Afrikas'], ['Ein Tag', '86 400 Sekunden'], ['Kaiserpinguin', 'Papa wärmt das Ei'], ['Seepferdchen', 'Papa trägt die Eier'], ['Schnabeltier', 'Säugetier, legt Eier'], ['Seestern', 'kein Gehirn'],
+  ['Eisbär', 'schwarze Haut'], ['Schmetterling', 'schmeckt mit den Füßen'], ['Kolibri', 'fliegt rückwärts'], ['Venus', 'Tag länger als Jahr'], ['Saturn', 'Ringe aus Eis und Gestein'], ['Island', 'Eis und Vulkane']
+];
+function mmLaenderPairs(n) {
+  return shuffle(gList('europa').filter(c => c.name !== c.cap)).slice(0, n).map(c => [{ h: flagSVG(c.id, 'mm-flag') + '<b>' + esc(c.name) + '</b>', p: c.name }, { h: esc(c.cap), p: c.cap }]);
+}
+function mmListPairs(list, n) {
+  const used = new Set(), out = [];
+  shuffle(list).forEach(([a, b]) => { if (out.length >= n || used.has(a) || used.has(b)) return; used.add(a); used.add(b); out.push(mmPlain(a, b)); });
+  return out;
+}
+function mmBuild(theme, lvl) {
+  const n = mmCnt(lvl), pick = theme === 'zufall' ? ['laender', 'mathe', 'deutsch', 'wissen'][mmRnd(0, 3)] : theme;
+  const pairs = pick === 'laender' ? mmLaenderPairs(n) : pick === 'mathe' ? mmMathPairs(n) : pick === 'deutsch' ? mmListPairs(MM_DE, n) : mmListPairs(MM_WISSEN, n);
+  return { theme: pick, pairs };
+}
+function mmNew(lvl, tm, theme) {
+  const N = MM_SIZES[lvl - 1].n, b = mmBuild(theme, lvl), cards = [];
+  b.pairs.forEach((pr, k) => { cards.push({ k, h: pr[0].h, p: pr[0].p, s: 0 }, { k, h: pr[1].h, p: pr[1].p, s: 1 }); });
+  const sh = shuffle(cards);
+  if (N % 2) sh.splice(Math.floor(N * N / 2), 0, { j: true, h: '⭐', p: 'Joker' });
+  return { st: 'play', lvl, tm, theme: b.theme, cards: sh, open: [], done: {}, moves: 0, lock: false, started: false, end: 0, left: tm, pairs: b.pairs.length, found: 0, last: '' };
+}
+function mmStop() { if (UI.mmT) { clearInterval(UI.mmT); UI.mmT = null; } }
+function mmTick() {
+  const m = UI.mm;
+  if (!m || m.st !== 'play' || view !== 'memory') { mmStop(); if (m && view !== 'memory') UI.mm = null; return; }
+  m.left = Math.max(0, Math.ceil((m.end - Date.now()) / 1000));
+  const el = document.getElementById('mmT'); if (el) el.textContent = fmtT(m.left);
+  const bar = document.getElementById('mmBar'); if (bar) bar.style.width = Math.max(0, (m.end - Date.now()) / (m.tm * 10)) + '%';
+  if (m.left <= 0) { mmStop(); m.st = 'lose'; m.lock = false; sfx('no'); render(); }
+}
+function mmWin() {
+  const m = UI.mm, g = mmS(); mmStop(); m.st = 'win'; g.wins++;
+  m.fresh = m.lvl === g.lvl && g.lvl < 4; if (m.fresh) g.lvl++;
+  const k = String(m.lvl); m.record = !g.best[k] || m.moves < g.best[k]; if (m.record) g.best[k] = m.moves;
+  save(); sfx('ok'); try { if (!rwCalm()) confetti(60); } catch (e) { }
+}
+function mmSetup() {
+  const g = mmS(), u = UI.mmSet || (UI.mmSet = { lvl: g.lvl, theme: 'zufall', tm: null });
+  if (u.lvl > g.lvl) u.lvl = g.lvl;
+  const tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm;
+  const lv = MM_SIZES.map((z, i) => { const ok = i + 1 <= g.lvl, c = z.n * z.n;
+    return `<button class="mm-lv${u.lvl === i + 1 ? ' on' : ''}${ok ? '' : ' lock'}" data-act="mmLvl" data-arg="${i + 1}" ${ok ? '' : 'disabled'} aria-pressed="${u.lvl === i + 1}"><b>${z.n} × ${z.n}</b><small>${ok ? c + ' Karten' : ico('lock', 14) + ' Noch zu'}</small></button>`; }).join('');
+  const tms = MM_TIMES.map(t => `<button class="mm-chip${tm === t ? ' on' : ''}" data-act="mmTime" data-arg="${t}" aria-pressed="${tm === t}">${t ? t + ' s' : 'Aus'}</button>`).join('');
+  const ths = MM_THEMES.map(t => `<button class="mm-chip${u.theme === t[0] ? ' on' : ''}" data-act="mmTheme" data-arg="${t[0]}" aria-pressed="${u.theme === t[0]}">${t[2]} ${t[1]}</button>`).join('');
+  const best = g.best[String(u.lvl)];
+  return topBar('Memory', 'rewards') + `<section class="card mm-setup"><h3>Stufe</h3><div class="mm-lvs">${lv}</div>
+    <h3>Zeit</h3><div class="mm-chips">${tms}</div><p class="small mute">Die Zeit läuft für die ganze Runde und startet beim ersten Aufdecken.</p>
+    <h3>Thema</h3><div class="mm-chips">${ths}</div>
+    ${best ? `<p class="small mute">Dein Rekord in dieser Stufe: <b>${best}</b> Züge</p>` : ''}
+    <div class="center" style="margin-top:12px"><button class="btn big" data-act="mmStart">Los geht’s</button></div></section>`;
+}
+VIEWS.memory = () => {
+  const m = UI.mm;
+  if (!m) return mmSetup();
+  const N = MM_SIZES[m.lvl - 1].n, tn = (MM_THEMES.find(t => t[0] === m.theme) || [0, '', ''])[1];
+  const head = topBar('Memory', 'rewards');
+  const clock = m.tm ? `<div class="mm-clock"><b id="mmT">${fmtT(m.left)}</b><span class="mm-bar"><i id="mmBar" style="width:${Math.max(0, m.left / m.tm * 100)}%"></i></span></div>` : '<div class="mm-clock"><b>Ohne Zeit</b></div>';
+  const info = `<div class="mm-info"><span>${(MM_THEMES.find(t => t[0] === m.theme) || [0, 0, ''])[2]} ${esc(tn)}</span><span>Paare <b>${m.found}</b> von ${m.pairs}</span><span>Züge <b>${m.moves}</b></span></div>`;
+  const grid = `<div class="mm-grid n${N}" style="--n:${N}">${m.cards.map((c, i) => {
+    if (c.j) return `<div class="mm-c joker up done" aria-label="Joker">⭐</div>`;
+    const up = m.done[i] || m.open.includes(i) || m.st !== 'play' && m.done[i];
+    return `<button class="mm-c${up ? ' up' : ''}${m.done[i] ? ' done' : ''}" data-act="mmFlip" data-arg="${i}" ${m.st !== 'play' ? 'disabled' : ''} aria-label="${up ? esc(c.p) : 'Karte ' + (i + 1)}">${up ? '<span class="mm-t">' + c.h + '</span>' : '?'}</button>`;
+  }).join('')}</div>`;
+  const last = m.last && m.st === 'play' ? `<p class="mm-last" aria-live="polite">✔ ${esc(m.last)}</p>` : '<p class="mm-last"></p>';
+  let res = '';
+  if (m.st === 'win') res = `<div class="card result mm-res"><h2>Geschafft in ${m.moves} Zügen!</h2><p>${m.record ? 'Neuer Rekord für diese Stufe! ' : ''}${m.fresh ? `Die nächste Stufe (${MM_SIZES[mmS().lvl - 1].n} × ${MM_SIZES[mmS().lvl - 1].n}) ist offen.` : ''}</p><div class="row wrap" style="justify-content:center"><button class="btn big" data-act="mmAgain">${m.fresh ? 'Nächste Stufe' : 'Nochmal'}</button><button class="btn sec" data-act="mmMenu">Auswahl</button></div></div>`;
+  if (m.st === 'lose') res = `<div class="card result mm-res"><h2>Zeit ist um!</h2><p>Du hast ${m.found} von ${m.pairs} Paaren gefunden. Versuch es gleich nochmal – oder nimm mehr Zeit.</p><div class="row wrap" style="justify-content:center"><button class="btn big" data-act="mmAgain">Nochmal</button><button class="btn sec" data-act="mmMenu">Auswahl</button></div></div>`;
+  return head + clock + info + last + grid + res + (m.st === 'play' ? `<div class="center" style="margin-top:12px"><button class="btn sec" data-act="mmMenu">Abbrechen</button></div>` : '');
+};
+registerFeature({
+  id: 'memory', title: 'Memory', icon: 'sparkle', tint: 'sky', group: 'spiel', order: 80, view: 'memory',
+  leave: () => { mmStop(); UI.mm = null; },
+  acts: {
+    memory: () => { mmStop(); UI.mm = null; go('memory'); },
+    mmLvl: l => { const u = UI.mmSet; u.lvl = +l; if (!u.tmSet) u.tm = null; render(); },
+    mmTime: t => { UI.mmSet.tm = +t; UI.mmSet.tmSet = true; render(); },
+    mmTheme: t => { UI.mmSet.theme = t; render(); },
+    mmStart: () => { const u = UI.mmSet, tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm; mmStop(); UI.mm = mmNew(u.lvl, tm, u.theme); sfx('tap'); render(); },
+    mmFlip: a => {
+      const m = UI.mm, i = +a; if (!m || m.st !== 'play' || m.lock) return;
+      const c = m.cards[i]; if (!c || c.j || m.done[i] || m.open.includes(i)) return;
+      if (!m.started) { m.started = true; if (m.tm) { m.end = Date.now() + m.tm * 1000; UI.mmT = setInterval(mmTick, 250); } }
+      sfx('tap'); m.open.push(i);
+      if (m.open.length === 2) {
+        m.moves++; const [x, y] = m.open;
+        if (m.cards[x].k === m.cards[y].k) { m.done[x] = m.done[y] = 1; m.open = []; m.found++; m.last = m.cards[x].p + ' = ' + m.cards[y].p; sfx('ok'); if (m.found === m.pairs) mmWin(); }
+        else { m.lock = true; render(); setTimeout(() => { m.open = []; m.lock = false; if (view === 'memory' && UI.mm === m && m.st === 'play') render(); }, 900); return; }
+      }
+      render();
+    },
+    mmAgain: () => { const m = UI.mm, g = mmS(), lvl = m.st === 'win' && m.fresh ? g.lvl : m.lvl; mmStop(); UI.mm = mmNew(lvl, m.tm && lvl !== m.lvl ? MM_SIZES[lvl - 1].t : m.tm, UI.mmSet ? UI.mmSet.theme : 'zufall'); render(); },
+    mmMenu: () => { mmStop(); UI.mm = null; if (UI.mmSet) { UI.mmSet.lvl = Math.min(mmS().lvl, UI.mmSet.lvl); } render(); }
+  }
+});
 
 /* =====================================================================
    MUSIK-WERKSTATT (Kreativ-Bereich, geschlossen bis Kreativzeit): kleiner Step-Sequencer mit WebAudio-Synthese (keine Samples).
@@ -10975,8 +11237,7 @@ const WA = {
   freeMiles: () => { const w = wS(); return Math.max(0, w.miles - w.milesSpent); },
   mcost: id => WP[id].cost * W_MILE_X,
   addMiles(n) {                                                                  // nur für gelöste Aufgaben; Tagesgrenze schützt vor Dauer-Klicken
-    touchDay(); const d = S.daily, give = Math.max(0, Math.min(n, W_MILES_DAY - (d.mi || 0))); if (!give) return 0;
-    d.mi = (d.mi || 0) + give; wS().miles += give; return give;
+    return 0;                                                                    // keine neuen Meilen mehr
   },
   testPass(score, total) {                                                       // Mini-Test ≥ 80 %: Boarding-Pass = eine freie Wahl (1× pro Tag)
     touchDay(); if (total < 10 || score / total < W_PASS_PCT || S.daily.bp) return null;
@@ -10994,7 +11255,7 @@ const WA = {
   },
   isOpen: id => !!WP[id] && (WP[id].cost === 0 || !!wS().open[id]),
   shown: id => !!WP[id] && (WA.isOpen(id) || !wS().off[id]),                  // vom Elternteil ausgeblendete, noch gesperrte Länder
-  canOpen: id => !!WP[id] && !WA.isOpen(id) && WA.freeMiles() >= WA.mcost(id),
+  canOpen: () => false,                                                          // Reisemeilen sind abgeschafft: Länder öffnen nur über freie Wahl, Boarding-Pass oder Ticket (alte Meilen-Zähler bleiben unberührt gespeichert)
   openCountry(id) {
     if (!WA.canOpen(id)) return false;
     const w = wS(); w.milesSpent += WA.mcost(id); w.open[id] = wDay(); save(); return true;
@@ -11086,8 +11347,8 @@ function wCard(p) {
   if (open) return `<button class="w-card open" data-act="wBoard" data-arg="${p.id}" aria-label="${esc(p.name)}, Reise starten, ${WA.marks(p.id)} von ${WSTAT.length} Stationen besucht${WA.stamped(p.id) ? ', Stempel erhalten' : ''}">
     ${wFlag(p.id, 'w-cflag')}<b>${esc(p.name)}</b><small>${esc(p.sub)}</small>${wDots(p.id)}${WA.stamped(p.id) ? `<span class="w-cstamp">${ico('stamp', 14)} Stempel</span>` : ''}</button>`;
   const can = WA.canOpen(p.id);
-  return `<button class="w-card locked ${can ? 'can' : ''}" data-act="wLock" data-arg="${p.id}" aria-label="${esc(p.name)}, gesperrt, kostet ${WA.mcost(p.id)} Reisemeilen${can ? ', du kannst es öffnen' : ''}">
-    <span class="w-cflagwrap">${wFlag(p.id, 'w-cflag')}<i class="w-lockic">${ico('lock', 16)}</i></span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small><span class="w-price">${WA.mcost(p.id)} ✈️${can ? ' · bereit' : ''}</span></button>`;
+  return `<button class="w-card locked ${can ? 'can' : ''}" data-act="wLock" data-arg="${p.id}" aria-label="${esc(p.name)}, gesperrt, noch nicht geöffnet">
+    <span class="w-cflagwrap">${wFlag(p.id, 'w-cflag')}<i class="w-lockic">${ico('lock', 16)}</i></span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small></button>`;
 }
 function wPickNote() {
   if (!WA.anyLocked()) return '';
@@ -11100,19 +11361,18 @@ const W_CONT = ['Europa', 'Asien', 'Afrika', 'Nordamerika', 'Südamerika', 'Ozea
 VIEWS.welt = () => {
   const all = wList().filter(p => WA.shown(p.id)), open = all.filter(p => WA.isOpen(p.id)), locked = all.filter(p => !WA.isOpen(p.id));
   const sel = UI.wDest && WP[UI.wDest] ? UI.wDest : (open[0] || all[0] || {}).id;
-  const opt = p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(p.name)}${WA.isOpen(p.id) ? '' : ' · ' + WA.mcost(p.id) + ' ✈️ Meilen'}</option>`;
+  const opt = p => `<option value="${p.id}" ${p.id === sel ? 'selected' : ''}>${esc(p.name)}</option>`;
   const pick = `<section class="w-pick" aria-label="Reiseziel wählen"><label for="wDest">Reiseziel wählen</label><div class="w-pick-row"><select id="wDest" class="txt">${open.length ? `<optgroup label="Meine Reisen">${open.map(opt).join('')}</optgroup>` : ''}${locked.length ? `<optgroup label="Noch gesperrt">${locked.map(opt).join('')}</optgroup>` : ''}</select><button class="btn" data-act="wGoDest">Los geht’s</button></div></section>`;
   const groups = W_CONT.map(c => [c, locked.filter(p => p.cont === c)]).filter(x => x[1].length);
   const pend = WA.pending();
   return wRoot(wBar(W_NAME, 'rewards', 'Meine Welt', `<button class="w-pill" data-act="wPassGo">${ico('stamp', 18)} ${W_PASS}</button>`)
-    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Du suchst dir selbst aus, wohin es geht. Jeden Tag nach 25 Aufgaben oder 20 Minuten Üben darfst du ein Land deiner Wahl öffnen. Auch mit Reisemeilen ✈️, einem Boarding-Pass aus dem Mini-Test (12 von 15 richtig) oder einem Reise-Ticket aus dem Shop.</p></div>
-      <div class="w-bal"><b>${WA.freeMiles()}</b><span>Reisemeilen ✈️</span><small>${wS().miles} gesammelt${wS().milesSpent ? ` · ${wS().milesSpent} ausgegeben` : ''}</small></div></section>
+    + `<section class="w-depart"><div><h2>Wohin möchtest du reisen?</h2><p>Du suchst dir selbst aus, wohin es geht. Jeden Tag nach 25 Aufgaben oder 20 Minuten Üben darfst du ein Land deiner Wahl öffnen. Außerdem öffnen ein Boarding-Pass aus dem Mini-Test (12 von 15 richtig) oder ein Reise-Ticket aus dem Shop ein Land.</p></div></section>
     ${wPickNote()}${pick}
     <h3 class="w-sec">Meine Reisen</h3><div class="w-grid">${open.map(wCard).join('')}</div>
     ${pend.length ? `<div class="w-wish">${ico('stamp', 18)} <span>Dein Wunschland${pend.length > 1 ? 'länder' : ''}: <b>${pend.map(x => esc(x.n)).join(', ')}</b>. Es kommt bald und wird dann von selbst geöffnet.</span></div>` : ''}
     ${groups.length ? `<h3 class="w-sec">Weitere Ziele</h3>${groups.map(([c, list]) => `<details class="w-cont" ${UI.wCont === c ? 'open' : ''} data-cont="${c}"><summary>${esc(c)} <span>${list.length}</span></summary><div class="w-grid">${list.map(wCard).join('')}</div></details>`).join('')}` : ''}
     <div class="w-foot2"><button class="btn sec" data-act="wTixShop">${ico('bag', 18)} Reise-Ticket im Shop</button></div>
-    <p class="w-foot">Reisemeilen bekommst du für richtig gelöste Aufgaben. Deine Sterne, Münzen, Wesen und Pokale bleiben, wie sie sind.</p>`);
+    <p class="w-foot">Deine Sterne, Münzen, Wesen und Pokale bleiben, wie sie sind.</p>`);
 };
 
 /* ---------- Shop → Reisen: Reise-Ticket (nächstes Land) und Wunsch-Ticket (frei gewähltes Land) ---------- */
@@ -11330,7 +11590,7 @@ function wSpeak(text, lang) {
 /* ---------- Aktionen ---------- */
 registerFeature({
   id: 'welt', title: W_NAME, icon: 'stamp', tint: 'sky', group: 'world', order: 70, view: 'welt',
-  sub: () => { const n = wList().filter(p => WA.isOpen(p.id)).length; return (WA.anyLocked() && WA.picks() > 0) || wList().some(p => WA.shown(p.id) && WA.canOpen(p.id)) ? 'Du kannst ein Land öffnen' : `${n} ${n === 1 ? 'Land' : 'Länder'} offen`; },
+  sub: () => { const n = wList().filter(p => WA.isOpen(p.id)).length; return (WA.anyLocked() && WA.picks() > 0) ? 'Du kannst ein Land öffnen' : `${n} ${n === 1 ? 'Land' : 'Länder'} offen`; },
   check: () => { const got = WA.checkWishes(); if (got.length) toast('🎫', `Dein Wunschland ${esc(WP[got[0]].name)} ist da und offen!`); },
   views: { weltReise: VIEWS.weltReise, weltPass: VIEWS.weltPass, weltEltern: VIEWS.weltEltern },
   leave: () => { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
@@ -11372,10 +11632,8 @@ registerFeature({
     wLock: id => {
       const p = WP[id]; if (!p) return;
       if (WA.isOpen(id)) return wLand(id);
-      const free = WA.freeMiles(), cost = WA.mcost(id);
-      if (WA.picks() > 0) return modal(`${esc(p.name)} öffnen?`, `Du darfst ${WA.dayPick() ? 'heute' : 'jetzt'} <b>ein Land frei wählen</b>. Möchtest du <b>${esc(p.name)}</b> öffnen? Es bleibt für immer offen. Deine Meilen, Sterne und Münzen bleiben, wie sie sind.`, 'Öffnen', 'wPickYes', id, 'Anderes Land');
-      if (free >= cost) modal(`${esc(p.name)} öffnen?`, `Das kostet <b>einmal ${cost} ✈️ Reisemeilen</b>. Du hast ${free}, danach ${free - cost}.<br>Deine Sterne, Münzen, Wesen und Pokale bleiben. Das Land bleibt danach für immer offen.`, 'Öffnen', 'wOpenYes', id, 'Später');
-      else modal(`${esc(p.name)} ist noch zu`, `${hwDone() ? 'Heute hast du schon ein Land gewählt. Morgen darfst du wieder eins aussuchen.' : 'Löse heute <b>25 Aufgaben</b> oder übe <b>20 Minuten</b> – dann darfst du ein Land deiner Wahl öffnen.'}<br>Oder mit Reisemeilen: dir fehlen noch <b>${cost - free} ✈️</b> (das Land kostet ${cost}, du hast ${free}). Ein Mini-Test mit 12 von 15 richtig bringt auch eine freie Wahl.`, null, '', '', 'Okay');
+      if (WA.picks() > 0) return modal(`${esc(p.name)} öffnen?`, `Du darfst ${WA.dayPick() ? 'heute' : 'jetzt'} <b>ein Land frei wählen</b>. Möchtest du <b>${esc(p.name)}</b> öffnen? Es bleibt für immer offen. Deine Sterne und Münzen bleiben, wie sie sind.`, 'Öffnen', 'wPickYes', id, 'Anderes Land');
+      modal(`${esc(p.name)} ist noch zu`, `${hwDone() ? 'Heute hast du schon ein Land gewählt. Morgen darfst du wieder eins aussuchen.' : 'Löse heute <b>25 Aufgaben</b> oder übe <b>20 Minuten</b> – dann darfst du ein Land deiner Wahl öffnen.'}<br>Ein Mini-Test mit 12 von 15 richtig oder ein Reise-Ticket aus dem Shop öffnet auch ein Land.`, null, '', '', 'Okay');
     },
     wPickYes: id => { closeModal(); if (!WA.usePick(id)) return; wQuietly(() => checkTrophies()); sfx('magic'); wFlight(id, () => wLand(id)); },
     wOpenYes: id => { closeModal(); if (!WA.openCountry(id)) return; wQuietly(() => checkTrophies()); wFlight(id, () => wLand(id)); },
@@ -11493,7 +11751,7 @@ const rgAreaCap = a => RG_AREA_CAP + (rgData().rgExt.a[a] || 0);
 const rgTotalCap = () => RG_TOTAL_CAP + (rgData().rgExt.tot || 0);
 const rgAreaUsed = a => rgData().rg.a[a] || 0;
 const rgTotalUsed = () => rgData().rg.tot || 0;
-const rgName = a => (a === 'profile' ? 'Mein Profil' : a === 'geo' ? 'Europa Entdecker' : a === 'geoCards' ? 'Länderkarten' : a === 'geoPass' ? 'Stempel' : a === 'geoMemory' ? 'Gedächtnis' : a === 'geoFacts' ? 'Fakten' : ((FEATS[a] || {}).title || secName(a) || a));
+const rgName = a => (a === 'profile' ? 'Mein Profil' : a === 'geo' ? 'Europa Entdecker' : a === 'geoCards' ? 'Länderkarten' : a === 'geoPass' ? 'Stempel' : a === 'geoFacts' ? 'Fakten' : ((FEATS[a] || {}).title || secName(a) || a));
 const pgName = a => rgName(a);
 /* alle Bereiche mit eigener Zeitgrenze (für die Eltern-Liste): Meine-Welt-Funktionen, Profil, Europa Entdecker + Unterseiten */
 const rgAreaList = () => Array.from(new Set([
@@ -11560,9 +11818,9 @@ function freeNoteHtml() {
 /* ---------- Bereiche für die Eltern-Freigaben (Haupt- und Unterbereiche) ---------- */
 const SEC_TREE = () => [
   { id: 'm_hefte', de: 'Meine Hefte', en: 'My workbooks', free: true, subs: [['mistakes', 'Fehler-Heft', 'Mistakes book'], ['minitest', 'Mini-Test', 'Mini test'], ['KOPF', 'Kopfrechnen', 'Mental arithmetic']] },
-  { id: 'm_geo', de: 'Europa Entdecker', en: 'Europe Explorer', free: true, subs: [['geoPlay', 'Spiele (Quiz, Flaggen …)', 'Games (quiz, flags …)'], ['geoMemory', 'Memory', 'Memory'], ['geoCards', 'Länderkarten', 'Country cards'], ['geoFacts', 'Wusstest du?', 'Did you know?'], ['geoPass', 'Stempelpass', 'Stamp passport']] },
+  { id: 'm_geo', de: 'Europa Entdecker', en: 'Europe Explorer', free: true, subs: [['geoPlay', 'Spiele (Quiz, Flaggen …)', 'Games (quiz, flags …)'], ['geoCards', 'Länderkarten', 'Country cards'], ['geoFacts', 'Wusstest du?', 'Did you know?'], ['geoPass', 'Stempelpass', 'Stamp passport']] },
   { id: 'm_kreativ', de: 'Ideenwerkstatt', en: 'Idea workshop', free: true, subs: [['musik', 'Meine Musik', 'My music'], ['story', 'Geschichte', 'Story'], ['noten', 'Notenheft', 'Music book']] },
-  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip']]
+  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip'], ['memory', 'Memory', 'Memory']]
       .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island' })[f.id] || f.label])) },
   { id: 'm_profil', de: 'Mein Profil', en: 'My profile', subs: [['profile', 'Profilseite & Farben', 'Profile page & colours'], ['avatar', 'Das bin ich (Avatar)', 'Avatar'], ['trophies', 'Pokale', 'Trophies'], ['schatz', 'Lustige Karten', 'Fun cards']] }
 ];
