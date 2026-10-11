@@ -9070,6 +9070,7 @@ registerFeature({
   goals: () => []
 });
 
+const APP_BUILD = 'a34a9ecf';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -9152,6 +9153,9 @@ VIEWS.parent = () => {
     <p class="small mute">${PT('Letzte Sicherung', 'Last backup')}: ${S.lastBackup ? new Date(S.lastBackup).toLocaleDateString(de ? 'de-DE' : 'en-GB') : PT('noch nie', 'never')}</p>
     <div class="row wrap"><button class="btn sm" data-act="export">💾 ${PT('Sichern', 'Back up')}</button><label class="btn sm sec" style="cursor:pointer">📂 ${PT('Laden', 'Load')}<input type="file" id="impFile" accept=".json,application/json" class="hide"></label></div>
     <textarea class="txt hide" id="expTxt" readonly style="margin-top:10px"></textarea>
+    <h3 style="margin-top:16px">${PT('App-Version', 'App version')}</h3>
+    <p class="small mute">${PT('Version', 'Version')} <b>${APP_BUILD}</b>. ${PT('Mit Internet holt „Update“ die neueste Version. Der Lernstand bleibt dabei erhalten.', 'With internet, “Update” fetches the newest version. Progress is kept.')}</p>
+    <div class="row wrap"><button class="btn sm" data-act="ptUpdate">🔄 ${PT('Update', 'Update')}</button></div>
     ${persistOK ? '' : `<p class="small" style="color:var(--bad)">${PT('In diesem Browser kann gerade nichts dauerhaft gespeichert werden (privater Modus?).', 'Nothing can be saved permanently in this browser right now (private mode?).')}</p>`}</div>`;
 };
 
@@ -9194,6 +9198,11 @@ Object.assign(ACT, {
   hwReset: () => { hwForceDone(false); toast('🔒', PT('Wieder gesperrt', 'Locked again')); render(); },
   freeResetAct: () => { freeReset(); toast('↩️', PT('Freie Zeit zurückgesetzt', 'Free time reset')); render(); },
   permSetAct: a => { const [id, v] = String(a).split('|'); permSet(id, v); toast(v === 'lock' ? '🔒' : v === 'open' ? '🔓' : '↩️', v === 'lock' ? PT('Gesperrt', 'Locked') : v === 'open' ? PT('Geöffnet', 'Opened') : PT('Automatisch', 'Automatic')); render(); },
+  ptUpdate: async () => {
+    if (navigator.onLine === false) { toast('📡', PT('Kein Internet – Update geht nur online.', 'No internet – updating needs a connection.')); return; }
+    toast('🔄', PT('Suche die neueste Version …', 'Getting the newest version …')); try { save(); if (navigator.serviceWorker) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); } if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } } catch (e) { }
+    location.reload();
+  },
   ptMainReset: id => { const m = SEC_TREE().find(x => x.id === id); if (m) m.subs.forEach(x => rgResetArea(x[0])); toast('↩️', PT('Zeit zurückgesetzt', 'Time reset')); render(); },
   ptMainExt: () => { rgExtendAll(5 * 60); toast('➕', PT('5 Minuten dazu (gesamt)', '5 minutes added (total)')); render(); },
   ptSubReset: a => { rgResetArea(a); toast('↩️', PT('Zeit zurückgesetzt', 'Time reset')); render(); },

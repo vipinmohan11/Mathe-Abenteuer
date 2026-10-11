@@ -64,6 +64,9 @@ with sync_playwright() as p:
 
     # ---------- Mein Buch ----------
     ok(E("()=>bkStickers().some(i=>i.kind==='figur')") and E("()=>!bkStickers().some(i=>i.e==='🦊')"), 'Mein Buch kennt die neuen Figuren, keine Tier-Sticker mehr')
+    # ---------- Eltern: Version + Update ----------
+    E("()=>{S.pin={h:hashStr('1234'),r:'x'};UI.pinUntil=Date.now()+1e9;S.cfg.plang='de';go('parent')}"); pg.wait_for_timeout(100)
+    ok(E("()=>!!document.querySelector('[data-act=ptUpdate]')") and E("()=>/Version [0-9a-f]{8}/.test(document.body.innerText)"), 'Eltern: Version (8 Zeichen) und Update-Knopf')
     ok(not errs, 'keine Konsolenfehler %s' % errs[:3])
     b.close()
 print('\nFAILS:', fails) if fails else print('\nAlles ok.')
