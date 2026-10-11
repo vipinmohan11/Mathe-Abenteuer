@@ -1,0 +1,16 @@
+/* Sammelalbum im Shop */
+.alb-sets{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:8px}
+.alb-set{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px;border-radius:18px;border:2px solid var(--line,#e5dfef);background:var(--card,#fff);color:inherit;font:inherit;cursor:pointer;min-height:44px}
+.alb-set.ok{border-color:#f5b82e;box-shadow:0 0 0 3px #ffe08255}
+.alb-set .bar{width:100%}
+.alb-row{display:flex;gap:2px;width:100%}
+.alm{display:block;flex:1 1 0;min-width:0}
+.alm svg{display:block;width:100%;height:auto}
+.alsil svg{filter:brightness(0) opacity(.22)}
+.alb-back{margin:6px 0 10px}
+.alb-hd{margin:0 4px 10px}
+.alb-hd h3{margin:0 0 2px}
+.alb-hd .bar{margin:8px 0 4px}
+.alleg{cursor:default}
+.itile .ith svg{max-width:100%}
+.bk-slot span svg{width:100%;height:100%}

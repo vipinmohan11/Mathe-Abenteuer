@@ -150,7 +150,7 @@ with sync_playwright() as p:
     E("()=>{const i=UI.gq.opts.findIndex(o=>!o.ok);ACT.giftPick(i)}"); ok(E("()=>S.gifts.open.length")==2 and E("()=>!!document.querySelector('.gq-note')") and pg.locator('.gq-o').count()==4, 'Falsche Antwort: Geschenk bleibt zu, neue Frage')
     E("()=>{const i=UI.gq.opts.findIndex(o=>o.ok);ACT.giftPick(i)}"); ok(E("()=>S.gifts.open.length==1&&S.gifts.log.length==1&&!!S.unl[S.gifts.log[0].item]"), 'Richtige Antwort: Geschenk geöffnet, Sticker oder Zubehör ist freigeschaltet')
     ok(E("()=>{S.decks={};S.mistakes=[];let ok=true;for(let i=0;i<20;i++){UI.gq=null;S.gifts.open.push('z');ACT.giftOpen();const g=UI.gq;ok=ok&&g.opts.length===4&&new Set(g.opts.map(o=>o.t)).size===4&&g.opts.filter(o=>o.ok).length===1;closeModal()}S.gifts.open=['x'];UI.gq=null;return ok}"), 'Frage (auch ohne begonnenes Heft): immer 4 verschiedene Antworten, eine richtig')
-    E("()=>{closeModal();const pool=giftPool().length;S.gifts.open=['x'];UI.gq=null;ACT.giftGo();closeModal();window.__p=pool}"); ok(E("()=>giftPool().length")==E("()=>window.__p")-1, 'Geschenk: jedes Geschenk ist neu (nie doppelt)')
+    E("()=>{closeModal();const pool=giftPool().length+ALB_CH.filter(c=>!hasItem('fg.'+c.id)).length;S.gifts.open=['x'];UI.gq=null;ACT.giftGo();closeModal();window.__p=pool}"); ok(E("()=>giftPool().length+ALB_CH.filter(c=>!hasItem('fg.'+c.id)).length")==E("()=>window.__p")-1, 'Geschenk: jedes Geschenk ist neu (nie doppelt)')
     E("()=>{S.gifts.open=['x'];go('home')}"); pg.wait_for_timeout(150)
     ok(E("()=>{const b=document.getElementById('giftBubble');return !!b&&!b.hidden}"), 'Startseite: Blase bei ungeöffneter Überraschung')
     pg.click('#giftBubble'); pg.wait_for_timeout(100); ok(E("()=>view")=='shop', 'Blase führt in den Shop')

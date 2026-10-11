@@ -15,11 +15,12 @@ const GIFT_MS = [
 ];
 const giftS = () => { const g = S.gifts || (S.gifts = {}); if (!g.got) g.got = {}; if (!Array.isArray(g.open)) g.open = []; if (!Array.isArray(g.log)) g.log = []; return g; };
 function giftCheck() {
+  if (typeof albumCheck === 'function') albumCheck();
   const g = giftS(); let n = 0;
   GIFT_MS.forEach(m => { if (!g.got[m.id] && m.v(S) >= m.n) { g.got[m.id] = Date.now(); g.open.push(m.id); n++; } });
   if (n) { save(); if (!(typeof UI !== 'undefined' && UI && UI.wQuiet)) toast('🎁', n === 1 ? 'Eine Überraschung wartet im Shop!' : n + ' Überraschungen warten im Shop!'); }
 }
-const giftPool = () => Object.values(CATALOG).filter(i => i.src && i.src.t === 'milestone' && i.src.why === GIFT_WHY2 && !hasItem(i.id));
+const giftPool = () => Object.values(CATALOG).filter(i => i.kind !== 'figur' && i.src && i.src.t === 'milestone' && i.src.why === GIFT_WHY2 && !hasItem(i.id));
 const giftNext = () => { const g = giftS(); return GIFT_MS.filter(m => !g.got[m.id]).map(m => ({ m, left: m.n - m.v(S) })).sort((a, b) => a.left / a.m.n - b.left / b.m.n)[0] || null; };
 function giftCard() {
   const g = giftS(), n = g.open.length;
@@ -73,10 +74,13 @@ Object.assign(ACT, {
   giftBubble: () => { UI.shopGrp = 'fino'; go('shop'); },
   giftGo: () => {
     const g = giftS(); if (!g.open.length) return;
-    const mid = g.open.shift(), pool = giftPool(), it = pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+    const mid = g.open.shift(), pool = giftPool(), fg = typeof albumGiftPick === 'function' ? albumGiftPick() : null;
+    const it = fg && (!pool.length || Math.random() < .65) ? fg : pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
     let body, title = 'Überraschung!';
-    if (it) { unlock(it.id, true); g.log.push({ m: mid, item: it.id, ts: Date.now() }); body = `<div class="gift-reveal"><div class="gift-th">${(KIND[it.kind] || { thumb: x => x.e }).thumb(it)}</div><p><b>${esc(it.name)}</b><br><span class="small mute">${it.kind === 'bsticker' ? 'Ein neuer Sticker für dein Heft.' : 'Neues Zubehör für deinen Avatar.'}</span></p></div>`; }
+    if (it) { unlock(it.id, true); g.log.push({ m: mid, item: it.id, ts: Date.now() }); body = `<div class="gift-reveal"><div class="gift-th">${(KIND[it.kind] || { thumb: x => x.e }).thumb(it)}</div><p><b>${esc(it.name)}</b><br><span class="small mute">${it.kind === 'figur' ? 'Eine neue Figur für dein Sammelalbum!' : it.kind === 'bsticker' ? 'Ein neuer Sticker für dein Heft.' : 'Neues Zubehör für deinen Avatar.'}</span></p></div>`; }
     else { S.coins += 30; S.life = (S.life || 0) + 30; g.log.push({ m: mid, item: 'coins30', ts: Date.now() }); body = '<p>Du hast schon alle Geschenke! Dafür gibt es <b>30 🪙</b>.</p>'; }
+    const done = it && typeof albumCheck === 'function' ? albumCheck(true) : null;
+    if (done) body += `<p><b>Set „${esc(done.name)}“ komplett!</b><br><span class="small mute">Die Legende ${esc(done.legend.name)} und ${ALB_BONUS} 🪙 sind dein.</span></p>`;
     save(); sfx('magic'); try { if (!rwCalm()) confetti(50); } catch (e) { }
     modal(title, body, g.open.length ? 'Nächstes aufmachen' : null, 'giftOpen', '', g.open.length ? 'Später' : 'Toll!');
     if (view === 'shop') render();

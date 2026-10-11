@@ -494,6 +494,7 @@ VIEWS.shop = () => {
   const gtabs = `<div class="tabs">${groups.map(g => `<button class="${g === grp ? 'on' : ''}" data-act="shopGrp" data-arg="${g}">${ico((SHOP_GROUPS[g] || {}).ic || 'sparkle', 18)} ${(SHOP_GROUPS[g] || { label: g }).label}</button>`).join('')}</div>`;
   const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${typeof giftCard === 'function' ? giftCard() : ''}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
   if (grp === 'reisen' && typeof wShopTickets === 'function') return head + gtabs + wShopTickets();
+  if (grp === 'album' && typeof albumView === 'function') return head + gtabs + albumView();
   if (grp !== 'fino') {
     const kinds = Object.keys(KIND).filter(k => KIND[k].group === grp);
     const kind = kinds.includes(UI.shopKind) ? UI.shopKind : kinds[0];
