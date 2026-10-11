@@ -7652,14 +7652,16 @@ registerFeature({ id: 'trophies', title: 'Pokale', icon: 'trophy', tint: 'sage',
    Navigation   NAV.stack (Verlauf), dzBack(fallback), Android-Zurück
    Bausteine    dzTile · dzGrid · dzSlot · dzAcc · dzHero · dzSec · dzChip · dzHead · dzTree · dzIc · dzArt · dzPassport
    Namen        dzPoss(name) · Fino-Name wird überall automatisch ersetzt (auch „Finos“ → „Blitz’ “ / „Mias“)
-   Schalter     flagOn(id) · DZ_FLAGS (Wesen, Buch, Insel: ausgeblendet, Eltern können sie einschalten)
+   Schalter     flagOn(id) · DZ_FLAGS (Wesen, Buch, Insel, Sudoku, Venola: ausgeblendet, Eltern können sie einschalten)
    ===================================================================== */
 
 /* ---------- Schalter für ausgeblendete Funktionen (Daten bleiben unangetastet) ---------- */
 const DZ_FLAGS = [
   { id: 'wesen', label: 'Meine Wesen', sub: 'Eier ausbrüten und Wesen sammeln' },
   { id: 'buch', label: 'Mein Buch', sub: 'Sticker sammeln und einkleben' },
-  { id: 'insel', label: 'Meine Insel', sub: 'Eine eigene Insel gestalten' }
+  { id: 'insel', label: 'Meine Insel', sub: 'Eine eigene Insel gestalten' },
+  { id: 'sudoku', label: 'Sudoku', sub: 'Zahlenrätsel mit Wochenrätsel' },
+  { id: 'venola', label: 'Venola Holmes', sub: 'Geheimschriften und Kriminalfälle' }
 ];
 const flagOn = id => !!(S.flags && S.flags[id]);
 
@@ -8113,7 +8115,7 @@ const worldTileL = (id, i) => {
   return tagged.replace('class="dz-tile ', 'class="dz-tile locked ');
 };
 VIEWS.rewards = () => {
-  const ids = ['shop', 'welt', 'memory', 'sudoku', 'venola'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || id === 'memory' || FEATS[id]);
+  const ids = ['shop', 'welt', 'memory'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || id === 'memory' || FEATS[id]);
   return topBar('Meine Welt', 'home') + dzHero('', 'Meine Welt', 'Von dir verdient. Für dich gemacht.', '', 'sm') + dzSec('Entdecken & sammeln') +
     dzGrid(HOME_N, ids.map(worldTileL).join(''), 'dz-home4 dz-kreativ') +
     `<p class="ad-creative-note">${creativeOK() ? (creativeMode() === 'always' ? 'Deine Kreativbereiche sind offen.' : `Deine Kreativzeit: ${fmtT(creativeLeft())}`) : esc(creativeInfo())}</p>`;
@@ -9154,7 +9156,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = '5620fb8f';
+const APP_BUILD = '7bec6f06';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -9162,7 +9164,7 @@ const APP_BUILD = '5620fb8f';
    ===================================================================== */
 const PT = (de, en) => (S.cfg && S.cfg.plang === 'en') ? en : de;
 const PT_SEASON = { Herbstferien: 'Autumn break', Weihnachtsferien: 'Christmas break', Osterferien: 'Easter break', Sommerferien: 'Summer break' };
-const PT_FLAG = { wesen: ['Meine Wesen', 'Eier ausbrüten und Wesen sammeln', 'My Creatures', 'Hatch eggs and collect creatures'], buch: ['Mein Buch', 'Sticker sammeln und einkleben', 'My Book', 'Collect stickers and stick them in'], insel: ['Meine Insel', 'Eine eigene Insel gestalten', 'My Island', 'Design your own island'] };
+const PT_FLAG = { wesen: ['Meine Wesen', 'Eier ausbrüten und Wesen sammeln', 'My Creatures', 'Hatch eggs and collect creatures'], buch: ['Mein Buch', 'Sticker sammeln und einkleben', 'My Book', 'Collect stickers and stick them in'], insel: ['Meine Insel', 'Eine eigene Insel gestalten', 'My Island', 'Design your own island'], sudoku: ['Sudoku', 'Zahlenrätsel mit Wochenrätsel', 'Sudoku', 'Number puzzles with a weekly puzzle'], venola: ['Venola Holmes', 'Geheimschriften und Kriminalfälle', 'Venola Holmes', 'Secret codes and detective cases'] };
 const ptDate = iso => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(iso || ''); return m ? (S.cfg.plang === 'en' ? `${m[3]}/${m[2]}/${m[1]}` : `${m[3]}.${m[2]}.${m[1]}`) : ''; };
 const ptSw = (on, act, arg, label) => `<button class="sw ${on ? 'on' : ''}" role="switch" aria-checked="${on}" aria-label="${esc(label)}" data-act="${act}"${arg == null ? '' : ` data-arg="${esc(arg)}"`}><span class="sw-k"></span><span class="sw-t">${on ? PT('AN', 'ON') : PT('AUS', 'OFF')}</span></button>`;
 const ptSel = (id, opts, val) => `<select id="${id}" class="txt noprint">${opts.map(o => `<option value="${o[0]}" ${String(o[0]) === String(val) ? 'selected' : ''}>${o[1]}</option>`).join('')}</select>`;
@@ -12592,8 +12594,8 @@ const SEC_TREE = () => [
   { id: 'm_hefte', de: 'Meine Hefte', en: 'My workbooks', free: true, subs: [['mistakes', 'Fehler-Heft', 'Mistakes book'], ['minitest', 'Mini-Test', 'Mini test'], ['KOPF', 'Kopfrechnen', 'Mental arithmetic']] },
   { id: 'm_geo', de: 'Europa Entdecker', en: 'Europe Explorer', free: true, subs: [['geoPlay', 'Spiele (Quiz, Flaggen …)', 'Games (quiz, flags …)'], ['geoCards', 'Länderkarten', 'Country cards'], ['geoFacts', 'Wusstest du?', 'Did you know?'], ['geoPass', 'Stempelpass', 'Stamp passport']] },
   { id: 'm_kreativ', de: 'Ideenwerkstatt', en: 'Idea workshop', free: true, subs: [['musik', 'Meine Musik', 'My music'], ['story', 'Geschichte', 'Story'], ['noten', 'Notenheft', 'Music book']] },
-  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip'], ['memory', 'Memory', 'Memory'], ['sudoku', 'Sudoku', 'Sudoku'], ['venola', 'Venola Holmes', 'Venola Holmes']]
-      .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island' })[f.id] || f.label])) },
+  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip'], ['memory', 'Memory', 'Memory']]
+      .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island', sudoku: 'Sudoku', venola: 'Venola Holmes' })[f.id] || f.label])) },
   { id: 'm_profil', de: 'Mein Profil', en: 'My profile', subs: [['profile', 'Profilseite & Farben', 'Profile page & colours'], ['avatar', 'Das bin ich (Avatar)', 'Avatar'], ['trophies', 'Pokale', 'Trophies'], ['schatz', 'Lustige Karten', 'Fun cards']] }
 ];
 function secName(id) {

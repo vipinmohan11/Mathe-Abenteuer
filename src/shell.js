@@ -257,7 +257,7 @@ const worldTileL = (id, i) => {
   return tagged.replace('class="dz-tile ', 'class="dz-tile locked ');
 };
 VIEWS.rewards = () => {
-  const ids = ['shop', 'welt', 'memory', 'sudoku', 'venola'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || id === 'memory' || FEATS[id]);
+  const ids = ['shop', 'welt', 'memory'].concat(DZ_FLAGS.map(x => x.id).filter(flagOn)).filter(id => id === 'shop' || id === 'memory' || FEATS[id]);
   return topBar('Meine Welt', 'home') + dzHero('', 'Meine Welt', 'Von dir verdient. Für dich gemacht.', '', 'sm') + dzSec('Entdecken & sammeln') +
     dzGrid(HOME_N, ids.map(worldTileL).join(''), 'dz-home4 dz-kreativ') +
     `<p class="ad-creative-note">${creativeOK() ? (creativeMode() === 'always' ? 'Deine Kreativbereiche sind offen.' : `Deine Kreativzeit: ${fmtT(creativeLeft())}`) : esc(creativeInfo())}</p>`;

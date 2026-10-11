@@ -30,6 +30,9 @@ with sync_playwright() as p:
 
     # ---------- Tiles / Gating ----------
     E("()=>go('rewards')"); pg.wait_for_timeout(100)
+    ok(E("()=>![...document.querySelectorAll('.dz-tile')].some(x=>/Sudoku|Venola/.test(x.textContent))"), 'Standard: Sudoku und Venola sind ausgeblendet')
+    ok(E("()=>DZ_FLAGS.some(f=>f.id==='sudoku')&&DZ_FLAGS.some(f=>f.id==='venola')"), 'Eltern-Schalter für beide')
+    E("()=>{S.flags.sudoku=true;S.flags.venola=true;save();go('rewards')}"); pg.wait_for_timeout(100)
     t = E("()=>[...document.querySelectorAll('.dz-tile')].map(x=>x.textContent)")
     ok(any('Sudoku' in x for x in t) and any('Venola' in x for x in t), 'Meine Welt zeigt Sudoku und Venola Holmes')
     ok(E("()=>secName('sudoku')")=='Sudoku' and E("()=>secName('venola')")=='Venola Holmes', 'Eltern-Freigaben kennen beide')

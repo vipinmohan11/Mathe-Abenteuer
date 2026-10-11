@@ -116,8 +116,8 @@ const SEC_TREE = () => [
   { id: 'm_hefte', de: 'Meine Hefte', en: 'My workbooks', free: true, subs: [['mistakes', 'Fehler-Heft', 'Mistakes book'], ['minitest', 'Mini-Test', 'Mini test'], ['KOPF', 'Kopfrechnen', 'Mental arithmetic']] },
   { id: 'm_geo', de: 'Europa Entdecker', en: 'Europe Explorer', free: true, subs: [['geoPlay', 'Spiele (Quiz, Flaggen …)', 'Games (quiz, flags …)'], ['geoCards', 'Länderkarten', 'Country cards'], ['geoFacts', 'Wusstest du?', 'Did you know?'], ['geoPass', 'Stempelpass', 'Stamp passport']] },
   { id: 'm_kreativ', de: 'Ideenwerkstatt', en: 'Idea workshop', free: true, subs: [['musik', 'Meine Musik', 'My music'], ['story', 'Geschichte', 'Story'], ['noten', 'Notenheft', 'Music book']] },
-  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip'], ['memory', 'Memory', 'Memory'], ['sudoku', 'Sudoku', 'Sudoku'], ['venola', 'Venola Holmes', 'Venola Holmes']]
-      .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island' })[f.id] || f.label])) },
+  { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip'], ['memory', 'Memory', 'Memory']]
+      .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island', sudoku: 'Sudoku', venola: 'Venola Holmes' })[f.id] || f.label])) },
   { id: 'm_profil', de: 'Mein Profil', en: 'My profile', subs: [['profile', 'Profilseite & Farben', 'Profile page & colours'], ['avatar', 'Das bin ich (Avatar)', 'Avatar'], ['trophies', 'Pokale', 'Trophies'], ['schatz', 'Lustige Karten', 'Fun cards']] }
 ];
 function secName(id) {
