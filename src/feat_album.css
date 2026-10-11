@@ -1,12 +1,12 @@
 /* Sticker-Album im Shop: eine Reihe je Serie */
 .alb-list{display:flex;flex-direction:column;gap:14px;margin-top:8px}
-.alb-ser{padding:14px 12px;border-radius:20px;border:2px solid var(--line,#e5dfef);background:var(--card,#fff)}
+.alb-ser{padding:14px 8px;border-radius:20px;border:2px solid var(--line,#e5dfef);background:var(--card,#fff)}
 .alb-ser.ok{border-color:#f5b82e;box-shadow:0 0 0 3px #ffe08255}
 .alb-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .alb-hd h3{margin:0}
-.alb-figs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 6px}
+.alb-figs{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
 .alf{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;text-align:center}
-.alf b{font-size:13px;line-height:1.15;overflow-wrap:anywhere}
+.alf b{font-size:clamp(8px,1.5vw,13px);line-height:1.1;overflow-wrap:anywhere}
 .alf:not(.on) b{color:#8a8696;font-weight:600}
 .alf-i{display:block;width:100%;max-width:150px}
 .alf-i svg{display:block;width:100%;height:auto}

@@ -109,7 +109,7 @@ function albumView() {
     const h = albHave(s), ok = !!A.done[s.id], near = h >= s.ch.length - 2, rw = CATALOG[s.reward], rwTh = rw ? KIND[rw.kind].thumb(rw) : '';
     const figs = s.ch.map(c => { const on = hasItem('fg.' + c.id); return `<div class="alf ${on ? 'on' : ''}">${albSvg(c.svg, !on)}<b>${esc(c.name)}</b></div>`; }).join('');
     const leg = ok ? `<div class="alf on leg">${albSvg(s.legend.svg, false)}<b>${esc(s.legend.name)}</b></div>` : `<div class="alf leg">${albSvg(near ? s.legend.svg : '<text x="0" y="16" font-size="56" text-anchor="middle" font-weight="700" fill="#777" font-family="sans-serif">?</text>', true)}<b>${near ? '???' : 'Geheim'}</b></div>`;
-    const rew = `<div class="alf rew ${ok ? 'on' : ''}"><span class="alf-i ${ok ? '' : 'alsil'}">${ok ? rwTh : '<svg viewBox="-55 -55 110 110"><text x="0" y="16" font-size="56" text-anchor="middle" font-weight="700" fill="#777" font-family="sans-serif">?</text></svg>'}</span><b>${ok ? esc(s.rname) : 'Belohnung'}</b></div>`;
+    const rew = `<div class="alf rew ${ok ? 'on' : ''}"><span class="alf-i ${ok ? '' : 'alsil'}">${ok ? rwTh : '<svg viewBox="-55 -55 110 110"><text x="0" y="16" font-size="56" text-anchor="middle" font-weight="700" fill="#777" font-family="sans-serif">?</text></svg>'}</span><b>${ok ? esc(s.rname) : 'Bonus'}</b></div>`;
     return `<section class="alb-ser ${ok ? 'ok' : ''}"><div class="alb-hd"><h3>${esc(s.name)}</h3><span class="small mute">${h} / ${s.ch.length}${ok ? ' ✔' : ''}</span></div><p class="small mute" style="margin:0 0 8px">${esc(s.sub)}</p><div class="alb-figs">${figs}${leg}${rew}</div></section>`;
   }).join('')}</div>`;
 }
