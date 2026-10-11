@@ -34,7 +34,7 @@ with sync_playwright() as p:
     ok(r['grp'] and r['cur'], 'Gruppe avatar, nur Münzen')
     ok(set(r['mix']) <= {'free', 'shop', 'milestone'}, 'Quellen nur free/shop/milestone %s' % r['mix'])
     ok(25 <= r['mix']['free'] <= 35, 'Gratis-Grundausstattung 25-35 (%d)' % r['mix']['free'])
-    ok(5 <= r['mix']['milestone'] - 14 <= 8 and r['msOk'], 'Meilensteine 5-8 (+10 Geschenke, +4 Serien) mit Text (%d)' % r['mix']['milestone'])
+    ok(5 <= r['mix']['milestone'] - 15 <= 8 and r['msOk'], 'Meilensteine 5-8 (+10 Geschenke, +5 Serien) mit Text (%d)' % r['mix']['milestone'])
     ok(15 <= r['min'] and r['max'] <= 400 and r['min'] <= 20, 'Münzpreise 15..400 (%s..%s), billig zuerst' % (r['min'], r['max']))
     ok(r['freeSkin'] and not r['old'], 'Hautfarben frei, alte Arten entfernt')
     ok(r['thumbs'], 'Jede Vorschau (Thumb) rendert')

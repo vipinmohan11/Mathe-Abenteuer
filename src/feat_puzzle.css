@@ -1,0 +1,65 @@
+/* Rätsel: Sudoku (.sd-*), Venola Holmes (.vn-*), gemeinsam (.pz-*) */
+.pz-clock{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0}.pz-clock b{font-size:1.3rem;min-width:3.4ch;text-align:center}.pz-clock small{color:var(--dz-mute)}
+.pz-bar{flex:1;max-width:260px;height:10px;border-radius:99px;background:var(--dz-t2);overflow:hidden}.pz-bar i{display:block;height:100%;background:var(--dz-accent);transition:width .25s linear}
+.pz-up{text-align:center;font-size:.9rem;color:var(--dz-accent);font-weight:700;margin:2px 0 6px}
+.pz-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pz-chip{padding:8px 14px;border-radius:999px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:700;color:inherit;cursor:pointer}
+.pz-chip.on{border-color:var(--dz-accent);background:var(--dz-t1)}
+.pz-tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.pz-tool.on{border-color:var(--dz-accent);background:var(--dz-t1)}.pz-tool:disabled{opacity:.5}
+.pz-msg{text-align:center;font-weight:700;margin:8px 0;color:var(--dz-accent)}.pz-msg.ok{color:var(--dz-ink)}
+.pz-res{text-align:center}.pz-fg{display:inline-block;width:44px;height:44px;vertical-align:middle;margin:0 6px}.pz-fg svg{width:100%;height:100%}
+.pz-h{display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;padding:8px 0;border-top:1px solid var(--dz-line)}
+.pz-h .pz-hp{grid-column:1/-1;display:flex;gap:4px}.pz-hp i{font-style:normal;font-size:1.2rem}
+/* Sudoku */
+.sd-setup h3,.sd-week h3{margin:14px 0 8px}.sd-setup h3:first-child,.sd-week h3:first-child{margin-top:0}
+.sd-cont{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.sd-lvs{display:grid;gap:8px}
+.sd-lvrow{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:8px;align-items:center}.sd-lvrow>b{min-width:4.4rem}
+.sd-lv{padding:10px 4px;border-radius:16px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:700;color:inherit;cursor:pointer}
+.sd-lv.on{border-color:var(--dz-accent);background:var(--dz-t1)}.sd-lv.lock{opacity:.5;cursor:not-allowed}
+.sd-info{text-align:center;margin:2px 0 8px}
+.sd-grid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));width:min(100%,460px);margin:0 auto;border:3px solid var(--dz-ink);border-radius:10px;overflow:hidden;background:var(--dz-surface)}
+.sd-c{aspect-ratio:1;display:grid;place-items:center;padding:0;border:0;border-right:1px solid var(--dz-line);border-bottom:1px solid var(--dz-line);background:var(--dz-surface);color:var(--dz-accent);font:inherit;font-weight:800;font-size:clamp(1.1rem,5vw,1.7rem);cursor:pointer;min-width:0;border-radius:0}
+.sd-c.fx{color:var(--dz-ink);background:var(--dz-t1)}
+.sd-c.rb{border-right:3px solid var(--dz-ink)}.sd-c.bb{border-bottom:3px solid var(--dz-ink)}
+.sd-c.pr{background:var(--dz-t2)}.sd-c.sm{background:var(--dz-t1);outline:2px solid var(--dz-accent2,var(--dz-accent));outline-offset:-2px}
+.sd-c.sel{background:var(--dz-accent);color:#fff}
+.sd-c.bad{color:#c0392b;background:#fdecea}
+.sd-nt{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;font-size:clamp(.5rem,1.9vw,.7rem);font-weight:700;color:var(--dz-mute);line-height:1;align-content:center}
+.sd-grid.n4 .sd-nt{grid-template-columns:repeat(2,1fr);font-size:clamp(.7rem,3vw,1rem)}
+.sd-nt i{font-style:normal;display:grid;place-items:center}
+.sd-pad{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;width:min(100%,460px);margin:12px auto 0}
+.sd-key{padding:10px 0;border-radius:12px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:800;font-size:1.2rem;color:inherit;cursor:pointer}
+.sd-key:disabled{opacity:.3}
+/* Venola Holmes */
+.vn-hero{text-align:center;margin:6px 0 12px}
+.vn-title{margin:0 0 4px;font-size:clamp(1.5rem,7vw,2.4rem);letter-spacing:.04em;line-height:1.1}
+.vn-title span{display:inline-block}
+.vn-title span:nth-child(odd){font-family:'Venola Bodoni','Libre Bodoni',serif;font-weight:700}
+.vn-title span:nth-child(even){font-family:Georgia,'Times New Roman',serif;font-weight:700}
+.vn-sp{display:inline-block;width:.45em}
+.vn-games{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vn-g{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:16px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-size:1.6rem;color:inherit;cursor:pointer}
+.vn-g b{font-size:1rem}.vn-g small{font-size:.75rem;color:var(--dz-mute)}.vn-g.on{border-color:var(--dz-accent);background:var(--dz-t1)}
+.vn-key{margin:8px 0}.vn-key summary{cursor:pointer;font-weight:700}
+.vn-tbl{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.vn-tbl span{display:flex;flex-direction:column;align-items:center;width:2rem;border:1px solid var(--dz-line);border-radius:8px;padding:2px 0;background:var(--dz-surface)}.vn-tbl i{font-style:normal;color:var(--dz-accent);font-weight:700}
+.vn-ex,.vn-note{text-align:center;margin:8px 0}
+.vn-note{padding:10px;border-radius:14px;background:var(--dz-t1)}
+.vn-msg{display:flex;flex-wrap:wrap;gap:14px 20px;justify-content:center;margin:12px 0}
+.vn-w{display:flex;gap:4px}
+.vn-l{display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:2.4rem;height:3.4rem;padding:2px 0;border-radius:10px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;color:inherit;cursor:pointer}
+.vn-l small{font-size:.8rem;color:var(--dz-mute);font-weight:700}.vn-l b{font-size:1.3rem;color:var(--dz-accent);min-height:1.5rem;border-top:1px solid var(--dz-line);width:80%;text-align:center}
+.vn-l.sel{border-color:var(--dz-accent);background:var(--dz-t1)}.vn-l.lk{background:var(--dz-t2)}.vn-l.bad{border-color:#c0392b}
+.vn-pad{display:grid;grid-template-columns:repeat(auto-fit,minmax(2.3rem,1fr));gap:5px;max-width:520px;margin:10px auto}
+.vn-k{padding:8px 0;border-radius:10px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:800;color:inherit;cursor:pointer}
+.vn-clues ol{margin:6px 0 6px 1.2rem;padding:0}.vn-clues li{margin:4px 0}
+.vn-sus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-width:520px;margin:10px auto}
+.vn-sus.n4{grid-template-columns:repeat(2,minmax(0,1fr))}
+.vn-s{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:16px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;color:inherit;cursor:pointer}
+.vn-s.x{opacity:.45}.vn-face{width:72px;height:auto}
+.vn-xx{position:absolute;top:6px;right:10px;font-size:1.6rem;color:#c0392b;font-weight:800}
+.vn-lvrow{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sd-c.sel .sd-nt{color:#fff}
+.sd-grid.n4 .sd-nt{font-size:clamp(.8rem,3.4vw,1.15rem)}
+.sd-grid.n6 .sd-nt{font-size:clamp(.6rem,2.4vw,.85rem)}

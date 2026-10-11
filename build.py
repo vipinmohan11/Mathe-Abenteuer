@@ -10,8 +10,8 @@ src = root/'src'
 outdir = None
 if '--out' in sys.argv: outdir = pathlib.Path(sys.argv[sys.argv.index('--out')+1])   # nur die Einzel-HTML in ein anderes Verzeichnis bauen (zum Testen)
 import base64
-# Schriften (Baloo 2 800, Nunito 600/800 – OFL, auf Latein + Deutsch reduziert) offline einbetten
-FONTS = [('Adventure Baloo', 800, 'baloo-800'), ('Adventure Nunito', 600, 'nunito-600'), ('Adventure Nunito', 800, 'nunito-800')]
+# Schriften (Baloo 2 800, Nunito 600/800, Libre Bodoni 700 – OFL, auf Latein + Deutsch reduziert) offline einbetten
+FONTS = [('Adventure Baloo', 800, 'baloo-800'), ('Adventure Nunito', 600, 'nunito-600'), ('Adventure Nunito', 800, 'nunito-800'), ('Venola Bodoni', 700, 'bodoni-700')]
 fontcss = '\n'.join(f"@font-face{{font-family:'{fam}';font-style:normal;font-weight:{w};font-display:swap;src:url(data:font/woff2;base64,{base64.b64encode((src/'fonts'/(n+'.woff2')).read_bytes()).decode()}) format('woff2')}}" for fam, w, n in FONTS)
 OFL = '<!-- Embedded fonts: Baloo 2 + Nunito (subset)\n' + (src/'fonts'/'OFL.txt').read_text().replace('--', '- -') + '-->'
 # Reihenfolge: Basis → Features → ui.css (innere Seiten) → dz.css (Denkzauber-Design-System, gewinnt)

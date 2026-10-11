@@ -14,9 +14,9 @@ with sync_playwright() as p:
     E("()=>{window.__rwOff=1;S.coins=500;S.life=500;S.cfg.shopMin=0;S.cfg.limitMin=0;save()}")
 
     # ---------- Daten ----------
-    ok(E("()=>ALB_SETS.length")==4 and E("()=>ALB_SETS.every(s=>s.ch.length===6)"), '4 Sets mit je 6 Figuren')
-    ok(E("()=>ALB_SETS.every(s=>[...s.ch,s.legend].every(c=>CATALOG['fg.'+c.id] && CATALOG['fg.'+c.id].svg.length>200))"), 'alle 28 Figuren im Katalog mit Bild')
-    ok(E("()=>Object.keys(CATALOG).filter(k=>k.startsWith('fg.')).length")==28, '28 Katalogeinträge (24 + 4 Legenden)')
+    ok(E("()=>ALB_SETS.length")==5 and E("()=>ALB_SETS.every(s=>s.ch.length===6)"), '5 Sets mit je 6 Figuren')
+    ok(E("()=>ALB_SETS.every(s=>[...s.ch,s.legend].every(c=>CATALOG['fg.'+c.id] && CATALOG['fg.'+c.id].svg.length>200))"), 'alle 35 Figuren im Katalog mit Bild')
+    ok(E("()=>Object.keys(CATALOG).filter(k=>k.startsWith('fg.')).length")==35, '35 Katalogeinträge (30 + 5 Legenden)')
     ok(E("()=>ALB_OLD.every(k=>!CATALOG['bs.'+k])"), 'alte Tier-Sticker sind aus dem Katalog')
     ok(E("()=>Object.values(CATALOG).filter(i=>i.kind==='figur'&&i.leg).every(i=>i.src.t==='milestone')"), 'Legenden sind nie kaufbar')
     ok(E("()=>new Set(Object.keys(CATALOG)).size===Object.keys(CATALOG).length"), 'keine doppelten Ids')
@@ -39,7 +39,7 @@ with sync_playwright() as p:
     tabs = E("()=>[...document.querySelectorAll('.tabs')[0].querySelectorAll('button')].map(x=>x.textContent.trim())")
     ok(any(t.endswith('Sticker') for t in tabs) and not any('Stickerbuch' in t or 'Sammelalbum' in t for t in tabs), 'Shop: Reiter „Sticker“, kein Stickerbuch mehr (%s)' % tabs)
     pg.click('.tabs button[data-arg=album]'); pg.wait_for_timeout(100)
-    ok(E("()=>document.querySelectorAll('.alb-ser').length")==4 and E("()=>document.querySelectorAll('.alf').length")==32, 'Eine Seite: 4 Serien-Reihen mit je 8 Feldern (6 + Legende + Belohnung)')
+    ok(E("()=>document.querySelectorAll('.alb-ser').length")==5 and E("()=>document.querySelectorAll('.alf').length")==40, 'Eine Seite: 5 Serien-Reihen mit je 8 Feldern (6 + Legende + Belohnung)')
     ok(E("()=>!document.querySelector('.alb-set, .alb-back')"), 'Kein Öffnen einzelner Sets nötig')
     ok(E("()=>[...document.querySelectorAll('.alf-i')].every(e=>e.getBoundingClientRect().width>=70)"), 'Figuren sind groß (mind. 70 px)')
     ok(not E("()=>buyItem('fg.schraubi')") and not E("()=>hasItem('fg.schraubi')"), 'Figuren sind nie kaufbar')

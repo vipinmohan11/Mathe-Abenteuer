@@ -393,6 +393,7 @@ function trophyList() {
   });
   if (typeof geoTrophies === 'function') geoTrophies().forEach(t => L.push(t));
   if (typeof worldTrophies === 'function') worldTrophies().forEach(t => L.push(t));
+  if (typeof puzzleTrophies === 'function') puzzleTrophies().forEach(t => L.push(t));
   return L;
 }
 function checkTrophies() {

@@ -1,10 +1,12 @@
 Copyright 2019 The Baloo 2 Project Authors (https://github.com/EkType/Baloo2)
 Copyright 2014 The Nunito Project Authors (https://github.com/googlefonts/nunito)
+Copyright 2012 The Libre Bodoni Project Authors (https://github.com/googlefonts/Libre-Bodoni/)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 License sources:
 https://github.com/google/fonts/blob/main/ofl/baloo2/OFL.txt
 https://github.com/google/fonts/blob/main/ofl/nunito/OFL.txt
+https://github.com/google/fonts/blob/main/ofl/librebodoni/OFL.txt
 
 SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
 

@@ -1,5 +1,5 @@
 /* =====================================================================
-   STICKER-ALBUM (Reiter „Sticker“ im Shop): vier Welten mit je 6 eigenen Figuren + einer geheimen Legende.
+   STICKER-ALBUM (Reiter „Sticker“ im Shop): fünf Welten mit je 6 eigenen Figuren + einer geheimen Legende.
    Figuren gibt es nur als Überraschungsgeschenk (nie zu kaufen). Wer alle 6 eines Sets hat, bekommt die Legende,
    ein seltenes Avatar-Zubehör (feat_avatar.js, SET_ACC) und 50 Münzen. Die Figuren sind eigene Erfindungen – als SVG im Code, offline.
    Zustand: S.album = { mig: 1, from: n, got: [ids], done: { setId: Zeit } }.
@@ -29,6 +29,8 @@ const aBrum = (c, b, prop, o = {}) => `<g transform="translate(0 6) scale(.9)">$
 /* Hüpfelinge: kleine Bohnen mit Schal und Fühlern */
 const aHup = (c, s, prop, o = {}) => `${aSh(19)}<ellipse cx="-8" cy="43" rx="7.5" ry="4" fill="#37474f"/><ellipse cx="8" cy="43" rx="7.5" ry="4" fill="#37474f"/><path d="M-6 -18 Q-10 -33 -17 -35 M6 -18 Q10 -33 17 -35" fill="none" stroke="${o.dk || '#455a64'}" stroke-width="2.4" stroke-linecap="round"/><circle cx="-17" cy="-35" r="3.6" fill="${s}"/><circle cx="17" cy="-35" r="3.6" fill="${s}"/><path d="M-19 42 Q-25 8 -15 -10 Q0 -27 15 -10 Q25 8 19 42Z" fill="${c}"/>${o.spots || ''}${aE(-6.5, -2, 3.6)}${aE(6.5, -2, 3.6)}${aSm(7, 4.5)}<path d="M-17 15 Q0 24 17 15 L16 24 Q0 32 -16 24Z" fill="${s}"/>${o.tail || `<path d="M10 22 l9 15 l-7 2 l-6 -13Z" fill="${s}"/>`}${prop}`;
 
+/* Spürnasen: kleine Ermittler mit Mütze – nur durch gelöste Fälle bei Venola Holmes (feat_venola.js) */
+const aDet = (c, cap, prop, o = {}) => `${aSh(21)}<ellipse cx="-8" cy="43" rx="7" ry="3.8" fill="#37474f"/><ellipse cx="8" cy="43" rx="7" ry="3.8" fill="#37474f"/><rect x="-16" y="12" width="32" height="32" rx="11" fill="${o.coat || '#8d6e63'}"/><path d="M-5 12 L0 22 L5 12Z" fill="#fff8e1"/><circle cx="0" cy="30" r="1.8" fill="#fff8e1"/><circle cx="0" cy="38" r="1.8" fill="#fff8e1"/><circle cx="0" cy="-3" r="22" fill="${c}"/>${aE(-8, -3)}${aE(8, -3)}${aBl(6)}${aSm(7, 5)}<path d="M-23 -9 Q-22 -33 0 -34 Q22 -33 23 -9 Q0 -17 -23 -9Z" fill="${cap}"/><path d="M-23 -9 Q0 -17 23 -9" fill="none" stroke="#00000033" stroke-width="2"/><path d="M-13 -33 Q0 -41 13 -33" fill="none" stroke="#00000033" stroke-width="2"/><circle cx="0" cy="-37" r="3.2" fill="${cap}"/>${o.x || ''}${prop}`;
 const ALB_SETS = [
   { id: 'pilz', reward: 'acc.pilzhut', rname: 'Pilzhut', name: 'Pilzdorf', sub: 'Kleine Dorfleute mit Pilzhut', story: 'Im Pilzdorf hat jeder eine Aufgabe. Wer hilft, wird Freund.', legend: { id: 'urpilz', name: 'Ur-Pilz Tüpfelbart', svg: aPilz('#ffd54a', '#fff8e1', aCrown(0, -45) + aStar(24, 34, 7, '#ffd54a'), { beard: '<path d="M-15 26 Q0 58 15 26Z" fill="#fff"/>' }) }, ch: [
     { id: 'broeckel', name: 'Bröckel', q: 20, svg: aPilz('#ef5350', '#fff', '<ellipse cx="22" cy="33" rx="13" ry="7.5" fill="#d9a05b"/><path d="M14 31 l4 -3 M22 30 l4 -3 M29 32 l3 -2" stroke="#a96d2e" stroke-width="1.7" stroke-linecap="round"/>') },
@@ -57,13 +59,21 @@ const ALB_SETS = [
     { id: 'tuepfel', name: 'Tüpfel', q: 30, svg: aHup('#f48fb1', '#7e57c2', '', { spots: '<circle cx="-11" cy="18" r="3" fill="#fff" opacity=".8"/><circle cx="10" cy="28" r="3.4" fill="#fff" opacity=".8"/><circle cx="-9" cy="34" r="2.6" fill="#fff" opacity=".8"/><circle cx="-12" cy="-8" r="2.6" fill="#fff" opacity=".8"/><circle cx="12" cy="-10" r="2.2" fill="#fff" opacity=".8"/>' }) },
     { id: 'wuschel', name: 'Wuschel', q: 35, svg: aHup('#ffb74d', '#26a69a', '<path d="M-14 -16 Q-16 -30 -8 -26 Q-6 -36 2 -28 Q10 -36 12 -24 Q20 -26 16 -14 Q0 -20 -14 -16Z" fill="#ff9100"/>') },
     { id: 'flummi', name: 'Flummi', q: 'G', svg: aHup('#9fa8da', '#ffca28', '<path d="M-24 52 Q0 40 24 52" fill="none" stroke="#9fa8da" stroke-width="3" stroke-linecap="round"/><path d="M-30 30 l-8 0 M-28 20 l-9 0 M30 30 l8 0 M28 20 l9 0" stroke="#9fa8da" stroke-width="2.4" stroke-linecap="round"/>') },
-    { id: 'hoppla', name: 'Hoppla', q: 'G', svg: aHup('#81d4fa', '#8d6e63', '<circle cx="27" cy="-22" r="11" fill="#fff" stroke="#455a64" stroke-width="2"/><text x="27" y="-16" font-size="16" text-anchor="middle" font-weight="700" fill="#455a64" font-family="sans-serif">?</text><circle cx="19" cy="-12" r="2" fill="#fff" stroke="#455a64"/>') }] }
+    { id: 'hoppla', name: 'Hoppla', q: 'G', svg: aHup('#81d4fa', '#8d6e63', '<circle cx="27" cy="-22" r="11" fill="#fff" stroke="#455a64" stroke-width="2"/><text x="27" y="-16" font-size="16" text-anchor="middle" font-weight="700" fill="#455a64" font-family="sans-serif">?</text><circle cx="19" cy="-12" r="2" fill="#fff" stroke="#455a64"/>') }] },
+  { id: 'detek', det: true, reward: 'acc.detektiv', rname: 'Detektivmütze', name: 'Spürnasen', sub: 'Kleine Ermittler – nur durch gelöste Fälle bei Venola Holmes', story: 'Die Spürnasen helfen jedem, der einen Fall löst.', legend: { id: 'scharf', name: 'Chefermittler Scharf', svg: aDet('#ffe0b2', '#5d4037', aStar(22, 30, 8, '#ffd54a') + '<circle cx="-20" cy="30" r="9" fill="#b3e5fc" stroke="#8d6e63" stroke-width="3"/><path d="M-14 36 L-6 44" stroke="#8d6e63" stroke-width="3.4" stroke-linecap="round"/>', { coat: '#37474f', x: aCrown(0, -40) }) }, ch: [
+    { id: 'lupo', name: 'Lupo', w: 1, svg: aDet('#ffcc80', '#8d6e63', '<circle cx="-21" cy="28" r="8" fill="#b3e5fc" stroke="#6d4c41" stroke-width="3"/><path d="M-15 34 L-8 42" stroke="#6d4c41" stroke-width="3.4" stroke-linecap="round"/>') },
+    { id: 'kritzel', name: 'Kritzel', w: 3, svg: aDet('#a5d6a7', '#c0392b', '<rect x="12" y="20" width="16" height="20" rx="2" fill="#fff8e1" stroke="#6d4c41" stroke-width="2"/><path d="M15 26 H25 M15 31 H25 M15 36 H22" stroke="#9e9e9e" stroke-width="1.6"/><path d="M26 18 L30 34" stroke="#ffb300" stroke-width="3" stroke-linecap="round"/>', { coat: '#5c6bc0' }) },
+    { id: 'tapsi', name: 'Tapsi', w: 6, svg: aDet('#f48fb1', '#455a64', '<g fill="#6d4c41"><ellipse cx="-26" cy="46" rx="3.4" ry="4.6"/><circle cx="-29.5" cy="39" r="1.8"/><circle cx="-26" cy="38" r="1.8"/><circle cx="-22.5" cy="39" r="1.8"/><ellipse cx="28" cy="40" rx="3.4" ry="4.6"/><circle cx="24.5" cy="33" r="1.8"/><circle cx="28" cy="32" r="1.8"/><circle cx="31.5" cy="33" r="1.8"/></g>', { coat: '#78909c' }) },
+    { id: 'funki', name: 'Funki', w: 10, svg: aDet('#b39ddb', '#ffa000', '<rect x="14" y="26" width="9" height="20" rx="3" fill="#455a64"/><path d="M12 26 L25 26 L31 14 L6 14Z" fill="#fff59d" stroke="#455a64" stroke-width="2"/><path d="M31 14 L44 0 M6 14 L-6 0" stroke="#fff59d" stroke-width="2" opacity=".7"/>', { coat: '#26a69a' }) },
+    { id: 'knack', name: 'Knack', w: 15, svg: aDet('#ef9a9a', '#37474f', '<circle cx="-24" cy="27" r="6" fill="none" stroke="#ffb300" stroke-width="3.4"/><path d="M-24 33 V46 M-24 40 H-18 M-24 45 H-19" stroke="#ffb300" stroke-width="3.4" stroke-linecap="round"/>', { coat: '#6d4c41' }) },
+    { id: 'mondi', name: 'Mondi', w: 25, svg: aDet('#81d4fa', '#283593', '<path d="M24 14 a10 10 0 1 0 6 18 a8 8 0 1 1 -6 -18Z" fill="#ffd54a"/>' + aStar(32, 40, 4, '#ffd54a'), { coat: '#3949ab' }) }
+  ] },
 ];
 const ALB_CH = [];
 ALB_SETS.forEach(s => {
   s.ch.forEach(c => { c.set = s.id; ALB_CH.push(c); });
   s.legend.set = s.id; s.legend.leg = true;
-  regItems([...s.ch.map(c => ({ id: 'fg.' + c.id, kind: 'figur', name: c.name, svg: c.svg, set: s.id, src: { t: 'milestone', why: ALB_WHY } })),
+  regItems([...s.ch.map(c => ({ id: 'fg.' + c.id, kind: 'figur', name: c.name, svg: c.svg, set: s.id, src: { t: 'milestone', why: c.w ? `Löse ${c.w} ${c.w === 1 ? 'Fall' : 'Fälle'} bei Venola Holmes` : ALB_WHY } })),
     { id: 'fg.' + s.legend.id, kind: 'figur', name: s.legend.name, svg: s.legend.svg, set: s.id, leg: true, src: { t: 'milestone', why: 'Sammle alle 6 Figuren von ' + s.name } }]);
 });
 const albS = () => { const A = S.album || (S.album = {}); if (!A.done) A.done = {}; if (!Array.isArray(A.got)) A.got = []; return A; };
@@ -76,7 +86,7 @@ function albumMig() {
   ALB_OLD.forEach(k => { if (S.unl && S.unl['bs.' + k]) { n++; delete S.unl['bs.' + k]; } });
   if (S.goal && /^bs\./.test(S.goal) && !CATALOG[S.goal]) S.goal = null;
   A.from = n; if (!n) return;
-  const pool = shuffle(ALB_CH.filter(c => !hasItem('fg.' + c.id))), take = pool.slice(0, n);
+  const pool = shuffle(ALB_CH.filter(c => !c.w && !hasItem('fg.' + c.id))), take = pool.slice(0, n);
   take.forEach(c => { unlock('fg.' + c.id, true); A.got.push('fg.' + c.id); });
   if (n > take.length) giveCoins((n - take.length) * 15);
   save();
@@ -84,6 +94,7 @@ function albumMig() {
 /* ---------- Set komplett? Dann Legende + Münzen ---------- */
 function albumCheck(silent) {
   albumMig(); const A = albS(); let fresh = null;
+  const vw = (S.puz && S.puz.venWins) || 0; ALB_CH.forEach(c => { if (c.w && vw >= c.w && !hasItem('fg.' + c.id)) unlock('fg.' + c.id, true); });
   ALB_SETS.forEach(s => {
     if (!A.done[s.id] && albHave(s) === s.ch.length) {
       A.done[s.id] = Date.now(); unlock('fg.' + s.legend.id, true); unlock(s.reward, true); S.coins += ALB_BONUS; S.life = (S.life || 0) + ALB_BONUS; fresh = s;
@@ -97,7 +108,7 @@ function albumCheck(silent) {
 }
 /* eine zufällige noch fehlende Figur (für Geschenke) */
 function albumGiftPick() {
-  const pool = ALB_CH.filter(c => !hasItem('fg.' + c.id)); if (!pool.length) return null;
+  const pool = ALB_CH.filter(c => !c.w && !hasItem('fg.' + c.id)); if (!pool.length) return null;
   return CATALOG['fg.' + pool[Math.floor(Math.random() * pool.length)].id];
 }
 
@@ -105,7 +116,7 @@ function albumGiftPick() {
 const albSvg = (svg, lock, cls) => `<span class="alf-i ${lock ? 'alsil' : ''} ${cls || ''}"><svg viewBox="-55 -55 110 110">${svg}</svg></span>`;
 function albumView() {
   albumMig(); const A = albS(), done = Object.keys(A.done).length;
-  return `<p class="mute small" style="margin:6px 4px">Sticker gibt es als Überraschungsgeschenk. Hast du alle 6 einer Serie, wartet eine geheime Belohnung. ${done} von ${ALB_SETS.length} Serien komplett.</p><div class="alb-list">${ALB_SETS.map(s => {
+  return `<p class="mute small" style="margin:6px 4px">Sticker gibt es als Überraschungsgeschenk, die Spürnasen für gelöste Fälle bei Venola Holmes. Hast du alle 6 einer Serie, wartet eine geheime Belohnung. ${done} von ${ALB_SETS.length} Serien komplett.</p><div class="alb-list">${ALB_SETS.map(s => {
     const h = albHave(s), ok = !!A.done[s.id], near = h >= s.ch.length - 2, rw = CATALOG[s.reward], rwTh = rw ? KIND[rw.kind].thumb(rw) : '';
     const figs = s.ch.map(c => { const on = hasItem('fg.' + c.id); return `<div class="alf ${on ? 'on' : ''}">${albSvg(c.svg, !on)}<b>${esc(c.name)}</b></div>`; }).join('');
     const leg = ok ? `<div class="alf on leg">${albSvg(s.legend.svg, false)}<b>${esc(s.legend.name)}</b></div>` : `<div class="alf leg">${albSvg(near ? s.legend.svg : '<text x="0" y="16" font-size="56" text-anchor="middle" font-weight="700" fill="#777" font-family="sans-serif">?</text>', true)}<b>${near ? '???' : 'Geheim'}</b></div>`;
