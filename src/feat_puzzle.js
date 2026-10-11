@@ -1,7 +1,7 @@
 /* =====================================================================
    RÄTSEL-GRUNDLAGEN für Sudoku (feat_sudoku.js) und Venola Holmes (feat_venola.js), beide in Meine Welt.
    Gemeinsam: Wochenschlüssel (neues Rätsel jeden Montag), Zufall mit Startwert, Stoppuhr + optionale Zeit (5/10/15 Min),
-   3 freie Hinweise pro Tag und Spiel (Zahl nur bei noch 2 oder 1 sichtbar), Verlauf NUR gelöster Rätsel, Pokale, Geschenk-Meilensteine.
+   3 freie Hinweise pro Tag und Spiel (Zahl nur bei noch 2 oder 1 sichtbar), Verlauf NUR gelöster Rätsel (nie gekürzt), Pokale, Geschenk-Meilensteine.
    Zustand: S.puz = { hist: [{ g, ts, lbl, secs, hints, wk, pk, fg }], hint: { day, sud, ven }, coin: { day, n },
                       sudWins, sudClean, sudWk, sud9, venWins, venClean, venWk, venCode, venCase, … }
    Nichts wird je abgezogen; „Zeit ist um“ lässt einfach ohne Zeit weiterspielen.
@@ -11,7 +11,7 @@ const pzS = () => {
   const p = S.puz || (S.puz = {});
   if (!Array.isArray(p.hist)) p.hist = [];
   if (!p.hint || typeof p.hint !== 'object') p.hint = {};
-  ['sudWins', 'sudClean', 'sudWk', 'sud9', 'venWins', 'venClean', 'venWk', 'venCode', 'venCase'].forEach(k => { if (!(p[k] >= 0)) p[k] = 0; });
+  ['sudWins', 'sudClean', 'sudWk', 'sud9', 'venWins', 'venClean', 'venWk', 'venCode', 'venCase', 'venL5'].forEach(k => { if (!(p[k] >= 0)) p[k] = 0; });
   return p;
 };
 /* Montag der laufenden Woche als Datum (Schlüssel für das Wochenrätsel) */
@@ -22,7 +22,7 @@ const pzShuf = (a, rnd) => { a = a.slice(); for (let i = a.length - 1; i > 0; i-
 const pzMD = ts => { const d = new Date(+ts); return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear(); };
 
 /* ---------- Hinweise: 3 pro Tag und Spiel ---------- */
-const pzHintLeft = g => { const h = pzS().hint; if (h.day !== ymd()) { h.day = ymd(); h.sud = 0; h.ven = 0; } return PZ_HINTS - (h[g] || 0); };
+const pzHintLeft = g => { const h = pzS().hint; if (h.day !== ymd()) { Object.keys(h).forEach(k => delete h[k]); h.day = ymd(); } return PZ_HINTS - (h[g] || 0); };
 const pzHintUse = g => { if (pzHintLeft(g) <= 0) return false; pzS().hint[g] = (pzS().hint[g] || 0) + 1; save(); return true; };
 const pzHintBtn = (act, g, extra) => { const l = pzHintLeft(g); return `<button class="btn sec pz-tool" data-act="${act}" ${l <= 0 ? 'disabled' : ''}>${ico('sparkle', 18)} ${l <= 0 ? 'Hinweise für heute weg' : l <= 2 ? `Hinweis (noch ${l})` : 'Hinweis'}</button>`; };
 
@@ -57,7 +57,7 @@ function pzFinish(g, lbl, secs, hints, o) {
   p[g + 'Wins']++; if (!hints) p[g + 'Clean']++; if (o.weekly) p[g + 'Wk']++;
   (o.inc || []).forEach(k => { p[k] = (p[k] || 0) + 1; });
   const e = { g, ts: Date.now(), lbl, secs: Math.round(secs), hints: hints || 0, wk: !!o.weekly, pk: [], fg: [] };
-  p.hist.push(e); if (p.hist.length > 400) p.hist.shift();
+  p.hist.push(e);                                                  // der Verlauf wird nie gekürzt
   save(); checkTrophies();
   e.pk = Object.keys(S.trophies).filter(k => !before.includes(k));
   e.fg = Object.keys(S.unl || {}).filter(k => k.startsWith('fg.') && !fgB.includes(k));
@@ -84,11 +84,13 @@ function puzzleTrophies() {
     T('zsc10', '🌟', 'Ganz allein', '10 Sudokus ohne Hinweis gelöst', p => p.sudClean, 10),
     T('zsw4', '📅', 'Wochenrätsel-Held', '4 Wochenrätsel gelöst', p => p.sudWk, 4),
     T('zv1', '🔍', 'Erster Fall', 'Einen Fall bei Venola Holmes gelöst', p => p.venWins, 1),
-    T('zvc5', '🗝️', 'Codeknacker', '5 Geheimschriften geknackt', p => p.venCode, 5),
+    T('zvc5', '🗝️', 'Aktenknacker', '5 Geheimakten gelöst', p => p.venCode, 5),
     T('zvs5', '👣', 'Spürnase', '5 Kriminalfälle gelöst', p => p.venCase, 5),
     T('zvw1', '🕵️', 'Meisterdetektiv', 'Einen Wochenfall gelöst', p => p.venWk, 1),
     T('zv25', '🏅', 'Detektiv-Profi', '25 Fälle gelöst', p => p.venWins, 25),
-    T('zvc10', '🎩', 'Detektiv ohne Hilfe', '10 Fälle ohne Hinweis gelöst', p => p.venClean, 10)
+    T('zvc10', '🎩', 'Detektiv ohne Hilfe', '10 Fälle ohne Hinweis gelöst', p => p.venClean, 10),
+    T('zvl5', '🧗', 'Ganz oben', 'Eine Akte auf Stufe 5 gelöst', p => p.venL5, 1),
+    T('zvk', '🧳', 'Voller Koffer', 'Alle 12 Beweisstücke im Detektivkoffer', p => Object.keys(p.vnKof || {}).length, 12)
   ];
 }
 /* ---------- Überraschungsgeschenke: gelöste Rätsel zählen mit (feat_geschenk.js) ---------- */

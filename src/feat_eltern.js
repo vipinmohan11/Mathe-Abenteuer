@@ -41,6 +41,7 @@ VIEWS.parent = () => {
     ${sub(PT('Zusatzfunktionen in „Meine Welt“', 'Extra features in “My World”'))}
     <p class="small mute" style="margin:0 0 6px">${PT('Ausgeschaltete Bereiche sind für das Kind unsichtbar. Was darin schon gesammelt wurde, bleibt immer erhalten.', 'Switched-off areas are hidden from your child. Anything already collected there is always kept.')}</p>
     ${DZ_FLAGS.map(f => { const t = PT_FLAG[f.id], on = flagOn(f.id); return `<div class="cfg"><div><b>${PT(t[0], t[2])}</b> <span class="flagstate ${on ? 'on' : ''}">${on ? PT('sichtbar', 'visible') : PT('ausgeblendet', 'hidden')}</span><br><span class="small mute">${PT(t[1], t[3])}</span></div>${ptSw(on, 'dzFlag', f.id, PT(t[0], t[2]))}</div>`; }).join('')}
+    ${typeof vnParentCard === 'function' && flagOn('venola') ? vnParentCard() : ''}
     ${sub(PT('Lernziel', 'Learning goal'))}
     ${ptRow(PT('Tagesziel', 'Daily goal'), PT('So viele Aufgaben pro Tag für Serie, Karte und Kreativzeit. Heute: ', 'Tasks per day for the streak, a card and creative time. Today: ') + `${today}`, ptSel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, PT(n + ' Aufgaben', n + ' tasks')]), S.cfg.goal))}
     ${sub(PT('Hausaufgaben-Sperre', 'Homework gate'))}

@@ -1067,6 +1067,48 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .sd-grid.n4 .sd-nt{font-size:clamp(.8rem,3.4vw,1.15rem)}
 .sd-grid.n6 .sd-nt{font-size:clamp(.6rem,2.4vw,.85rem)}
 
+/* ---- Venola Holmes v2 ---- */
+.vn-lvrow{grid-template-columns:repeat(5,minmax(0,1fr))}
+.vn-lvrow .btn{padding-left:4px;padding-right:4px;display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.vn-lvrow .btn small{font-size:.68rem;opacity:.8}
+.vn-card{margin:10px 0}.vn-h{margin:0 0 6px}.vn-q{font-weight:700;margin:10px 0 6px}
+.vn-text{white-space:pre-line;line-height:1.55;margin:6px 0}
+.vn-dots{display:flex;justify-content:center;gap:6px;margin:6px 0}
+.vn-opts{display:grid;gap:8px;margin:8px 0}.vn-opts.sm{grid-template-columns:repeat(auto-fit,minmax(90px,1fr))}
+.vn-opt{padding:12px 10px;border-radius:14px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;color:inherit;text-align:left;cursor:pointer;min-height:44px}
+.vn-opt.sel{border-color:var(--dz-accent);background:var(--dz-t1)}.vn-opt.bad{border-color:#c0392b;background:rgba(192,57,43,.1)}.vn-opt.ok{border-color:#2e8b57;background:rgba(46,139,87,.12)}
+.vn-mq{margin:12px 0 4px;font-weight:700}.vn-mh{font-size:.85rem;color:var(--dz-mute);margin:0 0 4px}
+.vn-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.vn-chip{padding:8px 12px;border-radius:12px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:700;color:inherit;cursor:pointer;min-height:40px}
+.vn-chip.used{opacity:.35}.vn-chip.syl{background:var(--dz-t1)}
+.vn-grp{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}
+.vn-gl{font-weight:800}.vn-gs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.vn-gp{font-weight:800}.vn-gq{font-size:.85rem;color:var(--dz-mute);flex-basis:100%}
+.vn-slot{min-width:54px;min-height:44px;padding:4px 10px;border-radius:12px;border:2px dashed var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:700;color:inherit;cursor:pointer}
+.vn-slot.full{border-style:solid}.vn-slot.act{border-color:var(--dz-accent);background:var(--dz-t1)}.vn-slot.lk{background:var(--dz-t2)}
+.vn-slot.good{border-color:#2e8b57}.vn-slot.wrong{border-color:#c0392b}
+.vn-fl{display:grid;gap:8px;margin:8px 0}.vn-fr{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}.vn-fq{font-weight:700}
+.vn-in{text-transform:uppercase;min-width:6rem;max-width:100%;padding:8px 10px;border-radius:12px;border:2px solid var(--dz-line);font:inherit;font-weight:700;background:var(--dz-surface);color:inherit}
+.vn-xw{display:grid;grid-template-columns:repeat(var(--w),var(--cs,min(40px,calc((100vw - 56px)/var(--w)))));gap:2px;justify-content:center;margin:10px auto}
+.vn-c{position:relative;aspect-ratio:1;border:2px solid var(--dz-line);border-radius:6px;background:var(--dz-surface);font:inherit;font-weight:800;color:inherit;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.vn-c sup{position:absolute;top:0;left:2px;font-size:.6rem;color:var(--dz-mute)}
+.vn-c.off{border:0;background:transparent;cursor:default}.vn-c.sel{border-color:var(--dz-accent);background:var(--dz-t1)}.vn-c.hl{background:var(--dz-t2)}.vn-c.lk{color:var(--dz-accent)}
+.vn-c.good{border-color:#2e8b57}.vn-c.wrong{border-color:#c0392b}
+.vn-ac{font-weight:700;margin:6px 0}.vn-clist{margin:6px 0 6px 1.2rem;padding:0}.vn-clist li{margin:4px 0}
+.vn-kb{display:grid;grid-template-columns:repeat(auto-fit,minmax(2rem,1fr));gap:4px;max-width:560px;margin:8px auto}
+.vn-exp{margin:10px 0}.vn-exp ol{margin:6px 0 6px 1.2rem;padding:0}.vn-exp li{margin:4px 0}
+.vn-ask{border:2px solid var(--dz-accent);text-align:center}
+.vn-link{background:none;border:0;color:var(--dz-accent);text-decoration:underline;font:inherit;cursor:pointer;padding:6px}
+.vn-rankc{display:flex;gap:12px;align-items:center}.vn-ri{font-size:2.2rem}.vn-rankc>div{flex:1}
+.vn-kb2{margin-top:6px}.vn-sug{border:2px dashed var(--dz-accent);text-align:center}
+.vn-gain{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}.vn-rup{font-weight:800;color:var(--dz-accent)}
+.vn-kof{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.vn-ki{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;padding:8px 4px;border-radius:14px;border:2px solid var(--dz-line);background:var(--dz-surface);opacity:.75}
+.vn-ki.own{opacity:1;border-color:var(--dz-accent)}.vn-ki svg{width:52px;height:52px}.vn-ki b{font-size:.85rem}.vn-ki small{font-size:.7rem;color:var(--dz-mute)}
+.vn-row{margin:10px 0}.vn-hr{flex-wrap:wrap}.vn-hts{display:flex;gap:6px;flex-wrap:wrap}
+.vn-det{display:block;margin:8px 0}.vn-title2{margin:0 0 6px;text-align:center}
+@media (max-width:520px){.vn-kof{grid-template-columns:repeat(2,minmax(0,1fr))}.vn-lvrow .btn{font-size:.85rem}}
+.vn-lvrow button{display:flex;flex-direction:column;align-items:center;line-height:1.15;padding-left:4px;padding-right:4px}.vn-lvrow button small{display:block;font-size:.7rem;opacity:.8}
+
 /* ===== Schatzkammer ===== */
 .tkopen{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
@@ -7400,7 +7442,7 @@ VIEWS.trophies = () => {
   const yrOf = ts => (+ts > 1e11 ? new Date(+ts).getFullYear() : 0);
   return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card pk-head"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
   ${mp ? `<div class="pk-meds" aria-label="Medaillen pro Gruppe">${mp}</div>` : ''}
-  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten.</div></div>
+  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten.</div></div>${typeof vnRankCard === 'function' ? vnRankCard() : ''}
   ${(() => {
     const tile = t => { const h = S.trophies[t.id], hid = t.s && !h; return `<div class="pk-b${h ? ' got' : ' lock'}">${h && yrOf(h) ? `<time class="pk-dt" datetime="${new Date(+h).toISOString().slice(0, 10)}">${ddmm(h)}</time>` : ''}<span class="pk-i">${hid ? '❓' : t.i}</span><b>${hid ? 'Geheimer Pokal' : esc(t.n)}</b><span class="pk-d">${hid ? 'Finde heraus, wie man ihn bekommt!' : esc(t.d)}</span>${h ? '' : '<small>Noch nicht geschafft</small>'}</div>`; };
     const earned = sorted.filter(t => S.trophies[t.id]), open = sorted.filter(t => !S.trophies[t.id]), yrs = [...new Set(earned.map(t => yrOf(S.trophies[t.id])))].sort((a, b) => b - a);
@@ -8659,6 +8701,11 @@ add('acc', { k: 'tueftler', n: 'Tüftler-Helm', s: 'x', slot: 'head', d: () => `
 add('acc', { k: 'brummelohren', n: 'Brummel-Ohren', s: 'x', slot: 'head', d: () => `<circle cx="66" cy="56" r="19" fill="#8E6BBF" stroke="#6a4a98" stroke-width="1.6"/><circle cx="134" cy="56" r="19" fill="#8E6BBF" stroke="#6a4a98" stroke-width="1.6"/><circle cx="66" cy="56" r="10" fill="#D9C8F0"/><circle cx="134" cy="56" r="10" fill="#D9C8F0"/><path d="M64 66Q100 44 136 66" stroke="#6a4a98" stroke-width="4" fill="none"/>` });
 add('acc', { k: 'huepffuehler', n: 'Hüpf-Fühler', s: 'x', slot: 'head', d: () => `<path d="M82 64Q70 50 84 42Q96 34 80 22M118 64Q130 50 116 42Q104 34 120 22" stroke="#455A64" stroke-width="3.6" fill="none" stroke-linecap="round"/><circle cx="80" cy="20" r="8" fill="#FF7043" stroke="#c24a22" stroke-width="1.4"/><circle cx="120" cy="20" r="8" fill="#FF7043" stroke="#c24a22" stroke-width="1.4"/>` });
 add('acc', { k: 'detektiv', n: 'Detektivmütze', s: 'x', slot: 'head', d: () => `<path d="M58 66Q58 26 100 26Q142 26 142 66Q100 56 58 66Z" fill="#8D6E63" stroke="#5d4037" stroke-width="1.6"/><path d="M58 66Q100 56 142 66" fill="none" stroke="#5d4037" stroke-width="3"/><path d="M70 40Q100 30 130 40" stroke="#5d4037" stroke-width="1.6" fill="none"/><path d="M60 62L40 68L62 72ZM140 62L160 68L138 72Z" fill="#6d4c41" stroke="#5d4037" stroke-width="1.4"/><circle cx="100" cy="24" r="5" fill="#6d4c41"/>` });
+/* Venola Holmes: nur durch den Detektivkoffer und den Detektiv-Rang (feat_venola.js) – nie im Shop */
+add('acc', { k: 'spion', n: 'Spion-Brille', s: 'x', slot: 'glass', d: () => `<rect x="62" y="85" width="34" height="23" rx="9" fill="#5d4037" fill-opacity=".92" stroke="#3e2723" stroke-width="2"/><rect x="104" y="85" width="34" height="23" rx="9" fill="#5d4037" fill-opacity=".92" stroke="#3e2723" stroke-width="2"/><path d="M96 92H104" stroke="#3e2723" stroke-width="3.4"/><circle cx="121" cy="96.5" r="10.5" fill="#cfe8f2" fill-opacity=".85" stroke="#C98A00" stroke-width="3"/><path d="M129 104l9 9" stroke="#C98A00" stroke-width="3.4" stroke-linecap="round"/><path d="M68 89l10-1" stroke="#fff" stroke-width="2" opacity=".4" stroke-linecap="round"/>` });
+add('acc', { k: 'dschal', n: 'Detektiv-Schal', s: 'x', slot: 'neck', d: () => `<path d="M72 146Q100 164 128 146L130 162Q100 180 70 162Z" fill="#8d6e63" stroke="#5d4037" stroke-width="1.4"/><path d="M108 164L124 192L106 195L99 170Z" fill="#8d6e63" stroke="#5d4037" stroke-width="1.4"/><path d="M80 154Q100 166 120 154M84 162Q100 172 116 162M104 176L116 190M101 170L112 184" stroke="#bf9b7a" stroke-width="2" fill="none"/><path d="M76 150L80 166M92 158L94 174M108 158L110 176M122 150L120 166" stroke="#5d4037" stroke-width="1.4" opacity=".55"/>` });
+add('acc', { k: 'meisterhut', n: 'Meisterhut', s: 'x', slot: 'head', d: () => `<path d="M46 68Q100 84 154 68Q150 62 132 60Q126 30 100 28Q74 30 68 60Q50 62 46 68Z" fill="#37474f" stroke="#1c262b" stroke-width="1.6"/><path d="M68 56Q100 66 132 56L131 62Q100 72 69 62Z" fill="#B03A48" stroke="#7d2530" stroke-width="1.2"/><path d="M84 38Q100 33 116 38" stroke="#546e7a" stroke-width="2" fill="none"/><path d="${star5(100, 62, 5.4, 2.4)}" fill="#FFD43B" stroke="#C98A00" stroke-width=".9"/>` });
+add('acc', { k: 'kommabz', n: 'Kommissar-Abzeichen', s: 'x', slot: 'ear', d: C => ears(C, x => `<path d="${star5(x, 109, 7.6, 3.4)}" fill="#FFD43B" stroke="#C98A00" stroke-width="1.2" stroke-linejoin="round"/><circle cx="${x}" cy="109" r="1.7" fill="#C98A00"/>`) });
 /* Haarschmuck */
 add('acc', { k: 'hairband', n: 'Haarreif Mint', s: 'c15', slot: 'hair', d: () => `<path d="M58 72Q100 24 142 72" stroke="#3CCFA0" stroke-width="5.4" fill="none"/><path d="M70 52Q86 40 102 38" stroke="#fff" stroke-width="2" fill="none" opacity=".5"/>` });
 const flowerD = (c, c2, x, y) => `<g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-7" rx="4.6" ry="6" transform="rotate(${a})" fill="${c}"/>`).join('')}<circle r="3.6" fill="${c2}"/></g>`;
@@ -8737,7 +8784,8 @@ const MS = {                                                       // id -> [Tex
 const GIFT_WHY = 'Überraschungsgeschenk aus dem Shop';
 const GIFT_ACC = ['acc.party', 'acc.pirate', 'acc.unicorn', 'acc.antenna', 'acc.chef', 'acc.viking', 'acc.shades', 'acc.starglass', 'acc.scarf', 'acc.starneck'];
 const SET_ACC = { 'acc.pilzhut': 'Pilzdorf', 'acc.tueftler': 'Werkelinge', 'acc.brummelohren': 'Brummel', 'acc.huepffuehler': 'Hüpfelinge', 'acc.detektiv': 'Spürnasen' };
-const SRC = id => SET_ACC[id] ? { t: 'milestone', why: 'Sticker-Serie ' + SET_ACC[id] + ' komplett' } : MS[id] ? { t: 'milestone', why: MS[id][0] } : GIFT_ACC.includes(id) ? { t: 'milestone', why: GIFT_WHY } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
+const VN_ACC = { 'acc.spion': 'Venola Holmes: Detektivkoffer Reihe 1 komplett', 'acc.dschal': 'Venola Holmes: Detektivkoffer Reihe 2 komplett', 'acc.meisterhut': 'Venola Holmes: Detektivkoffer Reihe 3 komplett', 'acc.kommabz': 'Venola Holmes: Rang Kommissarin' };
+const SRC = id => VN_ACC[id] ? { t: 'milestone', why: VN_ACC[id] } : SET_ACC[id] ? { t: 'milestone', why: 'Sticker-Serie ' + SET_ACC[id] + ' komplett' } : MS[id] ? { t: 'milestone', why: MS[id][0] } : GIFT_ACC.includes(id) ? { t: 'milestone', why: GIFT_WHY } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
 function avCheck() {                                               // Meilensteine freischalten (leise Hinweise kommen von unlock)
 let any = false;
 Object.keys(MS).forEach(id => { if (!S.unl[id] && ((S.stats || {})[MS[id][1]] || 0) >= MS[id][2]) { unlock(id); any = true; } });
@@ -8781,7 +8829,7 @@ return `<svg class="mascot" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/sv
 KINDS.forEach(k => regKind(k[1], { group: 'avatar', label: k[2], ic: k[3], thumb: k[0] === 'color' ? colorThumb : it => thumbOf(k[0], it) }));
 KINDS.forEach(k => {
 if (k[0] === 'color') return;
-regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id) || GIFT_ACC.includes(p.id) || p.id in SET_ACC).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
+regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id) || GIFT_ACC.includes(p.id) || p.id in SET_ACC || p.id in VN_ACC).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
 });
 regItems([].concat(...Object.keys(PAL).map(sl => PAL[sl][1].map(c => ({ id: c.id, kind: 'avcolor', name: PAL[sl][0] + ': ' + c[1], src: SRC(c.id), av: 1, slot: sl, v: c[2] })))));
 /* =====================================================================
@@ -9156,7 +9204,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = '7bec6f06';
+const APP_BUILD = '5346c287';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -9199,6 +9247,7 @@ VIEWS.parent = () => {
     ${sub(PT('Zusatzfunktionen in „Meine Welt“', 'Extra features in “My World”'))}
     <p class="small mute" style="margin:0 0 6px">${PT('Ausgeschaltete Bereiche sind für das Kind unsichtbar. Was darin schon gesammelt wurde, bleibt immer erhalten.', 'Switched-off areas are hidden from your child. Anything already collected there is always kept.')}</p>
     ${DZ_FLAGS.map(f => { const t = PT_FLAG[f.id], on = flagOn(f.id); return `<div class="cfg"><div><b>${PT(t[0], t[2])}</b> <span class="flagstate ${on ? 'on' : ''}">${on ? PT('sichtbar', 'visible') : PT('ausgeblendet', 'hidden')}</span><br><span class="small mute">${PT(t[1], t[3])}</span></div>${ptSw(on, 'dzFlag', f.id, PT(t[0], t[2]))}</div>`; }).join('')}
+    ${typeof vnParentCard === 'function' && flagOn('venola') ? vnParentCard() : ''}
     ${sub(PT('Lernziel', 'Learning goal'))}
     ${ptRow(PT('Tagesziel', 'Daily goal'), PT('So viele Aufgaben pro Tag für Serie, Karte und Kreativzeit. Heute: ', 'Tasks per day for the streak, a card and creative time. Today: ') + `${today}`, ptSel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, PT(n + ' Aufgaben', n + ' tasks')]), S.cfg.goal))}
     ${sub(PT('Hausaufgaben-Sperre', 'Homework gate'))}
@@ -11362,7 +11411,7 @@ window.addEventListener('load', nzBubble);
 /* =====================================================================
    RÄTSEL-GRUNDLAGEN für Sudoku (feat_sudoku.js) und Venola Holmes (feat_venola.js), beide in Meine Welt.
    Gemeinsam: Wochenschlüssel (neues Rätsel jeden Montag), Zufall mit Startwert, Stoppuhr + optionale Zeit (5/10/15 Min),
-   3 freie Hinweise pro Tag und Spiel (Zahl nur bei noch 2 oder 1 sichtbar), Verlauf NUR gelöster Rätsel, Pokale, Geschenk-Meilensteine.
+   3 freie Hinweise pro Tag und Spiel (Zahl nur bei noch 2 oder 1 sichtbar), Verlauf NUR gelöster Rätsel (nie gekürzt), Pokale, Geschenk-Meilensteine.
    Zustand: S.puz = { hist: [{ g, ts, lbl, secs, hints, wk, pk, fg }], hint: { day, sud, ven }, coin: { day, n },
                       sudWins, sudClean, sudWk, sud9, venWins, venClean, venWk, venCode, venCase, … }
    Nichts wird je abgezogen; „Zeit ist um“ lässt einfach ohne Zeit weiterspielen.
@@ -11372,7 +11421,7 @@ const pzS = () => {
   const p = S.puz || (S.puz = {});
   if (!Array.isArray(p.hist)) p.hist = [];
   if (!p.hint || typeof p.hint !== 'object') p.hint = {};
-  ['sudWins', 'sudClean', 'sudWk', 'sud9', 'venWins', 'venClean', 'venWk', 'venCode', 'venCase'].forEach(k => { if (!(p[k] >= 0)) p[k] = 0; });
+  ['sudWins', 'sudClean', 'sudWk', 'sud9', 'venWins', 'venClean', 'venWk', 'venCode', 'venCase', 'venL5'].forEach(k => { if (!(p[k] >= 0)) p[k] = 0; });
   return p;
 };
 /* Montag der laufenden Woche als Datum (Schlüssel für das Wochenrätsel) */
@@ -11383,7 +11432,7 @@ const pzShuf = (a, rnd) => { a = a.slice(); for (let i = a.length - 1; i > 0; i-
 const pzMD = ts => { const d = new Date(+ts); return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear(); };
 
 /* ---------- Hinweise: 3 pro Tag und Spiel ---------- */
-const pzHintLeft = g => { const h = pzS().hint; if (h.day !== ymd()) { h.day = ymd(); h.sud = 0; h.ven = 0; } return PZ_HINTS - (h[g] || 0); };
+const pzHintLeft = g => { const h = pzS().hint; if (h.day !== ymd()) { Object.keys(h).forEach(k => delete h[k]); h.day = ymd(); } return PZ_HINTS - (h[g] || 0); };
 const pzHintUse = g => { if (pzHintLeft(g) <= 0) return false; pzS().hint[g] = (pzS().hint[g] || 0) + 1; save(); return true; };
 const pzHintBtn = (act, g, extra) => { const l = pzHintLeft(g); return `<button class="btn sec pz-tool" data-act="${act}" ${l <= 0 ? 'disabled' : ''}>${ico('sparkle', 18)} ${l <= 0 ? 'Hinweise für heute weg' : l <= 2 ? `Hinweis (noch ${l})` : 'Hinweis'}</button>`; };
 
@@ -11418,7 +11467,7 @@ function pzFinish(g, lbl, secs, hints, o) {
   p[g + 'Wins']++; if (!hints) p[g + 'Clean']++; if (o.weekly) p[g + 'Wk']++;
   (o.inc || []).forEach(k => { p[k] = (p[k] || 0) + 1; });
   const e = { g, ts: Date.now(), lbl, secs: Math.round(secs), hints: hints || 0, wk: !!o.weekly, pk: [], fg: [] };
-  p.hist.push(e); if (p.hist.length > 400) p.hist.shift();
+  p.hist.push(e);                                                  // der Verlauf wird nie gekürzt
   save(); checkTrophies();
   e.pk = Object.keys(S.trophies).filter(k => !before.includes(k));
   e.fg = Object.keys(S.unl || {}).filter(k => k.startsWith('fg.') && !fgB.includes(k));
@@ -11445,11 +11494,13 @@ function puzzleTrophies() {
     T('zsc10', '🌟', 'Ganz allein', '10 Sudokus ohne Hinweis gelöst', p => p.sudClean, 10),
     T('zsw4', '📅', 'Wochenrätsel-Held', '4 Wochenrätsel gelöst', p => p.sudWk, 4),
     T('zv1', '🔍', 'Erster Fall', 'Einen Fall bei Venola Holmes gelöst', p => p.venWins, 1),
-    T('zvc5', '🗝️', 'Codeknacker', '5 Geheimschriften geknackt', p => p.venCode, 5),
+    T('zvc5', '🗝️', 'Aktenknacker', '5 Geheimakten gelöst', p => p.venCode, 5),
     T('zvs5', '👣', 'Spürnase', '5 Kriminalfälle gelöst', p => p.venCase, 5),
     T('zvw1', '🕵️', 'Meisterdetektiv', 'Einen Wochenfall gelöst', p => p.venWk, 1),
     T('zv25', '🏅', 'Detektiv-Profi', '25 Fälle gelöst', p => p.venWins, 25),
-    T('zvc10', '🎩', 'Detektiv ohne Hilfe', '10 Fälle ohne Hinweis gelöst', p => p.venClean, 10)
+    T('zvc10', '🎩', 'Detektiv ohne Hilfe', '10 Fälle ohne Hinweis gelöst', p => p.venClean, 10),
+    T('zvl5', '🧗', 'Ganz oben', 'Eine Akte auf Stufe 5 gelöst', p => p.venL5, 1),
+    T('zvk', '🧳', 'Voller Koffer', 'Alle 12 Beweisstücke im Detektivkoffer', p => Object.keys(p.vnKof || {}).length, 12)
   ];
 }
 /* ---------- Überraschungsgeschenke: gelöste Rätsel zählen mit (feat_geschenk.js) ---------- */
@@ -11769,92 +11820,120 @@ registerFeature({
 });
 
 /* =====================================================================
-   VENOLA HOLMES (in Meine Welt): Detektiv-Rätsel in zwei Spielen + Wochenfall.
-   · Geheimschrift: eine Botschaft entschlüsseln (Verschiebe-Code, A=1-Zahlen, Spiegel-Alphabet). Stufe 1 mit vollem Schlüssel,
-     Stufe 2 mit einem Beispiel, Stufe 3 ohne Schlüssel (das erste Wort ist verraten). Gleiche Zeichen = gleicher Buchstabe.
-   · Kriminalfall: 4 / 5 / 6 Verdächtige, Hinweise lesen, Verdächtige ausschließen, den Täter festnehmen. Genau eine Lösung.
-   · Wochenfall: einmal pro Woche (neu am Montag): erst die Botschaft entschlüsseln, dann den Täter finden.
-   Stufen schalten sich nach und nach frei (ein Sieg öffnet die nächste), Auswahl startet jeden Tag bei Stufe 1.
-   Gelöste Fälle zählen für Pokale, Überraschungsgeschenke und die Sticker-Serie „Spürnasen“ (feat_album.js). Nichts wird abgezogen.
-   Gespeichert: ein begonnener Fall (S.puz.vnCur), der Wochenfall (S.puz.vnWk); Verlauf nur gelöster Fälle (feat_puzzle.js).
+   VENOLA HOLMES (in Meine Welt) · Version 2
+   Zwei Spiele + Wochenfall, jeweils aus „Akten“ mit mehreren Rätseln (Teilen):
+   · Kriminalfall  – Logik: Wer lügt? · Alibi-Gitter · Zeitleiste · Widerspruch · Einstein-Rätsel   (feat_vnlogic.js)
+   · Geheimakte    – Wörter: Silbenrätsel · Wortleiter · Wörterkette · Analogien · Versteckte Wörter · Mini-Kreuzworträtsel · Lückentext (feat_vnwords.js, Inhalte feat_vndata.js)
+   · Großer Fall der Woche – 5 Logik-Rätsel, neu jeden Montag (+12 Beweismarken, +10 Münzen)
+   Stufen 1–5; Stufe 4 öffnet sich nach einem Sieg auf Stufe 3, Stufe 5 nach Stufe 4 (nacheinander).
+   Jedes Rätsel hat „Wie komme ich darauf?“ (Lösungsweg, erst nach dem Lösen). Vorher: „Aufgeben & Lösungsweg“ – zeigt die Lösung, beendet die Akte
+   OHNE Belohnung und OHNE Verlust, das Rätsel kommt später wieder (S.puz.vnLater).
+   Nichts wiederholt sich: gesehene Inhalte merkt sich S.puz.vnSeen; erst wenn alles gesehen ist, beginnt eine neue Runde.
+   Eigene Belohnungen (nur hier einlösbar): Beweismarken → Detektivkoffer (12 Stücke, 3 Reihen → Avatar-Teile), Detektiv-Rang nach gelösten Akten.
+   Gespeichert (alles in S.puz): vnCur (begonnene Akte), vnWk (Wochenfall), vnCodeLvl/vnCaseLvl (offene Stufen, max. 5), vnSeen, vnFlag (gemeldet), vnLater (aufgegeben),
+   vnMk (Beweismarken), vnKof (Koffer), vnRow, vnQuick, vnLast; Verlauf aller gelösten Akten in S.puz.hist (mit rp = Rätsel zum Wiederaufbau).
    ===================================================================== */
-const VN_MSG = {
-  1: ['HALLO FREUND', 'DER SCHATZ', 'KOMM SOFORT', 'WIR SIND DA', 'GUTE NACHT', 'GEHEIME SPUR', 'ZUM BAHNHOF', 'ES REGNET', 'TRIFF MICH', 'ALLES KLAR', 'SEI LEISE', 'IM KELLER', 'DER ZUG KOMMT', 'ROT UND BLAU'],
-  2: ['TREFFPUNKT IST DER BRUNNEN', 'DER SCHLUESSEL LIEGT UNTER DER MATTE', 'WIR TREFFEN UNS UM DREI', 'DIE LUPE IST IM SCHRANK', 'DER DIEB WAR IM GARTEN', 'ROM IST DIE HAUPTSTADT', 'PARIS LIEGT AN DER SEINE', 'DREI MAL VIER IST ZWOELF', 'ZEHN MAL ZEHN IST HUNDERT', 'FUENF PLUS FUENF IST ZEHN', 'DER MOND KREIST UM DIE ERDE', 'DER ZUG FAEHRT UM ACHT'],
-  3: ['DER GEHEIME EINGANG LIEGT HINTER DEM BUECHERREGAL', 'TREFFE MICH BEI SONNENUNTERGANG AM ALTEN TURM', 'DIE LOESUNG STEHT AUF DER RUECKSEITE DER KARTE', 'KEIN MENSCH WEISS WO DER SCHATZ VERSTECKT IST', 'DER BLAUWAL IST DAS GROESSTE TIER DER WELT', 'DER KUCKUCK RUFT NUR IM FRUEHLING', 'ALLE WEGE FUEHREN ZUM ZIEL', 'IM DUNKELN LEUCHTET DIE LATERNE AM HAFEN']
+const VN_TYPES_CASE = ['lie', 'grid', 'time', 'wit', 'ein'], VN_TYPES_WORD = ['sil', 'lad', 'chn', 'ana', 'hid', 'kre', 'lue'], VN_SEENT = ['sil', 'ana', 'hid', 'kre', 'lue'];
+const VN_N = { case: [1, 2, 3, 3, 4], code: [2, 3, 3, 4, 4] };
+const VN_BM = [2, 3, 5, 7, 10], VN_COIN = [3, 5, 8, 10, 12], VN_QUICK = [180, 300, 420, 540, 720];
+const VN_RANKS = [[0, 'Detektiv-Lehrling', '🔍'], [5, 'Nachwuchs-Ermittler', '👣'], [15, 'Kommissar-Anwärter', '🕶️'], [30, 'Kommissarin', '⭐'], [60, 'Chefermittler', '🎩'], [100, 'Meisterdetektiv', '🏆']];
+const VN_ROWS = [{ n: 'Grundausrüstung', acc: 'acc.spion', an: 'Spion-Brille' }, { n: 'Spurensicherung', acc: 'acc.dschal', an: 'Detektiv-Schal' }, { n: 'Meisterstücke', acc: 'acc.meisterhut', an: 'Meisterhut' }];
+const VN_KOF = [
+  { id: 'lupe', row: 0, cost: 5, n: 'Lupe', s: 'Sie zeigt jedes Haar am Tatort.', svg: '<circle cx="20" cy="20" r="12" fill="#e7edeb" fill-opacity=".8" stroke="#52676c" stroke-width="3.5"/><path d="M29 29l12 12" stroke="#9c6668" stroke-width="6" stroke-linecap="round"/>' },
+  { id: 'notiz', row: 0, cost: 6, n: 'Notizbuch', s: 'Hier steht alles, was Venola weiß.', svg: '<rect x="9" y="6" width="30" height="37" rx="4" fill="#f4efe4" stroke="#52676c" stroke-width="2.5"/><path d="M15 15h18M15 22h18M15 29h12" stroke="#bed1c6" stroke-width="2.5" stroke-linecap="round"/><path d="M9 12H6M9 20H6M9 28H6M9 36H6" stroke="#52676c" stroke-width="2.5" stroke-linecap="round"/>' },
+  { id: 'lampe', row: 0, cost: 8, n: 'Taschenlampe', s: 'Für dunkle Keller und geheime Gänge.', svg: '<rect x="6" y="20" width="22" height="9" rx="3" fill="#52676c"/><path d="M28 17h7l-2 15h-5z" fill="#8aa3a8"/><path d="M37 21l8-5M37 25h9M37 29l8 5" stroke="#f2c94c" stroke-width="2.6" stroke-linecap="round"/><rect x="10" y="22" width="6" height="5" rx="2" fill="#bed1c6"/>' },
+  { id: 'pulver', row: 0, cost: 10, n: 'Fingerabdruck-Pulver', s: 'Macht unsichtbare Spuren sichtbar.', svg: '<rect x="13" y="16" width="22" height="26" rx="5" fill="#e7edeb" stroke="#52676c" stroke-width="2.5"/><rect x="16" y="9" width="16" height="7" rx="2" fill="#52676c"/><path d="M18 30a6 6 0 0112 0M20 30a4 4 0 018 0M22 30a2 2 0 014 0" fill="none" stroke="#9c6668" stroke-width="2"/>' },
+  { id: 'fern', row: 1, cost: 12, n: 'Fernglas', s: 'Verdächtige beobachten – aus sicherer Entfernung.', svg: '<rect x="6" y="17" width="14" height="22" rx="5" fill="#52676c"/><rect x="28" y="17" width="14" height="22" rx="5" fill="#52676c"/><rect x="18" y="22" width="12" height="8" fill="#8aa3a8"/><rect x="9" y="10" width="8" height="9" rx="2" fill="#8aa3a8"/><rect x="31" y="10" width="8" height="9" rx="2" fill="#8aa3a8"/><circle cx="13" cy="39" r="3" fill="#cfe8f2"/><circle cx="35" cy="39" r="3" fill="#cfe8f2"/>' },
+  { id: 'pinz', row: 1, cost: 14, n: 'Pinzette und Tütchen', s: 'Kein Beweis geht verloren.', svg: '<path d="M12 14h24v26a3 3 0 01-3 3H15a3 3 0 01-3-3z" fill="#f4efe4" stroke="#52676c" stroke-width="2.5"/><path d="M12 20h24" stroke="#9c6668" stroke-width="2.5"/><path d="M20 28l6 8M30 28l-6 8" stroke="#52676c" stroke-width="2.6" stroke-linecap="round"/><circle cx="24" cy="28" r="2.5" fill="#52676c"/>' },
+  { id: 'kompass', row: 1, cost: 16, n: 'Kompass', s: 'Die Nadel zeigt zum Täter. Fast immer.', svg: '<circle cx="24" cy="24" r="17" fill="#f4efe4" stroke="#52676c" stroke-width="3"/><path d="M24 11l5 13H19z" fill="#c0392b"/><path d="M24 37l-5-13h10z" fill="#52676c"/><circle cx="24" cy="24" r="2.2" fill="#f4efe4"/>' },
+  { id: 'tinte', row: 1, cost: 18, n: 'Geheimtinte', s: 'Schreibt Botschaften, die nur im Licht erscheinen.', svg: '<path d="M20 8h8v8l7 9v13a5 5 0 01-5 5H18a5 5 0 01-5-5V25l7-9z" fill="#e7edeb" stroke="#52676c" stroke-width="2.5"/><path d="M14 30h20v8a4 4 0 01-4 4H18a4 4 0 01-4-4z" fill="#6c5ce7" fill-opacity=".8"/><path d="M24 20c3 4 4 6 0 8-4-2-3-4 0-8z" fill="#6c5ce7"/>' },
+  { id: 'funk', row: 2, cost: 22, n: 'Funkgerät', s: 'Verbindung zur ganzen Detektei.', svg: '<rect x="12" y="14" width="24" height="29" rx="5" fill="#52676c"/><path d="M30 14V5" stroke="#52676c" stroke-width="3.5" stroke-linecap="round"/><rect x="16" y="19" width="16" height="8" rx="2" fill="#bed1c6"/><circle cx="20" cy="35" r="2.4" fill="#f2c94c"/><circle cx="28" cy="35" r="2.4" fill="#c0392b"/>' },
+  { id: 'abz', row: 2, cost: 26, n: 'Detektiv-Abzeichen', s: 'Wer es trägt, wird ernst genommen.', svg: '<path d="M24 4l5.4 11 12.1 1.7-8.8 8.5 2.1 12L24 31.5 13.2 37.2l2.1-12-8.8-8.5L18.6 15z" fill="#f2c94c" stroke="#c98a00" stroke-width="2.4" stroke-linejoin="round"/><circle cx="24" cy="22" r="4.4" fill="#fff" fill-opacity=".7"/>' },
+  { id: 'mikro', row: 2, cost: 30, n: 'Mikroskop', s: 'Für Spuren, die kleiner sind als ein Krümel.', svg: '<path d="M20 8l8 3-8 18-8-3z" fill="#52676c"/><path d="M22 28q14 0 14 12" fill="none" stroke="#52676c" stroke-width="3.4" stroke-linecap="round"/><rect x="10" y="40" width="28" height="4" rx="2" fill="#52676c"/><rect x="14" y="30" width="14" height="3" rx="1.5" fill="#8aa3a8"/>' },
+  { id: 'schl', row: 2, cost: 36, n: 'Meisterschlüssel', s: 'Öffnet jede Tür – und jedes Rätsel.', svg: '<circle cx="16" cy="17" r="9" fill="#f2c94c" stroke="#c98a00" stroke-width="3"/><circle cx="16" cy="17" r="3.2" fill="#f4efe4"/><path d="M23 24l18 18M35 36l5-4M31 32l5-4" stroke="#c98a00" stroke-width="4" stroke-linecap="round" fill="none"/>' }
+];
+const vnS = () => {
+  const p = pzS();
+  ['vnCodeLvl', 'vnCaseLvl'].forEach(k => { if (!(p[k] >= 1)) p[k] = 1; if (p[k] > 5) p[k] = 5; });
+  if (!p.vnSeen || typeof p.vnSeen !== 'object') p.vnSeen = {};
+  if (!Array.isArray(p.vnFlag)) p.vnFlag = [];
+  if (!(p.vnMk >= 0)) p.vnMk = 0;
+  if (!p.vnKof || typeof p.vnKof !== 'object') p.vnKof = {};
+  if (!p.vnRow || typeof p.vnRow !== 'object') p.vnRow = {};
+  if (!p.vnQuick || typeof p.vnQuick !== 'object') p.vnQuick = {};
+  if (!p.vnLast || typeof p.vnLast !== 'object') p.vnLast = {};
+  if (!Array.isArray(p.vnLater)) p.vnLater = [];
+  if (!p.vnRep || typeof p.vnRep !== 'object') p.vnRep = {};
+  if (p.vnCur && !p.vnCur.stages) p.vnCur = null;                  // begonnene Akten der alten Version (Version 1) gibt es nicht mehr
+  if (p.vnWk && p.vnWk.cur && !p.vnWk.cur.stages) p.vnWk.cur = null;
+  return p;
 };
-const VN_WEEK_MSG = ['DER TAETER VERSTECKT SICH IM ZOO', 'DIE SPUR FUEHRT ZUR ALTEN MUEHLE', 'ER WARTET AM BAHNHOF AUF DICH', 'DAS VERSTECK IST HINTER DER KIRCHE', 'SUCHE IM LEEREN LEUCHTTURM', 'DER TAETER SITZT IM KINO'];
-const VN_COIN = [3, 5, 8], VN_NAMES = ['Anna', 'Ben', 'Clara', 'David', 'Emil', 'Fiona', 'Gustav', 'Hanna', 'Ida', 'Jonas'];
-const VN_HATADJ = ['roten', 'blauen', 'grünen'], VN_SCARFADJ = ['gelben', 'lila'];
-const VN_SKIN = ['#f2c7a4', '#e0a67e', '#c68a5e', '#8d5a3c', '#f7d9c0'], VN_HAIR = ['#3b2a20', '#7a4e2e', '#c9a227', '#2b2b2b', '#b5523b'], VN_HATC = ['#e53935', '#1e88e5', '#43a047'], VN_SCARFC = ['#fdd835', '#8e24aa'];
-const vnS = () => { const p = pzS(); ['vnCodeLvl', 'vnCaseLvl'].forEach(k => { if (!(p[k] >= 1)) p[k] = 1; }); return p; };
-const vnLbl = (kind, lv) => kind === 'week' ? 'Wochenfall' : (kind === 'code' ? 'Geheimschrift' : 'Kriminalfall') + ' · Stufe ' + lv;
-const vnSub = () => { const p = vnS(); return p.venWins ? `${p.venWins} Fälle gelöst` : 'Codes und Fälle'; };
-const vnPick = (a, rnd) => a[Math.floor(rnd() * a.length)];
+const vnRank = n => { let i = 0; VN_RANKS.forEach((r, k) => { if (n >= r[0]) i = k; }); const nx = VN_RANKS[i + 1]; return { i, name: VN_RANKS[i][1], ic: VN_RANKS[i][2], next: nx ? nx[1] : '', need: nx ? nx[0] - n : 0, pct: nx ? Math.round((n - VN_RANKS[i][0]) / (nx[0] - VN_RANKS[i][0]) * 100) : 100 }; };
+const vnLbl = (kind, lv) => kind === 'week' ? 'Großer Fall der Woche' : (kind === 'code' ? 'Geheimakte' : 'Kriminalfall') + ' · Stufe ' + lv;
+const vnSub = () => { const p = vnS(); return p.venWins ? vnRank(p.venWins).name : 'Akten und Rätsel'; };
+const vnRankCard = () => { if (!flagOn('venola')) return ''; const p = vnS(), r = vnRank(p.venWins); return `<section class="card vn-rankc"><span class="vn-ri">${r.ic}</span><div><b>Detektiv-Rang: ${esc(r.name)}</b><br><small class="mute">${p.venWins} ${p.venWins === 1 ? 'Akte' : 'Akten'} gelöst${r.next ? ` · noch ${r.need} bis „${esc(r.next)}“` : ' · höchster Rang!'}</small><div class="bar" style="margin-top:6px"><i style="width:${r.pct}%"></i></div></div></section>`; };
+const vnExHtml = l => esc(String(l)).replace(/&lt;(\/?)mark&gt;/g, '<$1mark>');
 
-/* ---------- Geheimschrift ---------- */
-const vnEnc = (type, k, ch) => { const a = ch.charCodeAt(0) - 65; return type === 'shift' ? String.fromCharCode(65 + (a + k) % 26) : type === 'mirror' ? String.fromCharCode(65 + 25 - a) : String(a + 1); };
-function vnCodeNew(lv, rnd, msg) {
-  msg = msg || vnPick(VN_MSG[lv], rnd);
-  const type = lv === 1 ? (rnd() < .5 ? 'shift' : 'num') : (rnd() < .6 ? 'shift' : 'mirror');
-  const k = type === 'shift' ? (lv === 1 ? 1 + Math.floor(rnd() * 3) : lv === 2 ? 4 + Math.floor(rnd() * 4) : 3 + Math.floor(rnd() * 9)) : 0;
-  const words = msg.split(' ').map(w => ({ p: w, s: w.split('').map(c => vnEnc(type, k, c)) })), truth = {}, guess = {}, locked = {};
-  words.forEach(w => w.p.split('').forEach((c, i) => { truth[w.s[i]] = c; }));
-  if (lv === 3) words[0].s.forEach(sym => { guess[sym] = truth[sym]; locked[sym] = 1; });      // Stufe 3: das erste Wort ist verraten
-  return { lv, type, k, msg, words, truth, guess, locked, sel: '' };
+/* ---------- Vorrat: gesehen / gemeldet ---------- */
+const vnFlagSet = t => new Set(vnS().vnFlag.filter(f => f.t === t).flatMap(f => f.ids || []));
+function vnPools() {            // t → alle Inhalts-Nummern (für „noch neu“ und Eltern-Anzeige)
+  return { sil: VN_SIL.map((x, i) => i), hid: VN_HID.map((x, i) => i), kre: VN_KRE.map((x, i) => i), lue: VN_LUE.map((x, i) => i), ana: VN_REL.flatMap((r, ri) => r.p.map((x, j) => ri * 100 + j)).concat(VN_ODD.map((x, i) => 10000 + i)) };
 }
-const vnSyms = c => [...new Set(c.words.flatMap(w => w.s))];
-const vnCodeDone = c => vnSyms(c).every(s => c.guess[s] === c.truth[s]);
-function vnCodeView(c, chk) {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  const key = c.lv === 1 ? `<details class="vn-key" open><summary>Schlüssel</summary><div class="vn-tbl">${letters.map(l => `<span><b>${l}</b><i>${vnEnc(c.type, c.k, l)}</i></span>`).join('')}</div><p class="small mute">${c.type === 'num' ? 'Jede Zahl steht für einen Buchstaben.' : 'Oben der echte Buchstabe, unten die Geheimschrift.'}</p></details>`
-    : c.lv === 2 ? `<p class="vn-ex">Beispiel: <b>${c.type === 'shift' ? 'A wird zu ' + vnEnc('shift', c.k, 'A') : 'A wird zu Z'}</b></p>` : `<p class="vn-ex">Tipp: ${c.type === 'shift' ? 'Alle Buchstaben sind gleich weit verschoben.' : 'Das Alphabet ist umgedreht.'} Das erste Wort ist schon verraten.</p>`;
-  const ws = c.words.map(w => `<div class="vn-w">${w.s.map(sym => { const g = c.guess[sym] || '', bad = chk && g && g !== c.truth[sym]; return `<button class="vn-l${c.sel === sym ? ' sel' : ''}${c.locked[sym] ? ' lk' : ''}${bad ? ' bad' : ''}" data-act="vnSel" data-arg="${sym}" aria-label="Zeichen ${sym}${g ? ', Buchstabe ' + g : ''}"><small>${sym}</small><b>${g}</b></button>`; }).join('')}</div>`).join('');
-  return `${key}<div class="vn-msg" aria-label="Geheime Botschaft">${ws}</div><div class="vn-pad">${letters.map(l => `<button class="vn-k" data-act="vnLet" data-arg="${l}">${l}</button>`).join('')}<button class="vn-k er" data-act="vnLet" data-arg="" aria-label="Löschen">✕</button></div>`;
+function vnPoolInfo() {
+  const p = vnS(), P = vnPools(), nm = { sil: 'Silbenrätsel (Wörter)', hid: 'Versteckte Wörter (Sätze)', kre: 'Kreuzworträtsel (Wörter)', lue: 'Lückentexte (Geschichten)', ana: 'Analogien (Aufgaben-Bausteine)' };
+  return Object.keys(P).map(t => { const sn = new Set(p.vnSeen[t] || []), fl = vnFlagSet(t); return { t, name: nm[t], total: P[t].length, left: P[t].filter(id => !sn.has(id) && !fl.has(id)).length, flagged: P[t].filter(id => fl.has(id)).length, rounds: p.vnRep[t] || 0 }; });
+}
+function vnParentCard() {
+  const p = vnS(), I = vnPoolInfo();
+  return `<div class="card noprint"><h3>Venola Holmes: Vorrat und gemeldete Fragen</h3>
+    <p class="small mute" style="margin:0 0 6px">Jede Akte nimmt nur Inhalte, die noch neu sind. Sind alle gesehen, beginnt eine neue Runde. Wortleiter, Wörterkette und die fünf Logik-Rätsel entstehen jedes Mal neu und gehen nie aus.</p>
+    ${I.map(x => `<div class="cfg"><div><b>${esc(x.name)}</b><br><span class="small mute">${x.left} von ${x.total} noch neu${x.flagged ? ` · ${x.flagged} gemeldet` : ''}${x.rounds ? ` · ${x.rounds}. Runde` : ''}</span></div></div>`).join('')}
+    <div class="cfg"><div><b>Gemeldete Fragen</b><br><span class="small mute">${p.vnFlag.length ? p.vnFlag.map(f => esc(VN_TNAME[f.t] || f.t) + ' (' + new Date(f.ts).toLocaleDateString('de-DE') + ')').join(', ') : 'Keine. Kinder melden eine Frage mit „Frage melden“ im Rätsel; sie kommt dann nie wieder.'}</span></div>
+      ${p.vnFlag.length ? '<button class="btn sm sec" data-act="vnUnflag">Alle freigeben</button>' : ''}</div>
+    <div class="cfg"><div><b>Neue Runde starten</b><br><span class="small mute">Vergisst, was schon gesehen wurde. Gelöste Akten und der Verlauf bleiben.</span></div><button class="btn sm sec" data-act="vnSeenReset">Zurücksetzen</button></div></div>`;
 }
 
-/* ---------- Kriminalfall ---------- */
-const vnFace = s => `<svg viewBox="0 0 60 74" class="vn-face" aria-hidden="true"><ellipse cx="30" cy="64" rx="19" ry="12" fill="#9aa5b1"/>${s.bag ? '<path d="M42 50L51 61" stroke="#6d4c41" stroke-width="2"/><rect x="45" y="59" width="12" height="10" rx="2" fill="#8d6e63"/>' : ''}${s.sc ? `<rect x="16" y="46" width="28" height="8" rx="4" fill="${VN_SCARFC[s.sc - 1]}"/>` : ''}<circle cx="30" cy="30" r="15" fill="${VN_SKIN[s.sk]}"/><path d="M15 29Q15 12 30 12Q45 12 45 29Q38 21 30 21Q22 21 15 29Z" fill="${VN_HAIR[s.hr]}"/><circle cx="24.5" cy="31" r="2" fill="#2a2038"/><circle cx="35.5" cy="31" r="2" fill="#2a2038"/><path d="M26 38Q30 41 34 38" fill="none" stroke="#2a2038" stroke-width="1.6" stroke-linecap="round"/>${s.gl ? '<circle cx="24.5" cy="31" r="5.4" fill="#ffffff33" stroke="#2a2038" stroke-width="1.5"/><circle cx="35.5" cy="31" r="5.4" fill="#ffffff33" stroke="#2a2038" stroke-width="1.5"/><path d="M29.9 31h.2" stroke="#2a2038" stroke-width="1.5"/>' : ''}${s.hat ? `<rect x="11" y="16" width="38" height="4.5" rx="2.2" fill="${VN_HATC[s.hat - 1]}"/><path d="M16 17Q17 3 30 3Q43 3 44 17Z" fill="${VN_HATC[s.hat - 1]}"/>` : ''}</svg>`;
-function vnClues(sus, cu, lv, rnd) {
-  const pos = [], neg = [], c = sus[cu];
-  pos.push(c.hat ? { t: `Der Täter trägt einen ${VN_HATADJ[c.hat - 1]} Hut.`, f: s => s.hat === c.hat } : { t: 'Der Täter trägt keinen Hut.', f: s => !s.hat });
-  pos.push(c.gl ? { t: 'Der Täter trägt eine Brille.', f: s => !!s.gl } : { t: 'Der Täter trägt keine Brille.', f: s => !s.gl });
-  pos.push(c.sc ? { t: `Der Täter hat einen ${VN_SCARFADJ[c.sc - 1]} Schal.`, f: s => s.sc === c.sc } : { t: 'Der Täter hat keinen Schal.', f: s => !s.sc });
-  pos.push(c.bag ? { t: 'Der Täter hat eine Tasche.', f: s => !!s.bag } : { t: 'Der Täter hat keine Tasche.', f: s => !s.bag });
-  VN_HATADJ.forEach((a, i) => { if (c.hat !== i + 1) neg.push({ t: `Der Täter trägt keinen ${a} Hut.`, f: s => s.hat !== i + 1 }); });
-  VN_SCARFADJ.forEach((a, i) => { if (c.sc !== i + 1) neg.push({ t: `Der Täter hat keinen ${a} Schal.`, f: s => s.sc !== i + 1 }); });
-  if (c.hat) neg.push({ t: 'Der Täter trägt einen Hut.', f: s => !!s.hat });
-  if (c.sc) neg.push({ t: 'Der Täter hat einen Schal.', f: s => !!s.sc });
-  const pool = lv === 1 ? pzShuf(pos, rnd) : lv === 2 ? pzShuf(pos.concat(neg), rnd) : pzShuf(neg, rnd).concat(pzShuf(pos, rnd));
-  let rem = sus.slice(); const out = [];
-  for (const cl of pool) { const nr = rem.filter(cl.f); if (nr.length < rem.length) { out.push(cl.t); rem = nr; if (rem.length === 1) break; } }
-  return rem.length === 1 ? out : null;
-}
-function vnCaseNew(lv, rnd) {
-  const n = [4, 5, 6][lv - 1], lim = [[2, 3], [3, 4], [4, 5]][lv - 1]; let best = null;
-  for (let t = 0; t < 400; t++) {
-    const combos = []; for (let h = 0; h < 4; h++) for (let g = 0; g < 2; g++) for (let s = 0; s < 3; s++) for (let b = 0; b < 2; b++) combos.push({ hat: h, gl: g, sc: s, bag: b });
-    const names = pzShuf(VN_NAMES, rnd), sus = pzShuf(combos, rnd).slice(0, n).map((c, i) => Object.assign(c, { name: names[i], sk: Math.floor(rnd() * 5), hr: Math.floor(rnd() * 5) }));
-    const cu = Math.floor(rnd() * n), clues = vnClues(sus, cu, lv, rnd);
-    if (!clues) continue;
-    const res = { lv, sus, cu, clues: pzShuf(clues, rnd), out: {} };
-    if (clues.length >= lim[0] && clues.length <= lim[1]) return res;
-    if (!best) best = res;
+/* ---------- Rätsel erzeugen ---------- */
+function vnMakeStage(t, lv, forcedSd) {
+  const p = vnS(), avoid = id => { const sn = p.vnSeen[t]; return !!(sn && sn.includes(id)) || vnFlagSet(t).has(id); }, bad = id => vnFlagSet(t).has(id);
+  for (let k = 0; k < 40; k++) {
+    const sd = forcedSd !== undefined ? forcedSd + k : Math.floor(Math.random() * 4294967295), P = { avoid, bad }, z = vnBuild({ t, lv, sd }, P);
+    if (!z) continue;
+    const d = { t, lv, sd }; if (z.ids) d.ids = z.ids; if (P.used && P.used.length) d.u = P.used;
+    return { d, rep: !!P.rep };
   }
-  return best;
+  return null;
 }
-function vnCaseView(k, o) {
-  const left = k.sus.map((s, i) => i).filter(i => !k.out[i]);
-  return `<section class="card vn-clues"><h3>Hinweise</h3><ol>${k.clues.map(t => `<li>${esc(t)}</li>`).join('')}</ol><p class="small mute">Tippe einen Verdächtigen an, um ihn auszuschließen. Tippe nochmal, um ihn zurückzuholen.</p></section>
-  <div class="vn-sus n${k.sus.length}">${k.sus.map((s, i) => `<button class="vn-s${k.out[i] ? ' x' : ''}" data-act="vnCross" data-arg="${i}" aria-pressed="${!!k.out[i]}" aria-label="${esc(s.name)}${k.out[i] ? ', ausgeschlossen' : ''}">${vnFace(s)}<b>${esc(s.name)}</b>${k.out[i] ? '<span class="vn-xx">✕</span>' : ''}</button>`).join('')}</div>
-  ${left.length === 1 ? `<div class="center" style="margin-top:12px"><button class="btn big" data-act="vnArrest">🚔 ${esc(k.sus[left[0]].name)} festnehmen</button></div>` : `<p class="small mute center">Noch ${left.length} Verdächtige</p>`}${k.wrong ? `<p class="pz-msg">Das war nicht der Täter. Lies die Hinweise noch einmal genau.</p>` : ''}`;
+function vnSeenMark(d, rep) {
+  if (!VN_SEENT.includes(d.t) || !d.u) return;
+  const p = vnS(); if (rep) { p.vnSeen[d.t] = []; p.vnRep[d.t] = (p.vnRep[d.t] || 0) + 1; }
+  const sn = p.vnSeen[d.t] = p.vnSeen[d.t] || []; d.u.forEach(id => { if (!sn.includes(id)) sn.push(id); });
 }
-
-/* ---------- Spielstand ---------- */
 function vnNew(kind, lv, tm, wk) {
-  if (kind === 'week') { const rnd = pzRng(pzSeed('ven' + wk)), msg = vnPick(VN_WEEK_MSG, rnd); return { st: 'play', kind, lv: 3, wk, tm, el: 0, t0: 0, up: false, hints: 0, stage: 1, code: vnCodeNew(2, rnd, msg), cas: vnCaseNew(3, rnd), chk: false }; }
-  const rnd = Math.random;
-  return kind === 'code' ? { st: 'play', kind, lv, tm, el: 0, t0: 0, up: false, hints: 0, code: vnCodeNew(lv, rnd), chk: false } : { st: 'play', kind, lv, tm, el: 0, t0: 0, up: false, hints: 0, cas: vnCaseNew(lv, rnd), chk: false };
+  const p = vnS(); let descs = [];
+  if (kind === 'week') {
+    const rnd = pzRng(pzSeed('ven2' + wk)), ty = pzShuf(VN_TYPES_CASE, rnd), lvs = pzShuf([3, 3, 4, 4, 5], rnd);
+    descs = ty.map((t, i) => vnMakeStage(t, lvs[i], pzSeed('w' + wk + t)).d);
+    lv = 5;
+  } else {
+    const grp = kind === 'code' ? 'w' : 'l', top = p[kind === 'code' ? 'vnCodeLvl' : 'vnCaseLvl'];
+    const due = p.vnLater.find(e => e.g === grp && e.n <= 1 && e.lv <= top);
+    p.vnLater.forEach(e => { if (e.g === grp) e.n--; });
+    const ty = pzShuf(kind === 'code' ? VN_TYPES_WORD : VN_TYPES_CASE, Math.random).slice(0, VN_N[kind][lv - 1]);
+    let di = -1; if (due) { p.vnLater.splice(p.vnLater.indexOf(due), 1); di = ty.indexOf(due.t); if (di < 0) di = ty.length - 1; }
+    descs = ty.map((t, i) => { if (i === di) { const x = { t: due.t, lv: due.lv, sd: due.sd }; if (due.ids) x.ids = due.ids; return x; } const r = vnMakeStage(t, lv); vnSeenMark(r.d, r.rep); return r.d; });
+  }
+  return { st: 'play', kind, lv, tm, wk, el: 0, t0: 0, up: false, hints: 0, stages: descs, si: 0, sv: descs.map(() => 0), ans: null, exp: false };
+}
+function vnPz(m) { m._pz = m._pz || {}; if (!m._pz[m.si]) m._pz[m.si] = vnBuild(m.stages[m.si], {}); return m._pz[m.si]; }
+function vnAnsNew(p) {
+  switch (p.kind) {
+    case 'choice': return { sel: null, bad: [] };
+    case 'multi': return { qa: p.qs.map(() => ({ ok: false, bad: [] })) };
+    case 'pool': return { fill: p.groups.map(g => Array(g.n).fill(-1)), act: null, lk: {}, chk: false };
+    case 'fields': return { v: p.items.map(() => ''), lk: p.items.map(() => false), chk: false };
+    default: return { g: {}, lk: {}, sel: null, d: 'h', chk: false };
+  }
 }
 function vnPersist(m) {
   if (!m) return; const p = vnS();
@@ -11863,113 +11942,1330 @@ function vnPersist(m) {
   if (m.kind === 'week') { p.vnWk = p.vnWk || { wk: m.wk }; p.vnWk.cur = d; } else p.vnCur = d;
   save();
 }
-const vnRestore = d => Object.assign({ st: 'play', t0: 0, chk: false }, JSON.parse(JSON.stringify(d)));
+const vnRestore = d => Object.assign({ st: 'play', t0: 0 }, JSON.parse(JSON.stringify(d)));
 function vnStop() { const m = UI.vn; if (m) { PzT.stop(m); if (m.st === 'play') vnPersist(m); } }
-function vnBegin(m) { UI.vn = m; m.save = () => vnPersist(m); PzT.start(m, 'venola', () => { sfx('tap'); if (view === 'venola') render(); }); vnPersist(m); render(); }
-function vnWin(m) {
-  PzT.stop(m); m.st = 'win'; const p = vnS(), secs = PzT.el(m), wk = m.kind === 'week';
-  m.fresh = '';
-  if (m.kind === 'code' && m.lv === p.vnCodeLvl && m.lv < 3) { p.vnCodeLvl++; m.fresh = 'Geheimschrift · Stufe ' + p.vnCodeLvl; }
-  if (m.kind === 'case' && m.lv === p.vnCaseLvl && m.lv < 3) { p.vnCaseLvl++; m.fresh = 'Kriminalfall · Stufe ' + p.vnCaseLvl; }
-  m.coins = pzCoins(VN_COIN[wk ? 2 : m.lv - 1], 'Fall gelöst') + (wk ? (() => { giveCoins(10, 'Wochenfall gelöst'); return 10; })() : 0);
-  if (wk && p.vnWk) { p.vnWk.done = true; p.vnWk.cur = null; }
-  m.entry = pzFinish('ven', vnLbl(m.kind, m.lv), secs, m.hints, { weekly: wk, inc: m.kind === 'code' ? ['venCode'] : m.kind === 'case' ? ['venCase'] : [] });
-  vnPersist(m); sfx('ok'); try { if (!rwCalm()) confetti(70); } catch (x) { }
-}
+function vnBegin(m) { UI.vn = m; UI.vnAsk = false; m.save = () => vnPersist(m); PzT.start(m, 'venola', () => { sfx('tap'); if (view === 'venola') render(); }); if (!m.ans) m.ans = vnAnsNew(vnPz(m)); vnPersist(m); render(); }
 const vnWeekState = () => { const p = vnS(), wk = pzWeek(); if (!p.vnWk || p.vnWk.wk !== wk) p.vnWk = { wk, done: false, cur: null }; return p.vnWk; };
+
+/* ---------- Belohnungen ---------- */
+function vnRewardsCheck(loud) {
+  const p = vnS(); let any = false;
+  VN_ROWS.forEach((r, ri) => { if (!p.vnRow[ri] && VN_KOF.filter(x => x.row === ri).every(x => p.vnKof[x.id])) { p.vnRow[ri] = Date.now(); any = true; unlock(r.acc, !loud); if (loud) toast('🧳', `Reihe ${ri + 1} komplett: <b>${esc(r.n)}</b>`); } });
+  if (p.venWins >= 30 && !S.unl['acc.kommabz']) { unlock('acc.kommabz', !loud); any = true; }
+  if (any) save();
+}
+function vnBuy(id) {
+  const p = vnS(), it = VN_KOF.find(x => x.id === id); if (!it || p.vnKof[id] || p.vnMk < it.cost) return;
+  p.vnMk -= it.cost; p.vnKof[id] = Date.now(); sfx('ok'); vnRewardsCheck(true); checkTrophies(); save(); render();
+}
+function vnWin(m) {
+  PzT.stop(m); m.st = 'win'; const p = vnS(), secs = PzT.el(m), wk = m.kind === 'week', lv = m.lv, g = m.kind;
+  const base = wk ? 12 : VN_BM[lv - 1]; m.bm = base + (m.hints ? 0 : Math.max(1, Math.round(base / 2))); p.vnMk += m.bm; p.vnMkT = (p.vnMkT || 0) + m.bm;
+  const key = g === 'code' ? 'vnCodeLvl' : 'vnCaseLvl'; m.fresh = '';
+  if (!wk && lv === p[key] && lv < 5) { p[key]++; m.fresh = (g === 'code' ? 'Geheimakte' : 'Kriminalfall') + ' · Stufe ' + p[key]; }
+  if (!wk) { const q = !m.hints && secs <= VN_QUICK[lv - 1]; p.vnQuick[g] = q ? (p.vnQuick[g] || 0) + 1 : 0; p.vnLast[g] = lv; }
+  const rkB = vnRank(p.venWins).i;
+  m.coins = pzCoins(VN_COIN[lv - 1], 'Akte gelöst') + (wk ? (() => { giveCoins(10, 'Großer Fall gelöst'); return 10; })() : 0);
+  if (!wk && lv === 5) p.venL5 = (p.venL5 || 0) + 1;
+  if (wk && p.vnWk) { p.vnWk.done = true; p.vnWk.cur = null; }
+  m.find = null; if (wk) { const left = VN_KOF.filter(x => !p.vnKof[x.id]); if (left.length) { m.find = left[Math.floor(Math.random() * left.length)]; p.vnKof[m.find.id] = Date.now(); } }
+  m.entry = pzFinish('ven', vnLbl(g, lv), secs, m.hints, { weekly: wk, inc: g === 'code' ? ['venCode'] : g === 'case' ? ['venCase'] : [] });
+  Object.assign(m.entry, { k: g, lv, bm: m.bm, st: m.stages.map(s => s.t), rp: m.stages.map(s => ({ t: s.t, lv: s.lv, sd: s.sd, ids: s.ids })) });
+  const rk = vnRank(p.venWins); m.rankUp = rk.i > rkB ? rk : null;
+  vnRewardsCheck(true); vnPersist(m); save(); sfx('ok'); try { if (!rwCalm()) confetti(70); } catch (x) { }
+}
+function vnSolveStage(m) {
+  m.sv[m.si] = 1; m.exp = false; sfx('ok'); vnPersist(m); render();
+}
+
+/* ---------- Rätsel-Oberflächen ---------- */
+const vnSol = p => p.sol || (p.opts ? `<b>${esc(String(p.opts[p.ans]))}</b>` : '');
+function vnPoolEval(p, a) {
+  return p.groups.map((g, gi) => {
+    const f = a.fill[gi], full = f.every(x => x >= 0), txt = f.map(x => x >= 0 ? p.chips[x] : ''); let good = false;
+    if (full) good = g.ok ? g.ok(txt[0]) : (p.join ? txt.join('') === g.ans : txt[0] === g.ans);
+    return { full, good, txt };
+  });
+}
+const vnFldEval = (p, a) => p.chk ? p.chk(a.v) : (() => { const ok = a.v.map((v, i) => v.trim() ? p.items[i].ans.map(vnNz).includes(vnNz(v)) : null); return { ok, done: ok.every(x => x === true), msg: '' }; })();
+function vnUiChoice(p, a, solved) {
+  return `<div class="vn-opts">${p.opts.map((o, i) => { const bad = a.bad.includes(i), on = a.sel === i, ok = solved && i === p.ans; return `<button class="vn-opt${on ? ' sel' : ''}${bad ? ' bad' : ''}${ok ? ' ok' : ''}" data-act="vnOpt" data-arg="${i}" ${bad || solved ? 'disabled' : ''} aria-pressed="${on}">${esc(String(o))}${bad ? ' ✕' : ''}${ok ? ' ✔' : ''}</button>`; }).join('')}</div>
+    ${a.msg && !solved ? `<p class="pz-msg">${esc(a.msg)}</p>` : ''}${solved ? '' : `<div class="center"><button class="btn big" data-act="vnOk" ${a.sel === null ? 'disabled' : ''}>Das ist meine Antwort</button></div>`}`;
+}
+function vnUiMulti(p, a, solved) {
+  return p.qs.map((q, k) => { const st = a.qa[k]; return `<div class="vn-mq${st.ok ? ' ok' : ''}"><div class="vn-mh">${k + 1}. ${q.h}${st.ok ? ' ✔' : ''}</div><div class="vn-opts sm">${q.opts.map((o, i) => { const bad = st.bad.includes(i), ok = st.ok && i === q.ans; return `<button class="vn-opt${bad ? ' bad' : ''}${ok ? ' ok' : ''}" data-act="vnMq" data-arg="${k},${i}" ${bad || st.ok ? 'disabled' : ''}>${esc(String(o))}${bad ? ' ✕' : ''}</button>`; }).join('')}</div></div>`; }).join('');
+}
+function vnUiPool(p, a, solved) {
+  const ev = vnPoolEval(p, a), used = new Set(a.fill.flat().filter(x => x >= 0));
+  const slot = (gi, si) => { const c = a.fill[gi][si], key = gi + '.' + si, g = ev[gi], cls = ['vn-slot', c >= 0 ? 'full' : '', a.act === key ? 'act' : '', a.lk[key] ? 'lk' : '', (a.chk || solved) && g.full ? (g.good ? 'good' : 'wrong') : ''].join(' '); return `<button class="${cls}" data-act="vnSlot" data-arg="${key}" ${solved ? 'disabled' : ''} aria-label="Lücke ${gi + 1}${c >= 0 ? ': ' + esc(p.chips[c]) : ''}">${c >= 0 ? esc(p.chips[c]) : ''}</button>`; };
+  let body;
+  if (p.inline) body = `<p class="vn-text">${p.inline.map((t, i) => esc(t) + (i < p.groups.length ? slot(i, 0) : '')).join('')}</p>`;
+  else body = p.groups.map((g, gi) => `<div class="vn-grp"><div class="vn-gl">${p.t === 'chn' ? esc(g.pre) + ' ' : ''}</div><div class="vn-gs">${p.t === 'chn' ? slot(gi, 0) + `<span class="vn-gp">${esc(g.post)}</span>` : g.fill === undefined ? Array.from({ length: g.n }, (x, si) => slot(gi, si)).join('') : ''}</div>${p.t === 'sil' ? `<div class="vn-gq">${esc(g.lab)}</div>` : ''}</div>`).join('');
+  return `${body}<div class="vn-chips" aria-label="Vorrat">${p.chips.map((c, i) => `<button class="vn-chip${used.has(i) ? ' used' : ''}${p.join ? ' syl' : ''}" data-act="vnChip" data-arg="${i}" ${used.has(i) || solved ? 'disabled' : ''}>${esc(c)}</button>`).join('')}</div>
+    ${solved ? '' : '<div class="center"><button class="btn sec" data-act="vnPoolChk">Prüfen</button></div>'}`;
+}
+function vnUiFields(p, a, solved) {
+  const ev = (a.chk || solved) ? vnFldEval(p, a) : { ok: [], msg: '' };
+  return `<div class="vn-fl">${p.items.map((it, i) => `<label class="vn-fr${ev.ok[i] === true ? ' good' : ev.ok[i] === false ? ' wrong' : ''}"><span class="vn-fq">${it.lab}</span><input class="txt vn-in" data-i="${i}" value="${esc(a.v[i] || '')}" ${a.lk[i] || solved ? 'disabled' : ''} autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" aria-label="${p.t === 'lad' ? 'Wort für ' + esc(it.lab) : 'Antwort ' + (i + 1)}"></label>`).join('')}</div>
+    ${a.chk && ev.msg && !solved ? `<p class="pz-msg">${esc(ev.msg)}</p>` : ''}${solved ? '' : '<div class="center"><button class="btn big" data-act="vnFldChk">Prüfen</button></div>'}`;
+}
+const VN_KEYS = 'QWERTZUIOPÜASDFGHJKLÖÄYXCVBNM'.split('');
+function vnWordAt(p, key, d) { return p.words.find(w => w.d === d && (d === 'h' ? (key.split(',')[0] == w.r && +key.split(',')[1] >= w.c && +key.split(',')[1] < w.c + w.w.length) : (key.split(',')[1] == w.c && +key.split(',')[0] >= w.r && +key.split(',')[0] < w.r + w.w.length))); }
+const vnWordCells = w => Array.from({ length: w.w.length }, (x, k) => (w.r + (w.d === 'v' ? k : 0)) + ',' + (w.c + (w.d === 'h' ? k : 0)));
+function vnUiCross(p, a, solved) {
+  const aw = a.sel ? (vnWordAt(p, a.sel, a.d) || vnWordAt(p, a.sel, a.d === 'h' ? 'v' : 'h')) : null, hl = new Set(aw ? vnWordCells(aw) : []), starts = {};
+  p.words.forEach(w => { starts[w.r + ',' + w.c] = w.no; });
+  let cells = '';
+  for (let r = 0; r < p.H; r++) for (let c = 0; c < p.W; c++) {
+    const k = r + ',' + c, L = p.cells[k];
+    if (!L) { cells += '<i class="vn-c off"></i>'; continue; }
+    const v = a.g[k] || '', cls = ['vn-c', a.sel === k ? 'sel' : '', hl.has(k) ? 'hl' : '', a.lk[k] ? 'lk' : '', (a.chk || solved) && v ? (v === L ? 'good' : 'wrong') : ''].join(' ');
+    cells += `<button class="${cls}" data-act="vnCell" data-arg="${k}" ${solved ? 'disabled' : ''} aria-label="Kästchen Zeile ${r + 1}, Spalte ${c + 1}${v ? ', ' + v : ''}">${starts[k] ? `<sup>${starts[k]}</sup>` : ''}<b>${esc(v)}</b></button>`;
+  }
+  const list = d => p.words.filter(w => w.d === d).sort((x, y) => x.no - y.no).map(w => `<li><b>${w.no}</b> ${esc(w.h)} <small class="mute">(${w.w.length})</small></li>`).join('');
+  return `<div class="vn-xw" style="--w:${p.W}">${cells}</div>
+    ${aw && !solved ? `<p class="vn-ac"><b>${aw.no} ${aw.d === 'h' ? 'waagerecht →' : 'senkrecht ↓'}</b> ${esc(aw.h)} <small class="mute">(${aw.w.length} Buchstaben)</small></p>` : '<p class="vn-ac mute">Tippe ein Kästchen an.</p>'}
+    ${solved ? '' : `<div class="vn-pad vn-kb">${VN_KEYS.map(l => `<button class="vn-k" data-act="vnKey" data-arg="${l}">${l}</button>`).join('')}<button class="vn-k er" data-act="vnKey" data-arg="" aria-label="Löschen">⌫</button></div><div class="center"><button class="btn sec" data-act="vnCrossChk">Prüfen</button></div>`}
+    <div class="vn-clist"><div><h4>Waagerecht →</h4><ul>${list('h')}</ul></div><div><h4>Senkrecht ↓</h4><ul>${list('v')}</ul></div></div>`;
+}
+function vnUi(p, a, solved) {
+  return p.kind === 'choice' ? vnUiChoice(p, a, solved) : p.kind === 'multi' ? vnUiMulti(p, a, solved) : p.kind === 'pool' ? vnUiPool(p, a, solved) : p.kind === 'fields' ? vnUiFields(p, a, solved) : vnUiCross(p, a, solved);
+}
+const vnExpCard = p => `<section class="card vn-exp"><h3>So kommst du darauf</h3><ol>${p.ex.map(l => `<li>${vnExHtml(l)}</li>`).join('')}</ol></section>`;
 
 /* ---------- Ansichten ---------- */
 const vnTitle = () => `<h1 class="vn-title" aria-label="Venola Holmes">${'VENOLA HOLMES'.split('').map(c => c === ' ' ? '<i class="vn-sp"></i>' : `<span>${c}</span>`).join('')}</h1>`;
+const vnTop = (back) => topBar('Venola Holmes', back || 'rewards');
 function vnSetup() {
-  const p = vnS(), u = UI.vnSet || (UI.vnSet = { game: 'code', lv: 1, tm: 0 }), wkS = vnWeekState(), top = u.game === 'code' ? p.vnCodeLvl : p.vnCaseLvl;
+  const p = vnS(), u = UI.vnSet || (UI.vnSet = { game: 'case', lv: p.vnLast.case || 1, tm: 0 }), wkS = vnWeekState(), rk = vnRank(p.venWins), key = u.game === 'code' ? 'vnCodeLvl' : 'vnCaseLvl', top = p[key];
   if (u.lv > top) u.lv = top;
-  const lvs = [1, 2, 3].map(l => `<button class="sd-lv${u.lv === l ? ' on' : ''}${l <= top ? '' : ' lock'}" data-act="vnLvl" data-arg="${l}" ${l <= top ? '' : 'disabled'} aria-pressed="${u.lv === l}">${l <= top ? '' : ico('lock', 13) + ' '}Stufe ${l}</button>`).join('');
-  const cont = p.vnCur ? `<section class="card sd-cont"><b>Begonnen: ${vnLbl(p.vnCur.kind, p.vnCur.lv)}</b><span class="small mute">${fmtT(p.vnCur.el || 0)} Min gespielt</span><button class="btn" data-act="vnCont" data-arg="cur">Weiterermitteln</button></section>` : '';
-  const wk = wkS.done ? '<span class="small mute">Gelöst ✔ – der nächste Wochenfall kommt am Montag.</span>' : `<button class="btn" data-act="vnCont" data-arg="week">${wkS.cur ? 'Weiterermitteln' : 'Wochenfall starten'}</button>`;
-  return topBar('Venola Holmes', 'rewards') + `<div class="vn-hero">${vnTitle()}<p class="small mute">Entschlüssle Botschaften und finde den Täter.</p></div>${cont}
-    <section class="card sd-week"><h3>Wochenfall</h3><p class="small mute">Erst die Botschaft entschlüsseln, dann den Täter finden. Neu am Montag. Bonus: +10 🪙.</p>${wk}</section>
-    <section class="card sd-setup"><h3>Neuer Fall</h3><div class="vn-games"><button class="vn-g${u.game === 'code' ? ' on' : ''}" data-act="vnGame" data-arg="code">🗝️<b>Geheimschrift</b><small>Stufe ${p.vnCodeLvl} von 3 offen</small></button><button class="vn-g${u.game === 'case' ? ' on' : ''}" data-act="vnGame" data-arg="case">🔍<b>Kriminalfall</b><small>Stufe ${p.vnCaseLvl} von 3 offen</small></button></div>
-    <h3>Stufe</h3><div class="sd-lvrow vn-lvrow">${lvs}</div><h3>Zeit</h3>${pzTimeChips('vnTime', u.tm)}<p class="small mute">Wenn die Zeit um ist, kannst du ohne Zeit weiterspielen.</p>
-    <div class="center" style="margin-top:12px"><button class="btn big" data-act="vnStart">Los geht’s</button></div><div class="center" style="margin-top:10px"><button class="btn sec" data-act="vnHist">Meine gelösten Fälle</button></div></section>`;
+  const lvs = [1, 2, 3, 4, 5].map(l => `<button class="sd-lv${u.lv === l ? ' on' : ''}${l <= top ? '' : ' lock'}" data-act="vnLvl" data-arg="${l}" ${l <= top ? '' : 'disabled'} aria-pressed="${u.lv === l}" title="${VN_N[u.game][l - 1]} ${VN_N[u.game][l - 1] === 1 ? 'Rätsel' : 'Rätsel'}">${l <= top ? '' : ico('lock', 13) + ' '}Stufe ${l}<small>${VN_N[u.game][l - 1]} ${VN_N[u.game][l - 1] === 1 ? 'Rätsel' : 'Rätsel'}</small></button>`).join('');
+  const cont = p.vnCur ? `<section class="card sd-cont"><b>Begonnen: ${vnLbl(p.vnCur.kind, p.vnCur.lv)}</b><span class="small mute">Rätsel ${p.vnCur.si + 1} von ${p.vnCur.stages.length} · ${fmtT(p.vnCur.el || 0)} Min</span><button class="btn" data-act="vnCont" data-arg="cur">Weiterermitteln</button></section>` : '';
+  const wk = wkS.done ? '<span class="small mute">Gelöst ✔ – der nächste Große Fall kommt am Montag.</span>' : `<button class="btn" data-act="vnCont" data-arg="week">${wkS.cur ? 'Weiterermitteln' : 'Großen Fall starten'}</button>`;
+  const quick = (p.vnQuick[u.game] || 0) >= 3 && u.lv < top ? `<p class="vn-sug">⚡ Drei schnelle Siege ohne Hinweis! Magst du <b>Stufe ${u.lv + 1}</b> probieren? <button class="btn sm" data-act="vnLvl" data-arg="${u.lv + 1}">Stufe ${u.lv + 1} wählen</button></p>` : '';
+  const next = top < 5 ? `<p class="small mute">Löse eine Akte auf Stufe ${top}, dann öffnet sich Stufe ${top + 1}.</p>` : '';
+  const rep = Object.keys(p.vnRep).filter(t => p.vnRep[t]).length ? '<p class="small mute">Du kennst schon alles von mindestens einer Rätselart – sie kommen jetzt in neuer Mischung wieder.</p>' : '';
+  return vnTop() + `<div class="vn-hero">${vnTitle()}<p class="small mute">Löse Akten, sammle Beweismarken und werde Meisterdetektiv.</p></div>
+    <section class="card vn-rankc"><span class="vn-ri">${rk.ic}</span><div><b>${esc(rk.name)}</b><br><small class="mute">${p.venWins} ${p.venWins === 1 ? 'Akte' : 'Akten'} gelöst${rk.next ? ` · noch ${rk.need} bis „${esc(rk.next)}“` : ' · höchster Rang!'}</small><div class="bar" style="margin-top:6px"><i style="width:${rk.pct}%"></i></div></div><button class="btn sec vn-kb2" data-act="vnKoffer">🧳 Koffer<small>${p.vnMk} 🔎</small></button></section>${cont}
+    <section class="card sd-week"><h3>Der Große Fall der Woche</h3><p class="small mute">Fünf Logik-Rätsel in einer Akte, schwer. Neu am Montag. Bonus: +12 🔎, +10 🪙 und ein Beweisstück für den Koffer.</p>${wk}</section>
+    <section class="card sd-setup"><h3>Neue Akte</h3><div class="vn-games"><button class="vn-g${u.game === 'case' ? ' on' : ''}" data-act="vnGame" data-arg="case">🔍<b>Kriminalfall</b><small>Logik · Stufe ${p.vnCaseLvl} von 5 offen</small></button><button class="vn-g${u.game === 'code' ? ' on' : ''}" data-act="vnGame" data-arg="code">🗝️<b>Geheimakte</b><small>Wörter · Stufe ${p.vnCodeLvl} von 5 offen</small></button></div>
+    <p class="small mute" style="margin:8px 0 0">${u.game === 'case' ? 'Wer lügt? · Alibi-Gitter · Zeitleiste · Widerspruch · Einstein-Rätsel' : 'Silbenrätsel · Wortleiter · Wörterkette · Analogien · Versteckte Wörter · Kreuzworträtsel · Lückentext'}</p>
+    <h3>Stufe</h3><div class="sd-lvrow vn-lvrow">${lvs}</div>${next}${quick}<h3>Zeit</h3>${pzTimeChips('vnTime', u.tm)}<p class="small mute">Wenn die Zeit um ist, kannst du ohne Zeit weiterspielen.</p>
+    <div class="center" style="margin-top:12px"><button class="btn big" data-act="vnStart">Los geht’s</button></div><div class="center" style="margin-top:10px"><button class="btn sec" data-act="vnHist">Meine Akten (${p.hist.filter(e => e.g === 'ven').length})</button></div>${rep}</section>`;
 }
 function vnPlay(m) {
-  const wk = m.kind === 'week', st = wk ? m.stage : (m.kind === 'code' ? 1 : 2), head = wk ? `Wochenfall · ${st === 1 ? 'Schritt 1: die Botschaft' : 'Schritt 2: der Täter'}` : vnLbl(m.kind, m.lv);
-  const tools = st === 1
-    ? `<div class="pz-tools"><button class="btn sec pz-tool" data-act="vnCheck">✔ Prüfen</button>${pzHintBtn('vnHint', 'ven')}</div>`
-    : `<div class="pz-tools">${pzHintBtn('vnHint', 'ven')}</div>`;
-  const note = wk && st === 2 ? `<p class="vn-note">📜 Die Botschaft sagt: <b>${esc(m.code.msg)}</b></p>` : '';
-  return topBar('Venola Holmes', 'rewards') + `${pzClock(m)}<p class="sd-info small mute">${esc(head)}${m.hints ? ' · Hinweise: ' + m.hints : ''}</p>${note}${st === 1 ? vnCodeView(m.code, m.chk) + (m.chk && !vnSyms(m.code).some(s => m.code.guess[s] && m.code.guess[s] !== m.code.truth[s]) ? '<p class="pz-msg ok">Bis hier stimmt alles. 👍</p>' : '') : vnCaseView(m.cas)}${tools}<div class="center" style="margin-top:12px"><button class="btn sec" data-act="vnMenu">Speichern und Menü</button></div>`;
+  const p = vnPz(m), a = m.ans || (m.ans = vnAnsNew(p)), solved = !!m.sv[m.si], last = m.si === m.stages.length - 1, kindK = m.kind === 'code' ? 'vg' : 'vc';
+  const dots = `<div class="vn-dots" aria-label="Rätsel ${m.si + 1} von ${m.stages.length}">${m.stages.map((s, i) => `<i class="${m.sv[i] ? 'ok' : i === m.si ? 'on' : ''}"></i>`).join('')}</div>`;
+  if (UI.vnAsk && !solved) return vnTop() + `${pzClock(m)}${dots}<section class="card vn-ask"><h3>Wirklich aufgeben?</h3><p>Du siehst die Lösung und den Lösungsweg. Diese Akte endet <b>ohne Belohnung</b> – aber auch <b>ohne Verlust</b>. Das Rätsel kommt später wieder.</p><div class="row wrap" style="justify-content:center"><button class="btn" data-act="vnGiveYes">Ja, Lösungsweg zeigen</button><button class="btn sec" data-act="vnGiveNo">Nein, weiter knobeln</button></div></section>`;
+  const tools = solved ? '' : `<div class="pz-tools">${pzHintBtn('vnHint', kindK)}<button class="btn sec pz-tool" data-act="vnGiveAsk">Aufgeben &amp; Lösungsweg</button></div>`;
+  const after = solved ? `<p class="pz-msg ok">Gelöst! ✔</p><div class="pz-tools"><button class="btn sec pz-tool" data-act="vnExp" aria-expanded="${!!m.exp}">${m.exp ? 'Lösungsweg zudecken' : 'Wie komme ich darauf?'}</button></div>${m.exp ? vnExpCard(p) : ''}<div class="center" style="margin-top:8px"><button class="btn big" data-act="vnNext">${last ? 'Akte abschließen' : 'Nächstes Rätsel'}</button></div>` : '';
+  const flag = (solved || m.fl && m.fl[m.si]) ? (m.fl && m.fl[m.si] ? '<p class="small mute center">Gemeldet. Diese Frage kommt nicht wieder.</p>' : '') : '<div class="center"><button class="vn-link" data-act="vnFlagQ">Frage melden</button></div>';
+  return vnTop() + `${pzClock(m)}${dots}<p class="sd-info small mute">${esc(vnLbl(m.kind, m.lv))} · Rätsel ${m.si + 1} von ${m.stages.length}${m.hints ? ' · Hinweise: ' + m.hints : ''}</p>
+    <section class="card vn-card"><h3 class="vn-h">${esc(p.title)}</h3>${p.body}${p.q ? `<p class="vn-q">${esc(p.q)}</p>` : ''}</section>${vnUi(p, a, solved)}${tools}${after}${flag}
+    <div class="center" style="margin-top:12px"><button class="btn sec" data-act="vnMenu">Speichern und Menü</button></div>`;
 }
 function vnWinView(m) {
-  const e = m.entry || { pk: [], fg: [] };
-  const sol = m.kind === 'code' ? `<p class="vn-note">📜 <b>${esc(m.code.msg)}</b></p>` : m.kind === 'case' ? `<p class="vn-note">🔍 Der Täter war <b>${esc(m.cas.sus[m.cas.cu].name)}</b>.</p>` : `<p class="vn-note">📜 <b>${esc(m.code.msg)}</b><br>🔍 Der Täter war <b>${esc(m.cas.sus[m.cas.cu].name)}</b>.</p>`;
-  return topBar('Venola Holmes', 'rewards') + `<section class="card result pz-res"><h2>Fall gelöst! 🕵️</h2><p>${esc(vnLbl(m.kind, m.lv))} in <b>${fmtT(e.secs || 0)}</b> Min${m.hints ? ` mit ${m.hints} ${m.hints === 1 ? 'Hinweis' : 'Hinweisen'}` : ' ganz ohne Hinweis'}.</p>${sol}${m.coins ? `<p>+${m.coins} 🪙</p>` : ''}${m.fresh ? `<p>Neue Stufe frei: <b>${esc(m.fresh)}</b></p>` : ''}${pzResultExtras(e)}
-    <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="vnAgain">Noch ein Fall</button><button class="btn sec" data-act="vnMenu">Menü</button></div></section>`;
+  const e = m.entry || { pk: [], fg: [] }, p = vnS();
+  return vnTop() + `<section class="card result pz-res"><h2>Akte gelöst! 🕵️</h2><p>${esc(vnLbl(m.kind, m.lv))} in <b>${fmtT(e.secs || 0)}</b> Min${m.hints ? ` mit ${m.hints} ${m.hints === 1 ? 'Hinweis' : 'Hinweisen'}` : ' ganz ohne Hinweis'}.</p>
+    <p class="vn-gain">+${m.bm} 🔎 Beweismarken${m.coins ? ` · +${m.coins} 🪙` : ''}</p>${m.find ? `<p>Du findest ein Beweisstück für den Koffer: <b>${esc(m.find.n)}</b>!</p>` : ''}${m.rankUp ? `<p class="vn-rup">${m.rankUp.ic} Neuer Rang: <b>${esc(m.rankUp.name)}</b>!</p>` : ''}${m.fresh ? `<p>Neue Stufe frei: <b>${esc(m.fresh)}</b></p>` : ''}${pzResultExtras(e)}
+    <p class="small mute">Du hast jetzt ${p.vnMk} 🔎. Im Detektivkoffer kannst du Beweisstücke kaufen.</p>
+    <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="vnAgain">Noch eine Akte</button><button class="btn sec" data-act="vnKoffer">🧳 Koffer</button><button class="btn sec" data-act="vnMenu">Menü</button></div></section>`;
+}
+function vnGaveView(m) {
+  const p = vnPz(m);
+  return vnTop() + `<section class="card result pz-res"><h2>Das war knifflig 🧩</h2><p>Hier ist die Lösung. Die Akte endet ohne Belohnung und ohne Verlust – dieses Rätsel kommt später wieder, dann kannst du es lösen.</p></section>
+    <section class="card vn-card"><h3 class="vn-h">${esc(p.title)}</h3>${p.body}<p class="vn-note">Lösung: ${vnSol(p)}</p></section>${vnExpCard(p)}
+    <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="vnAgain">Neue Akte</button><button class="btn sec" data-act="vnMenu">Menü</button></div>`;
+}
+function vnKofferView() {
+  const p = vnS();
+  return vnTop('venola') + `<div class="vn-hero"><h1 class="vn-title2">Detektivkoffer</h1><p class="small mute">Du hast <b>${p.vnMk} 🔎</b>. Beweismarken gibt es nur bei Venola Holmes – und ausgeben kannst du sie nur hier.</p></div>` +
+    VN_ROWS.map((r, ri) => { const its = VN_KOF.filter(x => x.row === ri), have = its.filter(x => p.vnKof[x.id]).length;
+      return `<section class="card vn-row"><h3>Reihe ${ri + 1}: ${esc(r.n)} <small class="mute">${have} von 4</small></h3><p class="small mute">${p.vnRow[ri] ? '✔ Reihe komplett' : 'Reihe komplett:'} Avatar-Teil „${esc(r.an)}“</p>
+      <div class="vn-kof">${its.map(x => { const own = !!p.vnKof[x.id]; return `<div class="vn-ki${own ? ' own' : ''}"><svg viewBox="0 0 48 48" aria-hidden="true">${x.svg}</svg><b>${esc(x.n)}</b>${own ? `<small>${esc(x.s)}</small>` : `<button class="btn sm" data-act="vnBuy" data-arg="${x.id}" ${p.vnMk < x.cost ? 'disabled' : ''}>${x.cost} 🔎</button>`}</div>`; }).join('')}</div></section>`; }).join('') +
+    `<p class="small mute center">Rang „Kommissarin“ (30 Akten) schenkt dir außerdem das Kommissar-Abzeichen für deinen Avatar.</p>`;
+}
+const VN_HK = [['all', 'Alle'], ['case', 'Kriminalfall'], ['code', 'Geheimakte'], ['week', 'Großer Fall']];
+function vnHistView() {
+  const p = vnS(), f = UI.vnHf || (UI.vnHf = { k: 'all', t: 'all', n: 40 }), all = p.hist.map((e, i) => [e, i]).filter(x => x[0].g === 'ven').reverse();
+  const L = all.filter(([e]) => (f.k === 'all' || e.k === f.k) && (f.t === 'all' || (e.st || []).includes(f.t)));
+  const row = ([e, i]) => { const inner = `<span class="pz-hd">${pzMD(e.ts)}</span><b>${esc(e.lbl)}</b><span>${fmtT(e.secs)} min</span><span class="small mute">${e.hints ? e.hints + (e.hints === 1 ? ' Hinweis' : ' Hinweise') : 'ohne Hinweis'}${e.bm ? ' · +' + e.bm + ' 🔎' : ''}</span>${e.st ? `<span class="vn-hts">${e.st.map(t => esc(VN_TNAME[t] || t)).join(' · ')}</span>` : ''}`; return e.rp ? `<button class="pz-h vn-hr" data-act="vnRep" data-arg="${i}">${inner}</button>` : `<div class="pz-h vn-hr">${inner}</div>`; };
+  return vnTop('venola') + `<div class="vn-hero"><h1 class="vn-title2">Meine Akten</h1><p class="small mute">${all.length} gelöst${all.length ? ' · schnellste Zeit ' + fmtT(Math.min(...all.map(x => x[0].secs))) + ' min' : ''}. Tippe auf eine Akte, um die Rätsel mit Lösung und Lösungsweg noch einmal anzusehen.</p></div>
+    <div class="pz-chips">${VN_HK.map(k => `<button class="pz-chip${f.k === k[0] ? ' on' : ''}" data-act="vnHf" data-arg="k:${k[0]}">${k[1]}</button>`).join('')}</div>
+    <div class="pz-chips" style="margin-top:8px"><button class="pz-chip${f.t === 'all' ? ' on' : ''}" data-act="vnHf" data-arg="t:all">Alle Rätselarten</button>${Object.keys(VN_TNAME).map(t => `<button class="pz-chip${f.t === t ? ' on' : ''}" data-act="vnHf" data-arg="t:${t}">${esc(VN_TNAME[t])}</button>`).join('')}</div>
+    <section class="card">${L.length ? L.slice(0, f.n).map(row).join('') : '<p class="mute">Hier ist noch nichts. Löse eine Akte, dann steht sie hier.</p>'}${L.length > f.n ? `<div class="center" style="margin-top:10px"><button class="btn sec" data-act="vnHf" data-arg="n:more">Mehr anzeigen (${L.length - f.n} weitere)</button></div>` : ''}</section>`;
+}
+function vnRepView() {
+  const e = vnS().hist[UI.vnRep]; if (!e || !e.rp) return vnHistView();
+  return vnTop('venola') + `<div class="center" style="margin:6px 0"><button class="btn sec" data-act="vnRep" data-arg="-1">‹ Zurück zu meinen Akten</button></div><section class="card"><h3>${esc(e.lbl)}</h3><p class="small mute">${pzMD(e.ts)} · ${fmtT(e.secs)} min</p></section>` +
+    e.rp.map((d, k) => { let p = null; try { p = vnBuild(d, {}); } catch (x) { } if (!p) return ''; return `<section class="card vn-card"><h3 class="vn-h">${k + 1}. ${esc(p.title)}</h3>${p.body}<p class="vn-note">Lösung: ${vnSol(p)}</p><details class="vn-det"><summary>Wie komme ich darauf?</summary><ol>${p.ex.map(l => `<li>${vnExHtml(l)}</li>`).join('')}</ol></details></section>`; }).join('');
 }
 VIEWS.venola = () => {
-  if (UI.vnHistOn) return topBar('Venola Holmes', 'rewards') + `<div class="center" style="margin:6px 0"><button class="btn sec" data-act="vnHist">‹ Zurück</button></div>` + pzHistory('ven', 'Gelöste Fälle');
+  if (UI.vnV === 'koffer') return vnKofferView();
+  if (UI.vnV === 'hist') return UI.vnRep >= 0 && UI.vnRep !== undefined && UI.vnRep !== null ? vnRepView() : vnHistView();
   const m = UI.vn; if (!m) return vnSetup();
-  return m.st === 'win' ? vnWinView(m) : vnPlay(m);
+  return m.st === 'win' ? vnWinView(m) : m.st === 'gave' ? vnGaveView(m) : vnPlay(m);
 };
 DZ_ART.venola = '<rect x="6" y="6" width="38" height="40" rx="7" fill="#f4efe4" stroke="#52676c" stroke-width="2"/><path d="M13 16h24M13 23h18M13 30h22" stroke="#bed1c6" stroke-width="2.4" stroke-linecap="round"/><circle cx="38" cy="29" r="12" fill="#e7edeb" fill-opacity=".85" stroke="#52676c" stroke-width="3"/><path d="M47 38l10 10" stroke="#9c6668" stroke-width="5" stroke-linecap="round"/><text x="38" y="34" font-size="14" font-weight="800" text-anchor="middle" fill="#52676c" font-family="sans-serif">?</text>';
 
-function vnAfterCode(m) {
-  const c = m.code; m.chk = false;
-  if (vnCodeDone(c)) {
-    if (m.kind === 'week') { m.stage = 2; sfx('magic'); vnPersist(m); render(); return; }
-    vnWin(m);
-  } else if (vnSyms(c).every(s => c.guess[s])) sfx('no');
+/* ---------- Eingaben ---------- */
+const vnCur = () => { const m = UI.vn; return m && m.st === 'play' && !(m.sv && m.sv[m.si]) ? m : null; };
+function vnAfterPool(m) {
+  const p = vnPz(m), a = m.ans, ev = vnPoolEval(p, a);
+  if (ev.every(g => g.full)) { if (ev.every(g => g.good)) { vnSolveStage(m); return; } a.chk = true; sfx('no'); }
   vnPersist(m); render();
 }
+function vnPlace(m, ci) {
+  const p = vnPz(m), a = m.ans, used = new Set(a.fill.flat().filter(x => x >= 0)); if (used.has(ci)) return;
+  let key = a.act; if (!key || a.fill[key.split('.')[0]][key.split('.')[1]] >= 0) key = null;
+  if (!key) for (let gi = 0; gi < a.fill.length && !key; gi++) for (let si = 0; si < a.fill[gi].length; si++) if (a.fill[gi][si] < 0) { key = gi + '.' + si; break; }
+  if (!key) return;
+  const [gi, si] = key.split('.').map(Number); a.fill[gi][si] = ci; a.chk = false; sfx('tap');
+  a.act = null; for (let g2 = gi; g2 < a.fill.length && !a.act; g2++) for (let s2 = (g2 === gi ? si + 1 : 0); s2 < a.fill[g2].length; s2++) if (a.fill[g2][s2] < 0) { a.act = g2 + '.' + s2; break; }
+  vnAfterPool(m);
+}
+function vnCrossSet(m, key, L) {
+  const p = vnPz(m), a = m.ans; if (!key || a.lk[key]) return;
+  if (L) a.g[key] = L; else delete a.g[key];
+  a.chk = false;
+  if (L) { const w = vnWordAt(p, key, a.d); if (w) { const cs = vnWordCells(w), i = cs.indexOf(key); if (i >= 0 && i < cs.length - 1) a.sel = cs[i + 1]; } }
+  const full = Object.keys(p.cells).every(k => a.g[k]);
+  if (full) { if (Object.keys(p.cells).every(k => a.g[k] === p.cells[k])) { vnSolveStage(m); return; } a.chk = true; sfx('no'); }
+  vnPersist(m); render();
+}
+function vnGiveUp(m) {
+  PzT.stop(m); const p = vnS(), d = m.stages[m.si];
+  if (m.kind !== 'week') { const x = { g: m.kind === 'code' ? 'w' : 'l', t: d.t, lv: d.lv, sd: d.sd, n: 2 }; if (d.ids) x.ids = d.ids; p.vnLater.push(x); p.vnQuick[m.kind] = 0; }
+  m.st = 'gave'; UI.vnAsk = false; vnPersist(m);
+  if (m.kind === 'week' && p.vnWk) p.vnWk.cur = null;
+  save(); sfx('tap'); render();
+}
+document.addEventListener('input', e => { const t = e.target; if (t && t.classList && t.classList.contains('vn-in')) { const m = UI.vn; if (m && m.ans && m.ans.v) { m.ans.v[+t.dataset.i] = t.value; m.ans.chk = false; } } });
+document.addEventListener('keydown', e => { const t = e.target; if (e.key === 'Enter' && t && t.classList && t.classList.contains('vn-in')) { e.preventDefault(); const nx = t.closest('.vn-fl') && [...t.closest('.vn-fl').querySelectorAll('.vn-in:not(:disabled)')], i = nx ? nx.indexOf(t) : -1; if (nx && i >= 0 && i < nx.length - 1) nx[i + 1].focus(); else if (typeof ACT !== 'undefined' && ACT.vnFldChk) ACT.vnFldChk(); } });
+
 registerFeature({
   id: 'venola', title: 'Venola Holmes', icon: 'sparkle', tint: 'sky', group: 'spiel', order: 82, view: 'venola',
-  leave: () => { vnStop(); UI.vn = null; UI.vnHistOn = false; },
-  check: () => { vnS(); },
+  leave: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; },
+  check: () => { vnS(); vnRewardsCheck(false); },
   acts: {
-    venola: () => { vnStop(); UI.vn = null; UI.vnSet = null; UI.vnHistOn = false; go('venola'); },
-    vnGame: g => { UI.vnSet.game = g; UI.vnSet.lv = 1; render(); },
-    vnLvl: l => { const p = vnS(); if (+l <= (UI.vnSet.game === 'code' ? p.vnCodeLvl : p.vnCaseLvl)) UI.vnSet.lv = +l; render(); },
+    venola: () => { vnStop(); UI.vn = null; UI.vnSet = null; UI.vnV = null; UI.vnAsk = false; go('venola'); },
+    vnGame: g => { const p = vnS(); UI.vnSet.game = g; UI.vnSet.lv = p.vnLast[g] || 1; render(); },
+    vnLvl: l => { const p = vnS(); if (+l <= p[UI.vnSet.game === 'code' ? 'vnCodeLvl' : 'vnCaseLvl']) { UI.vnSet.lv = +l; p.vnQuick[UI.vnSet.game] = 0; } render(); },
     vnTime: t => { UI.vnSet.tm = +t; render(); },
     vnStart: () => { const u = UI.vnSet; sfx('tap'); vnBegin(vnNew(u.game, u.lv, u.tm)); },
     vnCont: w => {
       const p = vnS(); let m;
-      if (w === 'week') { const ws = vnWeekState(); m = ws.cur ? vnRestore(ws.cur) : vnNew('week', 3, (UI.vnSet && UI.vnSet.tm) || 0, ws.wk); } else if (p.vnCur) m = vnRestore(p.vnCur);
+      if (w === 'week') { const ws = vnWeekState(); m = ws.cur ? vnRestore(ws.cur) : vnNew('week', 5, (UI.vnSet && UI.vnSet.tm) || 0, ws.wk); } else if (p.vnCur) m = vnRestore(p.vnCur);
       if (m) vnBegin(m);
     },
-    vnHist: () => { UI.vnHistOn = !UI.vnHistOn; render(); },
-    vnMenu: () => { vnStop(); UI.vn = null; render(); },
-    vnAgain: () => { UI.vn = null; render(); },
-    vnSel: s => { const m = UI.vn; if (!m || m.st !== 'play' || !m.code) return; m.code.sel = m.code.sel === s ? '' : s; render(); },
-    vnLet: l => {
-      const m = UI.vn; if (!m || m.st !== 'play' || !m.code || !m.code.sel || m.code.locked[m.code.sel]) return;
-      const c = m.code; sfx('tap');
-      if (l) c.guess[c.sel] = l; else delete c.guess[c.sel];
-      const syms = vnSyms(c), i = syms.indexOf(c.sel), nx = l ? syms.slice(i + 1).concat(syms.slice(0, i)).find(s => !c.guess[s] && !c.locked[s]) : null;
-      if (nx) c.sel = nx;
-      vnAfterCode(m);
+    vnHist: () => { UI.vnV = UI.vnV === 'hist' ? null : 'hist'; UI.vnRep = -1; render(); },
+    vnHf: a => { const f = UI.vnHf || (UI.vnHf = { k: 'all', t: 'all', n: 40 }), [k, v] = a.split(':'); if (k === 'n') f.n += 40; else { f[k] = v; f.n = 40; } render(); },
+    vnRep: i => { UI.vnRep = +i; render(); },
+    vnKoffer: () => { vnStop(); UI.vn = null; UI.vnV = 'koffer'; render(); },
+    vnBuy: id => vnBuy(id),
+    vnMenu: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; render(); },
+    vnAgain: () => { UI.vn = null; UI.vnV = null; render(); },
+    vnOpt: i => { const m = vnCur(); if (!m) return; const a = m.ans; a.sel = +i; a.msg = ''; sfx('tap'); render(); },
+    vnOk: () => {
+      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m); if (a.sel === null) return;
+      if (a.sel === p.ans) { vnSolveStage(m); return; }
+      a.bad.push(a.sel); a.sel = null; a.msg = 'Das stimmt nicht. Lies noch einmal genau – diese Antwort ist jetzt durchgestrichen.'; sfx('no'); vnPersist(m); render();
     },
-    vnCheck: () => { const m = UI.vn; if (!m || !m.code) return; m.chk = true; const bad = vnSyms(m.code).some(s => m.code.guess[s] && m.code.guess[s] !== m.code.truth[s]); sfx(bad ? 'no' : 'ok'); render(); },
-    vnCross: i => { const m = UI.vn, k = m && (m.cas); if (!k || m.st !== 'play') return; i = +i; if (k.out[i]) delete k.out[i]; else k.out[i] = 1; k.wrong = false; sfx('tap'); vnPersist(m); render(); },
-    vnArrest: () => {
-      const m = UI.vn, k = m && m.cas; if (!k || m.st !== 'play') return;
-      const left = k.sus.map((s, i) => i).filter(i => !k.out[i]);
-      if (left.length !== 1) return;
-      if (left[0] === k.cu) vnWin(m); else { k.wrong = true; sfx('no'); }
+    vnMq: s => {
+      const m = vnCur(); if (!m) return; const [k, i] = s.split(',').map(Number), a = m.ans, p = vnPz(m), st = a.qa[k]; if (st.ok || st.bad.includes(i)) return;
+      if (i === p.qs[k].ans) { st.ok = true; sfx('ok'); } else { st.bad.push(i); sfx('no'); }
+      if (a.qa.every(x => x.ok)) { vnSolveStage(m); return; }
       vnPersist(m); render();
     },
+    vnChip: i => { const m = vnCur(); if (m) vnPlace(m, +i); },
+    vnSlot: key => {
+      const m = vnCur(); if (!m) return; const a = m.ans, [gi, si] = key.split('.').map(Number);
+      if (a.lk[key]) return; if (a.fill[gi][si] >= 0) { a.fill[gi][si] = -1; a.chk = false; }
+      a.act = key; sfx('tap'); vnPersist(m); render();
+    },
+    vnPoolChk: () => { const m = vnCur(); if (!m) return; m.ans.chk = true; const ev = vnPoolEval(vnPz(m), m.ans); sfx(ev.some(g => g.full && !g.good) ? 'no' : 'ok'); render(); },
+    vnFldChk: () => {
+      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m); a.chk = true;
+      document.querySelectorAll('.vn-in').forEach(el => { a.v[+el.dataset.i] = el.value; });
+      const ev = vnFldEval(p, a); if (ev.done) { vnSolveStage(m); return; }
+      sfx(ev.ok.some(x => x === false) ? 'no' : 'tap'); vnPersist(m); render();
+    },
+    vnCell: key => {
+      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m), cov = p.words.filter(w => vnWordCells(w).includes(key)); if (!cov.length) return;
+      if (a.sel === key && cov.length > 1) a.d = a.d === 'h' ? 'v' : 'h'; else { a.sel = key; if (!cov.some(w => w.d === a.d)) a.d = cov[0].d; }
+      sfx('tap'); render();
+    },
+    vnKey: L => { const m = vnCur(); if (!m) return; const a = m.ans; if (!a.sel) { sfx('no'); return; } if (L) vnCrossSet(m, a.sel, L); else { if (!a.g[a.sel]) { const w = vnWordAt(vnPz(m), a.sel, a.d); if (w) { const cs = vnWordCells(w), i = cs.indexOf(a.sel); if (i > 0) a.sel = cs[i - 1]; } } vnCrossSet(m, a.sel, ''); } },
+    vnCrossChk: () => { const m = vnCur(); if (!m) return; m.ans.chk = true; const p = vnPz(m); sfx(Object.keys(m.ans.g).some(k => m.ans.g[k] !== p.cells[k]) ? 'no' : 'ok'); render(); },
+    vnExp: () => { const m = UI.vn; if (!m) return; m.exp = !m.exp; render(); },
+    vnNext: () => {
+      const m = UI.vn; if (!m || m.st !== 'play' || !m.sv[m.si]) return;
+      if (m.si >= m.stages.length - 1) { vnWin(m); render(); return; }
+      m.si++; m.ans = vnAnsNew(vnPz(m)); m.exp = false; sfx('tap'); vnPersist(m); render();
+    },
+    vnGiveAsk: () => { UI.vnAsk = true; render(); },
+    vnGiveNo: () => { UI.vnAsk = false; render(); },
+    vnGiveYes: () => { const m = UI.vn; if (m && m.st === 'play') vnGiveUp(m); },
+    vnFlagQ: () => {
+      const m = UI.vn; if (!m || m.st !== 'play') return; const d = m.stages[m.si], p = vnS(); m.fl = m.fl || {}; if (m.fl[m.si]) return;
+      m.fl[m.si] = 1; p.vnFlag.push({ t: d.t, sd: d.sd, ids: d.u || [], ts: Date.now() }); toast('🚩', 'Gemeldet. Diese Frage kommt nicht wieder.'); vnPersist(m); render();
+    },
+    vnUnflag: () => { vnS().vnFlag = []; save(); render(); },
+    vnSeenReset: () => { const p = vnS(); p.vnSeen = {}; save(); render(); },
     vnHint: () => {
-      const m = UI.vn; if (!m || m.st !== 'play') return;
-      const stage1 = m.kind === 'code' || (m.kind === 'week' && m.stage === 1);
-      if (stage1) {
-        const c = m.code, open = vnSyms(c).filter(s => c.guess[s] !== c.truth[s] && !c.locked[s]); if (!open.length || !pzHintUse('ven')) { render(); return; }
-        const cnt = s => c.words.reduce((a, w) => a + w.s.filter(x => x === s).length, 0); open.sort((a, b) => cnt(b) - cnt(a));
-        c.guess[open[0]] = c.truth[open[0]]; c.locked[open[0]] = 1; c.sel = ''; m.hints++; sfx('magic'); vnAfterCode(m); return;
+      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m), g = m.kind === 'code' ? 'vg' : 'vc';
+      if (pzHintLeft(g) <= 0) { render(); return; }
+      let done = false;
+      if (p.kind === 'choice') { const c = p.opts.map((o, i) => i).filter(i => i !== p.ans && !a.bad.includes(i)); if (c.length > 1) { a.bad.push(c[Math.floor(Math.random() * c.length)]); if (a.sel !== null && a.bad.includes(a.sel)) a.sel = null; done = true; } }
+      else if (p.kind === 'multi') { for (let k = 0; k < p.qs.length && !done; k++) { const st = a.qa[k]; if (st.ok) continue; const c = p.qs[k].opts.map((o, i) => i).filter(i => i !== p.qs[k].ans && !st.bad.includes(i)); if (c.length > 1) { st.bad.push(c[Math.floor(Math.random() * c.length)]); done = true; } } }
+      else if (p.kind === 'pool') {
+        const used = () => new Set(a.fill.flat().filter(x => x >= 0));
+        outer: for (let gi = 0; gi < p.groups.length; gi++) { const g0 = p.groups[gi]; for (let si = 0; si < g0.n; si++) {
+          const cur = a.fill[gi][si], want = p.join ? g0.syl[si] : g0.ans, key = gi + '.' + si;
+          if (a.lk[key] || (cur >= 0 && (g0.ok ? g0.ok(p.chips[cur]) : p.chips[cur] === want))) continue;
+          a.fill.forEach((r, i) => r.forEach((c, j) => { if (c >= 0 && p.chips[c] === want && !a.lk[i + '.' + j]) a.fill[i][j] = -1; }));
+          a.fill[gi][si] = -1; const ci = p.chips.findIndex((c, i) => c === want && !used().has(i)); if (ci < 0) continue;
+          a.fill[gi][si] = ci; a.lk[key] = 1; done = true; break outer;
+        } }
+        if (done) { a.act = null; a.chk = false; }
       }
-      const k = m.cas, cand = k.sus.map((s, i) => i).filter(i => i !== k.cu && !k.out[i]); if (!cand.length || !pzHintUse('ven')) { render(); return; }
-      k.out[cand[Math.floor(Math.random() * cand.length)]] = 1; k.wrong = false; m.hints++; sfx('magic'); vnPersist(m); render();
+      else if (p.kind === 'fields') { document.querySelectorAll('.vn-in').forEach(el => { a.v[+el.dataset.i] = el.value; }); const ev = vnFldEval(p, a); const i = p.items.findIndex((it, k) => !a.lk[k] && ev.ok[k] !== true); if (i >= 0) { a.v[i] = p.items[i].ans[0]; a.lk[i] = true; a.chk = false; done = true; } }
+      else if (p.kind === 'cross') { const bad = Object.keys(p.cells).filter(k => a.g[k] !== p.cells[k] && !a.lk[k]); if (bad.length) { const k = (a.sel && bad.includes(a.sel)) ? a.sel : bad[Math.floor(Math.random() * bad.length)]; a.g[k] = p.cells[k]; a.lk[k] = 1; a.chk = false; done = true; } }
+      if (!done) { toast('💡', 'Hier gibt es keinen Hinweis mehr.'); return; }
+      pzHintUse(g); m.hints++; sfx('magic');
+      if (p.kind === 'pool') { vnAfterPool(m); return; }
+      if (p.kind === 'cross' && Object.keys(p.cells).every(k => a.g[k] === p.cells[k])) { vnSolveStage(m); return; }
+      if (p.kind === 'fields') { const ev = vnFldEval(p, a); if (ev.done) { vnSolveStage(m); return; } }
+      vnPersist(m); render();
     }
   }
 });
+
+/* =====================================================================
+   VENOLA HOLMES · Inhalte für die Wortspiele (Geheimakte). Reine Daten – die Spiele selbst stehen in feat_vnwords.js.
+   WICHTIG: Die Reihenfolge ist die Nummerierung (für „schon gesehen“ und den Verlauf). Neue Einträge immer NUR AM ENDE anhängen.
+   Ein Test (tests/round12_test.py) prüft die Regeln (Silben = Wort, versteckte Wörter über Wortgrenzen, Wörterliste, Kreuzworträtsel …).
+   ===================================================================== */
+
+/* ---------- Silbenrätsel: Silben mit „-“ getrennt | Frage (Silbentrennung nach der heutigen Schulregel: Fen-ster, Ta-sche, Zu-cker) ---------- */
+const VN_SIL = `KOF-FER|Darin reist die Kleidung mit
+FEN-STER|Dadurch schaut man hinaus, ohne nass zu werden
+SCHLÜS-SEL|Er sperrt Türen auf und zu
+KER-ZE|Sie leuchtet und wird dabei immer kürzer
+SPIE-GEL|Er zeigt dir, wie du aussiehst
+TRE-SOR|Darin liegen Gold und wichtige Papiere
+LU-PE|Damit sieht ein Detektiv ganz genau hin
+GLO-CKE|Sie hängt im Turm und läutet
+FLA-SCHE|Daraus trinkt man, wenn kein Glas da ist
+SPIN-NE|Sie hat acht Beine und baut ein Netz
+HAM-MER|Damit schlägt man Nägel in die Wand
+BLU-ME|Sie blüht und duftet auf der Wiese
+WOL-KE|Sie schwebt am Himmel und kann regnen
+BRÜ-CKE|Sie führt über den Fluss
+SCHAU-FEL|Damit gräbt man im Sand
+KA-MEL|Wüstentier mit Höckern
+PFAN-NE|Darin brät man Spiegeleier
+KIS-SEN|Weich und gut für den Kopf im Bett
+LEI-TER|Man steigt auf ihr nach oben
+ZI-TRO-NE|Gelb und sehr sauer
+TE-LE-FON|Damit spricht man mit Menschen, die weit weg sind
+KA-LEN-DER|Er zählt die Tage des Jahres
+E-LE-FANT|Das größte Landtier, mit langem Rüssel
+ZAHN-BÜR-STE|Sie macht die Zähne sauber
+FEU-ER-WEHR|Sie löscht Brände
+SCHATZ-KAR-TE|Darauf zeigt ein Kreuz, wo Gold vergraben ist
+DE-TEK-TIV|Er löst Fälle und sucht Spuren
+RUCK-SACK|Wird auf dem Rücken getragen
+FLUG-ZEUG|Es fliegt, hat aber keine Federn
+SCHMET-TER-LING|Er war einmal eine Raupe
+KRO-KO-DIL|Grünes Reptil mit vielen Zähnen
+SCHO-KO-LA-DE|Süß und braun, sie schmilzt in der Hand
+BI-BLI-O-THEK|Hier leiht man Bücher aus
+RE-GEN-BO-GEN|Er erscheint, wenn Sonne und Regen zusammenkommen
+KAR-TOF-FEL|Sie wächst unter der Erde und wird zu Pommes
+MA-RI-EN-KÄ-FER|Roter Käfer mit schwarzen Punkten
+HUB-SCHRAU-BER|Ein Fluggerät mit Rotor über dem Dach
+FAHR-RAD|Es hat zwei Räder und keinen Motor
+TA-SCHEN-LAM-PE|Sie leuchtet im Dunkeln und passt in die Hosentasche
+GE-BURTS-TAG|Einmal im Jahr gibt es Geschenke
+STERN-BILD|Punkte am Nachthimmel, die sich zu einer Figur verbinden
+WAS-SER-FALL|Hier stürzt ein Fluss in die Tiefe
+FRÜH-STÜCK|Die erste Mahlzeit am Tag
+KLEI-DER-SCHRANK|Darin hängen Hosen und Jacken
+FIN-GER-AB-DRUCK|Ein Detektiv sucht ihn auf Gläsern und Türklinken
+EIS-BÄR|Er ist weiß und lebt im hohen Norden
+SEE-HUND|Tier mit Schnurrhaaren, das gut schwimmt
+SCHNEE-MANN|Er hat eine Karotte als Nase
+KÜR-BIS|Orangefarbenes Gemüse zu Halloween
+HO-NIG-BIE-NE|Sie sammelt Nektar und baut Waben
+LEUCHT-TURM|Er zeigt Schiffen nachts den Weg
+SE-GEL-BOOT|Es fährt nur mit dem Wind
+SCHWIMM-BAD|Hier kann man planschen und springen
+ZIR-KUS-ZELT|Dort treten Clowns und Akrobaten auf
+TA-SCHEN-RECH-NER|Er rechnet schnell und passt in die Hosentasche
+SON-NEN-BRIL-LE|Sie schützt die Augen vor grellem Licht
+GE-HEIM-SCHRIFT|Nur wer den Code kennt, kann sie lesen
+PAU-SEN-BROT|Es wartet in der Schultasche auf die große Pause
+RÄT-SEL-HEFT|Darin stehen Knobeleien
+LAND-KAR-TE|Sie zeigt Flüsse, Berge und Städte
+WET-TER-BE-RICHT|Er sagt voraus, ob es regnet
+FE-DER-MÄPP-CHEN|Darin liegen Stifte und Radiergummi
+ZAU-BER-STAB|Ein Magier schwingt ihn
+HAND-SCHUH|Schützt die Finger im Winter
+GAR-TEN-ZAUN|Er umgibt Rosen und Rasen
+ERD-BEE-RE|Rot, saftig, wächst im Sommer nah am Boden
+SCHUL-RAN-ZEN|Darin tragen Kinder Hefte und Bücher auf dem Rücken
+TRAM-PO-LIN|Darauf kann man hoch hüpfen
+AU-TO-BAHN|Straße ohne Ampeln für schnelle Autos
+BA-NA-NE|Gelb und krumm
+TO-MA-TE|Aus dieser roten Frucht macht man Ketchup
+SPA-GHET-TI|Lange Nudeln mit Soße
+PA-PA-GEI|Bunter Vogel, der sprechen lernen kann
+NAS-HORN|Grauer Dickhäuter mit Horn auf der Nase
+GI-RAF-FE|Tier mit sehr langem Hals
+PIN-GU-IN|Vogel im Frack, der nicht fliegen kann
+TREP-PE|Stufe für Stufe nach oben
+TEP-PICH|Er liegt auf dem Boden
+LA-TER-NE|Sie leuchtet nachts an der Straße
+RA-DIER-GUM-MI|Er macht Bleistiftstriche weg
+BLEI-STIFT|Damit schreibt man, und man kann es wegradieren
+LI-NE-AL|Damit zeichnet man gerade Striche
+SCHUL-HOF|Hier tobt man in der Pause
+FO-TO-AP-PA-RAT|Damit macht man Bilder
+SCHAT-TEN|Er folgt dir bei Sonne auf Schritt und Tritt
+VUL-KAN|Berg, der Lava spuckt
+DRA-CHE|Fabelwesen, das Feuer speit
+KO-MET|Himmelskörper mit leuchtendem Schweif
+RA-KE-TE|Sie fliegt ins Weltall
+PLA-NET|Die Erde ist einer davon
+MI-KRO-SKOP|Damit sieht man winzige Dinge riesig
+TE-LE-SKOP|Damit sieht man ferne Sterne
+HAN-DY|Es klingelt in der Hosentasche
+SPIE-GEL-EI|Es wird gebraten und hat ein gelbes Auge
+KA-NIN-CHEN|Langohriges Tier, das Möhren knabbert`.split('\n').map(l => { const [w, q] = l.split('|'); return { s: w.split('-'), w: w.replace(/-/g, ''), q }; });
+
+/* ---------- Wortleiter: echte 4-Buchstaben-Wörter. Beim Start entsteht ein Graph (genau ein Buchstabe anders = Nachbar). ---------- */
+const VN_LAD = `ACHT ALLE ARZT AUCH AUGE BACH BAHN BALL BAND BANK BART BASS BAUM BEIL BEIN BERG BETT BIER BILD BLAU BLEI BLUT BOCK BOOT BORD BOTE BROT BUCH BUND BURG
+DACH DAME DANK DASS DEIN DICH DICK DIEB DING DOCH DORF DORN DOSE DREI DUFT DUMM ECHT ECKE EDEL EGAL EIER EILE ELCH ELLE ENDE ERDE ESEL ETWA EULE
+FACH FALL FARM FASS FAUL FEHL FEIG FEIN FELD FELL FERN FEST FETT FILM FIRN FLUG FLUR FLUT FORM FREI FROH FUND
+GABE GANG GANS GANZ GAST GELB GELD GERN GIER GIFT GIPS GLAS GOLD GRAB GRAD GRAS GRAU GURT
+HAAR HAFT HAHN HAIN HALB HALM HALS HALT HAND HANF HART HASE HASS HAUS HAUT HEER HEFT HEIM HELD HELL HEMD HERD HERR HERZ HEXE HIER HIRN HOCH HOLZ HOSE HUHN HUND HUPE
+IDEE IGEL JAGD JAHR JUNG KAHN KALB KALT KAMM KARO KAUM KERL KERN KIEL KIND KINN KLAR KLEE KLUG KNIE KOCH KOHL KOPF KORB KORN KOST KRAN KURS KURZ KUSS
+LACK LAGE LAMM LAND LANG LAUB LAUF LAUT LEER LEHM LEIB LEID LEIM LIED LIEB LIFT LILA LIST LOCH LOHN LUFT LUPE LUST
+MAIS MARK MAST MATT MAUL MAUS MEER MEHL MEHR MEIN MILD MIST MODE MOND MOOR MOOS MORD MUND MUSS NACH NAHE NAME NASE NASS NEID NEIN NEST NETT NETZ NEUN NOCH NORD NOTE NULL NUSS
+OBST ODER OFEN OHNE OPER PAAR PACK PARK PASS PFAD PFAU PILZ PLAN POST PUMA PUTE QUAL RAND RANG RATE RAUM REIM REIS REST RIND RING RISS ROCK ROHR ROSA ROSE ROST RUHE RUND RUSS
+SAAL SACK SAFT SAGE SAND SATT SATZ SEHR SEIL SEIN SEIT SEKT SIEB SIEG SILO SINN SITZ SOHN SOLL SORT SPUR STAB STAR STIL
+TANK TANZ TAUB TEIG TEIL TEXT TIEF TIER TOLL TORF TREU TURM TUCH
+UFER ULME VASE VIEH VIEL VIER VOLK VOLL VORN
+WACH WAHL WAHN WALD WAND WANN WARM WEIT WELT WENN WERT WILD WIND WIRT WOLF WORT WURM
+ZAHL ZAHN ZART ZAUN ZEHN ZEIT ZELT ZOLL`.split(/\s+/).filter((w, i, a) => w.length === 4 && a.indexOf(w) === i);
+
+/* ---------- Wörterkette: Zusammensetzungen. „Erstes: Zweites, Zweites=ganzes Wort …“  Das ganze Wort steht nur, wenn ein Fugenlaut dazukommt.
+   Eine Kante A→B heißt: „A+B“ ist ein richtiges Wort. ---------- */
+const VN_CHN = `Haus: Tür, Dach, Schuh, Tier, Boot, Meister, Schlüssel, Wand, Arzt, Aufgabe, Garten, Mann, Nummer
+Tür: Schloss, Klinke, Rahmen, Schild, Griff, Matte, Glocke, Öffner, Angel, Stopper
+Schloss: Garten, Graben, Hof, Herr, Mauer, Turm, Park, Teich, Tor
+Garten: Zaun, Tor, Zwerg, Fest, Schlauch, Haus, Teich, Bank, Stuhl, Gerät, Tür, Schere
+Zaun: Pfahl, Gast, Tor, Latte, König
+Wasser: Fall, Hahn, Flasche, Melone, Rutsche, Ball, Farbe, Kraft, Glas, Wanne, Kocher, Mühle, Rad, Pistole, Tier
+Fall: Obst, Schirm, Tür, Grube, Wind, Rohr, Beil
+Obst: Baum, Garten, Salat, Kuchen, Saft, Korb, Messer, Schale
+Baum: Haus, Stamm, Krone, Rinde, Schule, Stumpf, Blüte, Kuchen, Wolle, Schere
+Stamm: Baum, Tisch, Gast, Halter, Zelle, Kunde, Platz
+Tisch: Bein, Decke, Platte, Tennis, Lampe, Fußball, Karte, Kicker, Nachbar, Glocke, Läufer, Gebet
+Tennis: Ball, Platz, Schläger, Schuh, Spieler, Turnier
+Ball: Spiel, Saal, Kleid, Gefühl, Junge, Mädchen, Pumpe, Netz, Wurf, Tasche
+Spiel: Platz, Zeug, Regel, Feld, Karte, Stand, Plan, Film, Ende, Zeit, Automat, Verderber
+Platz: Karte, Regen, Angst, Verweis, Patrone, Halter, Mangel, Tausch
+Regen: Bogen, Schirm, Tropfen, Wurm, Wald, Mantel, Wasser, Jacke, Wolke, Rinne, Tonne, Zeit, Wetter
+Wetter: Bericht, Karte, Hahn, Fahne, Station, Lage, Wechsel, Dienst
+Bericht: Erstatter=Berichterstatter, Heft=Berichtsheft
+Licht: Schalter, Schein, Jahr, Blick, Hupe, Show, Maschine, Strahl, Quelle, Kegel
+Sonne: Licht=Sonnenlicht, Schein=Sonnenschein, Brille=Sonnenbrille, Blume=Sonnenblume, Schirm=Sonnenschirm, Creme=Sonnencreme, Stich=Sonnenstich, Uhr=Sonnenuhr, Aufgang=Sonnenaufgang, Untergang=Sonnenuntergang, Strahl=Sonnenstrahl, Hut=Sonnenhut, System=Sonnensystem
+Mond: Licht, Schein, Finsternis, Landung, Stein, Phase, Krater
+Stern: Bild, Schnuppe, Warte, Himmel, Fahrt, Stunde, Zeichen
+Feuer: Wehr, Werk, Stelle, Zeug, Holz, Löscher, Melder, Salamander, Alarm, Leiter, Wasser, Rad
+Holz: Haus, Brücke, Boot, Fäller, Hammer, Kohle, Schuh, Wurm, Stapel, Wolle, Löffel
+Kohle: Grube, Stift, Papier, Feuer
+Wind: Mühle, Rad, Jacke, Stärke, Stille, Hose, Schutz, Richtung, Energie, Hund, Spiel
+Mühle: Rad=Mühlrad, Stein=Mühlstein, Bach=Mühlbach, Teich=Mühlteich
+Rad: Weg, Tour, Fahrer, Rennen, Sport, Kappe, Schlag, Lager, Spur
+Schuh: Band, Karton, Sohle, Löffel, Größe, Schrank, Putzer, Macher, Geschäft, Regal, Creme, Spitze
+Hand: Tuch, Schuh, Ball, Tasche, Werk, Schrift, Griff, Abdruck, Creme, Wagen, Rücken, Fläche, Kuss
+Finger: Abdruck, Hut, Nagel, Spitze, Ring, Puppe, Farbe, Spiel
+Nagel: Lack, Schere, Feile, Bett, Pflege, Studio
+Buch: Seite, Laden, Stabe=Buchstabe, Deckel, Rücken, Messe, Handlung, Regal, Händler, Druck, Binder
+Schule: Hof=Schulhof, Ranzen=Schulranzen, Bus=Schulbus, Weg=Schulweg, Tasche=Schultasche, Heft=Schulheft, Tag=Schultag, Glocke=Schulglocke, Leiter=Schulleiter, Garten=Schulgarten, Fest=Schulfest, Jahr=Schuljahr, Zeit=Schulzeit, Buch=Schulbuch, Sport=Schulsport
+Tasche: Lampe=Taschenlampe, Messer=Taschenmesser, Geld=Taschengeld, Rechner=Taschenrechner, Tuch=Taschentuch, Dieb=Taschendieb, Uhr=Taschenuhr, Spiegel=Taschenspiegel
+Geld: Beutel, Schein, Automat, Stück, Börse, Tasche, Strafe, Wäsche, Katze
+Kuchen: Teig, Gabel, Form, Blech, Duft, Stück, Messer, Teller, Buffet
+Teig: Rolle, Schaber, Tasche, Waren
+Brot: Messer, Korb, Kasten, Dose, Zeit, Aufstrich, Krume, Kruste, Beutel, Teig, Scheibe
+Korb: Ball, Stuhl, Flechter, Weide
+Milch: Kaffee, Straße, Shake, Zahn, Reis, Tüte, Glas, Schaum, Kanne, Pulver, Flasche
+Zahn: Bürste, Arzt, Pasta, Rad, Seide, Spange, Fleisch, Weh, Lücke, Schmelz
+Eis: Würfel, Bär, Berg, Hockey, Creme, Tüte, Zapfen, Kaffee, Zeit, Scholle, Becher, Maschine
+Schnee: Mann, Ball, Flocke, Sturm, Glöckchen, Schuh, Kette, Pflug, Schmelze, Regen, Fall, Decke, Gestöber, Eule, Hase
+Sand: Kasten, Burg, Sturm, Strand, Uhr, Schloss, Korn, Papier, Bank, Mann, Düne, Eimer, Stein, Wüste
+Uhr: Zeit, Zeiger, Werk, Macher, Band, Kette, Glas, Turm
+Zeit: Plan, Reise, Zone, Lupe, Schrift, Raum, Punkt, Alter, Ansage, Druck, Maschine
+Punkt: Zahl, Richter, Sieg, Landung
+Flug: Zeug, Hafen, Platz, Ticket, Ente, Gast, Lotse, Zeit, Blatt, Sand, Bahn, Angst, Gesellschaft
+Zeug: Haus
+Hafen: Stadt, Becken, Kneipe, Rundfahrt, Kran, Meister, Mauer, Viertel
+Schiff: Fahrt=Schifffahrt, Bruch=Schiffbruch, Schaukel=Schiffschaukel, Brücke=Schiffsbrücke, Mast=Schiffsmast, Schraube=Schiffsschraube, Werft=Schiffswerft, Glocke=Schiffsglocke, Koch=Schiffskoch
+Boot: Steg=Bootssteg, Fahrt=Bootsfahrt, Verleih=Bootsverleih, Mann=Bootsmann, Haus=Bootshaus, Hafen=Bootshafen, Schuppen=Bootsschuppen
+Zug: Brücke, Führer, Vogel, Abteil, Fahrt, Verspätung, Spitze, Tür
+Bahn: Hof=Bahnhof, Steig=Bahnsteig, Gleis=Bahngleis, Schranke=Bahnschranke, Fahrt=Bahnfahrt, Linie=Bahnlinie, Übergang=Bahnübergang, Strecke=Bahnstrecke
+Hof: Hund, Tor, Laden, Mauer, Narr, Dame, Garten, Staat
+Tor: Wart, Schütze, Pfosten, Latte, Linie, Raum, Hüter, Schuss, Jäger, Bogen
+Kette: Reaktion=Kettenreaktion, Raucher=Kettenraucher, Glied=Kettenglied, Hund=Kettenhund, Brief=Kettenbrief, Säge=Kettensäge
+Ring: Finger, Kampf, Buch, Richter, Straße, Mauer, Wurf, Tausch, Ordner, Bahn
+Gold: Fisch, Barren, Münze, Medaille, Schatz, Grube, Ring, Schmied, Rausch, Kette, Stück, Taler
+Schatz: Kiste, Karte, Truhe, Suche, Insel, Jäger, Sucher
+Karte: Haus=Kartenhaus, Spiel=Kartenspiel, Tisch=Kartentisch, Leser=Kartenleser, Telefon=Kartentelefon, Trick=Kartentrick, Verkauf=Kartenverkauf
+Salz: Streuer, Wasser, Stange, Brezel, Kruste, Mine, See, Gurke, Säure, Kartoffel, Wüste
+See: Hund, Mann, Gras, Stern, Rose, Pferd, Not, Adler, Löwe, Bär
+Kreuz: Wort, Fahrt, Verhör, Ass, Stich, Band, Weg, Spinne, Zug, Gang, Bein
+Wort: Schatz, Spiel, Art, Wahl, Laut, Führer, Wechsel, Bruch, Familie, Stamm, Witz, Gefecht
+Rätsel: Heft, Raten, Ecke, Spaß, Löser, Buch, Seite, Lösung
+Lampe: Schirm=Lampenschirm, Fassung=Lampenfassung, Fieber=Lampenfieber, Kabel=Lampenkabel
+Katze: Auge=Katzenauge, Futter=Katzenfutter, Klo=Katzenklo, Wäsche=Katzenwäsche, Sprung=Katzensprung, Streu=Katzenstreu, Jammer=Katzenjammer, Minze=Katzenminze, Baum=Katzenbaum
+Hund: Hütte=Hundehütte, Leine=Hundeleine, Futter=Hundefutter, Napf=Hundenapf, Schule=Hundeschule, Steuer=Hundesteuer, Wetter=Hundewetter, Korb=Hundekorb
+Vogel: Nest, Haus, Käfig, Scheuche, Beere, Futter, Flug, Spinne, Grippe, Perspektive, Schwarm, Kunde
+Tier: Park, Arzt, Heim, Garten, Pfleger, Welt, Fabel, Reich, Futter, Kunde, Stimme
+Park: Platz, Bank, Haus, Uhr, Scheibe, Wächter, Gebühr, Verbot, Lücke
+Bank: Räuber=Bankräuber, Konto=Bankkonto, Karte=Bankkarte, Geheimnis=Bankgeheimnis, Überfall=Banküberfall, Direktor=Bankdirektor, Einbruch=Bankeinbruch, Raub=Bankraub
+Raub: Tier, Vogel, Überfall, Ritter, Kopie, Fisch, Zug, Mord
+Mord: Fall, Kommission, Waffe, Verdacht, Opfer, Versuch, Motiv
+Spur: Suche, Leser, Wechsel, Breite, Hund, Weite
+Detektiv: Büro, Geschichte, Spiel, Hut, Agentur, Roman, Arbeit
+Büro: Klammer, Stuhl, Tür, Gebäude, Schluss, Material, Zeit, Arbeit
+Kind: Garten=Kindergarten, Zimmer=Kinderzimmer, Lied=Kinderlied, Wagen=Kinderwagen, Spiel=Kinderspiel, Buch=Kinderbuch, Geburtstag=Kindergeburtstag, Arzt=Kinderarzt, Bett=Kinderbett, Fest=Kinderfest, Tag=Kindertag
+Zimmer: Pflanze, Tür, Temperatur, Nummer, Wand, Schlüssel, Decke, Brand, Service, Mann
+Wand: Tafel, Uhr, Lampe, Farbe, Bild, Kalender, Schrank, Zeitung, Teppich, Malerei, Spiegel, Regal
+Tafel: Schwamm, Kreide, Dienst, Bild, Wasser, Silber, Lappen, Runde, Salz, Schokolade
+Kreide: Felsen, Zeit, Stück, Staub, Zeichnung, Strich
+Strich: Männchen, Code, Liste, Punkt, Zeichnung, Regen
+Code: Wort, Schloss, Knacker, Zeile, Name, Schlüssel
+Schlüssel: Bund, Loch, Brett, Anhänger, Dienst, Kind, Blume, Ring, Wort, Band
+Loch: Kamera, Karte, Blech, Säge, Zange
+Nuss: Knacker, Schale, Kuchen, Baum, Schokolade, Ecke, Öl, Kern, Torte
+Kern: Obst, Energie, Kraft, Seife, Zeit, Frage, Stück, Gehäuse
+Apfel: Baum=Apfelbaum, Saft=Apfelsaft, Kuchen=Apfelkuchen, Mus=Apfelmus, Schale=Apfelschale, Wein=Apfelwein, Strudel=Apfelstrudel
+Saft: Glas, Presse, Schorle, Flasche, Kur, Tüte
+Presse: Konferenz, Freiheit, Foto, Bericht, Sprecher, Meldung, Karte, Ausweis
+Sport: Platz, Schuh, Halle, Lehrer, Verein, Wagen, Fest, Tasche, Unterricht, Hose, Art, Geschäft, Gerät, Abzeichen
+Halle: Bad=Hallenbad, Fußball=Hallenfußball, Boden=Hallenboden, Handball=Hallenhandball
+Bad: Wanne=Badewanne, Zimmer=Badezimmer, Anzug=Badeanzug, Hose=Badehose, Tuch=Badetuch, Mantel=Bademantel, Meister=Bademeister, Kappe=Badekappe, Ente=Badeente, Wasser=Badewasser, Schaum=Badeschaum, Ort=Badeort, Salz=Badesalz
+Teich: Rose=Teichrose, Frosch=Teichfrosch, Rand=Teichrand, Wasser=Teichwasser, Fisch=Teichfisch
+Frosch: Schenkel=Froschschenkel, König=Froschkönig, Perspektive=Froschperspektive, Laich=Froschlaich, Mann=Froschmann, Konzert=Froschkonzert
+König: Reich=Königreich, Tochter=Königstochter, Krone=Königskrone, Sohn=Königssohn, Kind=Königskind, Paar=Königspaar, Schloss=Königsschloss, Pinguin=Königspinguin, Kobra=Königskobra, Familie=Königsfamilie, Tiger=Königstiger, Weg=Königsweg
+Krone: Korken=Kronkorken, Juwelen=Kronjuwelen, Prinz=Kronprinz, Leuchter=Kronleuchter, Zeuge=Kronzeuge
+Märchen: Buch=Märchenbuch, Prinz=Märchenprinz, Wald=Märchenwald, Schloss=Märchenschloss, Stunde=Märchenstunde, Land=Märchenland, Erzähler=Märchenerzähler
+Land: Karte=Landkarte, Straße=Landstraße, Wirt=Landwirt, Haus=Landhaus, Leben=Landleben, Kreis=Landkreis
+Wald: Weg=Waldweg, Boden=Waldboden, Rand=Waldrand, Brand=Waldbrand, Lichtung=Waldlichtung, Hütte=Waldhütte, Tier=Waldtier, Fest=Waldfest, Maus=Waldmaus, See=Waldsee, Läufer=Waldläufer
+Berg: Hütte=Berghütte, Spitze=Bergspitze, Wanderung=Bergwanderung, Bahn=Bergbahn, Rutsch=Bergrutsch, Steiger=Bergsteiger, Werk=Bergwerk, See=Bergsee, Tal=Bergtal, Gipfel=Berggipfel, Dorf=Bergdorf, Bach=Bergbach, Führer=Bergführer, Kristall=Bergkristall, Ziege=Bergziege
+Tal: Fahrt=Talfahrt, Station=Talstation, Sohle=Talsohle, Brücke=Talbrücke, Sperre=Talsperre
+Fluss: Bett=Flussbett, Ufer=Flussufer, Pferd=Flusspferd, Krebs=Flusskrebs, Fisch=Flussfisch, Mündung=Flussmündung, Tal=Flusstal, Schiff=Flussschiff, Insel=Flussinsel
+Ufer: Weg=Uferweg, Promenade=Uferpromenade, Böschung=Uferböschung, Straße=Uferstraße, Rand=Uferrand
+Insel: Bewohner=Inselbewohner, Gruppe=Inselgruppe, Urlaub=Inselurlaub, Staat=Inselstaat, Hüpfen=Inselhüpfen
+Meer: Wasser=Meerwasser, Salz=Meersalz, Schweinchen=Meerschweinchen, Jungfrau=Meerjungfrau, Enge=Meerenge, Blick=Meerblick
+Welle: Länge=Wellenlänge, Bad=Wellenbad, Reiter=Wellenreiter, Brecher=Wellenbrecher, Sittich=Wellensittich, Gang=Wellengang, Schlag=Wellenschlag, Linie=Wellenlinie
+Strand: Korb=Strandkorb, Bad=Strandbad, Burg=Strandburg, Hotel=Strandhotel, Gut=Strandgut, Promenade=Strandpromenade, Spaziergang=Strandspaziergang, Muschel=Strandmuschel, Tuch=Strandtuch, Liege=Strandliege
+Muschel: Schale=Muschelschale, Kette=Muschelkette, Sammlung=Muschelsammlung`.split('\n').map(l => { const i = l.indexOf(': '); return [l.slice(0, i), l.slice(i + 2).split(', ').map(x => { const j = x.indexOf('='); return j < 0 ? [x, ''] : [x.slice(0, j), x.slice(j + 1)]; })]; });
+
+/* ---------- Analogien: Beziehungstabellen. tier 1 = leicht … 3 = schwer.  how(a, b) erklärt die Beziehung. ---------- */
+const VN_REL = [
+  { id: 'gegen', tier: 1, lab: 'Gegenteile', how: (a, b) => `„${a}“ und „${b}“ sind Gegenteile`, p: [['heiß', 'kalt'], ['groß', 'klein'], ['hell', 'dunkel'], ['schnell', 'langsam'], ['dick', 'dünn'], ['laut', 'leise'], ['früh', 'spät'], ['alt', 'jung'], ['stark', 'schwach'], ['nass', 'trocken'], ['hart', 'weich'], ['reich', 'arm'], ['Tag', 'Nacht'], ['Sommer', 'Winter'], ['oben', 'unten'], ['voll', 'leer'], ['lang', 'kurz'], ['mutig', 'ängstlich'], ['süß', 'sauer']] },
+  { id: 'junges', tier: 1, lab: 'Tier und Jungtier', how: (a, b) => `das Junge vom ${a} heißt ${b}`, p: [['Hund', 'Welpe'], ['Katze', 'Kätzchen'], ['Pferd', 'Fohlen'], ['Kuh', 'Kalb'], ['Schaf', 'Lamm'], ['Schwein', 'Ferkel'], ['Huhn', 'Küken'], ['Frosch', 'Kaulquappe'], ['Reh', 'Kitz'], ['Ziege', 'Zicklein'], ['Hase', 'Häschen'], ['Schmetterling', 'Raupe']] },
+  { id: 'laut', tier: 1, lab: 'Tier und Laut', how: (a, b) => `${a}: das Tier macht „${b}“`, p: [['Hund', 'bellen'], ['Katze', 'miauen'], ['Kuh', 'muhen'], ['Schaf', 'blöken'], ['Frosch', 'quaken'], ['Pferd', 'wiehern'], ['Schwein', 'grunzen'], ['Löwe', 'brüllen'], ['Hahn', 'krähen'], ['Schlange', 'zischen'], ['Biene', 'summen'], ['Esel', 'iahen'], ['Wolf', 'heulen'], ['Maus', 'piepsen']] },
+  { id: 'sinn', tier: 1, lab: 'Sinn und Körperteil', how: (a, b) => `man ${a} mit dem Körperteil „${b}“`, p: [['sehen', 'Auge'], ['hören', 'Ohr'], ['riechen', 'Nase'], ['schmecken', 'Zunge'], ['greifen', 'Hand'], ['gehen', 'Fuß'], ['denken', 'Gehirn'], ['atmen', 'Lunge'], ['kauen', 'Zahn']] },
+  { id: 'farbe', tier: 1, lab: 'Ding und Farbe', how: (a, b) => `${a} ist typisch ${b}`, p: [['Banane', 'gelb'], ['Gras', 'grün'], ['Himmel', 'blau'], ['Schnee', 'weiß'], ['Tomate', 'rot'], ['Kohle', 'schwarz'], ['Karotte', 'orange'], ['Blut', 'rot'], ['Milch', 'weiß']] },
+  { id: 'hs', tier: 2, lab: 'Land und Hauptstadt', how: (a, b) => `${b} ist die Hauptstadt von ${a}`, p: [['Deutschland', 'Berlin'], ['Frankreich', 'Paris'], ['Italien', 'Rom'], ['Spanien', 'Madrid'], ['Österreich', 'Wien'], ['Schweiz', 'Bern'], ['Polen', 'Warschau'], ['Griechenland', 'Athen'], ['Portugal', 'Lissabon'], ['Niederlande', 'Amsterdam'], ['Dänemark', 'Kopenhagen'], ['England', 'London'], ['Ungarn', 'Budapest'], ['Tschechien', 'Prag']] },
+  { id: 'beruf', tier: 2, lab: 'Beruf und Werkzeug', how: (a, b) => `${a}: arbeitet mit ${b}`, p: [['Maler', 'Pinsel'], ['Bäcker', 'Backofen'], ['Arzt', 'Stethoskop'], ['Fotograf', 'Kamera'], ['Förster', 'Axt'], ['Gärtner', 'Spaten'], ['Friseur', 'Schere'], ['Schreiner', 'Hobel'], ['Lehrer', 'Kreide'], ['Fischer', 'Netz'], ['Pilot', 'Steuerknüppel'], ['Detektiv', 'Lupe'], ['Schneider', 'Nadel']] },
+  { id: 'teil', tier: 2, lab: 'Teil und Ganzes', how: (a, b) => `${a} ist ein Teil von ${b}`, p: [['Blatt', 'Baum'], ['Finger', 'Hand'], ['Zeh', 'Fuß'], ['Seite', 'Buch'], ['Rad', 'Auto'], ['Pfote', 'Hund'], ['Flügel', 'Vogel'], ['Taste', 'Klavier'], ['Segel', 'Boot'], ['Zimmer', 'Haus'], ['Zacke', 'Krone'], ['Henkel', 'Tasse'], ['Schale', 'Ei']] },
+  { id: 'ober', tier: 2, lab: 'Beispiel und Oberbegriff', how: (a, b) => `${a} gehört zu: ${b}`, p: [['Apfel', 'Obst'], ['Karotte', 'Gemüse'], ['Rose', 'Blume'], ['Eiche', 'Baum'], ['Hammer', 'Werkzeug'], ['Gitarre', 'Instrument'], ['Mai', 'Monat'], ['Montag', 'Wochentag'], ['Rot', 'Farbe'], ['Fußball', 'Sport'], ['Rhein', 'Fluss'], ['Wal', 'Säugetier'], ['Adler', 'Vogel'], ['Quadrat', 'Viereck'], ['Mars', 'Planet']] },
+  { id: 'mat', tier: 2, lab: 'Material und Produkt', how: (a, b) => `aus ${a} macht man ${b}`, p: [['Holz', 'Tisch'], ['Wolle', 'Pullover'], ['Glas', 'Fenster'], ['Milch', 'Käse'], ['Mehl', 'Brot'], ['Leder', 'Schuh'], ['Papier', 'Buch'], ['Gold', 'Ring'], ['Trauben', 'Wein'], ['Ton', 'Vase'], ['Eisen', 'Nagel'], ['Baumwolle', 'T-Shirt'], ['Kakao', 'Schokolade']] },
+  { id: 'einh', tier: 2, lab: 'Maßeinheiten', how: (a, b) => `${b} ist die nächstgrößere Einheit nach ${a}`, p: [['Sekunde', 'Minute'], ['Minute', 'Stunde'], ['Stunde', 'Tag'], ['Tag', 'Woche'], ['Woche', 'Monat'], ['Monat', 'Jahr'], ['Millimeter', 'Zentimeter'], ['Zentimeter', 'Meter'], ['Meter', 'Kilometer'], ['Gramm', 'Kilogramm'], ['Milliliter', 'Liter'], ['Jahr', 'Jahrzehnt']] },
+  { id: 'mehr', tier: 2, lab: 'Einzahl und Mehrzahl', how: (a, b) => `Mehrzahl von „${a}“ ist „${b}“`, p: [['Kind', 'Kinder'], ['Baum', 'Bäume'], ['Mann', 'Männer'], ['Apfel', 'Äpfel'], ['Tisch', 'Tische'], ['Auge', 'Augen'], ['Foto', 'Fotos'], ['Museum', 'Museen'], ['Zahn', 'Zähne'], ['Gans', 'Gänse'], ['Haus', 'Häuser'], ['Buch', 'Bücher'], ['Maus', 'Mäuse'], ['Fuß', 'Füße']] },
+  { id: 'wohn', tier: 2, lab: 'Tier und Zuhause', how: (a, b) => `${a}: das Zuhause heißt „${b}“`, p: [['Biene', 'Stock'], ['Fuchs', 'Bau'], ['Vogel', 'Nest'], ['Pferd', 'Stall'], ['Hund', 'Hütte'], ['Bär', 'Höhle'], ['Biber', 'Burg'], ['Spinne', 'Netz'], ['Ameise', 'Haufen']] },
+  { id: 'komp', tier: 3, lab: 'Steigerung', how: (a, b) => `„${b}“ ist die Steigerung von „${a}“`, p: [['gut', 'besser'], ['viel', 'mehr'], ['gern', 'lieber'], ['hoch', 'höher'], ['nah', 'näher'], ['groß', 'größer'], ['jung', 'jünger'], ['alt', 'älter'], ['lang', 'länger'], ['kurz', 'kürzer'], ['stark', 'stärker'], ['warm', 'wärmer']] },
+  { id: 'prae', tier: 3, lab: 'Vergangenheit (Präteritum)', how: (a, b) => `Vergangenheit von „${a}“ ist „${b}“`, p: [['gehen', 'ging'], ['sehen', 'sah'], ['essen', 'aß'], ['fliegen', 'flog'], ['singen', 'sang'], ['trinken', 'trank'], ['geben', 'gab'], ['laufen', 'lief'], ['schreiben', 'schrieb'], ['finden', 'fand'], ['nehmen', 'nahm'], ['bleiben', 'blieb']] },
+  { id: 'ursache', tier: 3, lab: 'Ursache und Folge', how: (a, b) => `${a} hat ${b} zur Folge`, p: [['Feuer', 'Rauch'], ['Regen', 'Pfütze'], ['Sonne', 'Schatten'], ['Blitz', 'Donner'], ['Kälte', 'Eis'], ['Hitze', 'Schweiß'], ['Wind', 'Wellen'], ['Frost', 'Raureif'], ['Erdbeben', 'Risse'], ['Fleiß', 'Erfolg']] },
+  { id: 'ort', tier: 3, lab: 'Tätigkeit und Ort', how: (a, b) => `${a}: man tut es ${b}`, p: [['schwimmen', 'im Bad'], ['lesen', 'in der Bibliothek'], ['kaufen', 'im Laden'], ['backen', 'in der Backstube'], ['lernen', 'in der Schule'], ['parken', 'auf dem Parkplatz'], ['heilen', 'im Krankenhaus'], ['schlafen', 'im Bett'], ['kochen', 'in der Küche'], ['turnen', 'in der Halle']] },
+  { id: 'werk', tier: 3, lab: 'Beruf und Werk', how: (a, b) => `${a}: schafft ${b}`, p: [['Maler', 'Bild'], ['Bäcker', 'Brot'], ['Architekt', 'Haus'], ['Dichter', 'Gedicht'], ['Komponist', 'Lied'], ['Schneider', 'Kleid'], ['Tischler', 'Möbel'], ['Autor', 'Buch'], ['Bildhauer', 'Statue'], ['Koch', 'Essen']] },
+  { id: 'sprache', tier: 3, lab: 'Land und Sprache', how: (a, b) => `in ${a} spricht man ${b}`, p: [['Frankreich', 'Französisch'], ['Spanien', 'Spanisch'], ['Italien', 'Italienisch'], ['Deutschland', 'Deutsch'], ['England', 'Englisch'], ['Polen', 'Polnisch'], ['Türkei', 'Türkisch'], ['Griechenland', 'Griechisch'], ['Russland', 'Russisch'], ['Portugal', 'Portugiesisch']] }
+];
+/* ---------- Ausreißer: vier gehören zusammen, einer nicht. [Gruppe (4), Außenseiter, Erklärung] ---------- */
+const VN_ODD = [
+  [['Apfel', 'Birne', 'Kirsche', 'Pflaume'], 'Karotte', 'Karotte ist ein Gemüse, die anderen sind Obst'],
+  [['Hund', 'Katze', 'Pferd', 'Schaf'], 'Auto', 'Das Auto ist kein Tier'],
+  [['Wal', 'Delfin', 'Robbe', 'Seehund'], 'Hai', 'Der Hai ist ein Fisch, die anderen sind Säugetiere'],
+  [['Rhein', 'Elbe', 'Donau', 'Weser'], 'Bodensee', 'Der Bodensee ist ein See, die anderen sind Flüsse'],
+  [['Hammer', 'Säge', 'Zange', 'Bohrer'], 'Pinsel', 'Der Pinsel ist ein Malwerkzeug, die anderen sind Handwerkzeuge'],
+  [['Montag', 'Mittwoch', 'Freitag', 'Sonntag'], 'Juli', 'Juli ist ein Monat, die anderen sind Wochentage'],
+  [['Geige', 'Cello', 'Bratsche', 'Harfe'], 'Trompete', 'Die Trompete ist ein Blasinstrument, die anderen haben Saiten'],
+  [['Mars', 'Venus', 'Jupiter', 'Saturn'], 'Mond', 'Der Mond ist ein Trabant, die anderen sind Planeten'],
+  [['Eiche', 'Buche', 'Birke', 'Ahorn'], 'Tanne', 'Die Tanne ist ein Nadelbaum, die anderen sind Laubbäume'],
+  [['Rom', 'Paris', 'Madrid', 'Wien'], 'Zürich', 'Zürich ist keine Hauptstadt'],
+  [['Ente', 'Gans', 'Schwan', 'Adler'], 'Fledermaus', 'Die Fledermaus ist ein Säugetier, die anderen sind Vögel'],
+  [['Schiff', 'Boot', 'Floß', 'Kanu'], 'Fahrrad', 'Das Fahrrad fährt nicht auf dem Wasser'],
+  [['Sonne', 'Regen', 'Schnee', 'Nebel'], 'Hose', 'Die Hose ist kein Wetter'],
+  [['Zucker', 'Honig', 'Marmelade', 'Sirup'], 'Salz', 'Salz ist nicht süß'],
+  [['Kreis', 'Dreieck', 'Quadrat', 'Rechteck'], 'Würfel', 'Der Würfel ist ein Körper, die anderen sind flache Figuren'],
+  [['Milch', 'Saft', 'Wasser', 'Tee'], 'Brot', 'Brot kann man nicht trinken'],
+  [['Katze', 'Löwe', 'Tiger', 'Leopard'], 'Wolf', 'Der Wolf gehört zu den Hunden, die anderen zu den Katzen'],
+  [['Pizza', 'Nudeln', 'Lasagne', 'Risotto'], 'Sauerkraut', 'Sauerkraut ist nicht italienisch'],
+  [['Käfer', 'Biene', 'Ameise', 'Fliege'], 'Spinne', 'Die Spinne hat acht Beine und ist kein Insekt'],
+  [['Rot', 'Blau', 'Gelb', 'Grün'], 'Eckig', 'Eckig ist keine Farbe'],
+  [['Tomate', 'Gurke', 'Paprika', 'Zucchini'], 'Kartoffel', 'Die Kartoffel wächst unter der Erde, die anderen über der Erde'],
+  [['Pinguin', 'Strauß', 'Kiwi', 'Emu'], 'Spatz', 'Der Spatz kann fliegen, die anderen nicht'],
+  [['Löwe', 'Elefant', 'Giraffe', 'Zebra'], 'Eisbär', 'Der Eisbär lebt im Norden, die anderen in Afrika'],
+  [['Bus', 'Zug', 'Straßenbahn', 'U-Bahn'], 'Flugzeug', 'Das Flugzeug fährt nicht auf Straße oder Schiene'],
+  [['Lehrer', 'Arzt', 'Bäcker', 'Pilot'], 'Schule', 'Die Schule ist ein Ort, die anderen sind Berufe'],
+  [['Daumen', 'Zeigefinger', 'Mittelfinger', 'Ringfinger'], 'Zeh', 'Der Zeh ist am Fuß, die anderen sind Finger'],
+  [['Frühling', 'Sommer', 'Herbst', 'Winter'], 'Dienstag', 'Der Dienstag ist ein Wochentag, die anderen sind Jahreszeiten'],
+  [['Löffel', 'Gabel', 'Messer', 'Teelöffel'], 'Teller', 'Der Teller ist kein Besteck'],
+  [['Ozean', 'Meer', 'See', 'Teich'], 'Berg', 'Der Berg ist kein Gewässer'],
+  [['Strumpf', 'Schuh', 'Stiefel', 'Sandale'], 'Mütze', 'Die Mütze trägt man auf dem Kopf, die anderen am Fuß'],
+  [['Hubschrauber', 'Flugzeug', 'Ballon', 'Drachen'], 'Boot', 'Das Boot fliegt nicht'],
+  [['Bleistift', 'Füller', 'Kugelschreiber', 'Filzstift'], 'Lineal', 'Das Lineal schreibt nicht, die anderen schon'],
+  [['Schaf', 'Kuh', 'Ziege', 'Schwein'], 'Reh', 'Das Reh ist ein Wildtier, die anderen sind Nutztiere auf dem Bauernhof'],
+  [['Uhu', 'Eule', 'Fledermaus', 'Glühwürmchen'], 'Hahn', 'Der Hahn ist tagaktiv, die anderen sind nachtaktiv'],
+  [['Daumen', 'Hand', 'Arm', 'Schulter'], 'Knie', 'Das Knie gehört zum Bein, die anderen zum Arm'],
+  [['Känguru', 'Koala', 'Beutelwolf', 'Wombat'], 'Löwe', 'Der Löwe hat keinen Beutel, die anderen sind Beuteltiere aus Australien']
+];
+
+/* ---------- Versteckte Wörter: Satz | gesuchtes Wort | Gruppe. Das Wort steckt über eine Wortgrenze hinweg (vom Test geprüft). ---------- */
+const VN_HID = `Aha, sehr gut gemacht!|HASE|Tier
+Wo Ina sehen kann, schaut sie hin.|NASE|Körperteil
+Er sah aus wie ein Clown.|HAUS|Gebäude
+Ich sah Oma Uschi winken.|MAUS|Tier
+Wusste es Elke schon?|ESEL|Tier
+Wir müssen Heu legen.|EULE|Tier
+Die Kinder wollen Tee trinken.|ENTE|Tier
+Schlaf fest, kleiner Detektiv.|AFFE|Tier
+Ali gelangte als Erster ans Ziel.|IGEL|Tier
+Der ehrliche Finder gab es zurück.|REH|Tier
+Dragan sieht den Dieb.|GANS|Tier
+Die Kuh rennt über die Wiese.|UHR|Gegenstand
+Er trägt einen Rock, Uhren mag er nicht.|KUH|Tier
+Kommt alle her, zum Fall gibt es Neues.|HERZ|Körperteil
+Ich esse ein Ei samt Schale.|EIS|Süßes
+Wo ist er nun?|STERN|Himmel
+Wir wollen Hero sehen.|ROSE|Blume
+Ich hab alle Hefte dabei.|BALL|Gegenstand
+Gib Etta den Ball.|BETT|Möbel
+Das war Mama.|ARM|Körperteil
+Ich hab ein Eis.|BEIN|Körperteil
+Ich nahm Anne mit.|MANN|Mensch
+Er sah als Erster das Ziel.|HALS|Körperteil
+Mich und dich mag er.|HUND|Tier
+Der Ball am Mast hing hoch.|LAMM|Tier
+Heute sind wir in der Schule.|RIND|Tier
+Gestern kam Ondra zu Besuch.|MOND|Himmel
+Ich fahre gen Süden.|REGEN|Wetter
+Im Bad, ach, ist es kalt.|DACH|Gebäude
+Der Sack am Mast ist schwer.|KAMM|Gegenstand
+Ich hab artige Kinder.|BART|Körper
+Er kam und blieb.|MUND|Körperteil`.split('\n').map(l => { const [s, w, g] = l.split('|'); return { s, w, g }; });
+
+/* ---------- Mini-Kreuzworträtsel: WORT|Hinweis|Stufe (1 leicht … 3 schwer). Nur Buchstaben A–Z, Ä, Ö, Ü ---------- */
+const VN_KRE = `HUND|Tier, das bellt|1
+KATZE|Tier, das miaut|1
+BAUM|Hat Äste, Blätter und eine Krone|1
+HAUS|Darin wohnt man|1
+AUTO|Fährt auf der Straße|1
+BALL|Rund und rollt|1
+BUCH|Wird gelesen|1
+SONNE|Scheint am Tag|1
+MOND|Leuchtet nachts|1
+STERN|Funkelt nachts am Himmel|1
+APFEL|Rundes Obst vom Baum|1
+WASSER|Fließt aus dem Hahn|1
+BROT|Kommt vom Bäcker|1
+MILCH|Weißes Getränk von der Kuh|1
+FISCH|Schwimmt und hat Flossen|1
+VOGEL|Hat Federn und kann fliegen|1
+SCHULE|Hier lernen Kinder|1
+TISCH|Darauf steht das Essen|1
+STUHL|Darauf sitzt man|1
+BETT|Darin schläft man|1
+DACH|Es liegt oben auf dem Haus|1
+ROSE|Blume mit Dornen|1
+WALD|Viele Bäume zusammen|1
+BERG|Höher als ein Hügel|1
+MEER|Salzwasser, so weit man sieht|1
+HAND|Hat fünf Finger|1
+KOPF|Darauf sitzt die Mütze|1
+NASE|Damit riecht man|1
+OHR|Damit hört man|1
+EIS|Kalt, süß und im Sommer beliebt|1
+KUH|Gibt Milch|1
+PFERD|Darauf kann man reiten|1
+TORTE|Gibt es zum Geburtstag|1
+LAMPE|Macht das Zimmer hell|1
+UHR|Sie zeigt die Zeit|1
+LUPE|Macht kleine Dinge groß|2
+SCHATTEN|Folgt dir bei Sonne auf Schritt und Tritt|2
+KOMPASS|Seine Nadel zeigt nach Norden|2
+LATERNE|Leuchtet nachts an der Straße|2
+RÄTSEL|Das löst du gerade|2
+GEHEIMNIS|Nur wenige dürfen es wissen|2
+TRESOR|Sicherer Kasten für Wertsachen|2
+SCHLÜSSEL|Passt nur in ein Schloss|2
+KARTE|Zeigt Wege und Länder|2
+TÄTER|Wer eine Tat begeht|2
+ZEUGE|Er hat etwas gesehen|2
+SPUR|Fußabdrücke sind eine|2
+ALARM|Laute Warnung|2
+MUSEUM|Hier stehen alte Dinge zum Anschauen|2
+PLANET|Die Erde ist einer|2
+RAKETE|Fliegt ins Weltall|2
+KOMET|Hat einen leuchtenden Schweif|2
+VULKAN|Spuckt Lava|2
+KAKTUS|Stachelige Pflanze der Wüste|2
+WÜSTE|Sand, Hitze und kaum Regen|2
+OASE|Grüner Fleck in der Wüste|2
+GLETSCHER|Ein Fluss aus Eis|2
+BLITZ|Kommt vor dem Donner|2
+DONNER|Es grollt nach dem Blitz|2
+NEBEL|Wie eine Wolke am Boden|2
+INSEL|Land, das ringsum von Wasser umgeben ist|2
+BRÜCKE|Führt über den Fluss|2
+TUNNEL|Röhre durch den Berg|2
+HAFEN|Hier legen Schiffe an|2
+KAPITÄN|Er steuert das Schiff|2
+PIRAT|Er segelt unter schwarzer Flagge|2
+SCHATZ|Gold und Edelsteine in der Truhe|2
+RITTER|Trägt eine Rüstung|2
+BURG|Hier lebten Könige und Ritter|2
+DRACHE|Spuckt Feuer im Märchen|2
+ZAUBERER|Er hext und murmelt Sprüche|2
+FERNROHR|Damit schauen Seeleute weit hinaus|2
+KERZE|Wachs mit Docht|2
+FLAMME|Das Leuchtende am Feuer|2
+SEGEL|Fängt den Wind am Boot|2
+ANKER|Hält das Schiff am Platz|2
+WELLE|Sie rollt aufs Ufer zu|2
+STRAND|Sand am Meer|2
+MUSCHEL|Wohnt am Meeresgrund und hat eine harte Schale|2
+KOFFER|Für die Reise|2
+GITARRE|Sie hat sechs Saiten|2
+KLAVIER|Instrument mit schwarzen und weißen Tasten|2
+TROMMEL|Man schlägt darauf|2
+ALIBI|Beweis, dass man nicht am Tatort war|3
+VERDACHT|Man hält jemanden für schuldig, hat aber keinen Beweis|3
+BEWEIS|Er zeigt, dass etwas wahr ist|3
+INSPEKTOR|Ein Polizist, der Fälle leitet|3
+GEHEIMCODE|Nur wer den Schlüssel kennt, versteht ihn|3
+VERHÖR|Fragen der Polizei an einen Verdächtigen|3
+BELOHNUNG|Geld für einen guten Hinweis|3
+TATORT|Hier geschah das Verbrechen|3
+FINGERABDRUCK|Auf Glas bleibt er zurück und überführt den Dieb|3
+HINWEIS|Ein kleiner Tipp bei der Suche|3
+LABYRINTH|Verwinkelter Irrgarten|3
+SCHMETTERLING|Flattert bunt von Blume zu Blume|3
+FOTOGRAF|Er macht Bilder|3
+ELEKTRIZITÄT|Strom heißt auch so|3
+JAHRHUNDERT|Hundert Jahre|3
+ASTRONAUT|Reist ins All|3
+DETEKTIV|Er löst Fälle|3
+EXPERIMENT|Ein Versuch im Labor|3
+KONTINENT|Afrika ist einer|3
+ÄQUATOR|Gedachte Linie um die Erde, genau in der Mitte|3
+GEBIRGE|Viele Berge nebeneinander|3
+NOTIZBUCH|Darin schreibt der Detektiv Beobachtungen auf|3
+GEWITTER|Blitz, Donner und Regen|3
+REGENBOGEN|Erscheint, wenn Sonne und Regen zusammenkommen|3
+SPAZIERSTOCK|Hilft beim langsamen Gehen|3`.split('\n').map(l => { const [w, h, t] = l.split('|'); return { w, h, t: +t }; });
+
+/* ---------- Lückentexte: Titel | Text mit [Wort:Begründung] | Ablenker (mit Komma) | Stufe.  Jede Lücke passt nach Wortart/Geschlecht/Sinn zu genau einem Wort. ---------- */
+const VN_LUE = `Der Einbruch|In der Nacht stieg ein [Dieb:Wer einbricht und stiehlt, ist ein Dieb. „ein“ passt zu einem männlichen Wort] durch das offene [Fenster:„das“ offene … – nur ein sächliches Wort passt, und man steigt durch ein Fenster] ins Haus. Er [schlich:Vorsichtig, leise gehen heißt schleichen; die Zeitform ist die Vergangenheit] leise die Treppe hinauf und suchte nach dem [Tresor:In einem Tresor liegen Wertsachen – „dem“ verlangt ein männliches Wort]. Plötzlich ging das [Licht:Man sieht ein Licht angehen; „das“ passt zu einem sächlichen Wort] an.|Hund,Fahrrad,Blume,Brille|1
+Im Zoo|Im Zoo sah Lena einen riesigen [Elefanten:„einen“ riesigen … + großes Tier mit Rüssel. Die Endung „-en“ zeigt: männlich, Akkusativ] mit langem [Rüssel:Nur der Elefant hat einen Rüssel; „langem“ zeigt: männlich] und zwei dicken [Stoßzähnen:Die großen Zähne des Elefanten heißen Stoßzähne; „zwei“ verlangt die Mehrzahl]. Danach fütterte sie die [Giraffen:„die“ + Mehrzahl-Endung: die Tiere mit langem Hals] mit frischen [Blättern:Giraffen fressen Blätter; „frischen“ verlangt die Mehrzahl].|Schlüssel,Tisch,Lampe,Teller|1
+Das Picknick|Am Samstag packte die Familie einen großen [Korb:Ins Picknick gehört ein Korb; „einen großen“ zeigt: männlich] und eine warme [Decke:„eine warme“ zeigt: weiblich; auf der Decke sitzt man] ein. Auf der [Wiese:„der“ + weiblich: man sitzt im Freien auf der Wiese] aßen sie belegte [Brote:Zum Picknick passen Brote; „belegte“ zeigt die Mehrzahl] und tranken kühlen [Saft:„kühlen“ + männlich: ein Getränk].|Bett,Kissen,Sofa,Auto|1
+Die Bibliothek|In der [Bibliothek:Hier leiht man Bücher aus; „der“ zeigt: weiblich] liegen tausende [Bücher:„tausende“ verlangt die Mehrzahl, und in der Bibliothek liegen Bücher] auf den [Regalen:„den“ + Mehrzahl-Endung -n: Dinge, auf denen Bücher stehen]. Wer ein Buch mitnehmen möchte, zeigt seinen [Ausweis:Zum Ausleihen braucht man einen Ausweis; „seinen“ zeigt: männlich] vor.|Schrank,Besen,Stiefel,Pinsel|1
+Der Schneetag|Über Nacht fiel viel [Schnee:Schnee fällt vom Himmel; „viel“ passt zu einem Stoff ohne Mehrzahl] vom Himmel. Die Kinder bauten einen dicken [Schneemann:„einen dicken“ zeigt: männlich; aus Schnee baut man einen Schneemann] mit einer [Karotte:Die Nase besteht oft aus einer Karotte; „einer“ zeigt: weiblich] als Nase. Dann fuhren sie mit dem [Schlitten:Im Schnee fährt man Schlitten; „dem“ zeigt: männlich] den Hügel hinunter.|Sand,Regenschirm,Sonnenbrille,Eimer|1
+Die Detektivin|Die [Detektivin:Wer Fälle löst, ist Detektivin; „Die“ + „-in“ zeigt eine Frau] untersuchte den [Tatort:Der Ort einer Tat heißt Tatort; „den“ zeigt: männlich] ganz genau. Mit der [Lupe:Zum genauen Hinsehen nimmt man eine Lupe; „der“ zeigt: weiblich] fand sie einen [Fingerabdruck:Was Detektive suchen, ist ein Fingerabdruck; „einen“ zeigt: männlich] auf dem [Glas:Fingerabdrücke bleiben auf glatten Dingen; „dem“ + sächlich]. Das war der erste [Hinweis:Ein erster Tipp im Fall heißt Hinweis; „der“ zeigt: männlich].|Dieb,Kerze,Haus|2
+Die Wüste|In der [Wüste:Sand und Hitze gibt es in der Wüste; „der“ zeigt: weiblich] ist es tagsüber sehr [heiß:Zur Sonne in der Wüste passt „heiß“; ein Wie-Wort ohne Endung] und nachts sehr [kalt:Das Gegenteil von heiß; in der Wüste kühlt es nachts ab]. Das [Kamel:Das Tier der Wüste, „das“ zeigt: sächlich] kann lange ohne [Wasser:Ohne Wasser hält es lange aus; „ohne“ + Stoff] auskommen, weil es in seinem [Höcker:Dort speichert das Kamel Fett; „seinem“ zeigt: männlich] Fett speichert. Manchmal findet man eine [Oase:Grüner Fleck mit Wasser: weiblich, „eine“] mit Palmen.|Schnee,Eisbär,Regen,Pinguin|2
+Eine Zeitreise|Der Erfinder baute eine [Maschine:Ein Gerät heißt Maschine; „eine“ zeigt: weiblich] für die Reise in die [Vergangenheit:Zurück in der Zeit heißt Vergangenheit; „die“ zeigt: weiblich]. Er drückte auf den [Knopf:Zum Starten drückt man einen Knopf; „den“ zeigt: männlich], und die [Räder:Die Mehrzahl von Rad: „die“ + Mehrzahl] begannen sich zu drehen. Plötzlich stand er vor einer [Burg:Im Mittelalter gab es Burgen; „einer“ zeigt: weiblich] mit hohen Mauern.|Zukunft,Hebel,Schloss,Rad|2
+Die Schatzsuche|Auf dem Dachboden fand Ben eine alte [Karte:„eine alte“ zeigt: weiblich; eine Schatzkarte zeigt den Weg] mit einem roten [Kreuz:Dort liegt der Schatz; „einem roten“ zeigt: sächlich] darauf. Er nahm einen [Spaten:Zum Graben nimmt man einen Spaten; „einen“ zeigt: männlich] und eine [Taschenlampe:Im Dunkeln leuchtet man mit der Taschenlampe; „eine“ zeigt: weiblich]. Unter der [Eiche:Auf der Karte war ein Baum gezeichnet; „der“ zeigt: weiblich] grub er und fand eine [Truhe:In einer Truhe liegt der Schatz; „eine“ zeigt: weiblich].|Schaufel,Kiste,Eimer,Wald|2
+Der Sturm|Am Abend zog ein heftiger [Sturm:„ein heftiger“ zeigt: männlich; starker Wind heißt Sturm] auf. Die [Äste:Mehrzahl von Ast: „die“ + Mehrzahl] der Bäume bogen sich, und der [Regen:Zum Sturm gehört Regen; „der“ zeigt: männlich] prasselte gegen die [Scheiben:„die“ + Mehrzahl: Glasflächen am Fenster]. Plötzlich zuckte ein [Blitz:Er kommt vor dem Donner; „ein“ zeigt: männlich] über den Himmel, und der [Donner:Es grollt nach dem Blitz; „der“ zeigt: männlich] folgte kurz darauf.|Sonne,Schatten,Fenster|2
+Eine Verfolgungsjagd|Der Verdächtige rannte [schnell:Ein Wie-Wort ohne Endung passt hinter „rannte“] durch die [Gasse:„die“ zeigt: weiblich; enge Straße] und sprang über einen [Zaun:Über ein Hindernis springt man; „einen“ zeigt: männlich]. Die Detektivin [verfolgte:Hinterherlaufen heißt verfolgen; Vergangenheit] ihn bis zum [Hafen:Dort liegen Schiffe; „zum“ zeigt: männlich]. Am [Ende:Zum Schluss: „am“ + sächlich] hatte sie ihn eingeholt.|Berg,Garten|2
+Am Fluss|Der [Fluss:Wasser fließt im Fluss; „der“ zeigt: männlich] schlängelt sich durch das grüne [Tal:Zwischen zwei Bergen liegt ein Tal; „das“ zeigt: sächlich]. Über das [Wasser:Man geht über Wasser; „das“ zeigt: sächlich] führt eine hölzerne [Brücke:„eine hölzerne“ zeigt: weiblich], und am [Ufer:Der Rand des Flusses; „am“ zeigt: sächlich] sitzen Angler und warten auf einen [Fisch:Angler fangen Fische; „einen“ zeigt: männlich].|Meer,Gipfel,Weg|2
+Die große Prüfung|Vor der [Prüfung:Eine Klassenarbeit heißt Prüfung; „der“ zeigt: weiblich] war Mia sehr [aufgeregt:Vor einer Prüfung ist man nervös; die Endung fehlt, also ein Wie-Wort] und konnte kaum [schlafen:Nach „kaum“ steht ein Tu-Wort in der Grundform]. Der Lehrer verteilte die [Aufgaben:Mehrzahl, die zu lösen sind] und sagte: „Lest alles ganz [genau:Ein Wie-Wort, das zu „lesen“ passt] durch!“ Am Ende bekam Mia ein [Lob:Für gute Arbeit gibt es ein Lob; „ein“ zeigt: sächlich].|Ferien,Urlaub,Frühstück|2
+Das Labor|Im [Labor:Dort macht man Versuche; „im“ zeigt: sächlich] steht ein [Mikroskop:Damit sieht man winzige Dinge; „ein“ zeigt: sächlich], durch das man kleinste [Teilchen:Mehrzahl, sehr kleine Stücke; „kleinste“ + Mehrzahl] erkennen kann. Die Forscherin mischt zwei [Flüssigkeiten:Zwei von etwas Flüssigem: Mehrzahl, weiblich] in einem [Glas:Gefäß für Flüssigkeiten; „einem“ zeigt: sächlich] und notiert das [Ergebnis:Was am Ende herauskommt, heißt Ergebnis; „das“ zeigt: sächlich] in ihrem Heft.|Teleskop,Ofen,Garten,Tür|2
+Auf hoher See|Das [Schiff:Es schwimmt auf dem Meer; „Das“ zeigt: sächlich] verließ am Morgen den [Hafen:Dort liegen Schiffe; „den“ zeigt: männlich]. Der [Kapitän:Er steuert das Schiff; „Der“ zeigt: männlich] stand auf der [Brücke:Hier steht der Kapitän; „der“ zeigt: weiblich] und beobachtete die [Wellen:Mehrzahl, sie rollen auf dem Wasser] durch ein [Fernrohr:Damit schaut man in die Ferne; „ein“ zeigt: sächlich]. Plötzlich rief der Matrose: „Land in [Sicht:Feste Wendung: Land in Sicht!]!“|Bahnhof,Pilot,Flügel,Tunnel|2
+Das Geheimversteck|Hinter dem [Regal:Dahinter versteckt sich eine Tür; „dem“ zeigt: sächlich] im Keller fand Tom eine [Tür:„eine“ zeigt: weiblich; ein Geheimeingang] aus altem [Holz:Material, aus dem Türen sind; „altem“ zeigt: sächlich]. Sie war mit einem rostigen [Schloss:Zum Absperren; „einem rostigen“ zeigt: sächlich] gesichert, doch der passende [Schlüssel:Der öffnet das Schloss; „der passende“ zeigt: männlich] lag im [Versteck:Wo man etwas verbirgt; „im“ zeigt: sächlich] unter dem Teppich.|Eisen,Wand,Fenster|2
+Ein kniffliger Fall|Der Detektiv las die [Aussagen:Was Zeugen sagen: Mehrzahl, „die“] der Zeugen noch einmal [aufmerksam:Wie er las: genau und konzentriert] durch. Einer der Zeugen [widersprach:Wenn jemand das Gegenteil sagt, widerspricht er; Vergangenheit] den anderen. Das war [verdächtig:Wenn etwas nicht stimmt, ist es verdächtig; Wie-Wort ohne Endung] und führte zu einer [Befragung:Die Polizei stellt Fragen; „einer“ zeigt: weiblich]. Am Ende stand fest: Der [Täter:Wer es getan hat; „Der“ zeigt: männlich] war entlarvt.|Freude,Urlaub|3
+Die Expedition|Die Forscher brachen zu einer [Expedition:Eine Forschungsreise heißt Expedition; „einer“ zeigt: weiblich] in den [Dschungel:Dort wachsen dichte Urwälder; „den“ zeigt: männlich] auf. Sie [schlugen:Mit Macheten schlägt man Wege frei; Mehrzahl, Vergangenheit] sich einen [Pfad:Ein schmaler Weg; „einen“ zeigt: männlich] durch das dichte [Gestrüpp:Wildes Gebüsch; „das dichte“ zeigt: sächlich] und entdeckten eine bisher [unbekannte:Noch nie gesehen: Wie-Wort mit Endung -e, weil „eine … Pflanze“ weiblich ist] Pflanze.|Wüste,Gletscher|3
+Das Konzert|Abends ging die Familie ins [Konzert:Dort spielt ein Orchester; „ins“ zeigt: sächlich]. Der [Dirigent:Er leitet das Orchester; „Der“ zeigt: männlich] hob den [Stab:Damit gibt er den Takt; „den“ zeigt: männlich], und die [Geigen:Instrumente mit Saiten: Mehrzahl, „die“] setzten leise ein. Am Schluss gab es [tosenden:Sehr lauter Applaus: Wie-Wort mit Endung -en für „Applaus“ (männlich)] Applaus, und das Publikum rief laut: „[Zugabe:Noch ein Stück! – feste Bitte nach dem Konzert]!“|Stille,Pause|3
+Der Zauberlehrling|Der Zauberlehrling nahm das [Buch:Darin steht der Spruch; „das“ zeigt: sächlich] vom Regal und las einen [Spruch:Zauberworte; „einen“ zeigt: männlich] laut vor. Da begann der [Besen:Er fegt sonst; „der“ zeigt: männlich] zu tanzen und füllte den [Eimer:Dafür trägt er Wasser; „den“ zeigt: männlich] immer wieder mit [Wasser:Es läuft über – das ist das Problem]. Der Meister musste ihn [stoppen:Anhalten heißt stoppen; Grundform nach „musste“], bevor das ganze Haus [überschwemmt:Alles steht unter Wasser; Zustandsform] war.|Schwert,Kessel|3`.split('\n').map(l => { const [ti, tx, de, lv] = l.split('|'); const gaps = []; const text = tx.replace(/\[([^:\]]+):([^\]]+)\]/g, (m, w, why) => { gaps.push({ w, why }); return '\u0001'; }); return { ti, text, gaps, de: de ? de.split(',') : [], lv: +lv }; });
+
+/* =====================================================================
+   VENOLA HOLMES · Kriminalfall: fünf Arten von Logik-Rätseln, jedes aus einem Startwert (Seed) erzeugt.
+   Gleicher Seed = gleiches Rätsel (so lassen sich gelöste Fälle im Verlauf wieder ansehen).
+   Jedes Rätsel hat genau EINE Lösung (per Programm geprüft) und bringt seinen Lösungsweg („Wie komme ich darauf?“) selbst mit.
+     lie  – Wer lügt?          Aussagen über Aussagen, eine feste Regel (genau eine/zwei Wahrheiten)
+     grid – Alibi-Gitter       Personen × Räume, Hinweise → wer war im Tatort-Raum
+     time – Zeitleiste         Ereignisse mit Zeitabständen, Alibis → wer hat keine lückenlose Unschuld
+     wit  – Widerspruch        Zeugen sahen den Dieb an Orten – wessen Aussage passt nicht (Gehzeiten)
+     ein  – Einstein-Rätsel    Häuser in einer Reihe, mehrere Eigenschaften, Hinweise → eine gesuchte Eigenschaft
+   Rückgabe von vnGen*(lv, r): { t, title, body (HTML), q (Frage), kind: 'choice', opts: [..], ans: Index, ex: [Zeilen] }
+   ===================================================================== */
+const VN_PEOPLE = ['Anna', 'Ben', 'Clara', 'David', 'Emil', 'Fiona', 'Gustav', 'Hanna', 'Ida', 'Jonas', 'Kira', 'Leon', 'Mara', 'Nico'];
+const VN_LOOT = ['Der Rubin', 'Das Gemälde', 'Die Goldmünze', 'Der Silberlöffel', 'Die Schatzkarte', 'Das Fernglas', 'Der Diamant', 'Die Kristallkugel', 'Die Geburtstagstorte', 'Der Tresorschlüssel'];
+const VN_ROOMS = [['Bibliothek', 'in der'], ['Küche', 'in der'], ['Garten', 'im'], ['Keller', 'im'], ['Dachboden', 'auf dem'], ['Werkstatt', 'in der'], ['Salon', 'im'], ['Garage', 'in der'], ['Gewächshaus', 'im'], ['Musikzimmer', 'im'], ['Waschküche', 'in der'], ['Speisekammer', 'in der']];
+const vnRi = (r, n) => Math.floor(r() * n);
+const vnT = m => { m = ((m % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+const vnList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' und ' + a[a.length - 1];
+const vnPop = m => { let c = 0; while (m) { m &= m - 1; c++; } return c; };
+const vnCap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const vnRoomT = rm => rm[1] + ' ' + rm[0];
+function vnDur(d) {
+  if (d === 1) return 'eine Minute'; if (d === 15) return 'eine Viertelstunde'; if (d === 30) return 'eine halbe Stunde'; if (d === 45) return 'eine Dreiviertelstunde'; if (d === 60) return 'eine Stunde';
+  if (d > 60) { const h = Math.floor(d / 60), m = d % 60; return (h === 1 ? 'eine Stunde' : h + ' Stunden') + (m ? ' und ' + (m === 1 ? 'eine Minute' : m + ' Minuten') : ''); }
+  return d + ' Minuten';
+}
+
+/* ===================== 1) Wer lügt? ===================== */
+function vnLieEval(s, c, m) {
+  switch (s.k) {
+    case 'is': return c === s.j; case 'not': return c !== s.j;
+    case 'lies': return !((m >> s.j) & 1); case 'truth': return !!((m >> s.j) & 1);
+    default: return c === s.a || c === s.b;
+  }
+}
+function vnLieSols(S, n, R) {      // alle (Täter, Wahrheitsmaske), die zu den Sätzen passen; R = nötige Zahl der Wahrheiten (null = egal)
+  const out = [];
+  for (let c = 0; c < n; c++) for (let m = 0; m < (1 << n); m++) {
+    let ok = true; for (let i = 0; i < n; i++) if (vnLieEval(S[i], c, m) !== !!((m >> i) & 1)) { ok = false; break; }
+    if (ok && (R === null || vnPop(m) === R)) out.push([c, m]);
+  }
+  return out;
+}
+function vnLieStmt(i, n, r) {
+  const x = r(), oth = () => { let j; do j = vnRi(r, n); while (j === i); return j; };
+  if (x < .28) return { k: 'is', j: oth() };
+  if (x < .5) return { k: 'not', j: r() < .4 ? i : oth() };
+  if (x < .74) return { k: 'lies', j: oth() };
+  if (x < .86) return { k: 'truth', j: oth() };
+  const a = vnRi(r, n); let b; do b = vnRi(r, n); while (b === a); return { k: 'either', a, b };
+}
+function vnGenLie(lv, r) {
+  const n = [5, 5, 6, 6, 7][lv - 1], rule = lv < 3 ? (r() < .5 ? 'one' : 'oneLie') : lv < 5 ? ['one', 'oneLie', 'two'][vnRi(r, 3)] : 'three', R = rule === 'one' ? 1 : rule === 'oneLie' ? n - 1 : rule === 'two' ? 2 : 3;
+  const N = pzShuf(VN_PEOPLE, r).slice(0, n), minRef = [1, 2, 2, 3, 3][lv - 1], loot = VN_LOOT[vnRi(r, VN_LOOT.length)];
+  const txt = (s, i) => { switch (s.k) { case 'is': return `${N[s.j]} war es.`; case 'not': return s.j === i ? 'Ich war es nicht.' : `${N[s.j]} war es nicht.`; case 'lies': return `${N[s.j]} lügt.`; case 'truth': return `${N[s.j]} sagt die Wahrheit.`; default: return `Es war ${N[s.a]} oder ${N[s.b]}.`; } };
+  for (let tries = 0; tries < 6000; tries++) {
+    const S = []; for (let i = 0; i < n; i++) S.push(vnLieStmt(i, n, r));
+    if (S.filter(s => s.k === 'lies' || s.k === 'truth').length < minRef) continue;
+    const sols = vnLieSols(S, n, R); if (sols.length !== 1) continue;
+    const ans = sols[0][0], all = vnLieSols(S, n, null);
+    const ruleT = rule === 'one' ? 'Genau eine Person sagt die Wahrheit, alle anderen lügen.' : rule === 'oneLie' ? 'Genau eine Person lügt, alle anderen sagen die Wahrheit.' : rule === 'two' ? 'Genau zwei Personen sagen die Wahrheit, alle anderen lügen.' : 'Genau drei Personen sagen die Wahrheit, alle anderen lügen.';
+    const ex = [`Regel: ${ruleT}`, 'Probiere der Reihe nach jede Person als Täter durch und zähle, wer dann die Wahrheit sagen würde. Aussagen wie „X lügt“ musst du dabei mit den Aussagen von X zusammen prüfen.'];
+    for (let c = 0; c < n; c++) {
+      const L = all.filter(x => x[0] === c);
+      if (!L.length) ex.push(`Wäre ${N[c]} der Täter: Die Aussagen widersprechen sich selbst (zum Beispiel sagt jemand „X lügt“, obwohl X dann stimmt). Das geht nicht.`);
+      else L.slice(0, 2).forEach(x => { const tr = N.filter((_, i) => (x[1] >> i) & 1), k = tr.length; ex.push(`Wäre ${N[c]} der Täter: Es sprächen ${k === 0 ? 'niemand' : vnList(tr)} die Wahrheit – das ${k === 1 ? 'ist 1 Person' : 'sind ' + k + ' Personen'}, erlaubt ${R === 1 ? 'ist 1' : 'sind ' + R}. ${k === R ? 'Das passt!' : 'Das passt nicht.'}`); });
+    }
+    ex.push(`Nur bei ${N[ans]} passt alles. ${N[ans]} ist der Täter.`);
+    return { t: 'lie', title: 'Wer lügt?', body: `<p>${esc(loot)} wurde gestohlen. Der Täter ist unter diesen ${n} Verdächtigen. Jeder sagt einen Satz.</p><ul class="vn-st">${S.map((s, i) => `<li><b>${esc(N[i])}:</b> „${esc(txt(s, i))}“</li>`).join('')}</ul><p class="vn-rule">${esc(ruleT)}</p>`, q: 'Wer ist der Täter?', kind: 'choice', opts: N, ans, ex };
+  }
+  return null;
+}
+
+/* ===================== 2) Alibi-Gitter ===================== */
+const vnGridText = (c, N, RM) => c.k === 'in' ? `${N[c.p]} war ${vnRoomT(RM[c.r])}.` : c.k === 'notin' ? `${N[c.p]} war nicht ${vnRoomT(RM[c.r])}.` : c.k === 'either' ? `${N[c.p]} war entweder ${vnRoomT(RM[c.r[0]])} oder ${vnRoomT(RM[c.r[1]])}.` : `Weder ${N[c.ps[0]]} noch ${N[c.ps[1]]} war ${vnRoomT(RM[c.r])}.`;
+function vnGridProp(n, clues, N, RM) {
+  const M = Array.from({ length: n }, () => Array(n).fill(true)), log = [], rc = p => M[p].filter(Boolean).length;
+  clues.forEach((c, idx) => {
+    const tag = `Hinweis ${idx + 1}: `;
+    if (c.k === 'in') { for (let x = 0; x < n; x++) if (x !== c.r) M[c.p][x] = false; for (let q = 0; q < n; q++) if (q !== c.p) M[q][c.r] = false; log.push(tag + `${N[c.p]} ist sicher ${vnRoomT(RM[c.r])}. Dort kann also sonst niemand gewesen sein.`); }
+    else if (c.k === 'notin') { M[c.p][c.r] = false; log.push(tag + `${N[c.p]} scheidet für ${RM[c.r][0]} aus.`); }
+    else if (c.k === 'either') { for (let x = 0; x < n; x++) if (!c.r.includes(x)) M[c.p][x] = false; log.push(tag + `${N[c.p]} kommt nur für ${RM[c.r[0]][0]} und ${RM[c.r[1]][0]} infrage.`); }
+    else { c.ps.forEach(p => { M[p][c.r] = false; }); log.push(tag + `${N[c.ps[0]]} und ${N[c.ps[1]]} scheiden für ${RM[c.r][0]} aus.`); }
+  });
+  let ch = true;
+  while (ch) {
+    ch = false;
+    for (let p = 0; p < n; p++) if (rc(p) === 1) { const r = M[p].indexOf(true); for (let q = 0; q < n; q++) if (q !== p && M[q][r]) { M[q][r] = false; ch = true; log.push(`${N[p]} bleibt nur ${RM[r][0]} übrig – also kann ${N[q]} dort nicht sein.`); } }
+    for (let r = 0; r < n; r++) { const ps = []; for (let p = 0; p < n; p++) if (M[p][r]) ps.push(p); if (ps.length === 1 && rc(ps[0]) > 1) { const p = ps[0]; for (let x = 0; x < n; x++) if (x !== r) M[p][x] = false; ch = true; log.push(`${RM[r][0]}: Nur ${N[p]} kann noch dort gewesen sein – also war ${N[p]} dort.`); } }
+  }
+  const solved = M.every((row, p) => rc(p) === 1) && [...Array(n).keys()].every(r => M.filter(row => row[r]).length === 1);
+  return { solved, log, M };
+}
+function vnGenGrid(lv, r) {
+  const n = [4, 5, 5, 6, 6][lv - 1], hs = [1, 1, 2, 3, 3][lv - 1], N = pzShuf(VN_PEOPLE, r).slice(0, n), RM = pzShuf(VN_ROOMS, r).slice(0, n), perm = pzShuf([...Array(n).keys()], r), hour = 13 + vnRi(r, 7), loot = VN_LOOT[vnRi(r, VN_LOOT.length)];
+  const tgt = vnRi(r, n), ansP = perm.indexOf(tgt);
+  for (let tries = 0; tries < 400; tries++) {
+    const pool = [];
+    for (let p = 0; p < n; p++) for (let rm = 0; rm < n; rm++) {
+      if (perm[p] !== rm) { pool.push({ k: 'notin', p, r: rm }); pool.push({ k: 'either', p, r: [perm[p], rm].sort(() => r() - .5) }); }
+    }
+    for (let rm = 0; rm < n; rm++) { const no = [...Array(n).keys()].filter(p => perm[p] !== rm); for (let k = 0; k < 3; k++) { const a = pzShuf(no, r); pool.push({ k: 'none', r: rm, ps: [a[0], a[1]] }); } }
+    const sh = pzShuf(pool, r);
+    let acc = [], ok = false;
+    for (const c of sh) { acc.push(c); if (vnGridProp(n, acc, N, RM).solved) { ok = true; break; } }
+    if (!ok) continue;
+    for (const c of pzShuf(acc.slice(), r)) { const t = acc.filter(x => x !== c); if (vnGridProp(n, t, N, RM).solved) acc = t; }
+    acc = pzShuf(acc, r);
+    const pr = vnGridProp(n, acc, N, RM); if (pr.log.filter(x => x.includes(': Nur ')).length < (tries < 250 ? hs : 0)) continue;
+    const ex = ['Lege dir ein Gitter an: oben die Räume, links die Personen. Streiche jeden Hinweis ab, dann füllt sich der Rest von selbst.'].concat(pr.log.slice(0, 16));
+    if (pr.log.length > 16) ex.push('… und so weiter, bis jede Person genau einen Raum hat.');
+    ex.push(`Ergebnis: ${N.map((x, p) => `${x} → ${RM[perm[p]][0]}`).join(', ')}. ${vnRoomT(RM[tgt])} war ${N[ansP]}.`);
+    return { t: 'grid', title: 'Alibi-Gitter', body: `<p>Um ${hour} Uhr verschwand ${esc(loot.replace(/^(Der|Die|Das)/, m => m.toLowerCase()))} ${esc(vnRoomT(RM[tgt]))}. Zu dieser Zeit waren ${n} Verdächtige in ${n} verschiedenen Räumen – jeder in einem eigenen: ${esc(vnList(RM.map(x => x[0])))}.</p><ul class="vn-st">${acc.map(c => `<li>${esc(vnGridText(c, N, RM))}</li>`).join('')}</ul>`, q: `Wer war um ${hour} Uhr ${vnRoomT(RM[tgt])}?`, kind: 'choice', opts: N, ans: ansP, ex, dbg: { n, perm, clues: acc } };
+  }
+  return null;
+}
+
+/* ===================== 3) Zeitleiste ===================== */
+const VN_EVT = [{ n: 'Hundegebell', g: 'n' }, { n: 'Glockenschlag der Turmuhr', g: 'm' }, { n: 'Anruf bei der Polizei', g: 'm' }, { n: 'Sirenengeheul', g: 'n' }, { n: 'Regenschauer', g: 'm' }, { n: 'Alarm', g: 'm' }, { n: 'Lieferwagen vor dem Haus', g: 'm' }];
+const vnNom = e => ({ m: 'Der ', f: 'Die ', n: 'Das ' }[e.g]) + e.n, vnDat = e => ({ m: 'dem ', f: 'der ', n: 'dem ' }[e.g]) + e.n;
+function vnGenTime(lv, r) {
+  const m = [4, 5, 6, 7, 8][lv - 1], n = [4, 4, 5, 5, 6][lv - 1];
+  const evs = [{ n: 'Stromausfall', g: 'm' }, { n: 'Einbruch', g: 'm' }, { n: 'Flucht des Täters', g: 'f' }].concat(pzShuf(VN_EVT, r).slice(0, m - 3));
+  const T0 = 18 * 60 + vnRi(r, 330), tt = [T0]; tt[1] = T0 + 4 + vnRi(r, 32); tt[2] = tt[1] + 12 + vnRi(r, 34);
+  for (let i = 3; i < m; i++) { let t; do t = T0 - 15 + vnRi(r, tt[2] - T0 + 50); while (tt.includes(t)); tt[i] = t; }
+  const order = [0].concat(pzShuf([...Array(m - 1).keys()].map(x => x + 1), r)), clues = [], steps = [];
+  order.slice(1).forEach((e, k) => {
+    const ref = order[vnRi(r, k + 1)], d = Math.abs(tt[e] - tt[ref]), after = tt[e] > tt[ref];
+    clues.push(`${vnNom(evs[e])} kam ${vnDur(d)} ${after ? 'nach' : 'vor'} ${vnDat(evs[ref])}.`);
+    steps.push(`${evs[e].n}: ${evs[ref].n} (${vnT(tt[ref])}) ${after ? '+' : '−'} ${d} Min → ${vnT(tt[e])} Uhr`);
+  });
+  const E = tt[1], X = tt[2], gap = [[8, 14], [6, 10], [4, 7], [3, 5], [2, 4]][lv - 1], N = pzShuf(VN_PEOPLE, r).slice(0, n), cu = vnRi(r, n);
+  const places = pzShuf(['im Kino', 'beim Training', 'im Restaurant', 'in der Bibliothek', 'beim Friseur', 'im Schwimmbad', 'beim Zahnarzt', 'im Café'], r), al = [];
+  for (let i = 0; i < n; i++) {
+    let a, b;
+    if (i === cu) { const g = gap[0] + vnRi(r, gap[1] - gap[0] + 1); if (r() < .5) { a = E + g; b = X + vnRi(r, 20); } else { a = E - vnRi(r, 20); b = X - g; } }
+    else { a = E - (lv >= 3 && r() < .3 ? 0 : vnRi(r, 22)); b = X + (lv >= 3 && r() < .3 ? 0 : vnRi(r, 22)); }
+    al.push([a, b]);
+  }
+  const ex = [`Zuerst die Uhrzeiten rechnen:`, `Stromausfall: ${vnT(T0)} Uhr (gegeben).`].concat(steps);
+  ex.push(`Der Einbrecher war im Haus von ${vnT(E)} bis ${vnT(X)} Uhr.`);
+  al.forEach((x, i) => ex.push(`${N[i]}: ${vnT(x[0])}–${vnT(x[1])} Uhr ${places[i]}. ${x[0] <= E && x[1] >= X ? 'Deckt die ganze Zeit ab ✔' : `Deckt ${x[0] > E ? 'den Anfang (' + vnT(E) + '–' + vnT(x[0]) + ')' : 'das Ende (' + vnT(x[1]) + '–' + vnT(X) + ')'} nicht ab ✘`}`));
+  ex.push(`Nur ${N[cu]} hat kein lückenloses Alibi.`);
+  const body = `<p>Im Museum wurde eingebrochen. Ein Einbrecher war vom Einbruch bis zu seiner Flucht im Haus. Das weißt du über den Abend:</p><ul class="vn-st"><li>${vnNom(evs[0])} war um ${vnT(T0)} Uhr.</li>${clues.map(c => `<li>${esc(c)}</li>`).join('')}</ul><p>Das sagen die Verdächtigen (alle Angaben sind von Zeugen bestätigt):</p><ul class="vn-st">${al.map((x, i) => `<li><b>${esc(N[i])}:</b> „Ich war von ${vnT(x[0])} bis ${vnT(x[1])} Uhr ${places[i]}.“</li>`).join('')}</ul>`;
+  return { t: 'time', title: 'Zeitleiste', body, q: 'Wer hat für die ganze Zeit, in der der Einbrecher im Haus war, kein lückenloses Alibi?', kind: 'choice', opts: N, ans: cu, ex };
+}
+
+/* ===================== 4) Widerspruch (Zeugen) ===================== */
+const VN_SPOTS = [['Tor', 'am'], ['Brunnen', 'am'], ['Markt', 'auf dem'], ['Brücke', 'auf der'], ['Park', 'im'], ['Bahnhof', 'am'], ['Kirche', 'an der'], ['Hafen', 'am'], ['Schule', 'an der']];
+function vnGenWit(lv, r) {
+  const Lp = [6, 6, 7, 8, 8][lv - 1], W = [4, 4, 5, 5, 6][lv - 1], per = [2, 2, 2, 2, 2][lv - 1];
+  for (let tries = 0; tries < 1500; tries++) {
+    const sp = pzShuf(VN_SPOTS, r).slice(0, Lp), seg = [], d = [0];
+    for (let i = 1; i < Lp; i++) { seg.push(3 + vnRi(r, 7)); d.push(d[i - 1] + seg[i - 1]); }
+    const t0 = (9 + vnRi(r, 12)) * 60 + vnRi(r, 55), T = [t0]; for (let i = 1; i < Lp; i++) T.push(T[i - 1] + seg[i - 1] + vnRi(r, 4));
+    const N = pzShuf(VN_PEOPLE, r).slice(0, W), fw = vnRi(r, W), S = [];
+    let cyc = []; for (let w = 0; w < W; w++) { if (cyc.length < per) cyc = cyc.concat(pzShuf([...Array(Lp).keys()], r)); const idx = cyc.splice(0, per).sort((a, b) => a - b); S.push(idx.map(k => ({ p: k, t: T[k] }))); }
+    const fi = vnRi(r, per), j = vnRi(r, Lp), fp = vnRi(r, Lp); S[fw][fi] = { p: fp, t: T[j] + vnRi(r, 31) - 15, bad: true };
+    const conf = (a, b) => Math.abs(a.t - b.t) < Math.abs(d[a.p] - d[b.p]), flat = (skip) => S.flatMap((s, w) => w === skip ? [] : s.map(x => Object.assign({ w }, x)));
+    const okW = []; for (let w = 0; w < W; w++) { const f = flat(w); let bad = false; for (let i = 0; i < f.length && !bad; i++) for (let k = i + 1; k < f.length; k++) if (conf(f[i], f[k])) { bad = true; break; } if (!bad) okW.push(w); }
+    if (okW.length !== 1 || okW[0] !== fw) continue;
+    const f0 = flat(-1), bs = S[fw][fi], cf = f0.filter(x => x.w !== fw && conf(bs, x)), ws = new Set(cf.map(x => x.w)); if (ws.size < 2) continue;
+    const spot = k => `${sp[k][1]} ${sp[k][0]}`, stm = x => `um ${vnT(x.t)} Uhr ${spot(x.p)}`;
+    const ex = ['Der Dieb kann nicht schneller sein als die Gehzeit zwischen zwei Orten. Prüfe jedes Paar von Aussagen: Reicht die Zeit dazwischen?'];
+    cf.slice(0, 3).forEach(x => ex.push(`${N[fw]} (${stm(bs)}) und ${N[x.w]} (${stm(x)}): ${sp[bs.p][0]} ↔ ${sp[x.p][0]} braucht mindestens ${Math.abs(d[bs.p] - d[x.p])} Min, es liegen aber nur ${Math.abs(bs.t - x.t)} Min dazwischen. Das geht nicht.`));
+    ex.push(`Streicht man ${N[fw]}, passen alle übrigen Aussagen zusammen. Streicht man jemand anderen, bleibt der Widerspruch bestehen. Also irrt sich ${N[fw]}.`);
+    const way = sp.map((s, i) => i ? `${sp[i - 1][0]} → ${s[0]}: ${seg[i - 1]} Min` : '').filter(Boolean);
+    return { t: 'wit', title: 'Widerspruch', body: `<p>Ein Dieb ist durch die Stadt gelaufen. Er geht zu Fuß und ist nie schneller als die Gehzeit zwischen zwei Orten. Die Orte liegen an einer Straße:</p><p class="vn-way">${esc(way.join('  ·  '))}</p><p>Das sagen die Zeugen. Genau ein Zeuge irrt sich bei einer Angabe:</p><ul class="vn-st">${S.map((s, w) => `<li><b>${esc(N[w])}:</b> „Ich sah den Dieb ${s.map(x => esc(stm(x))).join(' und ')}.“</li>`).join('')}</ul>`, q: 'Welcher Zeuge irrt sich?', kind: 'choice', opts: N, ans: fw, ex };
+  }
+  return null;
+}
+
+/* ===================== 5) Einstein-Rätsel ===================== */
+const VN_ECATS = [
+  { id: 'col', lab: 'Hausfarbe', art: 'Welche', vals: ['rot', 'blau', 'grün', 'gelb', 'weiß'], np: v => `die Person im ${v}en Haus`, dat: v => `der Person im ${v}en Haus`, sh: v => `das ${v}e Haus`, show: v => vnCap(v) },
+  { id: 'pet', lab: 'Haustier', art: 'Welches', vals: ['Hund', 'Katze', 'Fisch', 'Vogel', 'Hase'], g: ['dem', 'der', 'dem', 'dem', 'dem'], np: (v, i, c) => `die Person mit ${c.g[i]} ${v}`, dat: (v, i, c) => `der Person mit ${c.g[i]} ${v}`, sh: (v, i, c) => `${c.g[i] === 'der' ? 'die' : 'der'} ${v}`, show: v => v },
+  { id: 'drink', lab: 'Getränk', art: 'Welches', vals: ['Tee', 'Milch', 'Saft', 'Kakao', 'Wasser'], np: v => `die Person, die ${v} trinkt`, dat: v => `der Person, die ${v} trinkt`, sh: v => v, show: v => v },
+  { id: 'hob', lab: 'Hobby', art: 'Welches', vals: ['Malen', 'Lesen', 'Singen', 'Segeln', 'Schach'], vb: ['malt', 'liest', 'singt', 'segelt', 'Schach spielt'], np: (v, i, c) => `die Person, die ${c.vb[i]}`, dat: (v, i, c) => `der Person, die ${c.vb[i]}`, sh: v => v, show: v => v },
+  { id: 'food', lab: 'Lieblingsessen', art: 'Welches', vals: ['Pizza', 'Nudeln', 'Suppe', 'Pfannkuchen', 'Reis'], np: v => `die Person, die gern ${v} isst`, dat: v => `der Person, die gern ${v} isst`, sh: v => v, show: v => v }
+];
+function vnEinProp(n, nv, catOf, clues, nameOf) {
+  const dom = Array.from({ length: nv }, () => new Set([...Array(n).keys()])), log = [];
+  const rel = (c, pa, pb) => c.k === 'same' ? pa === pb : c.k === 'notsame' ? pa !== pb : c.k === 'left' ? pa < pb : c.k === 'dleft' ? pa + 1 === pb : Math.abs(pa - pb) === 1;
+  const show = v => [...dom[v]].map(x => x + 1).join(' oder ');
+  let ch = true;
+  while (ch) {
+    ch = false;
+    clues.forEach((c, idx) => {
+      const prune = (v, keep, why) => { let ca = false; [...dom[v]].forEach(p => { if (!keep(p)) { dom[v].delete(p); ca = true; } }); if (ca) { ch = true; log.push(`Hinweis ${idx + 1}: ${nameOf(v)} → Haus ${show(v)}${dom[v].size === 1 ? ' ✔' : ''}`); } };
+      if (c.k === 'pos') prune(c.a, p => p === c.x);
+      else { prune(c.a, p => [...dom[c.b]].some(q => rel(c, p, q))); prune(c.b, p => [...dom[c.a]].some(q => rel(c, q, p))); }
+    });
+    for (let ci = 0; ci < 5; ci++) {
+      const vs = []; for (let v = 0; v < nv; v++) if (catOf[v] === ci) vs.push(v); if (!vs.length) continue;
+      vs.forEach(v => { if (dom[v].size === 1) { const p = [...dom[v]][0]; vs.forEach(u => { if (u !== v && dom[u].has(p)) { dom[u].delete(p); ch = true; log.push(`${nameOf(v)} wohnt in Haus ${p + 1} – also ${nameOf(u)} nicht → Haus ${show(u)}${dom[u].size === 1 ? ' ✔' : ''}`); } }); } });
+      for (let p = 0; p < n; p++) { const w = vs.filter(v => dom[v].has(p)); if (w.length === 1 && dom[w[0]].size > 1) { dom[w[0]] = new Set([p]); ch = true; log.push(`Haus ${p + 1} kann nur noch zu ${nameOf(w[0])} gehören → ${nameOf(w[0])} wohnt in Haus ${p + 1} ✔`); } }
+    }
+  }
+  return { solved: dom.every(d => d.size === 1), dom, log };
+}
+function vnGenEin(lv, r) {
+  const n = [4, 4, 5, 5, 5][lv - 1], nc = [3, 4, 3, 4, 5][lv - 1];
+  for (let tries = 0; tries < 300; tries++) {
+    const cats = pzShuf([0, 1, 2, 3, 4], r).slice(0, nc), cs = cats.map(i => VN_ECATS[i]), vals = cs.map(c => pzShuf([...Array(5).keys()], r).slice(0, n));   // vals[ci] = Indizes in c.vals
+    const nv = nc * n, catOf = [], pos = []; for (let ci = 0; ci < nc; ci++) { const pm = pzShuf([...Array(n).keys()], r); for (let k = 0; k < n; k++) { catOf.push(ci); pos.push(pm[k]); } }
+    const vc = v => cs[catOf[v]], vi = v => vals[catOf[v]][v % n], vname = v => { const c = vc(v), i = vi(v); return c.sh(c.vals[i], i, c); };
+    const np = (v, dat) => { const c = vc(v), i = vi(v); return (dat ? c.dat : c.np)(c.vals[i], i, c); };
+    const pool = [];
+    for (let a = 0; a < nv; a++) {
+      if (lv <= 2 && r() < .5) pool.push({ k: 'pos', a, x: pos[a] });
+      for (let b = 0; b < nv; b++) { if (catOf[a] === catOf[b] || a === b) continue; const pa = pos[a], pb = pos[b];
+        if (a < b && pa === pb) pool.push({ k: 'same', a, b }); if (a < b && pa !== pb && r() < .25) pool.push({ k: 'notsame', a, b });
+        if (pa < pb) { pool.push({ k: 'left', a, b }); if (pa + 1 === pb) pool.push({ k: 'dleft', a, b }); }
+        if (a < b && Math.abs(pa - pb) === 1) pool.push({ k: 'neigh', a, b }); }
+    }
+    const sh = pzShuf(pool, r); let acc = [], ok = false;
+    for (const c of sh) { acc.push(c); if (vnEinProp(n, nv, catOf, acc, vname).solved) { ok = true; break; } if (acc.length > 40) break; }
+    if (!ok) continue;
+    for (const c of pzShuf(acc.slice(), r)) { const t = acc.filter(x => x !== c); if (vnEinProp(n, nv, catOf, t, vname).solved) acc = t; }
+    acc = pzShuf(acc, r);
+    // Frage: Eigenschaft einer anderen Kategorie der Person mit …
+    const sc = vnRi(r, nc); let tc = vnRi(r, nc - 1); if (tc >= sc) tc++; const sv = sc * n + vnRi(r, n), tv = [...Array(n).keys()].map(k => tc * n + k).find(v => pos[v] === pos[sv]);
+    if (acc.some(c => (c.k === 'same') && ((c.a === sv && c.b === tv) || (c.a === tv && c.b === sv)))) continue;
+    const pr = vnEinProp(n, nv, catOf, acc, vname), tcat = cs[tc];
+    const txt = c => { const A = vnCap(np(c.a)), B = c.k === 'pos' ? '' : np(c.b), BD = c.k === 'pos' ? '' : np(c.b, true); switch (c.k) { case 'same': return `${A} ist auch ${B}.`; case 'notsame': return `${A} ist nicht ${B}.`; case 'left': return `${A} wohnt weiter links als ${B}.`; case 'dleft': return `${A} wohnt direkt links neben ${BD}.`; case 'neigh': return `${A} wohnt direkt neben ${BD}.`; default: return `${A} wohnt im ${['ersten', 'zweiten', 'dritten', 'vierten', 'fünften'][c.x]} Haus von links.`; } };
+    const ex = ['Zeichne dir ' + n + ' Kästchen für die Häuser (von links nach rechts). Notiere bei jeder Eigenschaft, in welchen Häusern sie noch stehen kann, und streiche mit jedem Hinweis Möglichkeiten weg.'].concat(pr.log.slice(0, 18));
+    if (pr.log.length > 18) ex.push('… so geht es weiter, bis überall nur noch ein Haus übrig bleibt.');
+    ex.push(`${vnCap(np(sv))} wohnt in Haus ${pos[sv] + 1} – und dort wohnt ${tcat.show(tcat.vals[vi(tv)])} (${tcat.lab}).`);
+    return { t: 'ein', title: 'Einstein-Rätsel', body: `<p>${n} Häuser stehen in einer Reihe (Haus 1 ist ganz links). In jedem wohnt eine Person. Von jeder Person kennst du: ${vnList(cs.map(c => c.lab))}. Alles ist verschieden.</p><ul class="vn-st">${acc.map(c => `<li>${esc(txt(c))}</li>`).join('')}</ul>`, q: `${tcat.art} ${tcat.lab} hat ${np(sv)}?`, kind: 'choice', opts: vals[tc].map(i => tcat.show(tcat.vals[i])), ans: vals[tc].indexOf(vi(tv)), ex, dbg: { n, nv, catOf, clues: acc, pos } };
+  }
+  return null;
+}
+const VN_LOGIC = { lie: vnGenLie, grid: vnGenGrid, time: vnGenTime, wit: vnGenWit, ein: vnGenEin };
+
+/* =====================================================================
+   VENOLA HOLMES · Geheimakte: die sieben Wortspiele (Generatoren). Jedes Rätsel entsteht aus (Art, Stufe, Startwert) + gewählten Inhalten (ids).
+   Damit kann ein Rätsel nach dem Neuladen und aus dem Verlauf IMMER genau gleich wieder aufgebaut werden.
+   Rätsel-Objekt: { t, title, body, q, kind: 'choice' | 'multi' | 'pool' | 'fields' | 'cross', … , ex: [Zeilen „Wie komme ich darauf?“], sol: Lösung als HTML, ids, seen }
+   Die Inhalte stehen in feat_vndata.js.
+   ===================================================================== */
+const vnNz = s => String(s || '').trim().toUpperCase().replace(/Ä/g, 'AE').replace(/Ö/g, 'OE').replace(/Ü/g, 'UE').replace(/ß/g, 'SS').replace(/[^A-Z]/g, '');
+/* Auswahl mit Gedächtnis: P.avoid(id) = „schon gesehen oder gemeldet“, P.force = feste Auswahl (beim Wiederaufbau). Reicht der Vorrat nicht, wird neu gemischt (P.rep). */
+function vnTake(P, cands, n, rnd) {
+  if (P && P.force) return P.force.splice(0, n);
+  let c = cands.filter(id => !(P && P.avoid && P.avoid(id)));
+  if (c.length < n) { if (P) P.rep = true; c = cands.filter(id => !(P && P.bad && P.bad(id))); if (c.length < n) c = cands.slice(); }
+  const out = pzShuf(c, rnd).slice(0, n);
+  if (P) (P.used = P.used || []).push(...out);
+  return out;
+}
+const vnNum = n => String(n).replace('-', '−');
+
+/* ===================== Silbenrätsel ===================== */
+function vnGenSil(lv, rnd, P) {
+  const n = [2, 3, 4, 4, 5][lv - 1], deco = [0, 0, 0, 2, 3][lv - 1], maxS = [3, 4, 4, 6, 6][lv - 1], minS = [2, 2, 2, 3, 3][lv - 1];
+  const cands = VN_SIL.map((x, i) => i).filter(i => VN_SIL[i].s.length <= maxS && VN_SIL[i].s.length >= minS);
+  const ids = vnTake(P, cands, n, rnd), W = ids.map(i => VN_SIL[i]), rb = P.rb;
+  let chips = W.flatMap(x => x.s);
+  const extra = [];
+  if (deco) { const others = VN_SIL.map((x, i) => i).filter(i => !ids.includes(i)); pzShuf(others, rb).slice(0, 12).forEach(i => { const s = pzShuf(VN_SIL[i].s, rb)[0]; if (extra.length < deco && !chips.includes(s) && !extra.includes(s)) extra.push(s); }); }
+  chips = pzShuf(chips.concat(extra), rb);
+  const groups = W.map((x, k) => ({ lab: x.q, n: x.s.length, ans: x.w, syl: x.s }));
+  return {
+    t: 'sil', title: 'Silbenrätsel', kind: 'pool', ids, groups, chips, join: true,
+    body: `<p>Aus den Silben unten entstehen ${n} Wörter. Zu jedem Wort gibt es eine Frage. Jedes Kästchen ist eine Silbe.${deco ? ` <b>${extra.length} Silben sind überflüssig</b> und gehören zu keinem Wort.` : ''}</p>`,
+    q: 'Tippe die Silben in der richtigen Reihenfolge in die Kästchen.',
+    sol: W.map(x => `<b>${esc(x.s.join('-'))}</b>`).join(' · '),
+    ex: ['Zähle zuerst die Kästchen: So viele Silben hat das gesuchte Wort. Das hilft beim Suchen.',
+      'Beginne mit der Frage, bei der du das Wort sofort weißt, und streiche seine Silben weg. Dann bleiben weniger Silben für die schweren Fragen übrig.']
+      .concat(W.map(x => `„${x.q}“ → ${x.w.charAt(0) + x.w.slice(1).toLowerCase()} (${x.s.map(s => s.toLowerCase()).join(' · ')}). Gesprochen: Klatsche das Wort, und du hörst ${x.s.length} Silben.`))
+      .concat(extra.length ? [`Übrig bleiben ${extra.map(s => s.toLowerCase()).join(', ')} – sie sind nur zum Verwirren da.`] : [])
+  };
+}
+
+/* ===================== Wortleiter ===================== */
+let _lad = null;
+function vnLadG() {
+  if (_lad) return _lad;
+  const W = VN_LAD, idx = {}, adj = W.map(() => []), bk = {};
+  W.forEach((w, i) => { idx[w] = i; for (let k = 0; k < 4; k++) { const key = k + w.slice(0, k) + '_' + w.slice(k + 1); (bk[key] = bk[key] || []).push(i); } });
+  Object.values(bk).forEach(b => b.forEach(i => b.forEach(j => { if (i !== j) adj[i].push(j); })));
+  return _lad = { W, idx, adj };
+}
+function vnLadBfs(g, s) {
+  const dist = new Array(g.W.length).fill(-1), par = new Array(g.W.length).fill(-1); dist[s] = 0; const q = [s];
+  for (let h = 0; h < q.length; h++) { const u = q[h]; g.adj[u].forEach(v => { if (dist[v] < 0) { dist[v] = dist[u] + 1; par[v] = u; q.push(v); } }); }
+  return { dist, par };
+}
+const vnLadAdj = (a, b) => { if (a.length !== 4 || b.length !== 4) return false; let d = 0; for (let i = 0; i < 4; i++) if (a[i] !== b[i]) d++; return d === 1; };
+function vnGenLad(lv, rnd, P) {
+  const g = vnLadG(), d = [3, 4, 5, 6, 7][lv - 1]; let s, e, path;
+  if (P && P.force) { [s, e] = P.force.splice(0, 2); const b = vnLadBfs(g, g.idx[s]); path = []; for (let x = g.idx[e]; x >= 0; x = b.par[x]) path.unshift(g.W[x]); }
+  else {
+    const order = pzShuf(g.W.map((w, i) => i), rnd);
+    for (const i of order) {
+      const b = vnLadBfs(g, i), far = []; b.dist.forEach((x, j) => { if (x === d) far.push(j); });
+      if (!far.length) continue;
+      const j = far[Math.floor(rnd() * far.length)]; s = g.W[i]; e = g.W[j]; path = []; for (let x = j; x >= 0; x = b.par[x]) path.unshift(g.W[x]); break;
+    }
+    if (P) (P.used = P.used || []).push(s, e);
+  }
+  const mid = path.slice(1, -1), diff = (a, b) => { for (let i = 0; i < 4; i++) if (a[i] !== b[i]) return i + 1; return 0; };
+  const chk = vals => {
+    const v = vals.map(vnNz), ok = [], seen = new Set([s, e]); let msg = '', prev = s, chainOk = true;
+    v.forEach((w, i) => {
+      let good = false;
+      if (!w) { chainOk = false; ok.push(null); prev = ''; return; }
+      if (w.length !== 4) msg = msg || `„${vals[i].trim()}“ hat nicht 4 Buchstaben.`;
+      else if (g.idx[w] === undefined) msg = msg || `„${w.charAt(0) + w.slice(1).toLowerCase()}“ kenne ich nicht in meiner Wörterliste.`;
+      else if (seen.has(w)) msg = msg || `„${w.charAt(0) + w.slice(1).toLowerCase()}“ kommt schon vor.`;
+      else if (prev && !vnLadAdj(prev, w)) msg = msg || `„${w.charAt(0) + w.slice(1).toLowerCase()}“ unterscheidet sich vom Wort davor nicht in genau einem Buchstaben.`;
+      else good = true;
+      if (good) seen.add(w); else chainOk = false;
+      ok.push(good); prev = good ? w : '';
+    });
+    const last = v.length ? v[v.length - 1] : s, endOk = chainOk && v.every(Boolean) && vnLadAdj(last, e);
+    if (chainOk && v.every(Boolean) && !endOk) msg = msg || 'Das letzte Wort passt nicht zum Zielwort.';
+    return { ok, done: endOk, msg };
+  };
+  const nice = w => w.charAt(0) + w.slice(1).toLowerCase();
+  return {
+    t: 'lad', title: 'Wortleiter', kind: 'fields', ids: [s, e],
+    body: `<p>Verwandle <b>${nice(s)}</b> in <b>${nice(e)}</b>. Bei jedem Schritt änderst du <b>genau einen Buchstaben</b> – und es muss wieder ein echtes Wort entstehen. Die Buchstaben bleiben dabei an ihrem Platz.</p><p class="vn-way vn-lad"><b>${s}</b> → ${mid.map(() => '▢').join(' → ')} → <b>${e}</b></p>`,
+    q: `Schreibe die ${mid.length} Wörter dazwischen.`, items: mid.map((w, i) => ({ lab: `Schritt ${i + 1}`, ans: [w], len: 4 })), chk,
+    sol: path.map(w => `<b>${w}</b>`).join(' → '),
+    ex: [`Von ${s} nach ${e} sind es ${d} Schritte, also ${mid.length} Wörter dazwischen.`,
+      'Vergleiche Anfang und Ende Buchstabe für Buchstabe: An welchen Stellen sind sie verschieden? Diese Stellen musst du irgendwann ändern.',
+      'Ändere zuerst eine dieser Stellen so, dass ein echtes Wort entsteht. Wenn du nicht weiterkommst, probiere es von hinten: Welche Wörter sind einen Schritt vom Ziel entfernt?']
+      .concat(path.slice(1).map((w, i) => `${path[i]} → ${w}: Der ${diff(path[i], w)}. Buchstabe ändert sich (${path[i][diff(path[i], w) - 1]} wird zu ${w[diff(path[i], w) - 1]}).`))
+      .concat(['Es kann mehrere richtige Wege geben. Das hier ist ein Beispiel – jeder Weg, der die Regeln erfüllt, zählt.'])
+  };
+}
+
+/* ===================== Wörterkette ===================== */
+let _chn = null;
+function vnChnG() {
+  if (_chn) return _chn;
+  const out = {}, lab = {}, inn = {}; VN_CHN.forEach(([a, l]) => { out[a] = out[a] || new Set(); l.forEach(([b, full]) => { out[a].add(b); inn[b] = inn[b] || new Set(); inn[b].add(a); lab[a + '>' + b] = full || (a + b.toLowerCase()); }); });
+  const nodes = [...new Set(VN_CHN.flatMap(([a, l]) => [a].concat(l.map(x => x[0]))))];
+  return _chn = { out, inn, lab, nodes, has: (a, b) => !!(out[a] && out[a].has(b)), cmp: (a, b) => lab[a + '>' + b] || '' };
+}
+function vnGenChn(lv, rnd, P) {
+  const g = vnChnG(), gaps = [1, 2, 2, 3, 4][lv - 1], nd = [3, 3, 4, 5, 6][lv - 1]; let path;
+  if (P && P.force) path = P.force.splice(0, 2 * gaps + 1);
+  else {
+    const starts = pzShuf(Object.keys(g.out), rnd), want = 2 * gaps;
+    const dfs = (p, used) => { if (p.length === want + 1) return p; const nx = pzShuf([...(g.out[p[p.length - 1]] || [])], rnd); for (const n of nx) { if (used.has(n)) continue; used.add(n); p.push(n); const r = dfs(p, used); if (r) return r; p.pop(); used.delete(n); } return null; };
+    for (const s of starts) { const r = dfs([s], new Set([s])); if (r) { path = r; break; } }
+    if (P) (P.used = P.used || []).push(...path);
+  }
+  const given = path.filter((x, i) => i % 2 === 0), gapW = path.filter((x, i) => i % 2 === 1);
+  /* Ablenker: passen höchstens zu einer Seite (ab Stufe 3) – und nie zu einer ganzen Lücke */
+  const fitsGap = (c, k) => g.has(given[k], c) && g.has(c, given[k + 1]);
+  const pool = g.nodes.filter(c => !path.includes(c) && !gapW.some((x, k) => fitsGap(c, k)) && !given.some((x, k) => k < gaps && fitsGap(c, k)));
+  const half = pool.filter(c => given.some((x, k) => k < gaps && (g.has(given[k], c) || g.has(c, given[k + 1]))));
+  const dis = pzShuf(lv >= 3 && half.length >= nd ? half : half.concat(pool), P.rb).filter((x, i, a) => a.indexOf(x) === i).slice(0, nd);
+  const chips = pzShuf(gapW.concat(dis), P.rb);
+  const groups = gapW.map((w, k) => ({ lab: `${given[k]} ▢ ${given[k + 1]}`, n: 1, ok: c => fitsGap(c, k), ans: w, pre: given[k], post: given[k + 1] }));
+  return {
+    t: 'chn', title: 'Wörterkette', kind: 'pool', ids: path, groups, chips, join: false,
+    body: `<p>Zwischen zwei Wörtern fehlt ein Wort. Es muss <b>mit dem Wort davor</b> und <b>mit dem Wort danach</b> je ein neues Wort ergeben – zum Beispiel <i>Haus ▢ Schlüssel</i> mit <b>Tür</b>: Haus<b>tür</b> und <b>Tür</b>schlüssel.</p>
+      <p class="vn-way vn-chn">${given.map((w, i) => `<b>${esc(w)}</b>${i < gaps ? ' ▢ ' : ''}`).join('')}</p>`,
+    q: 'Welche Wörter fehlen? Tippe sie in die Lücken.',
+    sol: gapW.map((w, k) => `${esc(given[k])} <b>${esc(w)}</b> ${esc(given[k + 1])}`).join(' · '),
+    ex: ['Prüfe jedes Wort aus dem Vorrat an beiden Seiten einer Lücke: Das Wort davor muss vorne dran, das Wort danach hinten dran passen.',
+      'Wörter, die nur auf einer Seite passen, sind Fallen. Das richtige Wort passt auf BEIDEN Seiten.']
+      .concat(gapW.map((w, k) => `Lücke ${k + 1}: ${given[k]} + ${w} = ${g.cmp(given[k], w)} ✔ und ${w} + ${given[k + 1]} = ${g.cmp(w, given[k + 1])} ✔.`))
+      .concat(dis.length ? ['Zu den anderen Wörtern fällt dir keine Zusammensetzung auf beiden Seiten ein – sie sind nur zum Verwirren da.'] : [])
+  };
+}
+
+/* ===================== Analogien & Ausreißer ===================== */
+const VN_RULES = [
+  { n: 'verdoppelt', t: 1, f: x => x * 2, xs: [2, 3, 4, 5, 6, 7, 8, 9, 11, 12] },
+  { n: 'verdreifacht', t: 1, f: x => x * 3, xs: [2, 3, 4, 5, 6, 7, 8, 9] },
+  { n: 'halbiert', t: 1, f: x => x / 2, xs: [4, 6, 8, 10, 12, 14, 16, 18, 20] },
+  { n: 'mal 4', t: 1, f: x => x * 4, xs: [2, 3, 4, 5, 6, 7] },
+  { n: 'Quadratzahl (mal sich selbst)', t: 2, f: x => x * x, xs: [2, 3, 4, 5, 6, 7, 8, 9] },
+  { n: 'mal 2, dann plus 1', t: 2, f: x => x * 2 + 1, xs: [2, 3, 4, 5, 6, 7, 8, 9, 10] },
+  { n: 'mal 3, dann minus 1', t: 3, f: x => x * 3 - 1, xs: [2, 3, 4, 5, 6, 7, 8, 9] },
+  { n: 'Quadrat, dann plus 1', t: 3, f: x => x * x + 1, xs: [2, 3, 4, 5, 6, 7, 8] },
+  { n: 'plus die Hälfte (mal 1,5)', t: 3, f: x => x * 3 / 2, xs: [2, 4, 6, 8, 10, 12] },
+  { n: 'mal 5, dann minus 2', t: 3, f: x => x * 5 - 2, xs: [2, 3, 4, 5, 6, 7] }
+];
+const VN_NODDS = [
+  { id: 'vf', t: 1, gen: r => { const k = 3 + Math.floor(r() * 5), base = 2 + Math.floor(r() * 4), mem = pzShuf([0, 1, 2, 3, 4, 5], r).slice(0, 4).map(i => k * (base + i)); let o; do o = k * (base + Math.floor(r() * 7)) + (1 + Math.floor(r() * (k - 1))); while (mem.includes(o)); return { mem, o, why: `Vier Zahlen kommen in der ${k}er-Reihe vor (${mem.slice().sort((a, b) => a - b).join(', ')}). ${o} nicht: ${o} geteilt durch ${k} geht nicht auf.` }; } },
+  { id: 'qu', t: 2, gen: r => { const mem = pzShuf([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], r).slice(0, 4).map(x => x * x); let o; do o = 5 + Math.floor(r() * 140); while (Math.sqrt(o) % 1 === 0 || mem.includes(o)); return { mem, o, why: `${mem.slice().sort((a, b) => a - b).join(', ')} sind Quadratzahlen (z. B. ${Math.sqrt(mem[0])} · ${Math.sqrt(mem[0])} = ${mem[0]}). ${o} ist keine Quadratzahl.` }; } },
+  { id: 'pr', t: 3, gen: r => { const P = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47], mem = pzShuf(P, r).slice(0, 4), C = [21, 27, 33, 39, 49, 51, 57, 63, 77, 91]; const o = C[Math.floor(r() * C.length)]; const f = [3, 7, 11, 13].find(x => o % x === 0); return { mem, o, why: `${mem.slice().sort((a, b) => a - b).join(', ')} sind Primzahlen (nur durch 1 und sich selbst teilbar). ${o} = ${f} · ${o / f}, also keine Primzahl.` }; } },
+  { id: 'ge', t: 1, gen: r => { const ev = r() < .5, mem = pzShuf([...Array(40).keys()].map(x => x + 10).filter(x => (x % 2 === 0) === ev), r).slice(0, 4); let o; do o = 10 + Math.floor(r() * 40); while ((o % 2 === 0) === ev); return { mem, o, why: `Vier Zahlen sind ${ev ? 'gerade' : 'ungerade'}, ${o} ist ${ev ? 'ungerade' : 'gerade'}.` }; } },
+  { id: 'zw', t: 2, gen: r => { const Z = [2, 4, 8, 16, 32, 64, 128, 256], mem = pzShuf(Z, r).slice(0, 4); let o; do o = 3 + Math.floor(r() * 250); while (Z.includes(o)); return { mem, o, why: `${mem.slice().sort((a, b) => a - b).join(', ')} gehören in die Zweier-Folge 2, 4, 8, 16 … (immer das Doppelte). ${o} kommt in dieser Folge nicht vor` }; } }
+];
+function vnQAna(rel, rb, ids, nopt) {
+  const p = rel.p, A = p[ids[0]][0], B = p[ids[0]][1], C = p[ids[1]][0], D = p[ids[1]][1], rev = rb() < .4;
+  let correct, cands, stem;
+  if (!rev) { correct = D; cands = [...new Set(p.map(q => q[1]))].filter(x => x !== D && x !== B && !p.some(q => q[0] === C && q[1] === x)); stem = `<b>${esc(A)}</b> : <b>${esc(B)}</b> = <b>${esc(C)}</b> : <b>?</b>`; }
+  else { correct = C; cands = [...new Set(p.map(q => q[0]))].filter(x => x !== C && x !== A && !p.some(q => q[0] === x && q[1] === D)); stem = `<b>?</b> : <b>${esc(D)}</b> = <b>${esc(A)}</b> : <b>${esc(B)}</b>`; }
+  const opts = pzShuf(pzShuf(cands, rb).slice(0, nopt - 1).concat([correct]), rb);
+  return { h: stem, opts, ans: opts.indexOf(correct), ex: `${rel.lab}: ${rel.how(A, B)}. Genauso gilt: ${rel.how(C, D)}. Gesucht ist also „${correct}“.` };
+}
+function vnQNum(lv, rnd, nopt) {
+  const R = VN_RULES.filter(r => lv >= 5 ? r.t >= 2 : lv >= 4 ? r.t >= 1 : r.t <= 2), rule = R[Math.floor(rnd() * R.length)], xs = pzShuf(rule.xs, rnd), a = xs[0], c = xs[1], b = rule.f(a), d = rule.f(c);
+  const cand = new Set(); [d + 1, d - 1, d + 2, d - 2, d * 2, c * 2, c + a, c + b, d + a, Math.round(d / 2), c * c, c + 1, d + 10, d - 10].forEach(x => { if (Number.isInteger(x) && x !== d && x > 0) cand.add(x); });
+  const opts = pzShuf(pzShuf([...cand], rnd).slice(0, nopt - 1).concat([d]), rnd);
+  return { h: `<b>${a}</b> : <b>${b}</b> = <b>${c}</b> : <b>?</b>`, opts: opts.map(String), ans: opts.indexOf(d), ex: `Zahlenregel: ${a} wird zu ${b} – das Ergebnis ist ${rule.n}. Probiere die Regel mit der zweiten Zahl: ${c} ${rule.n} ergibt ${d}.` };
+}
+function vnQOdd(lv, rnd, id) {
+  let mem, o, why;
+  if (id !== null && id !== undefined) { const x = VN_ODD[id]; mem = x[0]; o = x[1]; why = x[2]; }
+  else { const R = VN_NODDS.filter(r => r.t <= (lv >= 5 ? 3 : lv >= 3 ? 2 : 1)); const r = R[Math.floor(rnd() * R.length)], q = r.gen(rnd); mem = q.mem.map(String); o = String(q.o); why = q.why; }
+  const opts = pzShuf(mem.concat([o]), rnd);
+  return { h: '<b>Welches gehört nicht dazu?</b>', opts, ans: opts.indexOf(o), ex: `Ausreißer: ${why.replace(/\.$/, '')}.` };
+}
+function vnGenAna(lv, rnd, P) {
+  const nq = [3, 4, 5, 5, 6][lv - 1], nopt = lv >= 4 ? 5 : 4, tiers = [[1], [1, 2], [2, 3], [2, 3], [3]][lv - 1];
+  const nNum = lv >= 3 ? (lv >= 5 ? 2 : 1) : 0, nOdd = lv >= 2 ? (lv >= 5 ? 2 : 1) : 0, nRel = nq - nNum - nOdd, rb = P.rb;
+  /* Plan = Liste der Aufgaben: [Paar, Paar] (Beziehung), 'n' (Zahlenregel), 'o' (Zahlen-Ausreißer) oder 10000+Nr (Wort-Ausreißer) */
+  let plan;
+  if (P.force) plan = P.force.splice(0, nq);
+  else {
+    const rels = pzShuf(VN_REL.map((r, i) => i).filter(i => tiers.includes(VN_REL[i].tier)), rnd), plan0 = [];
+    for (let k = 0; k < nRel; k++) {
+      const ri = rels[k % rels.length], n = VN_REL[ri].p.length, cand = [...Array(n).keys()].map(j => ri * 100 + j);
+      let two; for (let t = 0; t < 30; t++) { const fr = cand.filter(id => !(P.avoid && P.avoid(id))); if (fr.length < 2) P.rep = true; two = vnTake(null, fr.length >= 2 ? fr : cand.filter(id => !(P.bad && P.bad(id))), 2, rnd); const a = VN_REL[ri].p[two[0] % 100], b = VN_REL[ri].p[two[1] % 100]; if (a[0] !== b[0] && a[1] !== b[1]) break; }
+      (P.used = P.used || []).push(...two); plan0.push(two);
+    }
+    for (let k = 0; k < nNum; k++) plan0.push('n');
+    if (nOdd) plan0.push(vnTake(P, VN_ODD.map((x, i) => 10000 + i), 1, rnd)[0]);
+    if (nOdd > 1) plan0.push('o');
+    plan = pzShuf(plan0, rnd);
+  }
+  const qs = plan.map(x => {
+    if (Array.isArray(x)) return vnQAna(VN_REL[Math.floor(x[0] / 100)], rb, x.map(v => v % 100), nopt);
+    if (x === 'n') return vnQNum(lv, rb, nopt);
+    return vnQOdd(lv, rb, x === 'o' ? null : x - 10000);
+  });
+  return {
+    t: 'ana', title: 'Analogien', kind: 'multi', ids: plan,
+    body: `<p>Bei jeder Aufgabe musst du die <b>Beziehung</b> zwischen zwei Wörtern (oder Zahlen) erkennen und auf ein zweites Paar übertragen. „<i>A : B = C : ?</i>“ liest man: A verhält sich zu B wie C zu …? Bei „Welches gehört nicht dazu?“ passen vier Dinge zusammen.</p>`,
+    q: 'Wähle bei jeder Aufgabe die richtige Antwort.', qs,
+    sol: qs.map(x => `<b>${esc(String(x.opts[x.ans]))}</b>`).join(' · '),
+    ex: ['Sage dir die Beziehung des ersten Paares in einem Satz: „B ist ein … von A“. Dann prüfe, ob der Satz auch für das zweite Paar stimmt.'].concat(qs.map((x, k) => `Aufgabe ${k + 1}: ${x.ex}`))
+  };
+}
+
+/* ===================== Versteckte Wörter ===================== */
+function vnHidAt(s, w) {
+  const pos = [], L = []; for (let i = 0; i < s.length; i++) if (/[A-Za-zÄÖÜäöü]/.test(s[i])) { pos.push(i); L.push(s[i].toUpperCase()); }
+  const flat = L.join(''); let from = 0, at = -1;
+  while ((from = flat.indexOf(w, from)) >= 0) { if (/[^A-Za-zÄÖÜäöü]/.test(s.slice(pos[from], pos[from + w.length - 1] + 1))) { at = from; break; } from++; }
+  return { pos, at };
+}
+function vnHidMark(s, w) {
+  const { pos, at } = vnHidAt(s, w); if (at < 0) return null;
+  const a = pos[at], b = pos[at + w.length - 1], hit = new Set(pos.slice(at, at + w.length));
+  let html = ''; for (let i = 0; i < s.length; i++) html += hit.has(i) ? `<mark>${esc(s[i])}</mark>` : esc(s[i]);
+  const words = []; s.replace(/[A-Za-zÄÖÜäöüß]+/g, (m, off) => { if (off + m.length > a && off <= b) words.push(m); return m; });
+  return { html, words };
+}
+function vnGenHid(lv, rnd, P) {
+  const n = [3, 4, 4, 5, 6][lv - 1], ids = vnTake(P, VN_HID.map((x, i) => i), n, rnd), I = ids.map(i => VN_HID[i]), hint = lv <= 3;
+  return {
+    t: 'hid', title: 'Versteckte Wörter', kind: 'fields', ids,
+    body: `<p>In jedem Satz versteckt sich ein Wort – es steckt <b>über Wortgrenzen hinweg</b>: ein Stück vom einen Wort, dann ein Stück vom nächsten. Lies die Buchstaben ohne Lücken hintereinander!${hint ? ' Hinter jedem Satz steht, <b>was</b> gesucht ist.' : ' Diesmal verrät dir nichts, was gesucht ist.'}</p>`,
+    q: 'Welches Wort ist versteckt?', items: I.map(x => ({ lab: `<span class="vn-sent">${esc(x.s)}</span>${hint ? ` <small class="mute">(${esc(x.g)})</small>` : ''}`, ans: [x.w] })),
+    sol: I.map(x => `<b>${esc(x.w.charAt(0) + x.w.slice(1).toLowerCase())}</b>`).join(' · '),
+    ex: ['Streiche im Kopf alle Leerzeichen und Satzzeichen weg und lies die Buchstaben als langes Wort. Suche dann ein Wort, das mitten drin steckt.', 'Die Lücke zwischen zwei Wörtern ist die Stelle, an der sich das gesuchte Wort versteckt.']
+      .concat(I.map(x => { const m = vnHidMark(x.s, x.w); return m ? `„${m.html}“ → ${x.w}: versteckt in ${m.words.map(w => '„' + esc(w) + '“').join(' + ')}.` : `„${esc(x.s)}“ → ${x.w}`; }))
+  };
+}
+
+/* ===================== Mini-Kreuzworträtsel ===================== */
+function vnKreLayout(words, rnd, size) {
+  const G = new Map(), pl = [];
+  const key = (r, c) => r + ',' + c, get = (r, c) => G.get(key(r, c));
+  const can = (w, r, c, d) => {
+    const dr = d === 'v' ? 1 : 0, dc = d === 'h' ? 1 : 0; let cross = 0;
+    const b = get(r - dr, c - dc), a = get(r + dr * w.length, c + dc * w.length); if (b || a) return -1;
+    for (let k = 0; k < w.length; k++) {
+      const rr = r + dr * k, cc = c + dc * k, ex = get(rr, cc);
+      if (ex) { if (ex.l !== w[k] || ex.d.includes(d)) return -1; cross++; }
+      else if (get(rr + dc, cc + dr) || get(rr - dc, cc - dr)) return -1;
+    }
+    return cross;
+  };
+  const put = (id, w, r, c, d) => { const dr = d === 'v' ? 1 : 0, dc = d === 'h' ? 1 : 0; for (let k = 0; k < w.length; k++) { const e = get(r + dr * k, c + dc * k); if (e) e.d += d; else G.set(key(r + dr * k, c + dc * k), { l: w[k], d }); } pl.push([id, r, c, d]); };
+  const bbox = (extra) => { let r0 = 1e9, r1 = -1e9, c0 = 1e9, c1 = -1e9; const add = (r, c) => { r0 = Math.min(r0, r); r1 = Math.max(r1, r); c0 = Math.min(c0, c); c1 = Math.max(c1, c); }; G.forEach((v, k) => { const [r, c] = k.split(',').map(Number); add(r, c); }); if (extra) { const dr = extra.d === 'v' ? 1 : 0, dc = extra.d === 'h' ? 1 : 0; for (let k = 0; k < extra.w.length; k++) add(extra.r + dr * k, extra.c + dc * k); } return [r1 - r0 + 1, c1 - c0 + 1]; };
+  put(words[0].i, words[0].w, 0, 0, 'h');
+  for (let n = 1; n < words.length; n++) {
+    const w = words[n].w, opts = [];
+    G.forEach((v, k) => {
+      const [r, c] = k.split(',').map(Number);
+      for (let j = 0; j < w.length; j++) if (w[j] === v.l) {
+        if (!v.d.includes('v')) { const r0 = r - j; const x = can(w, r0, c, 'v'); if (x >= 1) opts.push([r0, c, 'v', x]); }
+        if (!v.d.includes('h')) { const c0 = c - j; const x = can(w, r, c0, 'h'); if (x >= 1) opts.push([r, c0, 'h', x]); }
+      }
+    });
+    const ok = opts.filter(o => { const [bh, bw] = bbox({ w, r: o[0], c: o[1], d: o[2] }); return bh <= size && bw <= size; });
+    if (!ok.length) continue;
+    const best = Math.max(...ok.map(o => o[3])), pick = pzShuf(ok.filter(o => o[3] >= Math.min(best, 2)), rnd)[0] || pzShuf(ok, rnd)[0];
+    put(words[n].i, w, pick[0], pick[1], pick[2]);
+  }
+  return pl;
+}
+function vnGenKre(lv, rnd, P) {
+  const nW = [4, 5, 6, 7, 8][lv - 1], tiers = [[1], [1, 2], [2], [2, 3], [2, 3]][lv - 1], maxL = [7, 8, 8, 9, 10][lv - 1], size = [8, 9, 10, 11, 12][lv - 1];
+  let pl;
+  if (P && P.force) pl = P.force.splice(0, P.force.length);
+  else {
+    const cands = VN_KRE.map((x, i) => i).filter(i => tiers.includes(VN_KRE[i].t) && VN_KRE[i].w.length <= maxL && VN_KRE[i].w.length >= 3);
+    let best = null;
+    for (let t = 0; t < 80; t++) {
+      const fresh = cands.filter(id => !(P.avoid && P.avoid(id))), ids = pzShuf(fresh.length >= nW + 4 ? fresh : cands.filter(id => !(P.bad && P.bad(id))), rnd).slice(0, nW + 5);
+      if (fresh.length < nW + 4) { P.rep = true; }
+      const ws = ids.map(i => ({ i, w: VN_KRE[i].w })).sort((a, b) => b.w.length - a.w.length || rnd() - .5);
+      const L = vnKreLayout(ws, rnd, size);
+      if (!best || L.length > best.length) best = L;
+      if (L.length >= nW) { best = L; break; }
+    }
+    pl = best.slice(0, Math.max(nW, 3));
+    /* beim Kürzen nur Wörter behalten, die noch zusammenhängen – daher in Einlege-Reihenfolge kürzen (jedes neue Wort kreuzt ein älteres) */
+    (P.used = P.used || []).push(...pl.map(x => x[0]));
+  }
+  let r0 = 1e9, c0 = 1e9, r1 = -1, c1 = -1; const words = pl.map(([i, r, c, d]) => { const w = VN_KRE[i].w; const e = [r + (d === 'v' ? w.length - 1 : 0), c + (d === 'h' ? w.length - 1 : 0)]; r0 = Math.min(r0, r); c0 = Math.min(c0, c); r1 = Math.max(r1, e[0]); c1 = Math.max(c1, e[1]); return { i, w, r, c, d, h: VN_KRE[i].h }; });
+  words.forEach(x => { x.r -= r0; x.c -= c0; });
+  const cells = {}; words.forEach(x => { for (let k = 0; k < x.w.length; k++) { const rr = x.r + (x.d === 'v' ? k : 0), cc = x.c + (x.d === 'h' ? k : 0); cells[rr + ',' + cc] = x.w[k]; } });
+  /* Nummern: erst nach Zeile, dann nach Spalte */
+  const starts = [...new Set(words.map(x => x.r + ',' + x.c))].sort((a, b) => { const [r1_, c1_] = a.split(',').map(Number), [r2, c2] = b.split(',').map(Number); return r1_ - r2 || c1_ - c2; });
+  words.forEach(x => { x.no = starts.indexOf(x.r + ',' + x.c) + 1; });
+  const H = r1 - r0 + 1, Wd = c1 - c0 + 1;
+  return {
+    t: 'kre', title: 'Mini-Kreuzworträtsel', kind: 'cross', ids: pl, cells, words, H, W: Wd,
+    body: `<p>Löse die Hinweise und trage die Wörter ins Gitter ein. Wo sich zwei Wörter kreuzen, teilen sie sich einen Buchstaben – das hilft dir beim Raten. Ä, Ö und Ü haben eigene Tasten.</p>`,
+    q: 'Tippe ein Kästchen an und schreibe mit der Tastatur darunter.',
+    sol: words.slice().sort((a, b) => a.no - b.no).map(x => `${x.no} ${x.d === 'h' ? '→' : '↓'} <b>${esc(x.w.charAt(0) + x.w.slice(1).toLowerCase())}</b>`).join(' · '),
+    ex: ['Beginne mit den Hinweisen, die du sicher weißt, und schreibe die Wörter ein. Die Buchstaben an den Kreuzungen helfen dir bei den schweren Wörtern.', 'Zähle die Kästchen: Das Wort muss genau so lang sein. Passt ein Wort nicht zu einem schon eingetragenen Kreuzungsbuchstaben, ist eines von beiden falsch.']
+      .concat(words.slice().sort((a, b) => a.no - b.no).map(x => `${x.no} ${x.d === 'h' ? 'waagerecht' : 'senkrecht'} (${x.w.length} Buchstaben): „${x.h}“ → ${x.w.charAt(0) + x.w.slice(1).toLowerCase()}.`))
+  };
+}
+
+/* ===================== Lückentext ===================== */
+function vnGenLue(lv, rnd, P) {
+  const tiers = [[1], [2], [2], [2, 3], [3]][lv - 1], cands = VN_LUE.map((x, i) => i).filter(i => tiers.includes(VN_LUE[i].lv)), id = vnTake(P, cands, 1, rnd)[0], st = VN_LUE[id];
+  const chips = pzShuf(st.gaps.map(g => g.w).concat(st.de), P.rb), parts = st.text.split('\u0001');
+  return {
+    t: 'lue', title: 'Lückentext', kind: 'pool', ids: [id], inline: parts, chips, join: false,
+    groups: st.gaps.map(g => ({ n: 1, ans: g.w, lab: '' })),
+    body: `<p><b>${esc(st.ti)}</b> – in dieser Geschichte fehlen Wörter. Jedes Wort aus dem Vorrat passt in höchstens eine Lücke. ${st.de.length ? `<b>${st.de.length} Wörter bleiben übrig.</b>` : ''} Achte auf <b>der / die / das</b>, auf Einzahl und Mehrzahl und darauf, was sinnvoll ist.</p>`,
+    q: 'Tippe ein Wort an und dann die Lücke, in die es gehört.',
+    sol: st.gaps.map((g, k) => `${k + 1}. <b>${esc(g.w)}</b>`).join(' · '),
+    ex: ['Lies den ganzen Satz um die Lücke. Frage dich: Ist das Wort männlich (der), weiblich (die), sächlich (das) oder Mehrzahl? Das verraten Wörter wie „ein / eine“, „dem / der“ und die Endungen davor.', 'Streiche Wörter, die du schon eingesetzt hast. Die übrigen Wörter im Vorrat sind Ablenker.']
+      .concat(st.gaps.map((g, k) => `Lücke ${k + 1}: „${g.w}“ – ${g.why}.`))
+  };
+}
+
+const VN_WORDS = { sil: vnGenSil, lad: vnGenLad, chn: vnGenChn, ana: vnGenAna, hid: vnGenHid, kre: vnGenKre, lue: vnGenLue };
+const VN_TNAME = { lie: 'Wer lügt?', grid: 'Alibi-Gitter', time: 'Zeitleiste', wit: 'Widerspruch', ein: 'Einstein-Rätsel', sil: 'Silbenrätsel', lad: 'Wortleiter', chn: 'Wörterkette', ana: 'Analogien', hid: 'Versteckte Wörter', kre: 'Mini-Kreuzworträtsel', lue: 'Lückentext' };
+/* Ein Rätsel aufbauen: desc = { t, lv, sd, ids? }.  ids vorhanden → genau dieses Rätsel (Wiederaufbau); P = Gedächtnis (nur beim ersten Erzeugen). */
+function vnBuild(desc, P) {
+  const rnd = pzRng(desc.sd);
+  if (VN_LOGIC[desc.t]) return VN_LOGIC[desc.t](desc.lv, rnd);
+  const Q = P || {}; if (desc.ids) { Q.force = JSON.parse(JSON.stringify(desc.ids)); }
+  Q.rb = pzRng((desc.sd ^ 0x5bd1e995) >>> 0);
+  return VN_WORDS[desc.t](desc.lv, rnd, Q);
+}
 
 /* =====================================================================
    WELT: „Meine Weltreise“ – ruhige Belohnung in Meine Welt

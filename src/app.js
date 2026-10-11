@@ -533,7 +533,7 @@ VIEWS.trophies = () => {
   const yrOf = ts => (+ts > 1e11 ? new Date(+ts).getFullYear() : 0);
   return topBar(ico('trophy', 26) + ' Pokale') + `<div class="card pk-head"><b>${got} von ${L.length} Pokalen</b><div class="bar" style="margin-top:6px"><i style="width:${Math.round(got / L.length * 100)}%"></i></div>
   ${mp ? `<div class="pk-meds" aria-label="Medaillen pro Gruppe">${mp}</div>` : ''}
-  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten.</div></div>
+  <div class="small mute" style="margin-top:8px">Medaillen: 🥉 Stufe 1 · 🥈 Stufe 2 · 🥇 alle 30 Aufgaben · 💎 mit mindestens 54 von 60 Punkten.</div></div>${typeof vnRankCard === 'function' ? vnRankCard() : ''}
   ${(() => {
     const tile = t => { const h = S.trophies[t.id], hid = t.s && !h; return `<div class="pk-b${h ? ' got' : ' lock'}">${h && yrOf(h) ? `<time class="pk-dt" datetime="${new Date(+h).toISOString().slice(0, 10)}">${ddmm(h)}</time>` : ''}<span class="pk-i">${hid ? '❓' : t.i}</span><b>${hid ? 'Geheimer Pokal' : esc(t.n)}</b><span class="pk-d">${hid ? 'Finde heraus, wie man ihn bekommt!' : esc(t.d)}</span>${h ? '' : '<small>Noch nicht geschafft</small>'}</div>`; };
     const earned = sorted.filter(t => S.trophies[t.id]), open = sorted.filter(t => !S.trophies[t.id]), yrs = [...new Set(earned.map(t => yrOf(S.trophies[t.id])))].sort((a, b) => b - a);
