@@ -12167,7 +12167,7 @@ idbGet().then(j => {                                // zweite Kopie: falls der H
   save();
 });
 
-if ('serviceWorker' in navigator && /^https?:/.test(location.protocol)) { window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); }); }
+if ('serviceWorker' in navigator && /^https?:/.test(location.protocol)) { window.addEventListener('load', function () { var had = !!navigator.serviceWorker.controller; navigator.serviceWorker.register('sw.js').then(function (r) { try { r.update(); } catch (e) { } }).catch(function () {}); navigator.serviceWorker.addEventListener('controllerchange', function () { if (had && typeof view !== 'undefined' && view === 'home') location.reload(); }); }); }
 
 </script>
 </body>
