@@ -291,6 +291,10 @@ add('acc', { k: 'shades', n: 'Sonnenbrille', s: 'x', slot: 'glass', d: () => `<r
 add('acc', { k: 'starglass', n: 'Sternenbrille', s: 'x', slot: 'glass', d: () => `<path d="${star5(80, 97, 17, 8)}" fill="#FFD43B" fill-opacity=".55" stroke="#C98A00" stroke-width="2.4" stroke-linejoin="round"/><path d="${star5(120, 97, 17, 8)}" fill="#FFD43B" fill-opacity=".55" stroke="#C98A00" stroke-width="2.4" stroke-linejoin="round"/><path d="M95 95H105" stroke="#C98A00" stroke-width="2.6"/>` });
 add('acc', { k: 'scarf', n: 'Schal Rot', s: 'x', slot: 'neck', d: () => `<path d="M74 146Q100 162 126 146L128 160Q100 176 72 160Z" fill="#E5504A" stroke="#B93A34" stroke-width="1.4"/><path d="M110 160L122 190L106 192L100 166Z" fill="#E5504A" stroke="#B93A34" stroke-width="1.4"/><path d="M107 176H120M105 184H118" stroke="#fff" stroke-width="2.4" opacity=".7"/>` });
 add('acc', { k: 'starneck', n: 'Sternenkette', s: 'x', slot: 'neck', d: () => `<path d="M80 144Q100 170 120 144" stroke="#C98A00" stroke-width="2.2" fill="none"/><path d="${star5(100, 170, 10, 4.6)}" fill="${gold()}" stroke="#C98A00" stroke-width="1.4" stroke-linejoin="round"/>` });
+add('acc', { k: 'pilzhut', n: 'Pilzhut', s: 'x', slot: 'head', d: () => `<path d="M52 70Q50 14 100 14Q150 14 148 70Q100 82 52 70Z" fill="#E5504A" stroke="#B3302B" stroke-width="1.6"/><circle cx="78" cy="38" r="8" fill="#fff"/><circle cx="108" cy="28" r="9" fill="#fff"/><circle cx="130" cy="52" r="7" fill="#fff"/><circle cx="92" cy="58" r="5" fill="#fff"/>` });
+add('acc', { k: 'tueftler', n: 'Tüftler-Helm', s: 'x', slot: 'head', d: () => `<path d="M60 70Q60 40 100 40Q140 40 140 70Z" fill="#4DD0E1" stroke="#2a9aa8" stroke-width="1.6"/><path d="M60 62H140" stroke="#455A64" stroke-width="5"/><circle cx="82" cy="56" r="11" fill="#fff" stroke="#455A64" stroke-width="3.4"/><circle cx="118" cy="56" r="11" fill="#fff" stroke="#455A64" stroke-width="3.4"/><circle cx="82" cy="57" r="4.6" fill="#2a2038"/><circle cx="118" cy="57" r="4.6" fill="#2a2038"/><circle cx="100" cy="26" r="11" fill="none" stroke="#FFB300" stroke-width="7" stroke-dasharray="4.3 4.3"/><circle cx="100" cy="26" r="8.5" fill="#FFCA28"/><circle cx="100" cy="26" r="3.2" fill="#FFF8E1"/>` });
+add('acc', { k: 'brummelohren', n: 'Brummel-Ohren', s: 'x', slot: 'head', d: () => `<circle cx="66" cy="56" r="19" fill="#8E6BBF" stroke="#6a4a98" stroke-width="1.6"/><circle cx="134" cy="56" r="19" fill="#8E6BBF" stroke="#6a4a98" stroke-width="1.6"/><circle cx="66" cy="56" r="10" fill="#D9C8F0"/><circle cx="134" cy="56" r="10" fill="#D9C8F0"/><path d="M64 66Q100 44 136 66" stroke="#6a4a98" stroke-width="4" fill="none"/>` });
+add('acc', { k: 'huepffuehler', n: 'Hüpf-Fühler', s: 'x', slot: 'head', d: () => `<path d="M82 64Q70 50 84 42Q96 34 80 22M118 64Q130 50 116 42Q104 34 120 22" stroke="#455A64" stroke-width="3.6" fill="none" stroke-linecap="round"/><circle cx="80" cy="20" r="8" fill="#FF7043" stroke="#c24a22" stroke-width="1.4"/><circle cx="120" cy="20" r="8" fill="#FF7043" stroke="#c24a22" stroke-width="1.4"/>` });
 /* Haarschmuck */
 add('acc', { k: 'hairband', n: 'Haarreif Mint', s: 'c15', slot: 'hair', d: () => `<path d="M58 72Q100 24 142 72" stroke="#3CCFA0" stroke-width="5.4" fill="none"/><path d="M70 52Q86 40 102 38" stroke="#fff" stroke-width="2" fill="none" opacity=".5"/>` });
 const flowerD = (c, c2, x, y) => `<g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-7" rx="4.6" ry="6" transform="rotate(${a})" fill="${c}"/>`).join('')}<circle r="3.6" fill="${c2}"/></g>`;
@@ -368,7 +372,8 @@ const MS = {                                                       // id -> [Tex
 };
 const GIFT_WHY = 'Überraschungsgeschenk aus dem Shop';
 const GIFT_ACC = ['acc.party', 'acc.pirate', 'acc.unicorn', 'acc.antenna', 'acc.chef', 'acc.viking', 'acc.shades', 'acc.starglass', 'acc.scarf', 'acc.starneck'];
-const SRC = id => MS[id] ? { t: 'milestone', why: MS[id][0] } : GIFT_ACC.includes(id) ? { t: 'milestone', why: GIFT_WHY } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
+const SET_ACC = { 'acc.pilzhut': 'Pilzdorf', 'acc.tueftler': 'Werkelinge', 'acc.brummelohren': 'Brummel', 'acc.huepffuehler': 'Hüpfelinge' };
+const SRC = id => SET_ACC[id] ? { t: 'milestone', why: 'Sticker-Serie ' + SET_ACC[id] + ' komplett' } : MS[id] ? { t: 'milestone', why: MS[id][0] } : GIFT_ACC.includes(id) ? { t: 'milestone', why: GIFT_WHY } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
 function avCheck() {                                               // Meilensteine freischalten (leise Hinweise kommen von unlock)
 let any = false;
 Object.keys(MS).forEach(id => { if (!S.unl[id] && ((S.stats || {})[MS[id][1]] || 0) >= MS[id][2]) { unlock(id); any = true; } });
@@ -412,7 +417,7 @@ return `<svg class="mascot" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/sv
 KINDS.forEach(k => regKind(k[1], { group: 'avatar', label: k[2], ic: k[3], thumb: k[0] === 'color' ? colorThumb : it => thumbOf(k[0], it) }));
 KINDS.forEach(k => {
 if (k[0] === 'color') return;
-regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id) || GIFT_ACC.includes(p.id)).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
+regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id) || GIFT_ACC.includes(p.id) || p.id in SET_ACC).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
 });
 regItems([].concat(...Object.keys(PAL).map(sl => PAL[sl][1].map(c => ({ id: c.id, kind: 'avcolor', name: PAL[sl][0] + ': ' + c[1], src: SRC(c.id), av: 1, slot: sl, v: c[2] })))));
 /* =====================================================================

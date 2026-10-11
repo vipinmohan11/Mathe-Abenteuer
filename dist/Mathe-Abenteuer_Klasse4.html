@@ -423,21 +423,21 @@ body[data-calm="1"] *{animation:none!important;transition:none!important}
 @media (orientation:landscape) and (max-height:560px){.coach .bubble{font-size:.85rem;padding:6px 10px}.coach .cbody{gap:4px}body .ad-play .qcard{padding:16px 20px}}
 @media (orientation:portrait) and (max-width:700px){.qcard{min-height:0!important}}
 
-/* Sammelalbum im Shop */
-.alb-sets{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:8px}
-.alb-set{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px;border-radius:18px;border:2px solid var(--line,#e5dfef);background:var(--card,#fff);color:inherit;font:inherit;cursor:pointer;min-height:44px}
-.alb-set.ok{border-color:#f5b82e;box-shadow:0 0 0 3px #ffe08255}
-.alb-set .bar{width:100%}
-.alb-row{display:flex;gap:2px;width:100%}
-.alm{display:block;flex:1 1 0;min-width:0}
-.alm svg{display:block;width:100%;height:auto}
-.alsil svg{filter:brightness(0) opacity(.22)}
-.alb-back{margin:6px 0 10px}
-.alb-hd{margin:0 4px 10px}
-.alb-hd h3{margin:0 0 2px}
-.alb-hd .bar{margin:8px 0 4px}
-.alleg{cursor:default}
-.itile .ith svg{max-width:100%}
+/* Sticker-Album im Shop: eine Reihe je Serie */
+.alb-list{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.alb-ser{padding:14px 12px;border-radius:20px;border:2px solid var(--line,#e5dfef);background:var(--card,#fff)}
+.alb-ser.ok{border-color:#f5b82e;box-shadow:0 0 0 3px #ffe08255}
+.alb-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.alb-hd h3{margin:0}
+.alb-figs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 6px}
+.alf{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;text-align:center}
+.alf b{font-size:13px;line-height:1.15;overflow-wrap:anywhere}
+.alf:not(.on) b{color:#8a8696;font-weight:600}
+.alf-i{display:block;width:100%;max-width:150px}
+.alf-i svg{display:block;width:100%;height:auto}
+.alsil svg{filter:brightness(0) opacity(.2)}
+.alf.rew .alf-i,.alf.leg .alf-i{border-radius:16px}
+.alf.rew.on .alf-i{background:#fff6d6;border-radius:16px}
 .bk-slot span svg{width:100%;height:100%}
 
 /* ===== Avatar „Mein Avatar“ (alle Klassen mit av-) – ruhig, Theme-Variablen, keine Schatten ===== */
@@ -7274,7 +7274,7 @@ function itemPreview(slot, it) {
   if (slot === 'bg') return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, bg: it.id }, 112);
   return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, frame: it.id }, 112);
 }
-const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (!g.includes(k.group)) g.push(k.group); }); if (typeof wShopTickets === 'function') g.push('reisen'); return g; };
+const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (k.group !== 'buch' && !g.includes(k.group)) g.push(k.group); }); if (typeof wShopTickets === 'function') g.push('reisen'); return g; };
 const shopTimeHTML = () => { const L = shopLeft(); return L === Infinity ? '' : `<span class="mute small">Shop-Zeit heute: <b id="shopT">${fmtT(L)}</b> übrig</span>`; };
 function goalItem() { return S.goal && CATALOG[S.goal] && !hasItem(S.goal) ? CATALOG[S.goal] : null; }
 const goalCard = () => {
@@ -8156,9 +8156,9 @@ window.addEventListener('pagehide', adminLock);
 window.addEventListener('pageshow', e => { if (ADMIN && adminLeft && e.persisted) location.reload(); });
 
 /* =====================================================================
-   SAMMELALBUM (nur im Shop): vier Welten mit je 6 eigenen Figuren + einer geheimen Legende.
-   Wer alle 6 Figuren eines Sets hat, bekommt die Legende und 50 Münzen. Figuren gibt es im Shop (4 pro Set, nie die letzte
-   allein) und als Überraschungsgeschenk (2 pro Set, nur dort). Die Figuren sind eigene Erfindungen – als SVG im Code, offline.
+   STICKER-ALBUM (Reiter „Sticker“ im Shop): vier Welten mit je 6 eigenen Figuren + einer geheimen Legende.
+   Figuren gibt es nur als Überraschungsgeschenk (nie zu kaufen). Wer alle 6 eines Sets hat, bekommt die Legende,
+   ein seltenes Avatar-Zubehör (feat_avatar.js, SET_ACC) und 50 Münzen. Die Figuren sind eigene Erfindungen – als SVG im Code, offline.
    Zustand: S.album = { mig: 1, from: n, got: [ids], done: { setId: Zeit } }.
    Die alten Tier-Sticker (OLD) gibt es nicht mehr: wer k davon hatte, bekommt einmalig k zufällige neue Figuren.
    ===================================================================== */
@@ -8166,7 +8166,7 @@ const ALB_OLD = ['fuchs', 'panda', 'katze', 'hase', 'eule', 'pinguin', 'einhorn'
 const ALB_WHY = 'Überraschungsgeschenk aus dem Shop';
 const ALB_BONUS = 50;
 regKind('figur', { group: 'album', label: 'Figuren', ic: 'sticker' });
-Object.assign(SHOP_GROUPS, { album: { label: 'Sammelalbum', ic: 'sticker' } });
+Object.assign(SHOP_GROUPS, { album: { label: 'Sticker', ic: 'sticker' } });
 
 /* ---------- Zeichenhelfer (Koordinaten -55…55) ---------- */
 const AK = '#2a2038';
@@ -8187,28 +8187,28 @@ const aBrum = (c, b, prop, o = {}) => `<g transform="translate(0 6) scale(.9)">$
 const aHup = (c, s, prop, o = {}) => `${aSh(19)}<ellipse cx="-8" cy="43" rx="7.5" ry="4" fill="#37474f"/><ellipse cx="8" cy="43" rx="7.5" ry="4" fill="#37474f"/><path d="M-6 -18 Q-10 -33 -17 -35 M6 -18 Q10 -33 17 -35" fill="none" stroke="${o.dk || '#455a64'}" stroke-width="2.4" stroke-linecap="round"/><circle cx="-17" cy="-35" r="3.6" fill="${s}"/><circle cx="17" cy="-35" r="3.6" fill="${s}"/><path d="M-19 42 Q-25 8 -15 -10 Q0 -27 15 -10 Q25 8 19 42Z" fill="${c}"/>${o.spots || ''}${aE(-6.5, -2, 3.6)}${aE(6.5, -2, 3.6)}${aSm(7, 4.5)}<path d="M-17 15 Q0 24 17 15 L16 24 Q0 32 -16 24Z" fill="${s}"/>${o.tail || `<path d="M10 22 l9 15 l-7 2 l-6 -13Z" fill="${s}"/>`}${prop}`;
 
 const ALB_SETS = [
-  { id: 'pilz', name: 'Pilzdorf', sub: 'Kleine Dorfleute mit Pilzhut', story: 'Im Pilzdorf hat jeder eine Aufgabe. Wer hilft, wird Freund.', legend: { id: 'urpilz', name: 'Ur-Pilz Tüpfelbart', svg: aPilz('#ffd54a', '#fff8e1', aCrown(0, -45) + aStar(24, 34, 7, '#ffd54a'), { beard: '<path d="M-15 26 Q0 58 15 26Z" fill="#fff"/>' }) }, ch: [
+  { id: 'pilz', reward: 'acc.pilzhut', rname: 'Pilzhut', name: 'Pilzdorf', sub: 'Kleine Dorfleute mit Pilzhut', story: 'Im Pilzdorf hat jeder eine Aufgabe. Wer hilft, wird Freund.', legend: { id: 'urpilz', name: 'Ur-Pilz Tüpfelbart', svg: aPilz('#ffd54a', '#fff8e1', aCrown(0, -45) + aStar(24, 34, 7, '#ffd54a'), { beard: '<path d="M-15 26 Q0 58 15 26Z" fill="#fff"/>' }) }, ch: [
     { id: 'broeckel', name: 'Bröckel', q: 20, svg: aPilz('#ef5350', '#fff', '<ellipse cx="22" cy="33" rx="13" ry="7.5" fill="#d9a05b"/><path d="M14 31 l4 -3 M22 30 l4 -3 M29 32 l3 -2" stroke="#a96d2e" stroke-width="1.7" stroke-linecap="round"/>') },
     { id: 'flitz', name: 'Flitz', q: 25, svg: aPilz('#42a5f5', '#e3f2fd', '<path d="M-15 12 L13 41" stroke="#1e5e9c" stroke-width="3"/><rect x="12" y="27" width="19" height="14" rx="2" fill="#fff" stroke="#1e5e9c" stroke-width="2"/><path d="M12 28 L21.5 35 L31 28" fill="none" stroke="#1e5e9c" stroke-width="2"/>') },
     { id: 'funkel', name: 'Funkel', q: 30, svg: aPilz('#7e57c2', '#ffe082', '<rect x="9" y="26" width="28" height="7" rx="3" fill="#5e3fa3" transform="rotate(-28 9 30)"/>' + aStar(38, 8, 6, '#ffd54a') + aStar(-30, -40, 4, '#ffe082')) },
     { id: 'giesserich', name: 'Gießerich', q: 35, svg: aPilz('#26a69a', '#e0f7f4', '<rect x="12" y="29" width="15" height="12" rx="3" fill="#00796b"/><path d="M27 32 L37 26" stroke="#00796b" stroke-width="3.2" stroke-linecap="round"/><path d="M40 29 l1 4 M43 28 l1 4 M37 31 l1 4" stroke="#7fd4ff" stroke-width="1.8" stroke-linecap="round"/>') },
     { id: 'klimpi', name: 'Klimpi', q: 'G', svg: aPilz('#ec7fb0', '#fff', `<path d="M17 40 V23 L31 20 V36" fill="none" stroke="${AK}" stroke-width="2.4"/><circle cx="14.5" cy="40" r="4.2" fill="${AK}"/><circle cx="28.5" cy="37" r="4.2" fill="${AK}"/>`) },
     { id: 'glimmer', name: 'Glimmer', q: 'G', svg: aPilz('#ff8a50', '#fff3e0', '<path d="M21 24 V30" stroke="#6b4a34" stroke-width="2"/><circle cx="21" cy="37" r="11" fill="#ffd54a" opacity=".35"/><rect x="14.5" y="30" width="13" height="14" rx="3" fill="#ffd54a" stroke="#6b4a34" stroke-width="2"/>') }] },
-  { id: 'werk', name: 'Werkelinge', sub: 'Winzige Tüftler mit Werkzeug', story: 'Die Werkelinge reparieren alles, was klemmt, quietscht oder wackelt.', legend: { id: 'wuppdich', name: 'Meister Wuppdich', svg: aWerk('#3f51b5', '<circle cx="0" cy="-32" r="10" fill="none" stroke="#ffb300" stroke-width="6" stroke-dasharray="3.49 3.49"/><circle cx="0" cy="-32" r="8" fill="#ffd54a"/><circle cx="0" cy="-32" r="3" fill="#fff8e1"/>' + aStar(-30, 28, 6, '#fff') + aStar(30, 22, 5, '#fff'), { belt: '<rect x="-23" y="24" width="46" height="6" fill="#8d6e63"/>' }) }, ch: [
+  { id: 'werk', reward: 'acc.tueftler', rname: 'Tüftler-Helm', name: 'Werkelinge', sub: 'Winzige Tüftler mit Werkzeug', story: 'Die Werkelinge reparieren alles, was klemmt, quietscht oder wackelt.', legend: { id: 'wuppdich', name: 'Meister Wuppdich', svg: aWerk('#3f51b5', '<circle cx="0" cy="-32" r="10" fill="none" stroke="#ffb300" stroke-width="6" stroke-dasharray="3.49 3.49"/><circle cx="0" cy="-32" r="8" fill="#ffd54a"/><circle cx="0" cy="-32" r="3" fill="#fff8e1"/>' + aStar(-30, 28, 6, '#fff') + aStar(30, 22, 5, '#fff'), { belt: '<rect x="-23" y="24" width="46" height="6" fill="#8d6e63"/>' }) }, ch: [
     { id: 'schraubi', name: 'Schraubi', q: 20, svg: aWerk('#ff8a65', '<rect x="-3.5" y="-33" width="7" height="19" rx="2.5" fill="#ffca28"/><rect x="-1.5" y="-48" width="3" height="16" fill="#b0bec5"/><path d="M-4.5 -48 h9" stroke="#b0bec5" stroke-width="2.4"/>') },
     { id: 'zahni', name: 'Zahni', q: 25, svg: aWerk('#4dd0e1', '<circle cx="0" cy="-28" r="10" fill="none" stroke="#ffb300" stroke-width="6" stroke-dasharray="3.49 3.49"/><circle cx="0" cy="-28" r="8" fill="#ffca28"/><circle cx="0" cy="-28" r="3" fill="#fff8e1"/>') },
     { id: 'zwirbel', name: 'Zwirbel', q: 30, svg: aWerk('#aed581', '<path d="M-7 -14 Q-18 -30 -5 -34 Q7 -38 0 -26 M5 -14 Q15 -28 9 -37 Q18 -41 20 -30" fill="none" stroke="#e53935" stroke-width="2.8" stroke-linecap="round"/><circle cx="-5" cy="-34" r="3" fill="#ffd54a"/><circle cx="20" cy="-30" r="3" fill="#ffd54a"/>') },
     { id: 'haemmerle', name: 'Hämmerle', q: 35, svg: aWerk('#9575cd', '<rect x="22" y="10" width="4.5" height="28" rx="2" fill="#8d6e63" transform="rotate(22 24 24)"/><rect x="15" y="2" width="20" height="10" rx="2.5" fill="#78909c" transform="rotate(22 25 7)"/>') },
     { id: 'tropfi', name: 'Tropfi', q: 'G', svg: aWerk('#f48fb1', '<path d="M0 -46 Q-10 -31 0 -22 Q10 -31 0 -46Z" fill="#29b6f6"/><path d="M-3 -34 Q-6 -29 -2 -27" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>') },
     { id: 'brutzel', name: 'Brutzel', q: 'G', svg: aWerk('#ffd180', '<path d="M8 -14 Q15 -30 6 -36" fill="none" stroke="#546e7a" stroke-width="3.2" stroke-linecap="round"/><circle cx="6" cy="-39" r="10" fill="#ffab40" opacity=".35"/><circle cx="6" cy="-39" r="5" fill="#ff7043"/>') }] },
-  { id: 'brum', name: 'Brummel', sub: 'Große, tollpatschige Kuschelkerle', story: 'Brummel sind riesig, gutmütig und ein bisschen ungeschickt.', legend: { id: 'goldbrummel', name: 'Goldbrummel', svg: aBrum('#ffca28', '#fff3c4', aCrown(0, -42) + `<circle cx="14" cy="1" r="7" fill="none" stroke="#c79100" stroke-width="2"/>`) }, ch: [
+  { id: 'brum', reward: 'acc.brummelohren', rname: 'Brummel-Ohren', name: 'Brummel', sub: 'Große, tollpatschige Kuschelkerle', story: 'Brummel sind riesig, gutmütig und ein bisschen ungeschickt.', legend: { id: 'goldbrummel', name: 'Goldbrummel', svg: aBrum('#ffca28', '#fff3c4', aCrown(0, -42) + `<circle cx="14" cy="1" r="7" fill="none" stroke="#c79100" stroke-width="2"/>`) }, ch: [
     { id: 'schmatz', name: 'Schmatz', q: 20, svg: aBrum('#c9a227', '#f5e6a8', '<rect x="-15" y="27" width="30" height="13" rx="4" fill="#e0a85e"/><path d="M-11 27 Q-7 35 -3 27 Q1 38 5 27 Q9 34 12 27Z" fill="#ffb300"/>') },
     { id: 'bibbel', name: 'Bibbel', q: 25, svg: aBrum('#8e6bbf', '#d9c8f0', '<ellipse cx="36" cy="-30" rx="7" ry="5" fill="#ffd54a"/><path d="M32 -35 v9 M36 -35 v9 M40 -34 v8" stroke="#2a2038" stroke-width="1.6"/><ellipse cx="32" cy="-38" rx="4.5" ry="3" fill="#e1f5fe" opacity=".85"/><path d="M-30 -4 q-4 6 0 9 q4 -3 0 -9" fill="#4fc3f7"/>', { mouth: '<path d="M-6 17 Q0 14 6 17" fill="none" stroke="#2a2038" stroke-width="2" stroke-linecap="round"/>' }) },
     { id: 'gaehn', name: 'Gähn', q: 30, svg: aBrum('#4fa8a0', '#c8ece8', '<path d="M-24 -24 Q0 -50 24 -24 Q9 -29 -24 -24Z" fill="#7986cb"/><circle cx="25" cy="-28" r="4.5" fill="#fff"/><text x="33" y="-30" font-size="13" font-weight="700" fill="#5c6bc0" font-family="sans-serif">z</text>', { mouth: '<ellipse cx="0" cy="18" rx="4" ry="5" fill="#7b2d3b"/>' }) },
     { id: 'plumps', name: 'Plumps', q: 35, svg: aBrum('#e57373', '#ffd9d9', aStar(-26, -34, 6, '#ffd54a') + aStar(0, -42, 5, '#ffe082') + aStar(26, -34, 6, '#ffd54a') + '<rect x="7" y="-9" width="15" height="5.5" rx="2.5" fill="#ffcc80" transform="rotate(-20 14 -6)"/>') },
     { id: 'mampf', name: 'Mampf', q: 'G', svg: aBrum('#7cb342', '#dcedc8', '<ellipse cx="0" cy="38" rx="17" ry="4.5" fill="#c68a3c"/><ellipse cx="0" cy="33" rx="16" ry="4.5" fill="#e0a85e"/><ellipse cx="0" cy="28" rx="15" ry="4.5" fill="#c68a3c"/><rect x="-4" y="22" width="8" height="5" rx="1.5" fill="#fff59d"/>') },
     { id: 'pitsch', name: 'Pitsch', q: 'G', svg: aBrum('#5c9ce6', '#d3e6fb', '<path d="M-28 -22 Q0 -55 28 -22 Q14 -28 0 -22 Q-14 -28 -28 -22Z" fill="#ef5350"/><path d="M0 -22 V-8" stroke="#6b4a34" stroke-width="2.6"/><path d="M-34 -2 l-2 6 M32 -6 l-2 6 M38 6 l-2 6" stroke="#4fc3f7" stroke-width="2" stroke-linecap="round"/>') }] },
-  { id: 'huepf', name: 'Hüpfelinge', sub: 'Eine Herde, die immer dem Anführer folgt', story: 'Die Hüpfelinge hüpfen im Gänsemarsch. Aber einer ist immer verschwunden.', legend: { id: 'springmeister', name: 'Springmeister', svg: aHup('#ffd54a', '#ef5350', aCrown(0, -35) + aStar(-26, 20, 6, '#fff') + aStar(27, 26, 5, '#fff'), { dk: '#c79100' }) }, ch: [
+  { id: 'huepf', reward: 'acc.huepffuehler', rname: 'Hüpf-Fühler', name: 'Hüpfelinge', sub: 'Eine Herde, die immer dem Anführer folgt', story: 'Die Hüpfelinge hüpfen im Gänsemarsch. Aber einer ist immer verschwunden.', legend: { id: 'springmeister', name: 'Springmeister', svg: aHup('#ffd54a', '#ef5350', aCrown(0, -35) + aStar(-26, 20, 6, '#fff') + aStar(27, 26, 5, '#fff'), { dk: '#c79100' }) }, ch: [
     { id: 'hopp', name: 'Hopp', q: 20, svg: aHup('#66bb6a', '#ef5350', '<path d="M-26 36 V-30" stroke="#6b4a34" stroke-width="2.8"/><path d="M-26 -30 L-8 -24 L-26 -16Z" fill="#ffd54a"/>') },
     { id: 'zipfel', name: 'Zipfel', q: 25, svg: aHup('#4dd0e1', '#ff7043', '', { tail: '<path d="M10 20 Q30 14 36 30 Q40 40 30 44 Q36 36 28 30 Q20 26 12 28Z" fill="#ff7043"/>' }) },
     { id: 'tuepfel', name: 'Tüpfel', q: 30, svg: aHup('#f48fb1', '#7e57c2', '', { spots: '<circle cx="-11" cy="18" r="3" fill="#fff" opacity=".8"/><circle cx="10" cy="28" r="3.4" fill="#fff" opacity=".8"/><circle cx="-9" cy="34" r="2.6" fill="#fff" opacity=".8"/><circle cx="-12" cy="-8" r="2.6" fill="#fff" opacity=".8"/><circle cx="12" cy="-10" r="2.2" fill="#fff" opacity=".8"/>' }) },
@@ -8220,7 +8220,7 @@ const ALB_CH = [];
 ALB_SETS.forEach(s => {
   s.ch.forEach(c => { c.set = s.id; ALB_CH.push(c); });
   s.legend.set = s.id; s.legend.leg = true;
-  regItems([...s.ch.map(c => ({ id: 'fg.' + c.id, kind: 'figur', name: c.name, svg: c.svg, set: s.id, src: c.q === 'G' ? { t: 'milestone', why: ALB_WHY } : { t: 'shop', cur: 'c', price: c.q } })),
+  regItems([...s.ch.map(c => ({ id: 'fg.' + c.id, kind: 'figur', name: c.name, svg: c.svg, set: s.id, src: { t: 'milestone', why: ALB_WHY } })),
     { id: 'fg.' + s.legend.id, kind: 'figur', name: s.legend.name, svg: s.legend.svg, set: s.id, leg: true, src: { t: 'milestone', why: 'Sammle alle 6 Figuren von ' + s.name } }]);
 });
 const albS = () => { const A = S.album || (S.album = {}); if (!A.done) A.done = {}; if (!Array.isArray(A.got)) A.got = []; return A; };
@@ -8243,44 +8243,34 @@ function albumCheck(silent) {
   albumMig(); const A = albS(); let fresh = null;
   ALB_SETS.forEach(s => {
     if (!A.done[s.id] && albHave(s) === s.ch.length) {
-      A.done[s.id] = Date.now(); unlock('fg.' + s.legend.id, true); S.coins += ALB_BONUS; S.life = (S.life || 0) + ALB_BONUS; fresh = s;
+      A.done[s.id] = Date.now(); unlock('fg.' + s.legend.id, true); unlock(s.reward, true); S.coins += ALB_BONUS; S.life = (S.life || 0) + ALB_BONUS; fresh = s;
     }
   });
   if (fresh) {
     save(); sfx('magic'); try { if (!rwCalm()) confetti(80); } catch (e) { }
-    if (!silent && !(typeof UI !== 'undefined' && UI && UI.wQuiet)) modal('Set komplett!', `<div class="gift-reveal"><div class="gift-th"><svg viewBox="-55 -55 110 110">${fresh.legend.svg}</svg></div><p><b>${esc(fresh.legend.name)}</b><br><span class="small mute">Die geheime Legende von ${esc(fresh.name)} ist da – und ${ALB_BONUS} 🪙 dazu!</span></p></div>`, null, '', '', 'Toll!');
+    if (!silent && !(typeof UI !== 'undefined' && UI && UI.wQuiet)) modal('Set komplett!', `<div class="gift-reveal"><div class="gift-th"><svg viewBox="-55 -55 110 110">${fresh.legend.svg}</svg></div><p><b>${esc(fresh.legend.name)}</b><br><span class="small mute">Die geheime Legende von ${esc(fresh.name)} ist da – dazu das Avatar-Zubehör <b>${esc(fresh.rname)}</b> und ${ALB_BONUS} 🪙!</span></p></div>`, null, '', '', 'Toll!');
   }
   return fresh;
 }
-/* eine zufällige noch fehlende Figur (für Geschenke); Geschenk-Figuren zählen doppelt */
+/* eine zufällige noch fehlende Figur (für Geschenke) */
 function albumGiftPick() {
   const pool = ALB_CH.filter(c => !hasItem('fg.' + c.id)); if (!pool.length) return null;
-  const w = []; pool.forEach(c => { w.push(c); if (c.q === 'G') w.push(c); });
-  return CATALOG['fg.' + w[Math.floor(Math.random() * w.length)].id];
+  return CATALOG['fg.' + pool[Math.floor(Math.random() * pool.length)].id];
 }
 
-/* ---------- Ansicht ---------- */
-const albMini = (s, lock) => `<span class="alm ${lock ? 'alsil' : ''}"><svg viewBox="-55 -55 110 110">${s}</svg></span>`;
+/* ---------- Ansicht: eine Reihe je Serie, alles auf einer Seite ---------- */
+const albSvg = (svg, lock, cls) => `<span class="alf-i ${lock ? 'alsil' : ''} ${cls || ''}"><svg viewBox="-55 -55 110 110">${svg}</svg></span>`;
 function albumView() {
-  albumMig(); const sel = ALB_SETS.find(s => s.id === UI.alSet);
-  if (sel) {
-    const h = albHave(sel), lg = CATALOG['fg.' + sel.legend.id], lgOn = hasItem(lg.id), near = h >= sel.ch.length - 2;
-    const legTile = lgOn ? itemTile(lg, {}) : `<div class="itile lk alleg" title="Geheim"><span class="ith alsil"><svg viewBox="-55 -55 110 110">${near ? sel.legend.svg : '<text x="0" y="14" font-size="52" text-anchor="middle" font-weight="700" fill="#888" font-family="sans-serif">?</text>'}</svg></span><span class="itn">${near ? '???' : 'Geheim'}</span><span class="tag">${h === sel.ch.length ? 'gleich da' : 'noch ' + (sel.ch.length - h)}</span></div>`;
-    return `<div class="alb-back"><button class="btn sec" data-act="alSet" data-arg="">‹ Alle Sets</button></div>
-    <div class="alb-hd"><h3>${esc(sel.name)}</h3><p class="small mute">${esc(sel.story)}</p><div class="bar"><i style="width:${Math.round(h / sel.ch.length * 100)}%"></i></div><span class="small mute">${h} von ${sel.ch.length} Figuren${albS().done[sel.id] ? ' · Set komplett ✔' : ' · Alle 6 = geheime Überraschung'}</span></div>
-    <div class="itiles">${sel.ch.map(c => itemTile(CATALOG['fg.' + c.id], { inShop: true })).join('')}${legTile}</div>`;
-  }
-  const done = Object.keys(albS().done).length;
-  return `<p class="mute small" style="margin:6px 4px">Sammelalbum: ${done} von ${ALB_SETS.length} Sets komplett. Tippe auf ein Set.</p><div class="alb-sets">${ALB_SETS.map(s => {
-    const h = albHave(s), ok = !!albS().done[s.id];
-    return `<button class="alb-set ${ok ? 'ok' : ''}" data-act="alSet" data-arg="${s.id}"><div class="alb-row">${s.ch.map(c => albMini(c.svg, !hasItem('fg.' + c.id))).join('')}${albMini(s.legend.svg, !ok)}</div><b>${esc(s.name)}</b><span class="small mute">${esc(s.sub)}</span><div class="bar"><i style="width:${Math.round(h / s.ch.length * 100)}%"></i></div><span class="small">${h} / ${s.ch.length}${ok ? ' ✔' : ''}</span></button>`;
+  albumMig(); const A = albS(), done = Object.keys(A.done).length;
+  return `<p class="mute small" style="margin:6px 4px">Sticker gibt es als Überraschungsgeschenk. Hast du alle 6 einer Serie, wartet eine geheime Belohnung. ${done} von ${ALB_SETS.length} Serien komplett.</p><div class="alb-list">${ALB_SETS.map(s => {
+    const h = albHave(s), ok = !!A.done[s.id], near = h >= s.ch.length - 2, rw = CATALOG[s.reward], rwTh = rw ? KIND[rw.kind].thumb(rw) : '';
+    const figs = s.ch.map(c => { const on = hasItem('fg.' + c.id); return `<div class="alf ${on ? 'on' : ''}">${albSvg(c.svg, !on)}<b>${esc(c.name)}</b></div>`; }).join('');
+    const leg = ok ? `<div class="alf on leg">${albSvg(s.legend.svg, false)}<b>${esc(s.legend.name)}</b></div>` : `<div class="alf leg">${albSvg(near ? s.legend.svg : '<text x="0" y="16" font-size="56" text-anchor="middle" font-weight="700" fill="#777" font-family="sans-serif">?</text>', true)}<b>${near ? '???' : 'Geheim'}</b></div>`;
+    const rew = `<div class="alf rew ${ok ? 'on' : ''}"><span class="alf-i ${ok ? '' : 'alsil'}">${ok ? rwTh : '<svg viewBox="-55 -55 110 110"><text x="0" y="16" font-size="56" text-anchor="middle" font-weight="700" fill="#777" font-family="sans-serif">?</text></svg>'}</span><b>${ok ? esc(s.rname) : 'Belohnung'}</b></div>`;
+    return `<section class="alb-ser ${ok ? 'ok' : ''}"><div class="alb-hd"><h3>${esc(s.name)}</h3><span class="small mute">${h} / ${s.ch.length}${ok ? ' ✔' : ''}</span></div><p class="small mute" style="margin:0 0 8px">${esc(s.sub)}</p><div class="alb-figs">${figs}${leg}${rew}</div></section>`;
   }).join('')}</div>`;
 }
-registerFeature({
-  id: 'album', group: 'hidden', title: 'Sammelalbum',
-  boot: albumMig, check: albumCheck,
-  acts: { alSet: id => { UI.alSet = id || null; render(); } }
-});
+registerFeature({ id: 'album', group: 'hidden', title: 'Sticker', boot: albumMig, check: albumCheck });
 
 /* =====================================================================
 AVATAR „Mein Avatar“ – eigenes Porträt (Memoji-Stil, Pastell, kein Pink)
@@ -8575,6 +8565,10 @@ add('acc', { k: 'shades', n: 'Sonnenbrille', s: 'x', slot: 'glass', d: () => `<r
 add('acc', { k: 'starglass', n: 'Sternenbrille', s: 'x', slot: 'glass', d: () => `<path d="${star5(80, 97, 17, 8)}" fill="#FFD43B" fill-opacity=".55" stroke="#C98A00" stroke-width="2.4" stroke-linejoin="round"/><path d="${star5(120, 97, 17, 8)}" fill="#FFD43B" fill-opacity=".55" stroke="#C98A00" stroke-width="2.4" stroke-linejoin="round"/><path d="M95 95H105" stroke="#C98A00" stroke-width="2.6"/>` });
 add('acc', { k: 'scarf', n: 'Schal Rot', s: 'x', slot: 'neck', d: () => `<path d="M74 146Q100 162 126 146L128 160Q100 176 72 160Z" fill="#E5504A" stroke="#B93A34" stroke-width="1.4"/><path d="M110 160L122 190L106 192L100 166Z" fill="#E5504A" stroke="#B93A34" stroke-width="1.4"/><path d="M107 176H120M105 184H118" stroke="#fff" stroke-width="2.4" opacity=".7"/>` });
 add('acc', { k: 'starneck', n: 'Sternenkette', s: 'x', slot: 'neck', d: () => `<path d="M80 144Q100 170 120 144" stroke="#C98A00" stroke-width="2.2" fill="none"/><path d="${star5(100, 170, 10, 4.6)}" fill="${gold()}" stroke="#C98A00" stroke-width="1.4" stroke-linejoin="round"/>` });
+add('acc', { k: 'pilzhut', n: 'Pilzhut', s: 'x', slot: 'head', d: () => `<path d="M52 70Q50 14 100 14Q150 14 148 70Q100 82 52 70Z" fill="#E5504A" stroke="#B3302B" stroke-width="1.6"/><circle cx="78" cy="38" r="8" fill="#fff"/><circle cx="108" cy="28" r="9" fill="#fff"/><circle cx="130" cy="52" r="7" fill="#fff"/><circle cx="92" cy="58" r="5" fill="#fff"/>` });
+add('acc', { k: 'tueftler', n: 'Tüftler-Helm', s: 'x', slot: 'head', d: () => `<path d="M60 70Q60 40 100 40Q140 40 140 70Z" fill="#4DD0E1" stroke="#2a9aa8" stroke-width="1.6"/><path d="M60 62H140" stroke="#455A64" stroke-width="5"/><circle cx="82" cy="56" r="11" fill="#fff" stroke="#455A64" stroke-width="3.4"/><circle cx="118" cy="56" r="11" fill="#fff" stroke="#455A64" stroke-width="3.4"/><circle cx="82" cy="57" r="4.6" fill="#2a2038"/><circle cx="118" cy="57" r="4.6" fill="#2a2038"/><circle cx="100" cy="26" r="11" fill="none" stroke="#FFB300" stroke-width="7" stroke-dasharray="4.3 4.3"/><circle cx="100" cy="26" r="8.5" fill="#FFCA28"/><circle cx="100" cy="26" r="3.2" fill="#FFF8E1"/>` });
+add('acc', { k: 'brummelohren', n: 'Brummel-Ohren', s: 'x', slot: 'head', d: () => `<circle cx="66" cy="56" r="19" fill="#8E6BBF" stroke="#6a4a98" stroke-width="1.6"/><circle cx="134" cy="56" r="19" fill="#8E6BBF" stroke="#6a4a98" stroke-width="1.6"/><circle cx="66" cy="56" r="10" fill="#D9C8F0"/><circle cx="134" cy="56" r="10" fill="#D9C8F0"/><path d="M64 66Q100 44 136 66" stroke="#6a4a98" stroke-width="4" fill="none"/>` });
+add('acc', { k: 'huepffuehler', n: 'Hüpf-Fühler', s: 'x', slot: 'head', d: () => `<path d="M82 64Q70 50 84 42Q96 34 80 22M118 64Q130 50 116 42Q104 34 120 22" stroke="#455A64" stroke-width="3.6" fill="none" stroke-linecap="round"/><circle cx="80" cy="20" r="8" fill="#FF7043" stroke="#c24a22" stroke-width="1.4"/><circle cx="120" cy="20" r="8" fill="#FF7043" stroke="#c24a22" stroke-width="1.4"/>` });
 /* Haarschmuck */
 add('acc', { k: 'hairband', n: 'Haarreif Mint', s: 'c15', slot: 'hair', d: () => `<path d="M58 72Q100 24 142 72" stroke="#3CCFA0" stroke-width="5.4" fill="none"/><path d="M70 52Q86 40 102 38" stroke="#fff" stroke-width="2" fill="none" opacity=".5"/>` });
 const flowerD = (c, c2, x, y) => `<g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-7" rx="4.6" ry="6" transform="rotate(${a})" fill="${c}"/>`).join('')}<circle r="3.6" fill="${c2}"/></g>`;
@@ -8652,7 +8646,8 @@ const MS = {                                                       // id -> [Tex
 };
 const GIFT_WHY = 'Überraschungsgeschenk aus dem Shop';
 const GIFT_ACC = ['acc.party', 'acc.pirate', 'acc.unicorn', 'acc.antenna', 'acc.chef', 'acc.viking', 'acc.shades', 'acc.starglass', 'acc.scarf', 'acc.starneck'];
-const SRC = id => MS[id] ? { t: 'milestone', why: MS[id][0] } : GIFT_ACC.includes(id) ? { t: 'milestone', why: GIFT_WHY } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
+const SET_ACC = { 'acc.pilzhut': 'Pilzdorf', 'acc.tueftler': 'Werkelinge', 'acc.brummelohren': 'Brummel', 'acc.huepffuehler': 'Hüpfelinge' };
+const SRC = id => SET_ACC[id] ? { t: 'milestone', why: 'Sticker-Serie ' + SET_ACC[id] + ' komplett' } : MS[id] ? { t: 'milestone', why: MS[id][0] } : GIFT_ACC.includes(id) ? { t: 'milestone', why: GIFT_WHY } : PRICE[id] ? { t: 'shop', cur: 'c', price: PRICE[id] } : { t: 'free' };
 function avCheck() {                                               // Meilensteine freischalten (leise Hinweise kommen von unlock)
 let any = false;
 Object.keys(MS).forEach(id => { if (!S.unl[id] && ((S.stats || {})[MS[id][1]] || 0) >= MS[id][2]) { unlock(id); any = true; } });
@@ -8696,7 +8691,7 @@ return `<svg class="mascot" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/sv
 KINDS.forEach(k => regKind(k[1], { group: 'avatar', label: k[2], ic: k[3], thumb: k[0] === 'color' ? colorThumb : it => thumbOf(k[0], it) }));
 KINDS.forEach(k => {
 if (k[0] === 'color') return;
-regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id) || GIFT_ACC.includes(p.id)).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
+regItems(T[k[0]].filter(p => p.id in PRICE || p.id in MS || FREE.includes(p.id) || GIFT_ACC.includes(p.id) || p.id in SET_ACC).map(p => ({ id: p.id, kind: k[1], name: p.n, src: SRC(p.id), av: 1 })));
 });
 regItems([].concat(...Object.keys(PAL).map(sl => PAL[sl][1].map(c => ({ id: c.id, kind: 'avcolor', name: PAL[sl][0] + ': ' + c[1], src: SRC(c.id), av: 1, slot: sl, v: c[2] })))));
 /* =====================================================================
@@ -9691,11 +9686,11 @@ regSubject({ id: 'geo', name: GEO_NAME, ic: '🌍', act: 'geo', sub: () => `${gK
    ===================================================================== */
 const GIFT_WHY2 = 'Überraschungsgeschenk aus dem Shop';
 const GIFT_MS = [
-  ...[40, 100, 200, 350, 550, 800, 1100, 1500].map(n => ({ id: 'gq' + n, t: `Löse ${n} Aufgaben`, v: s => s.stats.q || 0, n })),
-  ...[4, 12, 25, 45, 70].map(n => ({ id: 'gb' + n, t: `Beende ${n} Stufen`, v: s => s.stats.blocks || 0, n })),
-  ...[2, 4, 6, 9].map(n => ({ id: 'gd' + n, t: `Beende ${n} Gruppen`, v: s => s.stats.decks || 0, n })),
-  ...[2, 6, 12].map(n => ({ id: 'gp' + n, t: `${n} Stufen mit 10 von 10`, v: s => s.stats.perfect || 0, n })),
-  ...[3, 7, 14].map(n => ({ id: 'gs' + n, t: `${n} Tage in Folge üben`, v: s => (s.streak && s.streak.best) || 0, n }))
+  ...[40, 100, 200, 350, 550, 800, 1100, 1500, 2000, 2600, 3300, 4100].map(n => ({ id: 'gq' + n, t: `Löse ${n} Aufgaben`, v: s => s.stats.q || 0, n })),
+  ...[4, 12, 25, 45, 70, 100, 140, 190].map(n => ({ id: 'gb' + n, t: `Beende ${n} Stufen`, v: s => s.stats.blocks || 0, n })),
+  ...[2, 4, 6, 9, 12, 16, 20].map(n => ({ id: 'gd' + n, t: `Beende ${n} Gruppen`, v: s => s.stats.decks || 0, n })),
+  ...[2, 6, 12, 20, 30, 45].map(n => ({ id: 'gp' + n, t: `${n} Stufen mit 10 von 10`, v: s => s.stats.perfect || 0, n })),
+  ...[3, 7, 14, 21, 30, 45].map(n => ({ id: 'gs' + n, t: `${n} Tage in Folge üben`, v: s => (s.streak && s.streak.best) || 0, n }))
 ];
 const giftS = () => { const g = S.gifts || (S.gifts = {}); if (!g.got) g.got = {}; if (!Array.isArray(g.open)) g.open = []; if (!Array.isArray(g.log)) g.log = []; return g; };
 function giftCheck() {
@@ -9759,9 +9754,9 @@ Object.assign(ACT, {
   giftGo: () => {
     const g = giftS(); if (!g.open.length) return;
     const mid = g.open.shift(), pool = giftPool(), fg = typeof albumGiftPick === 'function' ? albumGiftPick() : null;
-    const it = fg && (!pool.length || Math.random() < .65) ? fg : pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+    const it = fg && (!pool.length || Math.random() < .8) ? fg : pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
     let body, title = 'Überraschung!';
-    if (it) { unlock(it.id, true); g.log.push({ m: mid, item: it.id, ts: Date.now() }); body = `<div class="gift-reveal"><div class="gift-th">${(KIND[it.kind] || { thumb: x => x.e }).thumb(it)}</div><p><b>${esc(it.name)}</b><br><span class="small mute">${it.kind === 'figur' ? 'Eine neue Figur für dein Sammelalbum!' : it.kind === 'bsticker' ? 'Ein neuer Sticker für dein Heft.' : 'Neues Zubehör für deinen Avatar.'}</span></p></div>`; }
+    if (it) { unlock(it.id, true); g.log.push({ m: mid, item: it.id, ts: Date.now() }); body = `<div class="gift-reveal"><div class="gift-th">${(KIND[it.kind] || { thumb: x => x.e }).thumb(it)}</div><p><b>${esc(it.name)}</b><br><span class="small mute">${it.kind === 'figur' ? 'Ein neuer Sticker für dein Album!' : it.kind === 'bsticker' ? 'Ein neuer Sticker für dein Heft.' : 'Neues Zubehör für deinen Avatar.'}</span></p></div>`; }
     else { S.coins += 30; S.life = (S.life || 0) + 30; g.log.push({ m: mid, item: 'coins30', ts: Date.now() }); body = '<p>Du hast schon alle Geschenke! Dafür gibt es <b>30 🪙</b>.</p>'; }
     const done = it && typeof albumCheck === 'function' ? albumCheck(true) : null;
     if (done) body += `<p><b>Set „${esc(done.name)}“ komplett!</b><br><span class="small mute">Die Legende ${esc(done.legend.name)} und ${ALB_BONUS} 🪙 sind dein.</span></p>`;

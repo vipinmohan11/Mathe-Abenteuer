@@ -7,11 +7,11 @@
    ===================================================================== */
 const GIFT_WHY2 = 'Überraschungsgeschenk aus dem Shop';
 const GIFT_MS = [
-  ...[40, 100, 200, 350, 550, 800, 1100, 1500].map(n => ({ id: 'gq' + n, t: `Löse ${n} Aufgaben`, v: s => s.stats.q || 0, n })),
-  ...[4, 12, 25, 45, 70].map(n => ({ id: 'gb' + n, t: `Beende ${n} Stufen`, v: s => s.stats.blocks || 0, n })),
-  ...[2, 4, 6, 9].map(n => ({ id: 'gd' + n, t: `Beende ${n} Gruppen`, v: s => s.stats.decks || 0, n })),
-  ...[2, 6, 12].map(n => ({ id: 'gp' + n, t: `${n} Stufen mit 10 von 10`, v: s => s.stats.perfect || 0, n })),
-  ...[3, 7, 14].map(n => ({ id: 'gs' + n, t: `${n} Tage in Folge üben`, v: s => (s.streak && s.streak.best) || 0, n }))
+  ...[40, 100, 200, 350, 550, 800, 1100, 1500, 2000, 2600, 3300, 4100].map(n => ({ id: 'gq' + n, t: `Löse ${n} Aufgaben`, v: s => s.stats.q || 0, n })),
+  ...[4, 12, 25, 45, 70, 100, 140, 190].map(n => ({ id: 'gb' + n, t: `Beende ${n} Stufen`, v: s => s.stats.blocks || 0, n })),
+  ...[2, 4, 6, 9, 12, 16, 20].map(n => ({ id: 'gd' + n, t: `Beende ${n} Gruppen`, v: s => s.stats.decks || 0, n })),
+  ...[2, 6, 12, 20, 30, 45].map(n => ({ id: 'gp' + n, t: `${n} Stufen mit 10 von 10`, v: s => s.stats.perfect || 0, n })),
+  ...[3, 7, 14, 21, 30, 45].map(n => ({ id: 'gs' + n, t: `${n} Tage in Folge üben`, v: s => (s.streak && s.streak.best) || 0, n }))
 ];
 const giftS = () => { const g = S.gifts || (S.gifts = {}); if (!g.got) g.got = {}; if (!Array.isArray(g.open)) g.open = []; if (!Array.isArray(g.log)) g.log = []; return g; };
 function giftCheck() {
@@ -75,9 +75,9 @@ Object.assign(ACT, {
   giftGo: () => {
     const g = giftS(); if (!g.open.length) return;
     const mid = g.open.shift(), pool = giftPool(), fg = typeof albumGiftPick === 'function' ? albumGiftPick() : null;
-    const it = fg && (!pool.length || Math.random() < .65) ? fg : pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+    const it = fg && (!pool.length || Math.random() < .8) ? fg : pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
     let body, title = 'Überraschung!';
-    if (it) { unlock(it.id, true); g.log.push({ m: mid, item: it.id, ts: Date.now() }); body = `<div class="gift-reveal"><div class="gift-th">${(KIND[it.kind] || { thumb: x => x.e }).thumb(it)}</div><p><b>${esc(it.name)}</b><br><span class="small mute">${it.kind === 'figur' ? 'Eine neue Figur für dein Sammelalbum!' : it.kind === 'bsticker' ? 'Ein neuer Sticker für dein Heft.' : 'Neues Zubehör für deinen Avatar.'}</span></p></div>`; }
+    if (it) { unlock(it.id, true); g.log.push({ m: mid, item: it.id, ts: Date.now() }); body = `<div class="gift-reveal"><div class="gift-th">${(KIND[it.kind] || { thumb: x => x.e }).thumb(it)}</div><p><b>${esc(it.name)}</b><br><span class="small mute">${it.kind === 'figur' ? 'Ein neuer Sticker für dein Album!' : it.kind === 'bsticker' ? 'Ein neuer Sticker für dein Heft.' : 'Neues Zubehör für deinen Avatar.'}</span></p></div>`; }
     else { S.coins += 30; S.life = (S.life || 0) + 30; g.log.push({ m: mid, item: 'coins30', ts: Date.now() }); body = '<p>Du hast schon alle Geschenke! Dafür gibt es <b>30 🪙</b>.</p>'; }
     const done = it && typeof albumCheck === 'function' ? albumCheck(true) : null;
     if (done) body += `<p><b>Set „${esc(done.name)}“ komplett!</b><br><span class="small mute">Die Legende ${esc(done.legend.name)} und ${ALB_BONUS} 🪙 sind dein.</span></p>`;

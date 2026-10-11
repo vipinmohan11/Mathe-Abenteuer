@@ -481,7 +481,7 @@ function itemPreview(slot, it) {
   if (slot === 'bg') return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, bg: it.id }, 112);
   return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, frame: it.id }, 112);
 }
-const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (!g.includes(k.group)) g.push(k.group); }); if (typeof wShopTickets === 'function') g.push('reisen'); return g; };
+const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (k.group !== 'buch' && !g.includes(k.group)) g.push(k.group); }); if (typeof wShopTickets === 'function') g.push('reisen'); return g; };
 const shopTimeHTML = () => { const L = shopLeft(); return L === Infinity ? '' : `<span class="mute small">Shop-Zeit heute: <b id="shopT">${fmtT(L)}</b> übrig</span>`; };
 function goalItem() { return S.goal && CATALOG[S.goal] && !hasItem(S.goal) ? CATALOG[S.goal] : null; }
 const goalCard = () => {

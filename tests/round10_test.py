@@ -15,7 +15,6 @@ with sync_playwright() as p:
 
     # ---------- Daten ----------
     ok(E("()=>ALB_SETS.length")==4 and E("()=>ALB_SETS.every(s=>s.ch.length===6)"), '4 Sets mit je 6 Figuren')
-    ok(E("()=>ALB_SETS.every(s=>s.ch.filter(c=>c.q==='G').length===2 && s.ch.filter(c=>typeof c.q==='number').length===4)"), 'je Set 4 im Shop, 2 nur als Geschenk')
     ok(E("()=>ALB_SETS.every(s=>[...s.ch,s.legend].every(c=>CATALOG['fg.'+c.id] && CATALOG['fg.'+c.id].svg.length>200))"), 'alle 28 Figuren im Katalog mit Bild')
     ok(E("()=>Object.keys(CATALOG).filter(k=>k.startsWith('fg.')).length")==28, '28 Katalogeinträge (24 + 4 Legenden)')
     ok(E("()=>ALB_OLD.every(k=>!CATALOG['bs.'+k])"), 'alte Tier-Sticker sind aus dem Katalog')
@@ -37,18 +36,14 @@ with sync_playwright() as p:
 
     # ---------- Shop ----------
     E("()=>go('shop')"); pg.wait_for_timeout(100)
-    tabs = E("()=>[...document.querySelectorAll('.tabs button')].map(x=>x.textContent.trim())")
-    ok(any('Sammelalbum' in t for t in tabs), 'Shop hat den Reiter Sammelalbum (%s)' % tabs)
+    tabs = E("()=>[...document.querySelectorAll('.tabs')[0].querySelectorAll('button')].map(x=>x.textContent.trim())")
+    ok(any(t.endswith('Sticker') for t in tabs) and not any('Stickerbuch' in t or 'Sammelalbum' in t for t in tabs), 'Shop: Reiter „Sticker“, kein Stickerbuch mehr (%s)' % tabs)
     pg.click('.tabs button[data-arg=album]'); pg.wait_for_timeout(100)
-    ok(E("()=>document.querySelectorAll('.alb-set').length")==4, 'Übersicht: 4 Set-Kacheln')
-    pg.click('.alb-set[data-arg=werk]'); pg.wait_for_timeout(100)
-    ok(E("()=>document.querySelectorAll('.itile').length")==7, 'Set-Seite: 6 Figuren + geheimer Platz')
-    ok(E("()=>document.querySelector('.alleg .itn').textContent")=='Geheim', 'Legende bleibt geheim, solange fast nichts da ist')
-    E("()=>buyItem('fg.schraubi')"); pg.wait_for_timeout(50)
-    ok(E("()=>hasItem('fg.schraubi')") and E("()=>S.coins")==480, 'Kaufen im Set: Figur gehört dir, 20 Münzen weg')
-    ok(not E("()=>buyItem('fg.tropfi')") and not E("()=>hasItem('fg.tropfi')"), 'Geschenk-Figuren sind nicht kaufbar')
-    pg.click('.alb-back button'); pg.wait_for_timeout(50)
-    ok(E("()=>document.querySelectorAll('.alb-set').length")==4, 'Zurück zur Übersicht')
+    ok(E("()=>document.querySelectorAll('.alb-ser').length")==4 and E("()=>document.querySelectorAll('.alf').length")==32, 'Eine Seite: 4 Serien-Reihen mit je 8 Feldern (6 + Legende + Belohnung)')
+    ok(E("()=>!document.querySelector('.alb-set, .alb-back')"), 'Kein Öffnen einzelner Sets nötig')
+    ok(E("()=>[...document.querySelectorAll('.alf-i')].every(e=>e.getBoundingClientRect().width>=70)"), 'Figuren sind groß (mind. 70 px)')
+    ok(not E("()=>buyItem('fg.schraubi')") and not E("()=>hasItem('fg.schraubi')"), 'Figuren sind nie kaufbar')
+    ok(E("()=>Object.values(CATALOG).filter(i=>i.kind==='figur').every(i=>i.src.t==='milestone')"), 'Alle Figuren sind nur Belohnungen')
 
     # ---------- Geschenk ----------
     E("()=>{const g=giftS();g.open=['gq40','gq100','gq200','gq350','gq550','gq800'];S.gifts.got.gq40=1}")
@@ -62,6 +57,8 @@ with sync_playwright() as p:
     ok(not E("()=>hasItem('fg.urpilz')"), '5 von 6: Legende noch nicht da')
     E("()=>{S.unl['fg.glimmer']=1;albumCheck()}")
     ok(E("()=>hasItem('fg.urpilz')") and E("()=>S.coins")==150, '6 von 6: Legende + 50 Münzen')
+    ok(E("()=>hasItem('acc.pilzhut')") and not E("()=>hasItem('acc.tueftler')"), 'Set komplett: seltenes Avatar-Zubehör Pilzhut (nur das der Serie)')
+    ok(E("()=>ALB_SETS.every(s=>CATALOG[s.reward] && CATALOG[s.reward].src.t==='milestone')"), 'Jede Serie hat ein Avatar-Zubehör als Belohnung')
     ok(E("()=>!!document.querySelector('#modal')") , 'Meldung „Set komplett“')
     E("()=>{closeModal();albumCheck()}"); ok(E("()=>S.coins")==150, 'Belohnung nur einmal')
 
