@@ -174,3 +174,17 @@
 .w-picknote{display:flex;gap:10px;align-items:center;border-radius:16px;padding:12px 14px;margin:12px 0;font-size:.95rem;background:var(--dz-t2,#eef0ec);color:var(--dz-ink,#303536)}
 .w-picknote.on{background:var(--dz-ok-bg,#e3efe6);font-weight:700}
 .w-picknote svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
+/* Fester Pass: Seiten haben eine feste Höhe, neue Stempel kommen auf die nächste Seite (Blättern statt Wachsen) */
+.rp-page{height:var(--rpH,600px);overflow:hidden;display:flex;flex-direction:column}
+.rp-stamps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:var(--rpRow,158px);justify-items:center;align-items:center;flex:1;min-height:0;padding:8px 0 4px}
+.rp-stamps .rp-none{grid-column:1/-1;align-self:start}
+.rp-st{width:min(170px,92%);margin:0}
+.rp-no{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:.7rem;font-weight:800;color:var(--pl);letter-spacing:.1em}
+.rp-blank{background:repeating-radial-gradient(circle at 50% 120%,rgba(91,36,49,.045) 0 2px,transparent 2px 7px),var(--paper)}
+.rp-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0 4px;flex-wrap:wrap}.rp-nav span{font-weight:800;color:var(--mute);min-width:9em;text-align:center}
+.rp-nav .btn{min-height:44px}
+.rp.turnf .rp-page{animation:rpTurnF .38s cubic-bezier(.2,0,0,1)}.rp.turnb .rp-page{animation:rpTurnB .38s cubic-bezier(.2,0,0,1)}
+@keyframes rpTurnF{from{opacity:.2;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes rpTurnB{from{opacity:.2;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@media(max-width:760px){.rp-page{height:auto;min-height:0}.rp-visa{height:var(--rpHm,560px)}.rp-blank{display:none}}
+@media(prefers-reduced-motion:reduce){.rp.turnf .rp-page,.rp.turnb .rp-page{animation:none}}

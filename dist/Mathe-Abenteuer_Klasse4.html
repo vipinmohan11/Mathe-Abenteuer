@@ -1495,6 +1495,20 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .w-picknote{display:flex;gap:10px;align-items:center;border-radius:16px;padding:12px 14px;margin:12px 0;font-size:.95rem;background:var(--dz-t2,#eef0ec);color:var(--dz-ink,#303536)}
 .w-picknote.on{background:var(--dz-ok-bg,#e3efe6);font-weight:700}
 .w-picknote svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
+/* Fester Pass: Seiten haben eine feste Höhe, neue Stempel kommen auf die nächste Seite (Blättern statt Wachsen) */
+.rp-page{height:var(--rpH,600px);overflow:hidden;display:flex;flex-direction:column}
+.rp-stamps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:var(--rpRow,158px);justify-items:center;align-items:center;flex:1;min-height:0;padding:8px 0 4px}
+.rp-stamps .rp-none{grid-column:1/-1;align-self:start}
+.rp-st{width:min(170px,92%);margin:0}
+.rp-no{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:.7rem;font-weight:800;color:var(--pl);letter-spacing:.1em}
+.rp-blank{background:repeating-radial-gradient(circle at 50% 120%,rgba(91,36,49,.045) 0 2px,transparent 2px 7px),var(--paper)}
+.rp-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0 4px;flex-wrap:wrap}.rp-nav span{font-weight:800;color:var(--mute);min-width:9em;text-align:center}
+.rp-nav .btn{min-height:44px}
+.rp.turnf .rp-page{animation:rpTurnF .38s cubic-bezier(.2,0,0,1)}.rp.turnb .rp-page{animation:rpTurnB .38s cubic-bezier(.2,0,0,1)}
+@keyframes rpTurnF{from{opacity:.2;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes rpTurnB{from{opacity:.2;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@media(max-width:760px){.rp-page{height:auto;min-height:0}.rp-visa{height:var(--rpHm,560px)}.rp-blank{display:none}}
+@media(prefers-reduced-motion:reduce){.rp.turnf .rp-page,.rp.turnb .rp-page{animation:none}}
 
 /* ===== Wesen ===== */
 .wes-detail{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
@@ -9352,7 +9366,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = '9c2bd688';
+const APP_BUILD = 'a39f34ea';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -14127,6 +14141,7 @@ VIEWS.weltReise = () => {
 
 /* ---------- Mein Reisepass: Datenseite + Visa-Seite mit Einreisestempeln ---------- */
 const WP_ISO = Object.assign({ deu: 'DEU', jpn: 'JPN', ind: 'IND' }, WX.iso), WP_AP = Object.assign({ deu: 'FRA', jpn: 'NRT', ind: 'DEL' }, WX.ap);       // Flughafen- und Länder-Codes (sichere Angaben)
+const RP_P1 = 4, RP_PN = 6;                                                                  // Stempel pro Visa-Seite (erste Seite mit Reise-Übersicht)
 const WMON = ['JAN', 'FEB', 'MÄR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];
 const wParts = d => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(d || ''); return m ? { y: m[1], mo: +m[2], m: WMON[+m[2] - 1] || '', d: m[3] } : null; };
 const wLong = d => { const q = wParts(d); return q ? `${q.d} ${q.m} ${q.y}` : '—'; };
@@ -14194,17 +14209,28 @@ VIEWS.weltPass = () => {
   ].join('');
   const ink = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rpInk" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.3 1.75" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="s"/><feTurbulence type="turbulence" baseFrequency=".035" numOctaves="1" seed="8" result="w"/><feDisplacementMap in="s" in2="w" scale="2.2"/></filter></svg>`;
   setTimeout(() => { freshIds.forEach(id => { ps.seen[id] = 1; }); if (freshIds.length) save(); }, 1800);
-  return wRoot(wBar(W_PASS, 'welt', 'Abflug', `<button class="w-pill" data-act="wParent">${ico('lock', 16)} Eltern</button>`)
-    + `${ink}<div class="rp ${anim ? 'anim' : ''}"><div class="rp-cover" aria-hidden="true"><div>${wCompass}<small>REISEPASS · PASSPORT</small><b>${esc(nm)}</b></div></div>
-    <article class="rp-page rp-data" aria-label="Datenseite">
+  /* Fester Pass wie in echt: Seite 1 = Datenseite, danach Visa-Seiten mit je RP_PN Stempeln (erste Visa-Seite RP_P1, dort steht die Reise-Übersicht).
+     Je zwei Seiten bilden eine Doppelseite; neue Stempel landen auf der nächsten freien Seite, der Pass wird nie länger. */
+  const vp = [stamps.slice(0, RP_P1)]; for (let i = RP_P1; i < stamps.length; i += RP_PN) vp.push(stamps.slice(i, i + RP_PN));
+  if (vp[vp.length - 1].length >= (vp.length === 1 ? RP_P1 : RP_PN)) vp.push([]);              // immer eine leere Seite für den nächsten Stempel
+  const pages = ['data', ...vp.map((x, i) => i)], nSp = Math.ceil(pages.length / 2);
+  const spOf = id => { const k = stamps.indexOf(id); return k < 0 ? 0 : Math.floor((1 + (k < RP_P1 ? 0 : 1 + Math.floor((k - RP_P1) / RP_PN))) / 2); };
+  if (UI.wPassSp == null || UI.wPassSp >= nSp) UI.wPassSp = freshIds.length ? spOf(freshIds[0]) : last ? spOf(last) : 0;
+  const sp = Math.max(0, Math.min(nSp - 1, UI.wPassSp));
+  const dataPage = `<article class="rp-page rp-data" aria-label="Datenseite">
       <header class="rp-hd"><span>Reisepass <i>/ Passport</i></span><b>${wCompass}</b></header>
       <div class="rp-body"><div class="rp-pic"><span class="rp-photo">${WA.photo(104)}</span><span class="rp-sig" aria-label="Unterschrift"><small>Unterschrift <i>/ Signature</i></small><em>${esc(nm)}</em></span></div>
         <div class="rp-grid">${data}</div></div>
-      <div class="rp-mrz" aria-hidden="true"><span>${esc(mrz1)}</span><span>${esc(mrz2)}</span></div></article>
-    <article class="rp-page rp-visa" aria-label="Einreisestempel">
-      <header class="rp-hd"><span>Einreise <i>/ Entry</i></span><b>${stamps.length}</b></header>
-      <div class="rp-grid trips">${trips}</div>
-      <div class="rp-stamps">${stamps.length ? stamps.map(id => wImmStamp(id, w.stamps[id], freshIds.includes(id))).join('') : `<p class="rp-none">Noch kein Einreisestempel. Besuche ${W_STAMP_AT} von ${WSTAT.length} Stationen in einem Land, dann stempelt die Grenzkontrolle deinen Pass.</p>`}</div></article></div>
+      <div class="rp-mrz" aria-hidden="true"><span>${esc(mrz1)}</span><span>${esc(mrz2)}</span></div><small class="rp-no">1</small></article>`;
+  const visaPage = i => `<article class="rp-page rp-visa${i ? '' : ' first'}" aria-label="Einreisestempel, Seite ${i + 2}">
+      <header class="rp-hd"><span>Einreise <i>/ Entry</i></span><b>${i ? '' : stamps.length}</b></header>
+      ${i ? '' : `<div class="rp-grid trips">${trips}</div>`}
+      <div class="rp-stamps">${vp[i].length ? vp[i].map(id => wImmStamp(id, w.stamps[id], freshIds.includes(id))).join('') : !stamps.length ? `<p class="rp-none">Noch kein Einreisestempel. Besuche ${W_STAMP_AT} von ${WSTAT.length} Stationen in einem Land, dann stempelt die Grenzkontrolle deinen Pass.</p>` : ''}</div><small class="rp-no">${i + 2}</small></article>`;
+  const pg = k => k >= pages.length ? '<article class="rp-page rp-blank" aria-hidden="true"></article>' : pages[k] === 'data' ? dataPage : visaPage(pages[k]);
+  const nav = nSp > 1 ? `<div class="rp-nav"><button class="btn sec" data-act="wPassSp" data-arg="-1" ${sp ? '' : 'disabled'} aria-label="Zurückblättern">‹ Zurück</button><span>Seite ${2 * sp + 1}–${Math.min(2 * sp + 2, pages.length)} von ${pages.length}</span><button class="btn sec" data-act="wPassSp" data-arg="1" ${sp < nSp - 1 ? '' : 'disabled'} aria-label="Weiterblättern">Weiter ›</button></div>` : '';
+  return wRoot(wBar(W_PASS, 'welt', 'Abflug', `<button class="w-pill" data-act="wParent">${ico('lock', 16)} Eltern</button>`)
+    + `${ink}<div class="rp ${anim ? 'anim' : ''}${UI.wPassTurn ? ' turn' + (UI.wPassTurn > 0 ? 'f' : 'b') : ''}"><div class="rp-cover" aria-hidden="true"><div>${wCompass}<small>REISEPASS · PASSPORT</small><b>${esc(nm)}</b></div></div>
+    ${pg(2 * sp)}${pg(2 * sp + 1)}</div>${nav}
     ${open.length ? `<h3 class="w-sec">Meine Länder</h3><ul class="w-prog">${open.map(p => `<li><button data-act="wBoard" data-arg="${p.id}">${wFlag(p.id, 'w-lflag')}<b>${esc(p.name)}</b>${wDots(p.id)}<small>${WA.pct(p.id)} %</small></button></li>`).join('')}</ul>` : ''}`);
 };
 
@@ -14317,7 +14343,8 @@ registerFeature({
       else { Q.done = true; const had = WA.souvs(Q.id).includes('quiz'), all = Q.score === Q.qs.length; if (all) { WA.saveQuiz(Q.id, Q.score); sfx('ok'); confetti(70); toast('🏆', 'Alles richtig! Stark gemacht!'); } else wQuietly(() => WA.saveQuiz(Q.id, Q.score)); if (!had && Q.score >= W_QUIZ_OK) { UI.wNew = Q.id + ':quiz'; UI.wMsg = 'Rätsel geschafft'; } }
       render(); wAfterMark(Q.id);
     },
-    wPassGo: () => { UI.wBookSeen = false; go('weltPass'); },
+    wPassGo: () => { UI.wBookSeen = false; UI.wPassSp = null; go('weltPass'); },
+    wPassSp: d => { UI.wPassSp = Math.max(0, (UI.wPassSp || 0) + (+d)); UI.wPassTurn = +d; sfx('tap'); render(); UI.wPassTurn = 0; },
     wParent: () => requirePin('weltEltern'),
     weltEltern: () => go('weltEltern'),
     wSaveEltern: () => {
