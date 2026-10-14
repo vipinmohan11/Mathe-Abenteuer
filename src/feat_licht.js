@@ -2,22 +2,23 @@
    BLINKIS LICHTERTURM (in Meine Welt, von den Eltern einschaltbar)
    Binärzahlen ohne Mathe-Gefühl: Blinki kann nur mit Lampen sprechen (AN / AUS), das Kind ist sein Übersetzer.
    Eine Idee pro Stufe: zwei Zustände → mehr Lampen, mehr Zeichen (Verdoppeln) → Lampen bekommen Punkte 1, 2, 4, 8 → Zahlen schicken
-   und lesen → AN = 1, AUS = 0 (Bit, Binärzahl). Stufen 1–8 hier, 9–15 folgen (Zählmaschine, Muster, Byte, Bilder, Buchstaben, Zaubertrick).
+   und bewegen → AN = 1, AUS = 0 → Lichtbilder. Acht direkte Experimente ohne Antwortauswahl.
    Belohnung NUR hier: Lichtpunkte → Werkstatt (Turm-Deko, Lampen-Looks, Lampen-Klänge, Blinki-Outfits, Sternbilder). Keine Münzen, Sticker, Pokale.
    Töne der Lampen sind standardmäßig AUS (eigener Schalter; die App-weite Ton-Einstellung gilt zusätzlich).
    Gespeichert: S.licht = { lv (höchste offene Stufe), done{n:{ts,hints}}, lp, lpLife, own{'cat.id':ts}, eq{lamp,snd,out}, snd, code[], snack[], rep{d,n} }
    Stufen und Schritte: feat_lichtlv.js
    ===================================================================== */
+const ltTop = (title, back) => topBar(title, back, `<button class="btn sec lt-notes" data-act="nzOpen" aria-label="Notizbuch öffnen">${ico('notebook', 20)}</button>`);
 const LT_MAX = 8;
 const LT_LV = [
-  { t: 'Ja oder Nein', s: 'Eine Lampe, zwei Antworten', c: 'Eine Lampe kann zwei Dinge sagen: AN oder AUS. Damit man sich versteht, muss man abmachen, was AN bedeutet.', nx: 'Ich habe Hunger … aber wie sage ich dir, welchen Snack ich möchte?' },
-  { t: 'Vier Snacks', s: 'Eine Lampe ist zu wenig', c: 'Mit einer Lampe gibt es nur zwei Zeichen. Mit zwei Lampen gibt es schon vier. Mehr Lampen – mehr Botschaften!', nx: 'Und wenn ich DREI Lampen habe? Wie viele Zeichen gibt es dann?' },
-  { t: 'Muster-Jagd', s: 'Wie viele Zeichen gibt es?', c: 'Jede neue Lampe verdoppelt die Zeichen: Jedes alte Zeichen gibt es einmal mit der neuen Lampe AUS und einmal mit AN. 2, 4, 8, 16, 32 …', nx: 'Lumi aus dem Turm gegenüber möchte Sterne zählen. Kannst du ihm Zahlen schicken?' },
-  { t: 'Leuchtpunkte', s: 'Lampen bekommen Punkte', c: 'Lampen können verschieden viel wert sein. Neben der 1 braucht die nächste Lampe 2 Punkte – sonst gibt es Lücken oder doppelte Zahlen.', nx: 'Lumi hat noch mehr Sterne! Wir brauchen eine dritte Lampe.' },
-  { t: 'Die dritte Lampe', s: '1, 2, 4 … und dann?', c: 'Jede neue Lampe ist eins mehr wert als alle anderen zusammen. Darum ist sie doppelt so viel wert wie die rechts daneben: 1, 2, 4, 8, 16 …', nx: 'Jetzt haben wir vier Lampen: 8, 4, 2 und 1. Lumi wünscht sich Sterne!' },
-  { t: 'Sterne schicken', s: 'Zahlen mit Lampen bauen', c: 'Mit den Lampen 8, 4, 2 und 1 kann man jede Zahl von 1 bis 15 bauen. Jede Lampe ist einmal dabei oder gar nicht.', nx: 'Jetzt schickt Lumi DIR Zahlen. Kannst du sie lesen?' },
-  { t: 'Lumis Antwort', s: 'Lampen-Zeichen lesen', c: 'Lesen geht genauso wie Schicken: Zähle die Punkte aller Lampen zusammen, die leuchten.', nx: 'Ich will Lumi einen Brief schreiben. Aber Lampen malen dauert ewig …' },
-  { t: 'Strich und Kreis', s: 'AN = 1, AUS = 0', c: 'AN schreibt man 1, AUS schreibt man 0. Jede Lampe heißt Bit, eine Zahl aus Bits heißt Binärzahl. 101 bedeutet 4 + 1 = 5.', nx: 'Mit 1 und 0 kann man jede Zahl aufschreiben. Bald baue ich eine Zählmaschine – die nächsten Stufen kommen!' }
+  { t: 'Die Lichtbrücke', s: 'Ein Schalter verändert die Welt', c: 'AN und AUS sind zwei klare Zustände. Beide können etwas mitteilen.', nx: '' },
+  { t: 'Die Lichtpost', s: 'Zwei Schalter, vier Ziele', c: 'Zwei Schalter ergeben vier verschiedene Muster. Auch AUS–AUS gehört dazu.', nx: '' },
+  { t: 'Der Mustersammler', s: 'Jede neue Lampe verdoppelt', c: 'Mit einer neuen Lampe gibt es jedes alte Muster zweimal: einmal mit ihr AUS und einmal AN.', nx: '' },
+  { t: 'Deine Vorratsmaschine', s: 'Mengen ohne Lücken bauen', c: 'Mit den Vorräten 2 und 1 kannst du jede Menge von 0 bis 3 genau einmal bauen.', nx: '' },
+  { t: 'Immer weiterbauen', s: '1, 2, 4, 8, 16 entdecken', c: 'Der neue Vorrat beginnt bei der ersten fehlenden Menge. Darum verdoppeln sich die Werte: 1, 2, 4, 8, 16.', nx: '' },
+  { t: 'Lumis Sternenschachtel', s: 'Eine Menge mit Licht schicken', c: 'Die leuchtenden Vorräte werden zusammengezählt. 4 und 1 ergeben 5.', nx: '' },
+  { t: 'Lumis Lichtbahn', s: 'Ein Muster wird Bewegung', c: 'Die Positionen haben unterschiedliche Werte. Das Spiel liest dein Muster als Strecke.', nx: '' },
+  { t: 'Zeichen und Lichtbilder', s: 'Aus Schaltern werden Bits', c: 'AN schreiben wir als 1, AUS als 0. Ein solcher Platz heißt Bit. Computer verwenden zwei unterscheidbare Signalzustände. Ein Programm bestimmt, ob ein Muster eine Zahl oder ein Bild beschreibt.', nx: '' }
 ];
 const LT_SHOP = [
   { cat: 'deco', n: 'Turm-Deko', s: 'Schmückt deinen Turm.', items: [{ id: 'laterne', n: 'Laterne', p: 10 }, { id: 'wimpel', n: 'Wimpel', p: 12 }, { id: 'blumen', n: 'Blumenkasten', p: 15 }, { id: 'kette', n: 'Lichterkette zu Lumi', p: 20 }, { id: 'teleskop', n: 'Teleskop', p: 25 }, { id: 'garten', n: 'Dachgarten', p: 30 }] },
@@ -69,32 +70,35 @@ function ltPlay(k, i, force) {
 }
 
 /* ---------- Figuren (Blinki und Lumi) ---------- */
-function ltBotG(mood, out, ant) {
-  const st = mood || 'idle', eye = '#9fe3ff', lit = ant ? '#ffd76a' : '#4a5470';
-  const bulb = out === 'regen' ? `<defs><linearGradient id="ltRb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a8a"/><stop offset=".35" stop-color="#ffd76a"/><stop offset=".65" stop-color="#7fd18a"/><stop offset="1" stop-color="#6fa8ff"/></linearGradient></defs><circle cx="50" cy="8" r="7" fill="url(#ltRb)"/>${ant ? '<circle cx="50" cy="8" r="12" fill="#ffd76a" opacity=".3"/>' : ''}` : `${ant ? '<circle cx="50" cy="8" r="12" fill="#ffd76a" opacity=".3"/>' : ''}<circle cx="50" cy="8" r="6" fill="${lit}"/>`;
-  const eyes = st === 'happy' ? `<path d="M34 48q6-8 12 0M54 48q6-8 12 0" stroke="${eye}" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M41 55q9 8 18 0" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
-    : st === 'curious' ? `<circle cx="40" cy="46" r="5.5" fill="${eye}"/><circle cx="60" cy="45" r="3.6" fill="${eye}"/><circle cx="50" cy="56" r="2.6" stroke="${eye}" stroke-width="2" fill="none"/>`
-      : st === 'confused' ? `<circle cx="40" cy="47" r="4" fill="${eye}"/><circle cx="60" cy="47" r="4" fill="${eye}"/><path d="M34 38l10 3" stroke="${eye}" stroke-width="2.4" stroke-linecap="round"/><path d="M43 57q3.5-3 7 0t7 0" stroke="${eye}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
-        : `<circle cx="40" cy="46" r="5" fill="${eye}"/><circle cx="60" cy="46" r="5" fill="${eye}"/><path d="M44 55q6 4 12 0" stroke="${eye}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-  const arms = st === 'happy' ? '<path d="M31 80q-12-4-15-16M69 80q12-4 15-16" stroke="#cbd5e8" stroke-width="6" stroke-linecap="round" fill="none"/>' : '<path d="M31 82q-10 4-12 13M69 82q10 4 12 13" stroke="#cbd5e8" stroke-width="6" stroke-linecap="round" fill="none"/>';
-  const hat = out === 'muetze' ? '<path d="M19 36q31-36 62 0z" fill="#5a7bd8"/><rect x="17" y="31" width="66" height="9" rx="4.5" fill="#3f5fbf"/><path d="M30 26l6-6M44 20l4-4M58 20l-1-6" stroke="#7d9bea" stroke-width="2" stroke-linecap="round"/>' : '';
-  const neck = out === 'schal' ? '<path d="M27 71h46v8H27z" fill="#ff8a5c"/><path d="M59 78v15h8V78z" fill="#ff8a5c"/><path d="M35 71v8M43 71v8M51 71v8M63 84h-4" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>'
-    : out === 'fliege' ? '<path d="M41 75l9 4.5-9 4.5zM59 75l-9 4.5 9 4.5z" fill="#e84f6a"/><circle cx="50" cy="79.5" r="2.4" fill="#b83a52"/>' : '';
-  return `<line x1="50" y1="22" x2="50" y2="10" stroke="#9aa8c7" stroke-width="3"/>${bulb}${arms}<rect x="30" y="73" width="40" height="29" rx="12" fill="#cbd5e8"/><circle cx="50" cy="88" r="4" fill="${lit}"/>
-    <rect x="16" y="20" width="68" height="54" rx="24" fill="#e3eaf6"/><rect x="25" y="30" width="50" height="34" rx="15" fill="#232c4a"/>${eyes}${st === 'happy' ? '<circle cx="28" cy="58" r="3" fill="#ffb3c7" opacity=".7"/><circle cx="72" cy="58" r="3" fill="#ffb3c7" opacity=".7"/>' : ''}${hat}${neck}
-    <rect x="34" y="100" width="10" height="7" rx="3" fill="#9aa8c7"/><rect x="56" y="100" width="10" height="7" rx="3" fill="#9aa8c7"/>${st === 'confused' ? '<text x="88" y="24" font-size="18" font-weight="800" fill="#ffd76a" font-family="sans-serif">?</text>' : ''}`;
+let ltSvgId = 0;
+function ltBotG(mood, out, ant, variant) {
+  const id = 'lt-shell-' + (++ltSvgId), lumi = variant === 'lumi';
+  const eye = lumi ? '#e9d5fb' : '#b7f2d7', shell = lumi ? '#e8def1' : '#e5eddb';
+  const shade = lumi ? '#b9a4d0' : '#a7c6b3', accent = lumi ? '#ceacef' : '#ffd76a';
+  const lit = ant ? accent : '#718c83', happy = mood === 'happy' || mood === 'laugh';
+  const eyes = happy
+    ? `<path d="M34 56q5-7 10 0M56 56q5-7 10 0" fill="none" stroke="${eye}" stroke-width="3.5" stroke-linecap="round"/>`
+    : `<rect x="34" y="${mood === 'curious' ? 47 : 49}" width="9" height="${mood === 'curious' ? 15 : 12}" rx="4.5" fill="${eye}"/><rect x="57" y="49" width="9" height="${mood === 'confused' ? 8 : 12}" rx="4.5" fill="${eye}"/>`;
+  const outfit = out === 'schal' ? '<path d="M22 76q28 9 56 0v9q-28 8-56 0z" fill="#e9926e"/><path d="M63 84v15h9V82" fill="#e9926e"/>'
+    : out === 'fliege' ? '<path d="M38 77l12 6-12 6zM62 77l-12 6 12 6z" fill="#d77381"/><circle cx="50" cy="83" r="3" fill="#b65468"/>'
+    : out === 'muetze' ? '<path d="M19 34q2-25 31-25t31 25" fill="#7198b2"/><rect x="17" y="28" width="66" height="9" rx="4.5" fill="#4a708b"/>' : '';
+  return `<defs><linearGradient id="${id}" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="${shell}"/><stop offset="1" stop-color="${shade}"/></linearGradient>${out === 'regen' ? `<linearGradient id="${id}-rainbow"><stop stop-color="#f6a79c"/><stop offset=".35" stop-color="#f2ce85"/><stop offset=".7" stop-color="#a8d9b6"/><stop offset="1" stop-color="#b6bcec"/></linearGradient>` : ''}</defs>
+    <ellipse cx="50" cy="108" rx="29" ry="3" fill="#071e22" opacity=".15"/>
+    <path d="M37 27v-7q0-12 13-12t13 12v7" fill="none" stroke="${shade}" stroke-width="4"/>
+    <path d="M50 20V9" stroke="${shell}" stroke-width="3"/>
+    ${ant ? `<circle cx="50" cy="8" r="9" fill="${accent}" opacity=".15"/>` : ''}<circle cx="50" cy="8" r="4.5" fill="${out === 'regen' ? 'url(#' + id + '-rainbow)' : lit}"/>
+    <path d="${happy ? 'M19 70Q5 64 8 52M81 70q14-6 11-18' : 'M19 71Q8 72 10 84M81 71q11 1 9 13'}" fill="none" stroke="${shade}" stroke-width="7" stroke-linecap="round"/>
+    <rect x="30" y="96" width="14" height="9" rx="4.5" fill="${shade}"/><rect x="56" y="96" width="14" height="9" rx="4.5" fill="${shade}"/>
+    <rect x="17" y="26" width="66" height="72" rx="23" fill="url(#${id})" stroke="${shell}" stroke-width="1.5"/>
+    <path d="M26 40q3-7 12-7h24" fill="none" stroke="white" stroke-opacity=".65" stroke-width="2" stroke-linecap="round"/>
+    <rect x="25" y="40" width="50" height="30" rx="13" fill="#173637"/>
+    <path d="M32 44h36" stroke="#355958" stroke-width="2" stroke-linecap="round"/>
+    ${eyes}<rect x="37" y="78" width="26" height="11" rx="5.5" fill="#173637" fill-opacity=".13"/>
+    <circle cx="44" cy="83.5" r="2" fill="${lit}"/><path d="M51 83.5h5" stroke="#496e62" stroke-width="2" stroke-linecap="round"/>
+    ${outfit}`;
 }
 const ltBot = (mood, ant, cls) => `<svg class="lt-bot ${cls || ''} m-${mood || 'idle'}" viewBox="0 0 100 112" role="img" aria-label="Blinki">${ltBotG(mood, ltS().eq.out, ant)}</svg>`;
-function ltLumiG(mood) {
-  const eye = '#ffb3e1', st = mood || 'idle';
-  const face = st === 'happy' ? `<path d="M36 48q6-7 12 0M52 48q6-7 12 0" stroke="${eye}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M42 55q8 7 16 0" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
-    : st === 'laugh' ? `<path d="M36 46l6 3-6 3M64 46l-6 3 6 3" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M41 54h18q-1 8-9 8t-9-8z" fill="${eye}"/>`
-      : st === 'curious' ? `<circle cx="42" cy="47" r="5" fill="${eye}"/><circle cx="58" cy="46" r="3.4" fill="${eye}"/><circle cx="50" cy="56" r="2.4" stroke="${eye}" stroke-width="2" fill="none"/>`
-        : `<circle cx="42" cy="47" r="4.6" fill="${eye}"/><circle cx="58" cy="47" r="4.6" fill="${eye}"/><path d="M45 55q5 4 10 0" stroke="${eye}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
-  return `<path d="M38 20l-6-12M62 20l6-12" stroke="#b9a7e0" stroke-width="3" stroke-linecap="round"/><circle cx="31" cy="7" r="4" fill="#ffb3e1"/><circle cx="69" cy="7" r="4" fill="#ffb3e1"/>
-    <rect x="34" y="72" width="32" height="28" rx="12" fill="#d9ccf2"/><circle cx="50" cy="46" r="31" fill="#ece3fb"/><ellipse cx="50" cy="48" rx="21" ry="16" fill="#2e2550"/>${face}
-    <rect x="37" y="98" width="9" height="7" rx="3" fill="#b9a7e0"/><rect x="54" y="98" width="9" height="7" rx="3" fill="#b9a7e0"/>`;
-}
+function ltLumiG(mood) { return ltBotG(mood, '', true, 'lumi'); }
 const ltLumi = (mood, cls) => `<svg class="lt-bot lt-lumi ${cls || ''} m-${mood || 'idle'}" viewBox="0 0 100 112" role="img" aria-label="Lumi">${ltLumiG(mood)}</svg>`;
 
 /* ---------- Lampen ---------- */
@@ -102,7 +106,7 @@ const ltLumi = (mood, cls) => `<svg class="lt-bot lt-lumi ${cls || ''} m-${mood 
 function ltRow(bits, o) {
   o = o || {};
   const n = bits.length, vals = o.vals || bits.map((b, i) => 2 ** (n - 1 - i)), sk = ltS().eq.lamp || 'std';
-  return `<div class="lt-row ${o.cls || 'mine'}">${bits.map((b, i) => {
+  return `<div class="lt-row ${o.cls || 'mine'}" data-count="${n}" style="--lt-count:${n}">${bits.map((b, i) => {
     const v = vals[i], dig = (o.morph && o.morph[i]) || o.mode === 'digit', mode = dig ? 'digit' : (o.mode || 'plain');
     let inner = '';
     if (mode === 'dots' && v > 0) inner = `<span class="lt-dots${v > 8 ? ' sm' : ''}">${'<i class="lt-dot"></i>'.repeat(v)}</span>`;
@@ -110,7 +114,7 @@ function ltRow(bits, o) {
     const cls = ['lt-lamp', 'sk-' + sk, b ? 'on' : '', o.just === i ? (b ? 'just' : 'cool') : '', o.pulse && o.pulse.includes(i) ? 'pulse' : '', dig ? 'dg' : '', o.drop === i ? 'drop' : '', o.act ? 'tap' : ''].filter(Boolean).join(' ');
     const lab = `Lampe${(mode === 'dots' || o.showVal) && v ? ' ' + v : ''}: ${b ? 'AN' : 'AUS'}`;
     const el = o.act ? `<button class="${cls}" data-act="ltDo" data-arg="${o.act}:${i}" aria-pressed="${!!b}" aria-label="${lab}">` : `<div class="${cls}" role="img" aria-label="${lab}">`;
-    return `<div class="lt-lw">${el}<span class="lt-glass">${inner}</span>${o.act ? '</button>' : '</div>'}${o.showVal && v ? `<span class="lt-val">${v}</span>` : ''}${o.under ? o.under(i) : ''}</div>`;
+    return `<div class="lt-lw">${el}<span class="lt-glass" aria-hidden="true">${inner || '<span class="lt-light-core"></span>'}</span><span class="lt-switch-track" aria-hidden="true"><span></span></span><span class="lt-switch-state" aria-hidden="true">${b ? 'AN' : 'AUS'}</span>${o.act ? '</button>' : '</div>'}${o.showVal && v ? `<span class="lt-val">${v}</span>` : ''}${o.under ? o.under(i) : ''}</div>`;
   }).join('')}</div>`;
 }
 const ltMini = (p, cls) => `<span class="lt-minis ${cls || ''}">${String(p).split('').map(c => `<i class="lt-mini sk-${ltS().eq.lamp || 'std'}${c === '1' ? ' on' : ''}"></i>`).join('')}</span>`;
@@ -145,22 +149,22 @@ function ltTower() {
   const p = ltS(), done = p.done, gold = !!done[LT_MAX], lumiOn = p.lv >= 4 || !!done[3];
   const floors = [...Array(LT_MAX).keys()].map(i => {
     const lv = i + 1, y = 205 - (i + 1) * 17, isD = !!done[lv], cur = !isD && lv === p.lv;
-    return `<rect x="95" y="${y}" width="70" height="17" fill="${i % 2 ? '#2f3b66' : '#2a3560'}"/>${isD ? `<rect x="118" y="${y + 3}" width="24" height="11" rx="5" fill="#ffd76a" opacity=".35"/>` : ''}<rect x="122" y="${y + 4}" width="16" height="9" rx="4" fill="${isD ? '#ffd76a' : cur ? '#55639c' : '#1f2747'}" ${cur ? 'stroke="#ffd76a" stroke-width="1.4" stroke-dasharray="3 2"' : ''}/>`;
+    return `<rect x="95" y="${y}" width="70" height="17" fill="${i % 2 ? '#3b5e4d' : '#365747'}"/>${isD ? `<rect x="118" y="${y + 3}" width="24" height="11" rx="5" fill="#ffd76a" opacity=".35"/>` : ''}<rect x="122" y="${y + 4}" width="16" height="9" rx="4" fill="${isD ? '#ffd76a' : cur ? '#8ba78a' : '#203e32'}" ${cur ? 'stroke="#ffd76a" stroke-width="1.4" stroke-dasharray="3 2"' : ''}/>`;
   }).join('');
   const top = 205 - LT_MAX * 17;
   const own = k => !!p.own[k];
   return `<svg class="lt-scn" viewBox="0 0 360 230" role="img" aria-label="Dein Lichterturm: ${ltDoneN()} von ${LT_MAX} Stockwerken leuchten">
-    <defs><linearGradient id="ltSkyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141a33"/><stop offset="1" stop-color="#2b3766"/></linearGradient></defs>
+    <defs><linearGradient id="ltSkyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#102f30"/><stop offset="1" stop-color="#23493f"/></linearGradient></defs>
     <rect width="360" height="230" fill="url(#ltSkyG)"/>
     ${LT_STARS.map((s, i) => `<circle class="lt-tw" style="animation-delay:${(i % 7) * .45}s" cx="${s[0]}" cy="${s[1]}" r="${i % 3 ? 1.1 : 1.6}" fill="#dfe6ff"/>`).join('')}
     <circle cx="318" cy="40" r="14" fill="#f4f1d0"/><circle cx="312" cy="36" r="3" fill="#e3dfb9"/><circle cx="322" cy="46" r="2" fill="#e3dfb9"/>
     ${LT_SHOP[4].items.filter(it => own('sky.' + it.id)).map(it => ltSkySvg(it.id)).join('')}
     ${own('deco.kette') ? ltDecoSvg('kette') : ''}
-    <path d="M0 212Q90 196 180 206T360 204V230H0z" fill="#10152b"/>
-    <rect x="270" y="95" width="40" height="112" fill="#2a3560"/><path d="M266 95h48l-24-20z" fill="#3a4677"/><rect x="282" y="112" width="16" height="10" rx="4" fill="${lumiOn ? '#ffb3e1' : '#1f2747'}"/>
+    <path d="M0 212Q90 196 180 206T360 204V230H0z" fill="#112d26"/>
+    <rect x="270" y="95" width="40" height="112" fill="#365747"/><path d="M266 95h48l-24-20z" fill="#69836a"/><rect x="282" y="112" width="16" height="10" rx="4" fill="${lumiOn ? '#ffb3e1' : '#203e32'}"/>
     ${lumiOn ? `<g transform="translate(278 50) scale(.26)">${ltLumiG('idle')}</g>` : ''}
     ${floors}
-    <rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="${gold ? '#f2c94c' : '#3a4677'}"/>${gold ? `<rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="#ffe9a6" opacity=".4"/>` : ''}
+    <rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="${gold ? '#f2c94c' : '#69836a'}"/>${gold ? `<rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="#ffe9a6" opacity=".4"/>` : ''}
     <g transform="translate(115 ${top - 44}) scale(.34)">${ltBotG(ltDoneN() ? 'happy' : 'idle', p.eq.out, true)}</g>
     ${['laterne', 'wimpel', 'blumen', 'teleskop', 'garten'].filter(id => own('deco.' + id)).map(ltDecoSvg).join('')}
   </svg>`;
@@ -175,23 +179,27 @@ function ltHub() {
     return `<button class="lt-lvc${d ? ' done' : open ? ' cur' : ' lock'}" data-act="ltLv" data-arg="${n}" ${open ? '' : 'disabled'} aria-label="Stufe ${n}: ${esc(L.t)}${d ? ', geschafft' : open ? '' : ', noch zu'}">
       <span class="lt-lvn">${d ? '✓' : open ? n : ico('lock', 15)}</span><span class="lt-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="lt-lvr">Nochmal</span>' : open ? '<span class="lt-lvr go">Los!</span>' : ''}</button>`;
   }).join('');
-  return topBar('Blinkis Lichterturm', 'rewards') + `<section class="lt-hub">${ltTower()}
-    <div class="lt-hubbar"><span class="lt-lp" title="Lichtpunkte">✨ <b>${p.lp}</b> Lichtpunkte</span>${ltSndBtn()}</div>
-    <div class="lt-hubbtn"><button class="lt-btn" data-act="ltShop">🛠️ Werkstatt</button><button class="lt-btn sec" data-act="ltBook">📖 Codebuch</button></div></section>
-    <h3 class="lt-h">Stockwerke</h3><div class="lt-lvs">${list}</div>
-    <p class="lt-soon small mute">Stufen 9 bis 15 (Zählmaschine, Muster, Bilder, Buchstaben und ein Zaubertrick) kommen bald.</p>`;
+  const next = Math.min(p.lv, LT_MAX), finished = ltDoneN() === LT_MAX;
+  return ltTop('Blinkis Lichterturm', 'rewards') + `<section class="lt-hub">
+    <div class="lt-hero"><div class="lt-hero-copy"><span class="lt-eyebrow">DEINE LICHTWERKSTATT</span><h1>Kleine Lichter.<br>Große Ideen.</h1><p>Schalte, tüftle und schick ein Zeichen.<br>Blinki wartet schon auf dich.</p>
+    <button class="lt-btn" data-act="ltLv" data-arg="${next}">${finished ? 'Noch einmal entdecken' : ltDoneN() ? 'Weiterentdecken' : 'Lass uns anfangen'} <span aria-hidden="true">↗</span></button></div>
+    <div class="lt-hero-art">${ltTower()}<div class="lt-hero-bot">${ltBot('idle', true)}<span>Hallo, ich bin Blinki.</span></div></div></div>
+    <div class="lt-hubbar"><span class="lt-lp"><span class="lt-spark" aria-hidden="true">✦</span> <b>${p.lp}</b> Lichtpunkte</span>${ltSndBtn()}</div></section>
+    <div class="lt-hubbtn"><button class="lt-link" data-act="ltShop">${ico('sparkle', 20)}<span>Meine Werkstatt<small>Dein Turm, dein Stil</small></span><span aria-hidden="true">↗</span></button><button class="lt-link" data-act="ltBook">${ico('book', 20)}<span>Mein Codebuch<small>Was du entdeckt hast</small></span><span aria-hidden="true">↗</span></button></div>
+    <div class="lt-section-title"><h3 class="lt-h">Deine Entdeckungsreise</h3><span>${ltDoneN()} / ${LT_MAX} entdeckt</span></div><div class="lt-lvs">${list}</div>
+    <p class="lt-soon small mute">Ein Licht nach dem anderen. In deinem Tempo.</p>`;
 }
 function ltItemArt(cat, id) {
   if (cat === 'lamp') return `<span class="lt-lamp on sk-${id} lt-prev" aria-hidden="true"><span class="lt-glass"></span></span>`;
   if (cat === 'snd') return '<span class="lt-note" aria-hidden="true">♪</span>';
   if (cat === 'out') return `<svg viewBox="0 0 100 112" class="lt-prevsvg" aria-hidden="true">${ltBotG('happy', id, true)}</svg>`;
-  if (cat === 'deco') return `<svg viewBox="${LT_DECO[id].vb}" class="lt-prevsvg dark" aria-hidden="true"><rect x="0" y="0" width="400" height="300" fill="#1f2747"/>${id === 'kette' ? '' : '<rect x="95" y="40" width="70" height="170" fill="#2f3b66"/>'}${ltDecoSvg(id)}</svg>`;
+  if (cat === 'deco') return `<svg viewBox="${LT_DECO[id].vb}" class="lt-prevsvg dark" aria-hidden="true"><rect x="0" y="0" width="400" height="300" fill="#203e32"/>${id === 'kette' ? '' : '<rect x="95" y="40" width="70" height="170" fill="#3b5e4d"/>'}${ltDecoSvg(id)}</svg>`;
   if (cat === 'sky') return `<svg viewBox="${LT_SKY[id].vb}" class="lt-prevsvg dark" aria-hidden="true"><rect x="0" y="0" width="400" height="300" fill="#1b2340"/>${ltSkySvg(id)}</svg>`;
   return '';
 }
 function ltShopView() {
   const p = ltS();
-  return topBar('Werkstatt', 'licht') + `<section class="lt-wbar"><span class="lt-lp">✨ <b>${p.lp}</b> Lichtpunkte</span><small class="mute">Lichtpunkte verdienst du nur im Lichterturm – und gibst sie nur hier aus.</small></section>
+  return ltTop('Werkstatt', 'licht') + `<section class="lt-wbar"><span class="lt-lp">✨ <b>${p.lp}</b> Lichtpunkte</span><small class="mute">Lichtpunkte verdienst du nur im Lichterturm – und gibst sie nur hier aus.</small></section>
   ${LT_SHOP.map(c => `<section class="card lt-cat"><h3>${esc(c.n)}</h3><p class="small mute">${esc(c.s)}</p><div class="lt-items">${c.items.map(it => {
     const has = ltOwn(c.cat, it.id), on = c.eq && p.eq[c.cat] === it.id, can = p.lp >= it.p;
     const btn = !has ? `<button class="btn sm" data-act="ltBuy" data-arg="${c.cat}.${it.id}" ${can ? '' : 'disabled'}>✨ ${it.p}</button>`
@@ -201,15 +209,15 @@ function ltShopView() {
   ${S.cfg.sound === false ? '<p class="small mute center">Hinweis: Die Töne der ganzen App sind ausgeschaltet (Farben & Töne).</p>' : ''}`;
 }
 const LT_CODE = {
-  jn: ['Die Abmachung', () => `<div class="lt-cbrow">${ltMini('1')} heißt <b>Ja</b> · ${ltMini('0')} heißt <b>Nein</b></div>`],
+  jn: ['Die Lichtbrücke', () => `<div class="lt-cbrow">${ltMini('1')} Brücke da · ${ltMini('0')} Brücke eingefahren</div><p>Beide Zustände sind eine Nachricht. Diese Bedeutung gehört zu unserer Brückenmaschine.</p>`],
   snack: ['Unsere Snack-Zeichen', () => `<div class="lt-cbrow wrap">${ltS().snack.map(c => `<span class="lt-cbc">${ltMini(c.p)} ${LT_SN[c.s] ? LT_SN[c.s][0] : ''}</span>`).join('')}</div>`],
   dbl: ['Jede Lampe verdoppelt', () => '<p>1 Lampe: 2 Zeichen · 2 Lampen: 4 · 3 Lampen: 8 · 4 Lampen: 16 · 5 Lampen: 32</p>'],
   wert: ['Was die Lampen wert sind', () => `<p>Von rechts nach links: <b>1, 2, 4, 8, 16 …</b> Jede Lampe ist doppelt so viel wert wie die rechts daneben.</p>${ltRow([1, 0, 1], { vals: [4, 2, 1], mode: 'dots', cls: 'tiny', showVal: true })}<p>Lampe 4 und Lampe 1 leuchten: 4 + 1 = <b>5</b></p>`],
-  bit: ['Bits und Binärzahlen', () => '<p><b>AN = 1</b> und <b>AUS = 0</b>. Jede Lampe heißt <b>Bit</b>. Eine Zahl aus Bits heißt <b>Binärzahl</b> (binär = zwei Möglichkeiten). <b>101</b> heißt 4 + 1 = 5.</p>']
+  bit: ['Bits und Binärzahlen', () => '<p><b>AN = 1</b> und <b>AUS = 0</b>. Eine binäre Stelle heißt <b>Bit</b>. Eine Zahl aus Bits heißt <b>Binärzahl</b> (binär = zwei Möglichkeiten). <b>101</b> heißt 4 + 1 = 5.</p>']
 };
 function ltBookView() {
   const p = ltS(), ks = Object.keys(LT_CODE).filter(k => p.code.includes(k));
-  return topBar('Codebuch', 'licht') + `<section class="lt-book">${ks.length ? ks.map(k => `<article class="card lt-cb"><h3>${esc(LT_CODE[k][0])}</h3>${LT_CODE[k][1]()}</article>`).join('') : '<p class="card">Noch leer. Spiel die erste Stufe – dann steht hier eure erste Abmachung.</p>'}</section>`;
+  return ltTop('Codebuch', 'licht') + `<section class="lt-book">${ks.length ? ks.map(k => `<article class="card lt-cb"><h3>${esc(LT_CODE[k][0])}</h3>${LT_CODE[k][1]()}</article>`).join('') : '<p class="card">Noch leer. Spiel die erste Stufe – dann steht hier eure erste Abmachung.</p>'}</section>`;
 }
 
 /* ---------- Eltern-Karte ---------- */
@@ -227,7 +235,7 @@ function ltFinish(m) {
   const p = ltS(), lv = m.lv, first = !p.done[lv];
   let earned = 0, rep = false, capped = false, fresh = false, gold = false;
   if (first) {
-    earned = m.pts + 5 + (m.hints ? 0 : 3);
+    earned = m.pts + 8; // Neugier und Hilfe gehören zum Lernen; Tipps kosten keine Belohnung.
     p.done[lv] = { ts: Date.now(), hints: m.hints };
     if (lv === p.lv && lv < LT_MAX) { p.lv++; fresh = true; }
     if (lv === LT_MAX) gold = true;
@@ -238,37 +246,18 @@ function ltFinish(m) {
   p.lp += earned; p.lpLife += earned;
   m.res = { earned, first, rep, capped, fresh, gold };
   save(); ltPlay('big');
-  try { if (!rwCalm()) confetti(first ? 60 : 25); } catch (e) { }
+  // Der beleuchtete Turm und die kurze Klangfolge feiern die Entdeckung ohne Konfetti.
 }
 function ltResult(m) {
   const r = m.res, L = LT_LV[m.lv - 1], nxt = m.lv < LT_MAX && m.lv + 1 <= ltS().lv;
-  const why = r.first ? `${m.pts} für gelöste Aufgaben · 5 für die Stufe${m.hints ? '' : ' · 3 ganz ohne Tipp'}` : r.rep ? '2 fürs Wiederholen' : 'Heute gibt es fürs Wiederholen keine Lichtpunkte mehr. Schlauer wirst du trotzdem!';
-  return topBar('Blinkis Lichterturm', 'licht') + `<section class="lt-stage lt-res"><div class="lt-scene">${ltBot('happy', true)}<div class="lt-bub from-l">${esc(L.nx)}</div></div>
-    <h2>Stufe ${m.lv} geschafft!</h2>
-    ${r.earned ? `<p class="lt-earn">✨ +${r.earned} Lichtpunkte</p>` : ''}<p class="small lt-why">${esc(why)}</p>
-    ${r.gold ? '<p class="lt-gold">🏆 Dein Turm bekommt ein goldenes Dach!</p>' : ''}
-    <div class="lt-learn"><b>Das hast du entdeckt</b><p>${esc(L.c)}</p></div>
-    <div class="lt-act">${nxt ? `<button class="lt-btn" data-act="ltLv" data-arg="${m.lv + 1}">Weiter: Stufe ${m.lv + 1}</button>` : ''}<button class="lt-btn sec" data-act="ltHub">Zum Turm</button></div></section>`;
+  const why = r.first ? `${m.pts} fürs Entdecken · 8 fürs abgeschlossene Stockwerk` : r.rep ? '2 fürs Wiederholen' : 'Heute gibt es fürs Wiederholen keine Lichtpunkte mehr. Schlauer wirst du trotzdem!';
+  return ltTop('Blinkis Lichterturm', 'licht') + `<section class="lt-stage lt-res"><div class="lt-result-bot">${ltBot('happy', true)}</div><span class="lt-eyebrow">DEINE ENTDECKUNG</span><h2>${esc(L.t)}</h2><div class="lt-learn"><p>${esc(L.c)}</p></div>
+    ${r.earned ? `<p class="lt-earn">✦ +${r.earned} Lichtpunkte</p>` : ''}<p class="small lt-why">${esc(why)}</p>${r.gold ? '<p class="lt-gold">Alle acht Stockwerke leuchten jetzt.</p>' : ''}
+    <div class="lt-act">${nxt ? `<button class="lt-btn" data-act="ltLv" data-arg="${m.lv + 1}">Nächste Entdeckung →</button>` : ''}<button class="lt-btn sec" data-act="ltLv" data-arg="${m.lv}">Weiter ausprobieren</button><button class="lt-btn sec" data-act="ltHub">Zum Turm</button></div></section>`;
 }
 
-/* ---------- fliegende Leuchtpunkte (nach dem Zeichnen) ---------- */
-function ltAfter() {
-  const m = UI.lt; if (!m || !m.fx) return;
-  const fx = m.fx; m.fx = null;
-  if (fx.fly) {
-    const bowl = document.getElementById('ltBowl'); if (!bowl || rwCalm()) return;
-    const b = bowl.getBoundingClientRect(), dots = [...document.querySelectorAll('.lt-row.mine .lt-lamp.on .lt-dot')];
-    dots.forEach((d, k) => {
-      const r = d.getBoundingClientRect(), f = document.createElement('i'); f.className = 'lt-fly';
-      f.style.left = r.left + 'px'; f.style.top = r.top + 'px'; document.body.appendChild(f);
-      const dx = b.left + b.width / 2 - r.left, dy = b.top + b.height / 2 - r.top;
-      try {
-        const a = f.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${dx * .5}px,${dy * .5 - 60}px) scale(1.3)`, opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(.6)`, opacity: .2 }], { duration: 650 + k * 45, easing: 'cubic-bezier(.3,.1,.3,1)' });
-        a.onfinish = () => { f.remove(); if (k % 2 === 0) ltPlay('plink'); };
-      } catch (e) { f.remove(); }
-    });
-  }
-}
+/* Regeln laufen synchron mit dem Spielzustand, nie abhängig von Animationen. */
+function ltAfter() {}
 
 /* ---------- Registrierung ---------- */
 DZ_ART.licht = '<rect x="22" y="14" width="20" height="34" rx="3" fill="#2c3a63"/><path d="M19 15h26L32 4z" fill="#3f4f86"/><circle cx="32" cy="22" r="7" fill="#ffd76a" opacity=".25"/><circle cx="32" cy="32" r="7" fill="#ffd76a" opacity=".25"/><circle cx="32" cy="22" r="4" fill="#ffd76a"/><circle cx="32" cy="32" r="4" fill="#ffd76a"/><circle cx="32" cy="42" r="4" fill="#4a5480"/><path d="M9 9l1.5 3 3 .5-2.2 2 .5 3-2.8-1.5-2.8 1.5.5-3-2.2-2 3-.5z" fill="#ffd76a"/><circle cx="54" cy="12" r="1.6" fill="#7f8fd0"/><circle cx="50" cy="23" r="1.2" fill="#7f8fd0"/>';
@@ -302,3 +291,135 @@ registerFeature({
     ltEq: k => { const p = ltS(), [cat, id] = String(k).split('.'); if (ltOwn(cat, id)) { p.eq[cat] = id; save(); render(); } }
   }
 });
+
+/* Lichtwerkstatt: direktes Ausprobieren statt Dialog und Antwortauswahl.
+   Jede Szene zeigt Ziel, Werkzeug und sichtbare Wirkung. Bestehende Stufen-IDs bleiben erhalten. */
+const LT_SN = { apfel: ['🍎', 'Apfel'], keks: ['🍪', 'Keks'], eis: ['🍦', 'Eis'], banane: ['🍌', 'Banane'] };
+const LT_V4 = [8, 4, 2, 1];
+const ltRange = (a, b) => Array.from({ length: Math.max(0, b - a + 1) }, (_, i) => a + i);
+const ltControl = (arg, label, cls = '', disabled = false) => `<button class="lt-btn ${cls}" data-act="ltDo" data-arg="${arg}"${disabled ? ' disabled' : ''}>${label}</button>`;
+const ltTokens = (n, cls = '') => `<span class="lt-token-group ${cls}" aria-label="${n} Leuchtpunkte">${Array.from({ length: n }, () => '<i></i>').join('')}</span>`;
+const LT_BUILD = {
+  1: () => [{ k: 'bridge', title: 'Mach den Weg frei.', goal: 'Schalte die Brücke ein. Schalte sie wieder aus.', hint: 'Tippe auf den großen Schalter. Die Brücke folgt deinem Licht.' }],
+  2: () => [{ k: 'post', title: 'Vier Zeichen. Vier Pakete.', goal: 'Schicke an jedes Fenster ein Paket.', hint: 'Jeder Schalter lässt sich einzeln ändern. Auch beide AUS ist ein Zeichen.' }],
+  3: () => [{ k: 'patterns', title: 'Sammle Lichtmuster.', goal: 'Fülle die acht Plätze mit verschiedenen Mustern.', hint: 'Lass links AUS und probiere die anderen beiden. Dann links AN.' }],
+  4: () => [{ k: 'factory', vals: [1], title: 'Baue einen lückenlosen Vorrat.', goal: 'Stell den linken Vorrat ein: Jede Menge von 0 bis 3 soll genau einmal gehen.', hint: 'Mit zwei Einser-Vorräten gibt es die 1 zweimal. Die 3 fehlt.' }],
+  5: () => [
+    { k: 'factory', vals: [2, 1], title: 'Ein neuer Platz für mehr.', goal: 'Die alten Plätze schaffen 0 bis 3. Ergänze den nächsten Vorrat.', hint: 'Der erste fehlende Vorrat ist 4. Stell den neuen Platz auf 4.' },
+    { k: 'factory', vals: [4, 2, 1], title: 'Und noch ein Platz.', goal: 'Bisher geht es bis 7. Mach die 8 möglich, ohne eine Lücke.', hint: 'Der neue Platz bekommt 8 Punkte: zweimal so viele wie der Vierer.' },
+    { k: 'factory', vals: [8, 4, 2, 1], title: 'Du kannst weiterbauen.', goal: 'Bisher geht es bis 15. Ergänze den nächsten Vorrat.', hint: 'Der neue Platz bekommt 16 Punkte. Immer doppelt so viel.' }
+  ],
+  6: () => [{ k: 'delivery', title: 'Fülle Lumis Sternenschachtel.', goal: 'Fülle die fünf Plätze und schicke die Schachtel ab.', hint: 'Nimm den Vorrat mit 4 Punkten. Ein Platz bleibt noch frei.' }],
+  7: () => [{ k: 'travel', title: 'Licht wird Bewegung.', goal: 'Lass Lumi zu zwei verschiedenen Stationen fahren.', hint: 'Die leuchtenden Vorräte bestimmen die Strecke. Tippe dann auf Losfahren.' }],
+  8: () => [
+    { k: 'notation', title: 'Schreib dein Licht auf.', goal: 'Mach die Zeichen sichtbar. Verändere dann einen Schalter.', hint: 'Tippe auf Zeichen sichtbar machen. AN bekommt eine 1, AUS eine 0.' },
+    { k: 'picture', title: 'Male mit AN und AUS.', goal: 'Gestalte ein Lichtbild und schicke es zu Lumi.', hint: 'Tippe auf die Bildfelder. Jedes Feld kann hell oder dunkel sein.' }
+  ]
+};
+function ltEnter(m) {
+  const sp = m.steps[m.si];
+  m.st = { bits: sp.k === 'factory' ? [0, ...sp.vals.map(() => 1)] : sp.k === 'bridge' ? [0] : sp.k === 'post' ? [0, 0] : sp.k === 'notation' ? [1, 0, 1] : sp.k === 'delivery' ? [0, 0, 0, 0] : [0, 0, 0], seen: [], just: null, done: false, solved: false, hint: false, v: sp.vals ? sp.vals[0] : 0, at: 0, received: null, digits: false, pixels: Array(16).fill(0), edits: 0, extended: false };
+}
+function ltStart(lv) {
+  if (!LT_BUILD[lv]) return;
+  UI.ltV = null;
+  UI.lt = { lv, steps: LT_BUILD[lv](), si: 0, pts: 0, hints: 0, mood: 'idle', fx: null };
+  ltEnter(UI.lt);
+  if (view !== 'licht') go('licht'); else render();
+  window.scrollTo(0, 0);
+}
+function ltTog(st, i) {
+  i = +i; if (!Number.isInteger(i) || i < 0 || i >= st.bits.length) return;
+  st.bits[i] = st.bits[i] ? 0 : 1; st.just = i;
+  ltPlay(st.bits[i] ? 'on' : 'off', st.bits.length - 1 - i);
+}
+function ltFactory(sp, st) {
+  const vals = [st.v, ...sp.vals], counts = {};
+  for (let n = 0; n < 2 ** vals.length; n++) { const sum = ltSum(ltBits(n, vals.length), vals); counts[sum] = (counts[sum] || 0) + 1; }
+  const target = sp.vals.reduce((a, b) => a + b, 0) + 1;
+  return { vals, counts, target, ok: st.v === target, max: target * 2 - 1 };
+}
+function ltMark(st, key) { if (!st.seen.includes(key)) st.seen.push(key); }
+function ltDo(arg) {
+  const m = UI.lt; if (!m || m.res) return;
+  const sp = m.steps[m.si], st = m.st, [act, raw] = String(arg).split(':'), n = +raw;
+  const focusArg = document.activeElement && document.activeElement.dataset.arg;
+  st.just = null;
+  if (act === 'next') {
+    if (!st.done) return;
+    m.pts += sp.k === 'patterns' ? 8 : sp.k === 'post' ? 4 : 2;
+    m.si++;
+    if (m.si === m.steps.length) {
+      const code = { 1: 'jn', 2: 'snack', 3: 'dbl', 4: 'wert', 5: 'wert', 8: 'bit' }[m.lv];
+      if (code) ltAddCode(code);
+      ltFinish(m);
+    } else ltEnter(m);
+    render(); window.scrollTo(0, 0); return;
+  }
+  if (act === 'tip') { if (!st.hint) m.hints++; st.hint = !st.hint; }
+  if (act === 'lamp') {
+    ltTog(st, n);
+    if (sp.k === 'bridge') { ltMark(st, st.bits[0]); st.done = st.seen.length === 2; }
+    if (sp.k === 'notation' && st.digits) st.done = true;
+  }
+  if (act === 'send' && sp.k === 'post') {
+    st.received = parseInt(st.bits.join(''), 2); ltMark(st, st.received); st.done = st.seen.length === 4; ltPlay('pop');
+    ltS().snack = ['apfel', 'keks', 'eis', 'banane'].map((s, i) => ({ p: ltBits(i, 2).join(''), s })); save();
+  }
+  if (act === 'catch' && sp.k === 'patterns') { ltMark(st, st.bits.join('')); st.done = st.seen.length === 8; ltPlay('pop'); }
+  if (act === 'extend' && sp.k === 'patterns' && st.done) st.extended = !st.extended;
+  if (sp.k === 'factory' && ['plus', 'minus'].includes(act)) {
+    const f = ltFactory(sp, st); st.v = Math.max(1, Math.min(f.target + 1, st.v + (act === 'plus' ? 1 : -1))); st.done = ltFactory(sp, st).ok; ltPlay('pop');
+  }
+  if (act === 'send' && sp.k === 'delivery') { st.received = ltSum(st.bits, LT_V4); st.done = st.received === 5; ltPlay(st.done ? 'ok' : 'pop'); }
+  if (act === 'drive' && sp.k === 'travel') { st.at = ltSum(st.bits, [4, 2, 1]); ltMark(st, st.at); st.done = st.seen.length >= 2; ltPlay('pop'); }
+  if (act === 'digits' && sp.k === 'notation') st.digits = !st.digits;
+  if (act === 'pixel' && sp.k === 'picture' && Number.isInteger(n) && n >= 0 && n < 16) { st.pixels[n] = 1 - st.pixels[n]; st.edits++; ltPlay(st.pixels[n] ? 'on' : 'off'); }
+  if (act === 'send' && sp.k === 'picture') { st.received = st.pixels.slice(); st.done = st.edits > 0; ltPlay('ok'); }
+  st.solved = st.done;
+  render();
+  // Whole-app rendering replaces controls; preserve keyboard focus on the same tool.
+  if (focusArg && act !== 'next') [...document.querySelectorAll('[data-act="ltDo"]')].find(el => el.dataset.arg === focusArg)?.focus({ preventScroll: true });
+}
+function ltBridge(on) {
+  return `<div class="lt-world lt-bridge ${on ? 'is-open' : ''}"><svg viewBox="0 0 420 160" role="img" aria-label="${on ? 'Die Brücke verbindet beide Ufer' : 'Die Brücke ist eingefahren'}">
+  <path d="M0 122Q105 99 210 122T420 122V160H0" fill="#285965"/><path d="M162 148q38-10 79 0M182 138h37" fill="none" stroke="#75b5b5" stroke-width="2"/>
+  <path d="M0 86h155v74H0M265 86h155v74H265" fill="#8daea0"/><path d="M0 86h155M265 86h155" stroke="#d3e4cb" stroke-width="9"/>
+  <g class="lt-bridge-deck" style="transform:translateX(${on ? 0 : -112}px)"><path d="M155 86h110" stroke="#f0c977" stroke-width="8"/><path d="M164 66v20m20-20v20m20-20v20m20-20v20m20-20v20m12-20v20M164 68h92" fill="none" stroke="#f0c977" stroke-width="3"/></g>
+  <g transform="translate(54 17) scale(.62)">${ltBotG(on ? 'happy' : 'idle', ltS().eq.out, on)}</g>
+  <path d="M328 48v35M328 49l23 8-23 8" fill="#e6a581" stroke="#e6a581" stroke-width="3"/>
+  <circle cx="289" cy="77" r="5" fill="${on ? '#ffd76a' : '#4a7065'}"/></svg><span class="lt-world-label">${on ? 'AN → Weg frei' : 'AUS → Brücke eingefahren'}</span></div>`;
+}
+function ltLabView(sp, st) {
+  const row = (vals, extra = {}) => ltRow(st.bits, { act: 'lamp', just: st.just, ...(vals ? { vals, mode: 'dots', showVal: true } : {}), ...extra });
+  if (sp.k === 'bridge') return { body: ltBridge(st.bits[0]) + '<div class="lt-flow-label">Dein Schalter steuert die Brücke ↓</div>' + row(), status: st.done ? 'Du hast beide Zustände ausprobiert.' : st.bits[0] ? 'Die Brücke ist da. Schalte sie wieder aus.' : 'Tippe auf den Schalter. Beobachte die Brücke.' };
+  if (sp.k === 'post') {
+    const dest = parseInt(st.bits.join(''), 2), keys = Object.keys(LT_SN);
+    return { body: `<div class="lt-destinations">${keys.map((k, i) => `<div class="lt-destination ${dest === i ? 'selected' : ''} ${st.seen.includes(i) ? 'visited' : ''}"><span class="lt-parcel">${LT_SN[k][0]}</span><b>${LT_SN[k][1]}</b>${ltMini(ltBits(i, 2).join(''))}<small>${st.seen.includes(i) ? 'angekommen ✓' : dest === i ? 'hierhin senden' : 'wartet'}</small></div>`).join('')}</div><div class="lt-flow-label">Dein Licht wählt das Fenster ↓</div>${row()}${ltControl('send', 'Paket schicken →')}`, status: st.received == null ? 'Verändere einen Schalter. Das ausgewählte Fenster wandert mit.' : `${LT_SN[keys[st.received]][1]} angekommen. ${st.seen.length} von 4 Fenstern besucht.` };
+  }
+  if (sp.k === 'patterns') return { body: `<div class="lt-pattern-board">${ltRange(0, 7).map(i => { const p = ltBits(i, 3).join(''), found = st.seen.includes(p); return `<div class="lt-pattern-slot ${found ? 'found' : ''}">${found ? ltMini(p) : '<span aria-hidden="true">· · ·</span>'}<span class="sr-only">${found ? p + ' gesammelt' : 'Noch ein freier Platz'}</span></div>`; }).join('')}</div><div class="lt-flow-label">Verändere die Lampen. Merke dir dein Muster.</div>${row()}${ltControl('catch', 'Muster aufbewahren +')}${st.done ? ltControl('extend', st.extended ? 'Wieder drei Lampen' : 'Eine Lampe dazu', 'sec') : ''}${st.extended ? `<div class="lt-double"><div><small>Neue Lampe AUS</small>${st.seen.map(p => ltMini('0' + p)).join('')}</div><div><small>Neue Lampe AN</small>${st.seen.map(p => ltMini('1' + p)).join('')}</div></div>` : ''}`, status: st.extended ? 'Jedes Muster gibt es zweimal. Aus 8 werden 16.' : `${st.seen.length} von 8 verschiedenen Mustern gesammelt. Auch alle AUS zählt.` };
+  if (sp.k === 'factory') {
+    const f = ltFactory(sp, st), sum = ltSum(st.bits, f.vals), firstGap = ltRange(0, f.max).find(n => !f.counts[n]), dup = ltRange(0, f.max).find(n => f.counts[n] > 1);
+    return { body: `<div class="lt-factory-top"><span>Neuer Vorrat links</span><div class="lt-stepper">${ltControl('minus', '−', '', st.v <= 1)}<strong aria-live="polite">${st.v}</strong>${ltControl('plus', '+', '', st.v >= f.target + 1)}</div><small>+ und − verändern nur diesen Vorrat.</small></div>${row(f.vals)}<div class="lt-live">Gerade ausgewählt: <b>${sum}</b> Punkte</div><div class="lt-coverage"><span>Diese Mengen kannst du bauen</span><div class="lt-line">${ltRange(0, f.max).map(n => `<span class="lt-n ${f.counts[n] === 1 ? 'ok' : f.counts[n] > 1 ? 'dup' : 'gap'}" aria-label="${n}: ${f.counts[n] === 1 ? 'einmal' : f.counts[n] > 1 ? 'doppelt' : 'fehlt'}">${n}${f.counts[n] > 1 ? '<i>2×</i>' : ''}</span>`).join('')}</div><small>Voll = möglich · gestrichelt = fehlt · 2× = doppelt</small></div>`, status: f.ok ? `Alles passt: 0 bis ${f.max}, ohne Lücke und ohne doppelte Menge.` : `${dup != null ? `Die ${dup} gibt es doppelt. ` : ''}${firstGap != null ? `Die ${firstGap} fehlt noch. ` : ''}Verändere den linken Vorrat.` };
+  }
+  if (sp.k === 'delivery') {
+    const sum = ltSum(st.bits, LT_V4), sent = st.received;
+    return { body: `<div class="lt-delivery-box"><span>Deine Schachtel · 5 Plätze</span><div class="lt-tray">${ltRange(0, 4).map(i => `<i class="${i < sum ? 'filled' : ''}">${i < sum ? '✦' : ''}</i>`).join('')}</div>${sum > 5 ? `<div class="lt-surplus">${ltTokens(sum - 5)}<small>${sum - 5} übrig</small></div>` : ''}</div><div class="lt-flow-label">Leuchtende Vorräte kommen in die Schachtel ↓</div>${row(LT_V4)}<div class="lt-live">${sum === 5 ? 'Alle fünf Plätze sind gefüllt.' : sum < 5 ? `Noch ${5 - sum} freie Plätze.` : `${sum - 5} Punkte passen noch nicht hinein.`}</div>${ltControl('send', 'Zu Lumi schicken →')}${sent != null ? `<div class="lt-receiver">${ltLumi('idle')}<span>Bei Lumi angekommen</span><div id="ltBowl" class="lt-bowl"><b>${sent}</b><small>Sterne</small></div></div>` : ''}`, status: sent == null ? 'Tippe die Vorräte an. Du siehst sofort, was in die Schachtel kommt.' : sent === 5 ? 'Die Schachtel ist vollständig angekommen.' : `${sent} Sterne angekommen. ${sent < 5 ? 'Es fehlen ' + (5 - sent) : (sent - 5) + ' sind übrig'}. Du kannst neu packen.` };
+  }
+  if (sp.k === 'travel') {
+    const sum = ltSum(st.bits, [4, 2, 1]);
+    return { body: `<div class="lt-travel"><div class="lt-track">${ltRange(0, 7).map(i => `<div class="lt-station ${st.at === i ? 'here' : ''} ${sum === i ? 'target' : ''}">${st.at === i ? ltLumi('idle') : '<span class="lt-track-space"></span>'}<b>${i}</b></div>`).join('')}</div><span>Ziel: Station ${sum}</span></div><div class="lt-flow-label">Dein Licht bestimmt die Strecke ↓</div>${row([4, 2, 1])}${ltControl('drive', 'Losfahren →')}`, status: st.seen.length ? `Lumi steht bei ${st.at}. ${st.seen.length} verschiedene Stationen besucht.` : 'Jeder leuchtende Vorrat zählt zur Strecke dazu.' };
+  }
+  if (sp.k === 'notation') {
+    const sum = ltSum(st.bits, [4, 2, 1]);
+    return { body: `<div class="lt-number-result">${ltTokens(sum)}<span>${sum} Leuchtpunkte</span></div>${row([4, 2, 1], st.digits ? { mode: 'digit' } : {})}${ltControl('digits', st.digits ? 'Wieder Leuchtpunkte zeigen' : 'Zeichen sichtbar machen', 'sec')}${st.digits ? '<p class="lt-discovery">AN wird <b>1</b>. AUS wird <b>0</b>.<br>Ein solcher Platz heißt <b>Bit</b>.</p>' : ''}`, status: st.digits ? `${st.bits.join('')} beschreibt dieselbe Menge: ${ltExpr(st.bits, [4, 2, 1])} = ${sum}.` : 'Dein Lichtmuster bleibt gleich. Gleich bekommt es kurze Zeichen.' };
+  }
+  if (sp.k === 'picture') return { body: `<div class="lt-picture-work"><div><span>Dein Lichtbild</span><div class="lt-pixel-grid">${st.pixels.map((b, i) => `<button class="lt-pixel ${b ? 'lit' : ''}" data-act="ltDo" data-arg="pixel:${i}" aria-pressed="${!!b}" aria-label="Bildfeld ${i + 1}: ${b ? 'AN' : 'AUS'}"></button>`).join('')}</div></div><div><span>Bei Lumi</span><div class="lt-pixel-grid received" role="img" aria-label="${st.received ? 'Dein gesendetes Lichtbild' : 'Noch kein Bild empfangen'}">${(st.received || Array(16).fill(0)).map(b => `<i class="lt-pixel ${b ? 'lit' : ''}"></i>`).join('')}</div></div></div>${ltControl('send', 'Bild schicken →')}<p class="lt-discovery">Hier bedeutet jedes Zeichen: ein Bildfeld an oder aus.<br>Ein Bildfeld heißt <b>Pixel</b>.</p>`, status: st.received ? 'Dein Bild ist angekommen. Du kannst es verändern und erneut senden.' : 'Tippe auf die Bildfelder. Auch dunkle Felder gehören zum Bild.' };
+  return { body: '', status: '' };
+}
+function ltLevelView(m) {
+  const sp = m.steps[m.si], st = m.st, o = ltLabView(sp, st);
+  return ltTop('Blinkis Lichterturm', 'licht') + `<div class="lt-head"><span class="lt-eyebrow">ENTDECKUNG ${m.lv} VON ${LT_MAX}${m.steps.length > 1 ? ' · ' + (m.si + 1) + '/' + m.steps.length : ''}</span>${ltSndBtn()}</div>
+  <section class="lt-stage"><div class="lt-task-head"><div><h1>${sp.title}</h1><p>${sp.goal}</p></div>${ltBot(st.done ? 'happy' : 'idle', st.bits.some(Boolean))}</div><div class="lt-body">${o.body}</div><p class="lt-status ${st.done ? 'complete' : ''}" role="status">${st.done ? '<span aria-hidden="true">✓ </span>' : ''}${o.status}</p>${st.done ? `<div class="lt-act">${ltControl('next', m.si + 1 < m.steps.length ? 'Weiterbauen →' : 'Entdeckung mitnehmen →')}</div>` : ''}</section>
+  <div class="lt-foot"><span>In deinem Tempo.</span><button class="lt-tipb" data-act="ltDo" data-arg="tip" aria-expanded="${st.hint}">Ein kleiner Hinweis</button></div>${st.hint ? `<p class="lt-hint" role="status">${sp.hint}</p>` : ''}`;
+}

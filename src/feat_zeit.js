@@ -21,7 +21,7 @@ const HW_HUB = /^(rewards)$/;
 const HW_N = 25, HW_SEC = 20 * 60, RG_AREA_CAP = 5 * 60, RG_TOTAL_CAP = 10 * 60, FREE_SEC = 4 * 60;
 
 /* ---------- Hausaufgaben-Status (aus den schon vorhandenen Zählern: Aufgaben heute, Übungszeit heute) ---------- */
-function hwDone() { if (ADMIN) return true; touchDay(); return (S.daily.n || 0) >= HW_N || (S.daily.sec || 0) >= HW_SEC; }
+function hwDone() { if (ADMIN) return true; touchDay(); return !!S.daily.hwApproved || (S.daily.n || 0) >= HW_N || (S.daily.sec || 0) >= HW_SEC; }
 function hwInfo() { touchDay(); return { n: S.daily.n || 0, need: HW_N, sec: S.daily.sec || 0, needSec: HW_SEC, done: hwDone() }; }
 
 /* ---------- Bereich (Ordner/Unterordner) für eine Ansicht; null = kein Bereich (frei oder Sammel-Seite) ---------- */
@@ -73,8 +73,8 @@ function pageLock(v, st) {
   if (st.perm) {
     const sc = secOf(v) || {}, pn = secName(sc.s) || secName(sc.m) || nm;
     return `${topBar(esc(pn), 'home')}
-    <div class="lockscr pglock"><div class="lockic">${ico('lock', 44)}</div>${lockBadge()}<h2>„${esc(pn)}“ ist gerade zu</h2>
-    <p>Deine Eltern haben diesen Bereich im Eltern-Bereich geschlossen. Frag sie, wenn du ihn öffnen möchtest.</p><p class="small mute">Alles ist gespeichert.</p>
+    <div class="lockscr pglock"><div class="lockic">${ico('lock', 44)}</div>${lockBadge()}<h2>${parentTimeLocked(v)?'Für heute pausiert':`„${esc(pn)}“ ist gerade zu`}</h2>
+    <p>${parentTimeLocked(v)?'Deine Eltern haben diesen Bereich für heute pausiert. Morgen gelten wieder die normalen Regeln.':'Deine Eltern haben diesen Bereich im Eltern-Bereich geschlossen. Frag sie, wenn du ihn öffnen möchtest.'}</p><p class="small mute">Alles ist gespeichert.</p>
     <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="home">Start</button></div></div>`;
   }
   if (st.hw) {
@@ -155,13 +155,53 @@ const permGet = id => ((S.cfg && S.cfg.perm) || {})[id] || '';
 function permOfSec(sc) { if (!sc) return ''; const own = sc.s === 'KOPF' ? (permGet('KOPF') || permGet('EMAL') || permGet('SCHR')) : (sc.s && permGet(sc.s)); return own || permGet(sc.m) || ''; }     // Kopfrechnen: frühere Einstellungen für Einmaleins/Schriftlich gelten weiter
 const permOf = v => permOfSec(secOf(v));
 function permSet(id, val) { if (!S.cfg.perm || typeof S.cfg.perm !== 'object') S.cfg.perm = {}; if (val === 'open' || val === 'lock') S.cfg.perm[id] = val; else delete S.cfg.perm[id]; save(); }
-/* Gesamtzustand einer Ansicht: Eltern-Freigabe → Hausaufgabe/freie Zeit → Zeitgrenzen */
+/* Zusatzzeit ist ein separater heutiger Vorrat. Verbrauch und Lernfortschritt bleiben erhalten. */
+function parentTimeData() {
+  touchDay();
+  const d = S.daily;
+  if (!isObj(d.parentTime)) d.parentTime = { shared: 0, areas: {}, locks: {}, practice: 0, practiceLocked: false, used: 0 };
+  if (!isObj(d.parentTime.areas)) d.parentTime.areas = {};
+  if (!isObj(d.parentTime.locks)) d.parentTime.locks = {};
+  return d.parentTime;
+}
+function parentTimeArea(v) { return rgArea(v) || ((featOf(v) || {}).id) || ''; }
+function parentSharedArea(v) { return !!pgArea(v) && !!rgArea(v); }
+function parentTimeLocked(v) {
+  const t = parentTimeData(), a = parentTimeArea(v);
+  return !!t.locks[a] || !!(t.sharedLocked && parentSharedArea(v));
+}
+function parentBonusLeft(v) {
+  const t = parentTimeData(), a = parentTimeArea(v);
+  return Math.max(0, t.areas[a] || 0) + (parentSharedArea(v) ? Math.max(0, t.shared || 0) : 0);
+}
+function parentNormalLeft(v, base) {
+  if (!base.open) return 0;
+  let left = base.left;
+  if (v === 'shop') left = Math.min(left, shopNormalLeft());
+  const F = featOf(v);
+  if (F && F.creative && creativeMode() === 'after') left = Math.min(left, creativeLeft());
+  return left;
+}
+let parentNormalTick = 0;
+function parentMarkNormalTick() { parentNormalTick = Date.now(); }
+function parentConsumeBonus(v) {
+  const t = parentTimeData(), a = parentTimeArea(v);
+  if ((t.areas[a] || 0) > 0) t.areas[a]--;
+  else if (parentSharedArea(v) && (t.shared || 0) > 0) t.shared--;
+  else return;
+  t.used = (t.used || 0) + 1;
+}
+/* Eltern-Sperre → heutige Pause → normale Zeit plus Zusatzzeit. */
 function viewState(v) {
   const pm = ADMIN ? '' : permOf(v);
-  if (pm === 'lock') return { open: false, perm: true };
+  if (pm === 'lock' || (!ADMIN && parentTimeLocked(v))) return { open: false, perm: true };
   if (ADMIN || pm === 'open') return { open: true, left: Infinity };
-  const a = pgArea(v); if (!a) return { open: true, left: Infinity };
-  return pgState(a);
+  const a = pgArea(v), base = a ? pgState(a) : { open: true, left: Infinity };
+  const bonus = parentBonusLeft(v), F = featOf(v);
+  if (!bonus || (F && F.creative && creativeMode() === 'locked')) return base;
+  const normal = parentNormalLeft(v, base);
+  if (normal === Infinity) return base;
+  return { open: true, left: normal + bonus, bonus: true, bonusOnly: normal <= 0, normal, base };
 }
 /* „Noch zu“ für Kacheln, auch tief in Ordnern: die Kachel weiß über data-act, wohin sie führt */
 const ACT_VIEW = { geoGo: 'geoPlay', gCard: 'geoCard', goNext: null, toggleSound: null, parent: null, home: null };
@@ -184,22 +224,33 @@ function lockTilesPass() {
 setInterval(() => {
   if (document.hidden || ADMIN) return;
   try {
-    const a = rgArea(view); if (!a) return;
-    const st = viewState(view); if (!st.open || st.left === Infinity) return;
+    const a = rgArea(view);
+    const st = viewState(view); if (!a && !st.bonus) return; if (!st.open || st.left === Infinity) return;
     if (Date.now() - lastInput > 120000) return;
-    if (st.free) {                                                          // freie Zeit vor der Hausaufgabe
+    if (st.bonusOnly) {
+      // The other timer may just have consumed the last normal second.
+      if (Date.now() - parentNormalTick < 500) return;
+      parentConsumeBonus(view);
+      const next = viewState(view), el = $('#pgT'); if (el) el.textContent = fmtT(next.left || 0);
+      if (!parentBonusLeft(view) || !next.open || next.left <= 0) { save(); leaveHook(view); render(); }
+      else if (parentTimeData().used % 15 === 0) save();
+      return;
+    }
+    if (!a) return;
+    const normalState = st.bonus ? st.base : st;
+    if (normalState.free) {                                                          // freie Zeit vor der Hausaufgabe
       S.daily.free = (S.daily.free || 0) + 1; const fl = freeLeft();
-      const el = $('#pgT'); if (el) el.textContent = fmtT(fl);
+      const el = $('#pgT'); if (el) el.textContent = fmtT(fl + parentBonusLeft(view));
       if (fl === 30) toast('⏳', 'Noch 30 Sekunden freie Zeit. Alles wird automatisch gespeichert.');
-      if (fl <= 0) { save(); leaveHook(view); render(); freeOver(); }
+      if (fl <= 0 && !parentBonusLeft(view)) { save(); leaveHook(view); render(); freeOver(); }
       else if (S.daily.free % 15 === 0) save();
       return;
     }
     const d = rgData(); d.rg.a[a] = (d.rg.a[a] || 0) + 1; d.rg.tot = (d.rg.tot || 0) + 1;
     const left = Math.min(Math.max(0, rgTotalCap() - rgTotalUsed()), Math.max(0, rgAreaCap(a) - rgAreaUsed(a)));
-    const el = $('#pgT'); if (el) el.textContent = fmtT(left);
+    const el = $('#pgT'); if (el) el.textContent = fmtT(left + parentBonusLeft(view));
     if (left === 30) toast('⏳', 'Noch 30 Sekunden hier. Alles wird automatisch gespeichert.');
-    if (left <= 0) { save(); leaveHook(view); toast('⏳', 'Die Zeit hier ist für heute um. Alles ist gespeichert.'); render(); }
+    if (left <= 0 && !parentBonusLeft(view)) { save(); leaveHook(view); toast('⏳', 'Die Zeit hier ist für heute um. Alles ist gespeichert.'); render(); }
     else if (d.rg.tot % 15 === 0) save();
   } catch (e) { console.error(e); }
 }, 1000);
@@ -210,7 +261,7 @@ function rgResetArea(a) { const d = rgData(); d.rg.tot = Math.max(0, d.rg.tot - 
 function rgExtendAll(sec) { const d = rgData(); d.rgExt.tot = (d.rgExt.tot || 0) + sec; save(); }
 function rgExtendArea(a, sec) { const d = rgData(); d.rgExt.a[a] = (d.rgExt.a[a] || 0) + sec; save(); }
 function freeReset() { touchDay(); S.daily.free = 0; S.daily.freeMsg = false; save(); }
-function hwForceDone(on) { touchDay(); if (on) S.daily.n = Math.max(S.daily.n || 0, HW_N); else { S.daily.n = 0; S.daily.sec = 0; } save(); }
+function hwForceDone(on) { touchDay(); S.daily.hwApproved = !!on; save(); }
 
 /* ---------- Tageswechsel: Hausaufgaben-Ergebnis des alten Tages merken (für den „2 Tage“-Hinweis) ---------- */
 function onDayRollover(oldDaily) {

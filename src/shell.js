@@ -90,17 +90,17 @@ setInterval(() => {
   if (document.hidden) return;
   tickN++;
   try {
-    if (view === 'shop' && (S.cfg.shopMin || 0) > 0 && shopLeft() > 0) {
-      touchDay(); S.daily.shopSec++;
+    if (view === 'shop' && (S.cfg.shopMin || 0) > 0 && shopNormalLeft() > 0 && !viewState(view).bonusOnly) {
+      touchDay(); S.daily.shopSec++; parentMarkNormalTick();
       const el = $('#shopT'); if (el) el.textContent = fmtT(shopLeft());
       if (shopLeft() <= 0) { save(); render(); toast('🛍️', 'Die Shop-Zeit für heute ist vorbei.'); }
     }
     const F = featOf(view);
-    if (F && F.creative && creativeMode() === 'after' && creativeLeft() > 0 && !(UI.pinCreative && Date.now() < UI.pinCreative)) {
-      S.daily.cr.left--; S.daily.cr.used++;
+    if (F && F.creative && creativeMode() === 'after' && creativeLeft() > 0 && !(UI.pinCreative && Date.now() < UI.pinCreative) && !viewState(view).bonusOnly) {
+      S.daily.cr.left--; S.daily.cr.used++; parentMarkNormalTick();
       const el = $('#crT'); if (el) el.textContent = fmtT(S.daily.cr.left);
       if (S.daily.cr.left === 60) toast('⏳', 'Noch eine Minute Kreativzeit. Alles wird automatisch gespeichert.');
-      if (S.daily.cr.left <= 0) {
+      if (S.daily.cr.left <= 0 && !parentBonusLeft(view)) {
         save(); leaveHook(view);
         modal('Kreativzeit vorbei', 'Alles ist gespeichert. Du findest es morgen genau so wieder. Jetzt üben wir weiter!', 'Weiter üben', 'goNext', '', 'Später');
         go(F.id === 'musik' || F.id === 'story' ? 'kreativhefte' : 'rewards');

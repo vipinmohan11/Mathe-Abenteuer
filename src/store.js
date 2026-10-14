@@ -262,8 +262,9 @@ function grantCreative(kind) {
   toast('🎨', `Geschafft! ${S.cfg.creativeMin || 5} Minuten Kreativzeit warten auf dich.`); return true;
 }
 const creativeLeft = () => { touchDay(); return S.daily.cr.left; };
-const creativeOK = () => { const m = creativeMode(); return m === 'always' || (m === 'after' && creativeLeft() > 0) || (UI.pinCreative && Date.now() < UI.pinCreative); };
-const shopLeft = () => { if (ADMIN) return Infinity; touchDay(); const lim = (S.cfg.shopMin || 0) * 60; return lim ? Math.max(0, lim - (S.daily.shopSec || 0)) : Infinity; };
+const creativeOK = () => { const m = creativeMode(); return m === 'always' || (m === 'after' && (creativeLeft() > 0 || (typeof parentBonusLeft === 'function' && parentBonusLeft(view) > 0 && !parentTimeLocked(view)))) || (UI.pinCreative && Date.now() < UI.pinCreative); };
+const shopNormalLeft = () => { if (ADMIN) return Infinity; touchDay(); const lim = (S.cfg.shopMin || 0) * 60; return lim ? Math.max(0, lim - (S.daily.shopSec || 0)) : Infinity; };
+const shopLeft = () => { const normal = shopNormalLeft(); return normal === Infinity ? normal : normal + (typeof parentBonusLeft === 'function' ? parentBonusLeft('shop') : 0); };
 function addLog(correct) {
   const t = ymd(); const e = S.log[t] || (S.log[t] = { n: 0, c: 0 });
   e.n++; if (correct) e.c++;
@@ -432,4 +433,4 @@ const pinOk = p => !!S.pin && hashStr(p) === S.pin.h;
 const recOk = p => !!S.pin && hashStr(p) === S.pin.r;
 
 /* ---------- Tageslimit ---------- */
-const limitHit = () => !ADMIN && S.cfg.limitMin > 0 && S.daily.d === ymd() && S.daily.sec >= S.cfg.limitMin * 60 && !S.daily.unlocked;
+const limitHit = () => { if (ADMIN) return false; touchDay(); const t = typeof parentTimeData === 'function' ? parentTimeData() : {}; return !!t.practiceLocked || (S.cfg.limitMin > 0 && S.daily.sec >= S.cfg.limitMin * 60 + (t.practice || 0) && !S.daily.unlocked); };

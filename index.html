@@ -586,6 +586,54 @@ button.av-chip:active{transform:scale(.96)}
 @page{size:A4 landscape;margin:12mm}
 @media print{.urk-in{border-radius:0;padding:30px}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 
+/* Eltern: globale Werkzeuge und vier Themen-Reiter. */
+body[data-screen="parent"] #app{max-width:1060px}
+.pt-global{margin:8px 0 22px;border:1px solid var(--dz-line);border-radius:20px;background:var(--dz-surface);padding:15px 18px}
+.pt-global-bar,.pt-global-group,.pt-global-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pt-global-bar{justify-content:space-between}.pt-global-group{gap:10px}.pt-global-label{font-size:.78rem;font-weight:800;color:var(--dz-mute)}
+.pt-global-actions{gap:8px}.pt-global-actions .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px}
+.pt-global .seg button{min-height:40px;min-width:42px}.pt-global .seg{margin:0}
+.pt-global-more{margin-top:12px;border-top:1px solid var(--dz-line)}
+.pt-global-more>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.8rem;font-weight:800;cursor:pointer;padding:13px 0 0;min-height:42px}
+.pt-global-more>summary>span{font-size:.72rem;color:var(--dz-mute);font-weight:600}
+.pt-global-more[open]>summary{padding-bottom:10px}.pt-global-more input{max-width:100%}
+.pt-workspace{border:1px solid var(--dz-line);border-radius:20px;background:var(--dz-surface2);overflow:hidden}
+.pt-tabs{display:flex;gap:3px;padding:10px 12px 0;border-bottom:1px solid var(--dz-line);background:var(--dz-t2)}
+.pt-tabs>button{position:relative;flex:1;min-width:0;min-height:49px;padding:11px 14px;border:1px solid transparent;border-bottom:0;border-radius:13px 13px 0 0;background:transparent;color:var(--dz-mute);font-size:.9rem;font-weight:800;cursor:pointer}
+.pt-tabs>button.selected{background:var(--dz-surface);border-color:var(--dz-line);color:var(--dz-ink)}
+.pt-tabs>button.selected:after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--dz-surface)}
+.pt-tabs>button:focus-visible{z-index:1;outline-offset:-4px}
+.pt-panel{padding:20px;background:var(--dz-surface)}
+.pt-card{margin:0 0 18px;padding:20px;border:1px solid var(--dz-line);box-shadow:none;border-radius:17px;background:var(--dz-surface)}
+.pt-card:last-child{margin-bottom:0}.pt-card>h3{font-size:1.13rem;margin:0 0 12px}
+.pt-description,.pt-note{color:var(--dz-mute);font-size:.85rem;line-height:1.6;margin:8px 0 16px}
+.pt-panel .cfg{gap:16px;align-items:center;border-color:var(--dz-line)}
+.pt-panel .cfg .row,.pt-global .cfg .row{flex-wrap:wrap}
+.pt-panel .cfg>div:first-child{min-width:0}
+.pt-panel .txt,.pt-global .txt{min-height:44px;max-width:100%}
+.pt-grant-form{display:grid;grid-template-columns:minmax(220px,2fr) minmax(120px,1fr) auto;gap:12px;align-items:end}
+.pt-grant-form label{display:flex;flex-direction:column;gap:7px;color:var(--dz-mute);font-size:.78rem;font-weight:800}
+.pt-grant-form .btn{min-height:45px;white-space:nowrap}
+.pt-balance{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:16px 0;padding:15px 18px;background:var(--dz-t2);border-radius:13px;font-size:.85rem}
+.pt-balance>strong{margin-left:auto;font-size:1.5rem;font-variant-numeric:tabular-nums;color:var(--dz-accent)}
+.pt-time-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 2px;width:100%}.pt-time-actions .btn{min-height:42px;font-size:.78rem;padding:8px 13px}
+.pt-time-actions .btn:disabled{opacity:.45;cursor:default}
+.pt-panel .ptblock{padding:5px 15px;margin-bottom:8px;box-shadow:none}
+.pt-panel .ptarea{gap:12px;padding:12px 0}.pt-panel .ptarea-t b{font-size:.9rem}.pt-panel .ptarea-t>span{line-height:1.5;font-size:.76rem}
+.pt-panel .ptarea.sub{padding:14px 0 14px 14px}.pt-panel .ptarea.sub .pt-time-actions{margin-top:0}
+.pt-panel .ptperm{flex-wrap:nowrap}.pt-panel .ptperm button{font-size:.76rem;min-height:42px;min-width:63px;padding:6px 12px}
+.pt-panel .ptsubs>summary{min-height:46px;font-size:.78rem}
+.pt-rule-details{margin-top:18px;border-top:1px solid var(--dz-line);padding-top:12px}.pt-rule-details>summary{min-height:44px;font-size:.84rem;font-weight:800;cursor:pointer;display:flex;align-items:center}
+.pt-deadlines{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.pt-deadlines>label{display:flex;flex-direction:column;gap:8px;font-size:.83rem}.pt-deadlines small{font-size:.74rem;color:var(--dz-mute)}
+.pt-notice{border:1px solid var(--dz-line);background:var(--dz-ok-bg);color:var(--dz-ink);border-radius:13px;padding:14px 17px;margin:0 0 16px;font-size:.86rem;line-height:1.6}
+.pt-stat-tools{display:flex;justify-content:flex-end;margin-bottom:12px}.pt-feature-stats{display:grid;gap:14px;margin-top:18px}.pt-feature-stats>.card{margin:0}.pt-feature-stats .cfg{gap:12px}
+body[data-screen="parent"]:has(.pt-global) #nzBubble{display:none}
+body[data-screen="parent"] .top .pt-notes{width:42px;height:42px;min-height:42px;padding:0;display:grid;place-items:center;flex:none}
+@media(max-width:700px){.pt-global{padding:13px;margin-bottom:16px}.pt-global-bar{gap:14px}.pt-global-actions{width:100%}.pt-global-actions .btn{flex:1}.pt-panel{padding:13px}.pt-card{padding:16px}.pt-tabs{padding:8px 7px 0;gap:0}.pt-tabs>button{padding:10px 5px;font-size:.78rem}.pt-grant-form{grid-template-columns:minmax(0,1fr) 100px}.pt-grant-form>.btn{grid-column:1/-1}.pt-balance{padding:12px;font-size:.78rem;gap:8px}.pt-balance>strong{font-size:1.3rem}.pt-panel .ptarea-t{min-width:140px}.pt-panel .ptarea-c{width:100%}.pt-panel .ptperm{width:100%}.pt-panel .ptperm button{flex:1}.pt-panel .ptblock{padding:4px 12px}.pt-panel .ptarea.sub{padding-left:7px}.pt-time-actions .btn{flex:1;min-width:100px}.pt-time-actions .btn.ghost{flex-basis:100%}.pt-deadlines{grid-template-columns:1fr}.pt-global-more>summary{flex-wrap:wrap;gap:5px}.pt-global-group{gap:8px}.pt-global-label{display:none}.pt-tabs>button{min-height:52px}.pt-panel .cfg{flex-wrap:wrap}.pt-panel .cfg>div{max-width:100%}.pt-feature-stats .cfg .row{flex-wrap:wrap}}
+@media(max-width:360px){.pt-tabs>button{font-size:.7rem;line-height:1.2}.pt-grant-form{grid-template-columns:minmax(0,1fr)}.pt-grant-form>.btn{grid-column:auto}.pt-global-group .seg button{padding-inline:9px}.pt-global-actions .btn{font-size:.8rem;padding-inline:10px}.pt-card{padding:13px}.pt-global .cfg{flex-wrap:wrap}.pt-global .cfg .row{width:100%}.pt-global .cfg input{width:100%;min-width:0}}
+@media print{.pt-global,.pt-tabs,.pt-stat-tools,.pt-notice{display:none!important}.pt-workspace{border:0}.pt-panel{padding:0}}
+
 /* Europa-Entdecker: Flaggen, Quiz, Karten – alle Farben folgen dem gewählten Thema */
 .geo-flag{display:block;border-radius:6px;border:1.5px solid var(--line);background:var(--soft);flex-shrink:0}
 .geo-qflag{width:84px;height:56px;margin:0 auto 8px}
@@ -716,224 +764,106 @@ button.av-chip:active{transform:scale(.96)}
 .qbody:has(.nwq) .ch{max-width:none;min-height:56px;text-align:left;font-size:1.05rem}
 .vzn .fld,.chainv .fld,.zhaus .fld,.fz .fld,.stt .fld{min-width:3.2ch}
 
-/* Blinkis Lichterturm (.lt-*): eine ruhige Nachtbühne, warmes Licht für AN. Ruhige Darstellung schaltet alle Bewegungen ab (style.css). */
-.lt-hub{background:#141a33;border-radius:24px;overflow:hidden;margin:4px auto 14px;max-width:760px;box-shadow:var(--dz-sh-card)}
+/* Lichtwerkstatt: ruhige, direkte Experimente. Alle Regeln bleiben im Feature. */
+.lt-hub,.lt-stage{--lt-ink:#eff5ea;--lt-muted:#aac5bd;--lt-line:#45665f;--lt-panel:#244841;--lt-gold:#f2ce85;color:var(--lt-ink);background:#163a35;border-radius:28px;overflow:hidden;max-width:860px;margin:8px auto 20px}
+.lt-hub{background:linear-gradient(135deg,#123c35,#1f4943)}
+.lt-hero{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;min-height:330px;padding:30px 28px 12px;gap:12px}
+.lt-eyebrow{font-size:.7rem;font-weight:800;letter-spacing:.14em;color:var(--dz-mute)}
+.lt-hero .lt-eyebrow,.lt-stage .lt-eyebrow{color:#b7d7c9}
+.lt-hero h1{font-size:clamp(2rem,5vw,3.3rem);font-weight:800;line-height:1.03;letter-spacing:-.045em;margin:16px 0;color:#f7f3df}
+.lt-hero p{color:#c2d7cb;font-size:.95rem;line-height:1.6;margin:0 0 24px}
+.lt-hero-art{position:relative;min-height:280px;align-self:stretch;display:flex;align-items:flex-end;isolation:isolate}
+.lt-hero-art:before{content:'';position:absolute;width:220px;height:220px;border:1px solid #63877b;border-radius:50%;left:50%;top:12px;transform:translateX(-50%);opacity:.3}
 .lt-scn{display:block;width:100%;height:auto}
-.lt-tw{animation:ltTw 3.2s ease-in-out infinite}
-@keyframes ltTw{0%,100%{opacity:.9}50%{opacity:.35}}
-.lt-hubbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px 0;color:#eef1ff}
-.lt-hubbtn{display:flex;gap:10px;padding:10px 14px 14px;flex-wrap:wrap}
-.lt-hubbtn .lt-btn{flex:1;min-width:140px}
-.lt-lp{display:inline-flex;align-items:center;gap:4px;font-weight:700}
-.lt-lp b{font-size:1.15rem}
-.lt-snd{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1.5px solid #4b5788;background:transparent;color:#cfd6f5;font-weight:700;font-size:.85rem;min-height:36px}
-.lt-snd.on{background:#ffd76a;border-color:#ffd76a;color:#2a2410}
-.lt-head .lt-snd{border-color:var(--dz-line);color:var(--dz-ink)}
-.lt-head .lt-snd.on{border-color:#e9b949;color:#2a2410}
-.lt-h{margin:6px 2px 8px}
-.lt-lvs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-.lt-lvc{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;border:1.5px solid var(--dz-line);background:var(--dz-surface);text-align:left;min-height:64px}
-.lt-lvc.cur{border-color:#e9b949;box-shadow:0 0 0 3px rgba(255,215,106,.25)}
-.lt-lvc.lock{opacity:.55;cursor:default}
-.lt-lvn{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#232c4a;color:#ffd76a}
-.lt-lvc.done .lt-lvn{background:#ffd76a;color:#2a2410}
-.lt-lvt{flex:1;display:flex;flex-direction:column;gap:2px}
-.lt-lvt small{color:var(--dz-mute);font-size:.82rem}
-.lt-lvr{font-size:.8rem;font-weight:800;color:var(--dz-mute)}
-.lt-lvr.go{color:#9a6b00}
-.lt-soon{text-align:center;margin:14px 0 4px}
-
-/* Kopf einer Stufe */
-.lt-head{display:flex;align-items:center;gap:12px;margin:2px 0 10px;flex-wrap:wrap}
-.lt-ht{display:flex;flex-direction:column;line-height:1.15}
-.lt-ht small{color:var(--dz-mute);font-weight:700}
-.lt-ht b{font-size:1.15rem}
-.lt-steps{flex:1;display:flex;gap:5px;justify-content:center;min-width:120px}
-.lt-steps i{width:10px;height:10px;border-radius:50%;background:var(--dz-line)}
-.lt-steps i.d{background:#e9b949}
-.lt-steps i.c{background:#e9b949;box-shadow:0 0 0 3px rgba(255,215,106,.35)}
-
-/* Bühne */
-.lt-stage{max-width:860px;margin-inline:auto;position:relative;overflow:hidden;border-radius:24px;padding:14px 14px 18px;color:#eef1ff;background:radial-gradient(1px 1px at 12% 18%,#dfe6ff 50%,transparent 51%),radial-gradient(1px 1px at 72% 10%,#dfe6ff 50%,transparent 51%),radial-gradient(1.4px 1.4px at 88% 40%,#dfe6ff 50%,transparent 51%),radial-gradient(1px 1px at 30% 70%,#dfe6ff 50%,transparent 51%),linear-gradient(#161d39,#26315a);box-shadow:var(--dz-sh-card)}
-.lt-scene{display:flex;align-items:flex-start;gap:10px}
-.lt-bot{flex:none;width:clamp(64px,19vw,92px);height:auto;transition:transform .3s}
-.lt-bot.m-happy{animation:ltHop .6s ease-out}
-.lt-bot.m-confused{animation:ltTilt .5s ease-out}
-@keyframes ltHop{0%{transform:translateY(0)}35%{transform:translateY(-8px)}70%{transform:translateY(0)}85%{transform:translateY(-3px)}}
-@keyframes ltTilt{0%{transform:rotate(0)}40%{transform:rotate(-7deg)}100%{transform:rotate(0)}}
-.lt-lumiw{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
-.lt-lumi{width:clamp(54px,15vw,78px)}
-.lt-bub{flex:1;position:relative;background:#f6f3ff;color:#262b45;border-radius:18px;padding:10px 14px;font-size:1.02rem;line-height:1.4;min-height:48px;animation:ltBub .25s ease-out}
-.lt-bub small{color:#5b6185;font-size:.86rem}
-.lt-bub.from-l::before,.lt-bub.from-r::before{content:'';position:absolute;top:18px;border:8px solid transparent}
-.lt-bub.from-l::before{left:-15px;border-right-color:#f6f3ff}
-.lt-bub.from-r{background:#fbeefa}
-.lt-bub.from-r::before{right:-15px;border-left-color:#fbeefa}
-@keyframes ltBub{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
-.lt-bowl{display:flex;flex-direction:column;align-items:center;min-width:56px;padding:4px 8px;border-radius:0 0 22px 22px;background:#2f3a68;border:2px solid #4b5788;border-top:0;line-height:1.05}
-.lt-bowl b{font-size:1.2rem;color:#ffd76a}
-.lt-bowl small{font-size:.7rem;color:#cfd6f5}
-.lt-body{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
-.lt-lab{font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#aab4d9;text-align:center}
-.lt-act{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-.lt-body .lt-act{margin-top:2px}
-.lt-btn{min-height:48px;padding:10px 22px;border-radius:999px;background:#ffd76a;color:#2a2410;font-weight:800;font-size:1.02rem;box-shadow:0 4px 0 #c9a23e;transition:transform .12s}
-.lt-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #c9a23e}
-.lt-btn.sec{background:transparent;color:#eef1ff;border:2px solid #4b5788;box-shadow:none}
-.lt-hubbtn .lt-btn.sec{color:#eef1ff}
-.lt-btn:disabled{opacity:.35;cursor:default}
-.lt-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
-.lt-opts .lt-btn{min-width:64px}
-.lt-foot{max-width:860px;margin-inline:auto!important;display:flex;justify-content:space-between;align-items:center;margin:10px 4px 0;padding-left:84px;min-height:44px}
-.lt-tipb{padding:8px 14px;border-radius:999px;border:1.5px solid var(--dz-line);background:var(--dz-surface);font-weight:700;min-height:40px}
-.lt-pts{font-weight:800;color:var(--dz-mute)}
-
-/* Lampen */
-.lt-row{display:flex;gap:clamp(8px,3vw,16px);justify-content:center;align-items:flex-start;--ls:clamp(58px,17vw,80px)}
-.lt-row.tiny{--ls:30px;gap:6px}
-.lt-lw{display:flex;flex-direction:column;align-items:center;gap:4px}
-.lt-lamp{width:var(--ls);height:var(--ls);border-radius:50%;display:grid;place-items:center;padding:0;border:3px solid #4b5788;background:radial-gradient(circle at 35% 30%,#3b4670,#1d2442);transition:transform .15s}
-.lt-lamp.tap{cursor:pointer}
-.lt-lamp.tap:active{transform:scale(.94)}
-.lt-lamp.on{border-color:#ffe3a0;background:radial-gradient(circle at 35% 30%,#fffbe6,#ffd25e 45%,#f2a42e);box-shadow:0 0 18px 6px rgba(255,200,80,.5)}
-.lt-lamp.sk-ff.on{border-color:#e6ffb0;background:radial-gradient(circle at 35% 30%,#fbffe8,#d7f57a 45%,#97cf3a);box-shadow:0 0 18px 6px rgba(190,240,90,.45)}
-.lt-lamp.sk-kerze.on{border-color:#ffd2a8;background:radial-gradient(circle at 50% 65%,#fff3dc,#ffb35c 45%,#e8692c);box-shadow:0 0 18px 6px rgba(255,140,60,.5)}
-.lt-lamp.sk-kri{border-radius:30%}
-.lt-lamp.sk-kri.on{border-color:#c8f4ff;background:radial-gradient(circle at 35% 30%,#f2fdff,#8fe0f7 45%,#4aa9d8);box-shadow:0 0 18px 6px rgba(110,210,245,.5)}
-.lt-lamp.sk-mond.on{border-color:#fff;background:radial-gradient(circle at 35% 30%,#ffffff,#dfe6fb 50%,#aab8e6);box-shadow:0 0 18px 6px rgba(210,222,255,.55)}
-.lt-lamp.just{animation:ltWarm .45s ease-out}
-.lt-lamp.cool{animation:ltCool .5s ease-out}
-.lt-lamp.drop{animation:ltDrop .6s cubic-bezier(.3,1.4,.5,1)}
-.lt-lamp.pulse{animation:ltPulse 1s ease-in-out 3}
-@keyframes ltWarm{0%{filter:brightness(.45);transform:scale(.9)}60%{transform:scale(1.08)}100%{filter:none;transform:scale(1)}}
-@keyframes ltCool{0%{filter:brightness(1.8)}100%{filter:none}}
-@keyframes ltDrop{0%{transform:translateY(-60px);opacity:0}100%{transform:none;opacity:1}}
-@keyframes ltPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,140,170,0)}50%{box-shadow:0 0 0 8px rgba(255,140,170,.55)}}
-.lt-glass{width:72%;height:72%;display:grid;place-items:center}
-.lt-dots{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:3px;width:100%;height:100%}
-.lt-dot{width:9px;height:9px;border-radius:50%;background:#7480b5}
-.lt-dots.sm .lt-dot{width:6px;height:6px}
-.lt-lamp.on .lt-dot{background:#fff;box-shadow:0 0 5px 1px #fff7d6}
-.lt-dig{font-size:calc(var(--ls) * .5);font-weight:800;color:#8b96c6;line-height:1}
-.lt-lamp.dg{animation:ltMorph .45s ease-out}
-.lt-lamp.dg.on .lt-dig{color:#5a3d00}
-@keyframes ltMorph{0%{transform:rotateY(90deg)}100%{transform:none}}
-.lt-val{font-size:.85rem;font-weight:800;color:#ffd76a;min-width:26px;text-align:center;padding:1px 6px;border-radius:999px;background:rgba(255,215,106,.12)}
-.lt-row.lumi .lt-lamp.on{border-color:#ffd0ef;background:radial-gradient(circle at 35% 30%,#fff2fb,#ffb3e1 45%,#e27fc0);box-shadow:0 0 18px 6px rgba(255,160,220,.45)}
-.lt-udig{font-size:1.2rem;font-weight:800;color:#eef1ff}
-.lt-stepper{display:flex;gap:8px}
-.lt-stepper button{width:44px;height:44px;border-radius:50%;background:#ffd76a;color:#2a2410;font-size:1.4rem;font-weight:800;line-height:1}
-.lt-stepper button:disabled{opacity:.3}
-.lt-live{font-size:.95rem;color:#cfd6f5}
-.lt-live b{color:#ffd76a;font-size:1.1rem}
-
-/* Snacks, Codebuch, Galerie */
-.lt-snacks{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.lt-snack{display:flex;flex-direction:column;align-items:center;gap:2px;width:76px;padding:8px 4px;border-radius:16px;background:#2f3a68;border:2px solid #4b5788;color:#eef1ff;min-height:72px}
-.lt-snack span{font-size:1.8rem;line-height:1}
-.lt-snack small{font-size:.78rem}
-.lt-snack:not(:disabled){border-color:#ffd76a;box-shadow:0 0 0 3px rgba(255,215,106,.2)}
-.lt-snack:disabled{opacity:.55;cursor:default}
-.lt-snack.has{opacity:.4}
-.lt-cbook{width:100%;max-width:520px;background:rgba(255,255,255,.06);border-radius:16px;padding:8px 10px;text-align:center}
-.lt-cbook>small{display:block;color:#aab4d9;font-weight:700;margin-bottom:4px}
-.lt-cbrow{display:flex;gap:10px;justify-content:center;align-items:center}
-.lt-cbrow.wrap{flex-wrap:wrap}
-.lt-cbc{display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border-radius:12px;background:rgba(255,255,255,.08);font-size:1.15rem}
-.lt-cbc.wig{animation:ltWig .45s ease-in-out 2}
-.lt-cbc.glow{box-shadow:0 0 0 3px #ffd76a;background:rgba(255,215,106,.18)}
-.lt-cbc.new{animation:ltPop .4s ease-out}
-@keyframes ltWig{0%,100%{transform:none}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
-@keyframes ltPop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.15)}100%{transform:none;opacity:1}}
-.lt-minis{display:inline-flex;gap:3px}
-.lt-mini{width:13px;height:13px;border-radius:50%;background:#2a3358;border:1.5px solid #56618f;display:inline-block}
-.lt-mini.on{background:#ffd76a;border-color:#ffe3a0;box-shadow:0 0 5px 1px rgba(255,200,80,.6)}
-.lt-mini.sk-ff.on{background:#c9ef5f;border-color:#e6ffb0}.lt-mini.sk-kerze.on{background:#ff9f4f;border-color:#ffd2a8}.lt-mini.sk-kri.on{background:#8fe0f7;border-color:#c8f4ff}.lt-mini.sk-mond.on{background:#e6ecff;border-color:#fff}
-.lt-mini.nw{outline:2px solid #ff8fb1;outline-offset:1px}
-.lt-cnt{color:#cfd6f5}
-.lt-cnt b{color:#ffd76a;font-size:1.2rem}
-.lt-gal{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:460px}
-.lt-copy{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.lt-grp{display:flex;flex-direction:column;gap:6px;align-items:center;padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.07)}
-.lt-grp small{color:#aab4d9;font-weight:700}
-.lt-copy.two .lt-grp{animation:ltPop .5s ease-out}
-.lt-copy.two .lt-grp.b{animation-delay:.25s;animation-fill-mode:backwards}
-.lt-eq{font-size:1.15rem;font-weight:800;color:#ffd76a;margin:2px 0;text-align:center}
-.lt-deal{display:flex;gap:18px;justify-content:center}
-.lt-dc{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:16px;background:rgba(255,255,255,.08);font-size:1.15rem}
-
-/* Zahlenstrahl (Lampen-Werkstatt) */
-.lt-line{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:520px}
-.lt-n{position:relative;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;border:2px dashed #56618f;color:#8f9acb}
-.lt-n.ok{background:#ffd76a;color:#2a2410;border:2px solid #ffe3a0;box-shadow:0 0 8px rgba(255,215,106,.5)}
-.lt-n.dup{background:#ff9f6b;color:#2a1608;border:2px solid #ffc7a3}
-.lt-n.dup i{position:absolute;top:-8px;right:-10px;font-style:normal;font-size:.68rem;padding:1px 4px;border-radius:999px;background:#fff;color:#a24a43}
-.lt-n.gap{border-color:#ff8fb1;color:#ff8fb1;animation:ltWob 1.4s ease-in-out infinite}
-.lt-n.far{opacity:.35;border-style:dotted}
-@keyframes ltWob{0%,100%{transform:none}50%{transform:scale(.88)}}
-.lt-stat{margin:2px 0 0;text-align:center;color:#cfd6f5;max-width:480px}
-.lt-stat.ok{color:#ffd76a;font-weight:800}
-
-/* Sterne, Zahlen-Tasten, Ziffern */
-.lt-sky{font-size:1.3rem;letter-spacing:4px;color:#3b4670}
-.lt-sky i{font-style:normal}
-.lt-sky i.on{color:#ffd76a;text-shadow:0 0 8px rgba(255,215,106,.7)}
-.lt-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:100%;max-width:340px}
-.lt-num{min-height:48px;border-radius:14px;background:#2f3a68;border:2px solid #4b5788;color:#eef1ff;font-weight:800;font-size:1.1rem}
-.lt-num:active{background:#ffd76a;color:#2a2410}
-.lt-digits{display:flex;gap:clamp(8px,3vw,16px);justify-content:center}
-.lt-digits span{width:clamp(58px,17vw,80px);text-align:center;font-size:2rem;font-weight:800;color:#56618f}
-.lt-digits span.on{color:#ffd76a;animation:ltPop .35s ease-out}
-.lt-slots{display:flex;gap:clamp(8px,3vw,16px);justify-content:center}
-.lt-slot{width:clamp(58px,17vw,80px);height:56px;border-radius:14px;border:2px dashed #56618f;color:#8f9acb;font-size:1.8rem;font-weight:800;background:rgba(255,255,255,.04)}
-.lt-slot.set{border-style:solid;border-color:#ffd76a;color:#ffd76a}
-.lt-slot.bad{border-color:#ff8fb1;color:#ff8fb1;animation:ltWig .45s ease-in-out 2}
-.lt-bigd{font-size:2.2rem;font-weight:800;letter-spacing:.35em;color:#ffd76a;padding-left:.35em;text-shadow:0 0 12px rgba(255,215,106,.35)}
-.lt-terms{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.lt-terms span{padding:6px 12px;border-radius:12px;background:rgba(255,255,255,.08)}
-.lt-terms b{color:#ffd76a}
-
-/* Ergebnis */
-.lt-res{text-align:center}
-.lt-res .lt-bub{text-align:left}
-.lt-res h2{margin:14px 0 4px;color:#fff}
-.lt-earn{font-size:1.4rem;font-weight:800;color:#ffd76a;margin:4px 0}
-.lt-why{color:#cfd6f5;margin:0 0 8px}
-.lt-gold{font-weight:800;color:#ffd76a}
-.lt-learn{margin:10px auto 6px;max-width:520px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.08);text-align:left}
-.lt-learn b{color:#ffd76a}
-.lt-learn p{margin:4px 0 0}
-
-/* fliegende Leuchtpunkte */
-.lt-fly{position:fixed;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 8px 3px #ffd76a;pointer-events:none;z-index:9999}
-
-/* Werkstatt und Codebuch */
-.lt-wbar{display:flex;flex-direction:column;gap:2px;padding:12px 14px;margin:2px 0 12px;border-radius:18px;background:#1b2340;color:#eef1ff}
-.lt-wbar .mute{color:#aab4d9}
-.lt-cat{margin-bottom:12px}
-.lt-cat h3{margin:0}
-.lt-cat p{margin:2px 0 10px}
-.lt-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
-.lt-it{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:16px;border:1.5px solid var(--dz-line);background:var(--dz-surface);text-align:center}
-.lt-it.sel{border-color:#e9b949;box-shadow:0 0 0 3px rgba(255,215,106,.25)}
-.lt-it b{font-size:.9rem}
-.lt-ita{width:100%;height:72px;display:grid;place-items:center;border-radius:12px;background:#1b2340;overflow:hidden}
-.lt-prev{--ls:46px}
-.lt-prevsvg{width:100%;height:72px}
-.lt-note{font-size:2rem;color:#ffd76a}
-.lt-hear{font-size:.8rem}
-.lt-book{display:grid;gap:10px}
-.lt-cb h3{margin:0 0 6px}
-.lt-cb .lt-cbrow,.lt-cb .lt-row{padding:10px;border-radius:14px;background:#1b2340;color:#eef1ff}
-.lt-cb .lt-cbc{background:rgba(255,255,255,.1)}
-
-@media (max-width:420px){
-  .lt-stage{padding:12px 10px 16px}
-  .lt-bub{font-size:.96rem;padding:9px 11px}
-  .lt-scene.two .lt-bot{width:58px}
-  .lt-lumi{width:50px}
-  .lt-btn{padding:10px 18px}
-}
+.lt-hero-art>.lt-scn{opacity:.6;border-radius:20px}
+.lt-hero-bot{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;padding-bottom:30px}
+.lt-hero-bot .lt-bot{width:155px;filter:drop-shadow(0 14px 14px #09261e55)}
+.lt-hero-bot>span{font-size:.75rem;font-weight:800;color:#e0efdc;background:#244c43;border:1px solid #54746a;padding:6px 12px;border-radius:12px}
+.lt-hubbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 26px;border-top:1px solid #41645a}
+.lt-lp{font-size:.82rem;color:#c2d7cb;display:inline-flex;gap:7px;align-items:center}
+.lt-lp b,.lt-spark{color:#f2ce85}
+.lt-snd{display:inline-flex;gap:7px;align-items:center;min-height:44px;border:1px solid #587870;border-radius:14px;padding:8px 12px;background:transparent;color:#dce8de;font-size:.8rem;font-weight:800}
+.lt-snd.on{background:#f2ce85;color:#26392b;border-color:#f2ce85}
+.lt-head .lt-snd{color:var(--dz-ink);border-color:var(--dz-line)}
+.lt-hubbtn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 auto 26px;max-width:860px}
+.lt-link{display:flex;align-items:center;gap:12px;text-align:left;background:var(--dz-surface);color:var(--dz-ink);padding:17px;border:1px solid var(--dz-line);border-radius:20px;min-height:78px}
+.lt-link>span:first-of-type{flex:1;font-weight:800;font-size:.92rem}
+.lt-link small{display:block;font-size:.73rem;font-weight:600;color:var(--dz-mute);margin-top:3px}
+.lt-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 auto 12px;max-width:860px}
+.lt-section-title h3{font-size:1.1rem;margin:0}.lt-section-title>span{font-size:.75rem;color:var(--dz-mute);white-space:nowrap}
+.lt-lvs{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:860px;margin:auto}
+.lt-lvc{display:flex;align-items:center;gap:12px;padding:16px;border-radius:19px;border:1px solid var(--dz-line);background:var(--dz-surface);color:var(--dz-ink);text-align:left;min-height:80px}
+.lt-lvc.cur{border-color:var(--dz-accent);box-shadow:0 0 0 1px var(--dz-accent)}
+.lt-lvc.lock{opacity:.68;cursor:default}.lt-lvn{flex:none;width:37px;height:37px;border-radius:12px;display:grid;place-items:center;font-weight:800;background:var(--dz-t2);color:var(--dz-ink)}
+.lt-lvc.cur .lt-lvn,.lt-lvc.done .lt-lvn{background:#315b4e;color:#e9f1de}
+.lt-lvt{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.lt-lvt b{font-size:.9rem}.lt-lvt small{color:var(--dz-mute);font-size:.75rem}.lt-lvr{font-size:.73rem;color:var(--dz-mute)}
+.lt-soon{text-align:center;margin:22px auto}.lt-head{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:860px;margin:6px auto 12px}
+.lt-stage{padding:26px;background:radial-gradient(ellipse at 80% 0,#2a5143,transparent 65%),#163a35}
+.lt-task-head{display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid #45665a;padding-bottom:21px}.lt-task-head>div{flex:1;min-width:0}
+.lt-task-head h1{font-size:clamp(1.35rem,3vw,1.85rem);color:#f6f2df;line-height:1.15;margin:0 0 10px}.lt-task-head p{font-size:.94rem;line-height:1.55;color:#c3d7ca;margin:0;max-width:500px}
+.lt-bot{width:72px;height:auto;flex:none}.lt-task-head>.lt-bot{width:58px}.lt-result-bot .lt-bot{width:100px}
+.lt-body{display:flex;flex-direction:column;align-items:center;gap:20px;margin:22px 0;min-width:0}.lt-body>*{max-width:100%}
+.lt-flow-label{font-size:.8rem;color:#c3d7ca;text-align:center;line-height:1.5}
+.lt-status{font-size:.87rem;line-height:1.5;background:#0d29254d;border:1px solid #45665a;border-radius:14px;padding:13px 16px;color:#c6d9d0;margin:18px 0 0;min-height:50px}
+.lt-status.complete{color:#f3ddab;border-color:#b39965;background:#b3996514}
+.lt-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;max-width:100%;padding:12px 22px;border-radius:15px;background:#f2ce85;color:#263b2d;border:1px solid #f8dda8;font-size:.95rem;font-weight:800;box-shadow:0 3px 0 #ad9567;transition:transform .15s}
+.lt-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #ad9567}.lt-btn.sec{background:transparent;border:1px solid #749084;box-shadow:none;color:#e7eddf}.lt-btn:disabled{opacity:.45;cursor:default}
+.lt-act{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px}
+.lt-stage button:focus-visible,.lt-hub button:focus-visible{outline:3px solid #fff0c6;outline-offset:4px}
+.lt-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:860px;margin:0 auto 12px;color:var(--dz-mute);font-size:.8rem}
+.lt-tipb{background:var(--dz-surface);color:var(--dz-ink);border:1px solid var(--dz-line);border-radius:13px;padding:10px 14px;min-height:44px;font-size:.8rem}
+.lt-hint{max-width:860px;margin:0 auto 20px;padding:16px;border-radius:15px;background:var(--dz-surface);color:var(--dz-ink);font-size:.9rem;line-height:1.5}
+/* Jeder Schalter hat ein Lichtfenster, einen beweglichen Hebel und eine Zustandsaufschrift. */
+.lt-row{--ls:76px;--lt-count:4;display:flex;gap:12px;justify-content:center;align-items:flex-start;width:100%;max-width:480px}
+.lt-lw{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;flex:0 1 var(--ls)}
+.lt-lamp{--signal:#f2ce85;--shell:#d1ded0;position:relative;width:100%;height:120px;border-radius:18px;border:1px solid #e7eee0;background:linear-gradient(145deg,#eef1df,#b5c9b9);box-shadow:0 5px 0 #779888,0 9px 14px #001d1726;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 8px 9px;transition:transform .15s}
+.lt-lamp.tap:active{transform:translateY(3px);box-shadow:0 2px 0 #779888}
+.lt-glass{width:100%;height:43px;display:grid;place-items:center;background:#24433c;border:1px solid #718d7b;box-shadow:inset 0 2px 5px #0b251e66;border-radius:10px;color:#c1d6c6}
+.lt-light-core{width:14px;height:14px;border:2px solid #91aa97;border-radius:50%;background:#344d41}
+.lt-lamp.on .lt-glass{background:var(--signal);border-color:#ecd9b5;box-shadow:inset 0 2px 2px #fffc,0 0 12px #f2ce851a;color:#314535}
+.lt-lamp.on .lt-light-core{background:#3b583a;border-color:#3b583a;box-shadow:none}
+.lt-switch-track{width:34px;height:17px;padding:3px;border-radius:10px;background:#7b9586;box-shadow:inset 0 1px 2px #24422f66;display:block}
+.lt-switch-track>span{display:block;width:11px;height:11px;border-radius:50%;background:#f5f4e5;box-shadow:0 1px 2px #24422f66;transform:translateX(0);transition:transform .16s}
+.lt-lamp.on .lt-switch-track{background:#416a53}.lt-lamp.on .lt-switch-track>span{transform:translateX(17px)}
+.lt-switch-state{font-size:.63rem;letter-spacing:.08em;font-weight:800;line-height:1;color:#314f3b}
+.lt-row[data-count="1"]:not(.tiny){--ls:106px}.lt-row[data-count="1"]:not(.tiny) .lt-lamp{height:144px}.lt-row[data-count="1"]:not(.tiny) .lt-glass{height:57px}
+.lt-row[data-count="5"]{gap:8px;--ls:64px}.lt-row[data-count="5"] .lt-lamp{padding-inline:5px}
+.lt-dots{display:flex;align-content:center;justify-content:center;flex-wrap:wrap;gap:4px;padding:3px;width:100%;max-width:52px}
+.lt-dot{display:block;width:7px;height:7px;background:#a2b9a8;border-radius:50%}.lt-dots.sm{gap:3px}.lt-dots.sm .lt-dot{width:4px;height:4px}.lt-lamp.on .lt-dot{background:#35503b}
+.lt-dig{font-size:1.6rem;font-weight:800;line-height:1;color:#adc5b4}.lt-lamp.on .lt-dig{color:#35503b}
+.lt-val{font-size:.82rem;font-weight:800;color:#e2d6b0;padding:4px 8px}
+.lt-lamp.sk-ff{--signal:#d6e7a2}.lt-lamp.sk-kerze{--signal:#f0b78d}.lt-lamp.sk-kri{--signal:#b4dde5}.lt-lamp.sk-mond{--signal:#e2e6ee}
+.lt-row.tiny{--ls:30px;width:auto;gap:5px}.lt-row.tiny .lt-lamp{width:30px;height:35px;padding:4px;border-radius:8px;box-shadow:none}.lt-row.tiny .lt-glass{height:23px;border-radius:4px}.lt-row.tiny .lt-switch-track,.lt-row.tiny .lt-switch-state{display:none}.lt-row.tiny .lt-light-core{width:7px;height:7px}.lt-row.tiny .lt-dots{gap:2px;padding:1px}.lt-row.tiny .lt-dot{width:4px;height:4px}.lt-row.tiny .lt-val{padding:0;font-size:.7rem}
+.lt-lamp.just{animation:ltPress .22s ease-out}@keyframes ltPress{0%{transform:translateY(3px)}100%{transform:translateY(0)}}
+.lt-minis{display:inline-flex;gap:4px;align-items:center}.lt-mini{width:13px;height:13px;border:1px solid #93ac9c;border-radius:4px;background:#304e40;display:inline-block}.lt-mini.on{background:#f2ce85;border-color:#ffe5b4}.lt-mini.sk-ff.on{background:#d6e7a2}.lt-mini.sk-kerze.on{background:#f0b78d}.lt-mini.sk-kri.on{background:#b4dde5}.lt-mini.sk-mond.on{background:#e2e6ee}
+/* Bühne und Folgen */
+.lt-world{width:100%;border:1px solid #58776b;border-radius:18px;overflow:hidden;background:#1b443e}.lt-world svg{display:block;width:100%;max-height:210px}.lt-world-label{display:block;text-align:center;font-size:.83rem;color:#e6eadc;padding:8px;background:#14342f}
+.lt-bridge-deck{transition:transform .28s ease-out}
+.lt-destinations{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%}.lt-destination{display:flex;align-items:center;flex-direction:column;gap:8px;border:1px solid #557469;border-radius:15px;padding:13px 5px;background:#23483e;min-width:0}.lt-destination.selected{border-color:#f2ce85;box-shadow:0 0 0 1px #f2ce85;background:#3c5341}.lt-destination b{font-size:.8rem}.lt-destination small{font-size:.63rem;color:#cadbce}.lt-parcel{font-size:1.8rem;line-height:1.3}.lt-destination.visited small{color:#edda9f}
+.lt-pattern-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:420px}.lt-pattern-slot{height:49px;display:grid;place-items:center;border:1px dashed #719184;border-radius:12px;color:#809e8d}.lt-pattern-slot.found{border-style:solid;background:#2d5043;color:#f2ce85}
+.lt-double{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:400px}.lt-double>div{display:grid;grid-template-columns:1fr 1fr;gap:10px}.lt-double small{grid-column:1/-1;color:#c2d7ca;font-size:.75rem}
+.lt-factory-top{display:flex;flex-direction:column;align-items:center;gap:8px}.lt-factory-top>span{font-weight:800;color:#e6d9b2;font-size:.85rem}.lt-factory-top small{color:#c3d7ca;font-size:.75rem;text-align:center}
+.lt-stepper{display:flex;align-items:center;gap:16px}.lt-stepper .lt-btn{width:46px;height:46px;padding:0;font-size:1.4rem;min-height:46px}.lt-stepper strong{min-width:30px;text-align:center;font-size:1.5rem}
+.lt-live{font-size:.9rem;color:#d4dfd0;text-align:center}.lt-live b{color:#f2ce85}.lt-coverage{width:100%;text-align:center}.lt-coverage>span{display:block;font-size:.78rem;color:#c0d2c6;margin-bottom:12px}.lt-coverage>small{display:block;font-size:.7rem;color:#c0d2c6;margin-top:10px}
+.lt-line{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}.lt-n{position:relative;width:31px;height:32px;display:grid;place-items:center;border:1px dashed #91ad9f;border-radius:8px;font-size:.8rem;color:#c1d4c6}.lt-n.ok{border-style:solid;background:#f2ce85;border-color:#f2ce85;color:#33452f}.lt-n.dup{border-style:solid;background:#e4b39a;color:#3d392c}.lt-n i{position:absolute;right:-6px;top:-9px;background:#f6f1df;color:#614d3b;border-radius:5px;font-size:.55rem;line-height:1.4;padding:1px 3px;font-style:normal}
+.lt-delivery-box{width:100%;background:#21493d;border:1px solid #749184;border-radius:18px;padding:18px;text-align:center}.lt-delivery-box>span{font-size:.78rem;color:#d0dfcf}.lt-tray{display:flex;gap:8px;justify-content:center;margin-top:14px}.lt-tray>i{width:44px;height:46px;border:1px dashed #9db6a4;border-radius:10px;display:grid;place-items:center;color:#3a4b31;font-style:normal;font-size:1.4rem}.lt-tray>i.filled{border-style:solid;background:#f2ce85;border-color:#f2ce85}.lt-surplus{margin-top:12px;display:flex;align-items:center;gap:10px;justify-content:center}.lt-surplus small{white-space:nowrap;color:#e9c4a2}
+.lt-token-group{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:180px}.lt-token-group i{width:14px;height:14px;border-radius:5px;background:#f2ce85;border:1px solid #fde5b4}
+.lt-receiver{display:flex;align-items:center;gap:12px;width:100%;justify-content:center;border-top:1px solid #557366;padding-top:12px;font-size:.8rem;color:#d4dfd0}.lt-receiver .lt-bot{width:42px}.lt-bowl{display:flex;flex-direction:column;align-items:center;border:1px solid #718b78;border-radius:12px;padding:6px 12px;background:#2a4c3e}.lt-bowl b{color:#f2ce85;font-size:1.2rem}.lt-bowl small{font-size:.65rem}
+.lt-travel{width:100%;text-align:center}.lt-track{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;align-items:end;margin:0 0 12px}.lt-station{display:flex;align-items:center;flex-direction:column;min-width:0;gap:5px}.lt-station>.lt-bot,.lt-track-space{height:48px;width:100%;display:block}.lt-station b{display:grid;place-items:center;height:34px;width:100%;border-top:3px solid #83a493;font-size:.8rem}.lt-station.target b{color:#f2ce85;border-color:#f2ce85}.lt-station.here b{background:#385d4a;border-radius:0 0 8px 8px}.lt-travel>span{font-size:.85rem;color:#e0d7b4}
+.lt-number-result{display:flex;align-items:center;gap:15px;padding:15px 22px;background:#234b3e;border:1px solid #638371;border-radius:15px}.lt-number-result>span:last-child{font-size:.85rem;white-space:nowrap}
+.lt-discovery{font-size:.9rem;line-height:1.6;color:#cadacb;text-align:center;margin:0}.lt-discovery b{color:#f2ce85}
+.lt-picture-work{display:grid;grid-template-columns:1fr 1fr;gap:28px;width:100%;max-width:440px}.lt-picture-work>div>span{display:block;text-align:center;font-size:.78rem;color:#d0dfce;margin-bottom:12px}.lt-pixel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;aspect-ratio:1}.lt-pixel{display:block;background:#2a5142;border:1px solid #83a591;border-radius:7px;min-width:0;aspect-ratio:1}.lt-pixel.lit{background:#f2ce85;border-color:#f6dfb2}.lt-pixel-grid.received{opacity:.85}
+.lt-res{text-align:center}.lt-res h2{color:#f5f0da;margin:12px 0}.lt-result-bot{margin:0 auto 12px}.lt-learn{max-width:510px;margin:18px auto;color:#dce7d7;font-size:1.03rem;line-height:1.6}.lt-learn p{margin:0}.lt-earn{font-size:1.15rem;font-weight:800;color:#f2ce85;margin:18px 0 6px}.lt-why{font-size:.77rem;color:#abc5b5}.lt-gold{color:#f2ce85}
+/* Bestehende Sammlungen und gekaufte Anpassungen bleiben nutzbar. */
+.lt-wbar{padding:16px;border-radius:18px;background:#163a35;color:#eff5ea;margin-bottom:18px;display:flex;flex-direction:column;gap:8px}.lt-wbar .mute{color:#bdd1c0}.lt-cat{margin-bottom:16px}.lt-cat h3{margin:0}.lt-cat p{font-size:.9rem;margin:6px 0 14px}.lt-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px}.lt-it{border:1px solid var(--dz-line);border-radius:16px;background:var(--dz-surface);padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}.lt-it.sel{border-color:var(--dz-accent);box-shadow:0 0 0 1px var(--dz-accent)}.lt-it>b{font-size:.85rem}.lt-ita{height:88px;width:100%;display:grid;place-items:center;background:#214238;border-radius:12px;overflow:hidden}.lt-prev{width:48px;height:70px;padding:6px}.lt-prev .lt-glass{height:50px}.lt-prevsvg{width:100%;height:84px}.lt-note{font-size:2rem;color:#f2ce85}.lt-hear{font-size:.8rem}.lt-book{display:grid;gap:12px}.lt-cb h3{margin:0 0 12px}.lt-cb p{font-size:.95rem;line-height:1.5}.lt-cbrow{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;background:#234a3b;color:#f4f1df;border-radius:13px}.lt-cbrow.wrap{flex-wrap:wrap}.lt-cbc{display:inline-flex;gap:8px;align-items:center;padding:6px}.lt-cb .lt-row{margin:auto;padding:10px;border-radius:12px;background:#234a3b}
+.lt-stage .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:600px){.lt-hero{grid-template-columns:1fr;padding:24px 22px 0;gap:0}.lt-hero-copy{z-index:1}.lt-hero h1{font-size:2.4rem;margin:12px 0}.lt-hero p{font-size:.87rem;margin-bottom:18px}.lt-hero-art{min-height:190px;margin-top:10px}.lt-hero-art>.lt-scn{max-height:190px;object-fit:cover;object-position:bottom}.lt-hero-bot{padding-bottom:6px}.lt-hero-bot .lt-bot{width:125px}.lt-hero-art:before{width:160px;height:160px;top:0}.lt-hubbar{padding:10px 18px}.lt-hubbtn{gap:8px}.lt-link{padding:13px 10px;gap:8px}.lt-link>svg{display:none}.lt-link>span:first-of-type{font-size:.8rem}.lt-link small{font-size:.67rem}.lt-lvs{grid-template-columns:1fr}.lt-stage{padding:20px 16px;border-radius:23px}.lt-task-head{gap:9px;padding-bottom:17px}.lt-task-head>.lt-bot{width:46px}.lt-task-head p{font-size:.87rem}.lt-task-head h1{font-size:1.4rem}.lt-body{gap:18px}.lt-row{--ls:70px;gap:9px}.lt-row[data-count="5"]{--ls:57px;gap:6px}.lt-row[data-count="5"] .lt-dots{gap:2px}.lt-row[data-count="5"] .lt-dot{width:5px;height:5px}.lt-row[data-count="5"] .lt-dots.sm .lt-dot{width:3px;height:3px}.lt-row[data-count="5"] .lt-lamp{padding-inline:4px;height:112px}.lt-destinations{gap:6px}.lt-destination{padding:11px 2px;gap:7px}.lt-destination b{font-size:.72rem}.lt-destination small{font-size:.57rem}.lt-picture-work{gap:16px;grid-template-columns:1fr}.lt-picture-work>div:first-child{max-width:220px;width:100%;margin:auto}.lt-picture-work>div:last-child{width:110px;margin:auto}.lt-number-result{padding:12px}.lt-status{padding:12px;font-size:.82rem}}
+@media(max-width:350px){.lt-stage{padding:17px 12px}.lt-task-head>.lt-bot{display:none}.lt-row{gap:7px}.lt-lamp{padding:8px 5px;border-radius:14px}.lt-tray{gap:5px}.lt-tray>i{width:36px;height:40px}.lt-delivery-box{padding:14px 10px}.lt-head .lt-eyebrow{font-size:.61rem}.lt-head{gap:6px}.lt-foot{font-size:.72rem}.lt-tipb{padding:10px}.lt-section-title{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.lt-stage *,.lt-hub *{animation:none!important;transition:none!important}}
+/* App-Werkzeuge bleiben erreichbar, verdecken aber keine Experimente. */
+body[data-screen="licht"]:has(.lt-notes) #nzBubble{display:none}
+body[data-screen="licht"] .top .lt-notes{width:42px;height:42px;min-height:42px;padding:0;display:grid;place-items:center;flex:none}
+body[data-screen="licht"] .crbar.pgbar{position:static;max-width:100%;width:fit-content;margin:4px 0 12px auto;font-size:.72rem;box-shadow:none}
 
 /* BELOHNUNGS-MOMENTE (feat_lohn.js): Münz-Beutel, Karten-Hinweis, Pokal-Fenster */
 .rw-bag{position:fixed;z-index:80;width:64px;height:64px;pointer-events:none;opacity:0;transform:translateY(-8px) scale(.7);transition:opacity .25s,transform .3s cubic-bezier(.2,1.4,.4,1)}
@@ -6713,8 +6643,9 @@ function grantCreative(kind) {
   toast('🎨', `Geschafft! ${S.cfg.creativeMin || 5} Minuten Kreativzeit warten auf dich.`); return true;
 }
 const creativeLeft = () => { touchDay(); return S.daily.cr.left; };
-const creativeOK = () => { const m = creativeMode(); return m === 'always' || (m === 'after' && creativeLeft() > 0) || (UI.pinCreative && Date.now() < UI.pinCreative); };
-const shopLeft = () => { if (ADMIN) return Infinity; touchDay(); const lim = (S.cfg.shopMin || 0) * 60; return lim ? Math.max(0, lim - (S.daily.shopSec || 0)) : Infinity; };
+const creativeOK = () => { const m = creativeMode(); return m === 'always' || (m === 'after' && (creativeLeft() > 0 || (typeof parentBonusLeft === 'function' && parentBonusLeft(view) > 0 && !parentTimeLocked(view)))) || (UI.pinCreative && Date.now() < UI.pinCreative); };
+const shopNormalLeft = () => { if (ADMIN) return Infinity; touchDay(); const lim = (S.cfg.shopMin || 0) * 60; return lim ? Math.max(0, lim - (S.daily.shopSec || 0)) : Infinity; };
+const shopLeft = () => { const normal = shopNormalLeft(); return normal === Infinity ? normal : normal + (typeof parentBonusLeft === 'function' ? parentBonusLeft('shop') : 0); };
 function addLog(correct) {
   const t = ymd(); const e = S.log[t] || (S.log[t] = { n: 0, c: 0 });
   e.n++; if (correct) e.c++;
@@ -6883,7 +6814,7 @@ const pinOk = p => !!S.pin && hashStr(p) === S.pin.h;
 const recOk = p => !!S.pin && hashStr(p) === S.pin.r;
 
 /* ---------- Tageslimit ---------- */
-const limitHit = () => !ADMIN && S.cfg.limitMin > 0 && S.daily.d === ymd() && S.daily.sec >= S.cfg.limitMin * 60 && !S.daily.unlocked;
+const limitHit = () => { if (ADMIN) return false; touchDay(); const t = typeof parentTimeData === 'function' ? parentTimeData() : {}; return !!t.practiceLocked || (S.cfg.limitMin > 0 && S.daily.sec >= S.cfg.limitMin * 60 + (t.practice || 0) && !S.daily.unlocked); };
 
 /* =====================================================================
    ICONS: eigener SVG-Symbolsatz (24×24, Linienstil). Farbe = currentColor,
@@ -8210,17 +8141,17 @@ setInterval(() => {
   if (document.hidden) return;
   tickN++;
   try {
-    if (view === 'shop' && (S.cfg.shopMin || 0) > 0 && shopLeft() > 0) {
-      touchDay(); S.daily.shopSec++;
+    if (view === 'shop' && (S.cfg.shopMin || 0) > 0 && shopNormalLeft() > 0 && !viewState(view).bonusOnly) {
+      touchDay(); S.daily.shopSec++; parentMarkNormalTick();
       const el = $('#shopT'); if (el) el.textContent = fmtT(shopLeft());
       if (shopLeft() <= 0) { save(); render(); toast('🛍️', 'Die Shop-Zeit für heute ist vorbei.'); }
     }
     const F = featOf(view);
-    if (F && F.creative && creativeMode() === 'after' && creativeLeft() > 0 && !(UI.pinCreative && Date.now() < UI.pinCreative)) {
-      S.daily.cr.left--; S.daily.cr.used++;
+    if (F && F.creative && creativeMode() === 'after' && creativeLeft() > 0 && !(UI.pinCreative && Date.now() < UI.pinCreative) && !viewState(view).bonusOnly) {
+      S.daily.cr.left--; S.daily.cr.used++; parentMarkNormalTick();
       const el = $('#crT'); if (el) el.textContent = fmtT(S.daily.cr.left);
       if (S.daily.cr.left === 60) toast('⏳', 'Noch eine Minute Kreativzeit. Alles wird automatisch gespeichert.');
-      if (S.daily.cr.left <= 0) {
+      if (S.daily.cr.left <= 0 && !parentBonusLeft(view)) {
         save(); leaveHook(view);
         modal('Kreativzeit vorbei', 'Alles ist gespeichert. Du findest es morgen genau so wieder. Jetzt üben wir weiter!', 'Weiter üben', 'goNext', '', 'Später');
         go(F.id === 'musik' || F.id === 'story' ? 'kreativhefte' : 'rewards');
@@ -9425,23 +9356,91 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = 'f2983eb4';
+const APP_BUILD = '9c2bd688';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
-   Inhalt: Nutzer (Kind/Admin) · Namen · Zusatzfunktionen (Schalter) · Zeiten & Limits (jede Zeit einzeln zurücksetzbar) · Termine · Ton · PIN · Überblick · Sicherung
+   Inhalt: Nutzer (Kind/Admin) · Namen · Zusatzfunktionen (Schalter) · Zeit & Zugriff · Lernen · Funktionen · Statistik · Termine · Ton · PIN · Überblick · Sicherung
    ===================================================================== */
 const PT = (de, en) => (S.cfg && S.cfg.plang === 'en') ? en : de;
 const PT_SEASON = { Herbstferien: 'Autumn break', Weihnachtsferien: 'Christmas break', Osterferien: 'Easter break', Sommerferien: 'Summer break' };
 const PT_FLAG = { wesen: ['Meine Wesen', 'Eier ausbrüten und Wesen sammeln', 'My Creatures', 'Hatch eggs and collect creatures'], buch: ['Mein Buch', 'Sticker sammeln und einkleben', 'My Book', 'Collect stickers and stick them in'], insel: ['Meine Insel', 'Eine eigene Insel gestalten', 'My Island', 'Design your own island'], sudoku: ['Sudoku', 'Zahlenrätsel mit Wochenrätsel', 'Sudoku', 'Number puzzles with a weekly puzzle'], venola: ['Venola Holmes', 'Geheimschriften und Kriminalfälle', 'Venola Holmes', 'Secret codes and detective cases'], licht: ['Blinkis Lichterturm', 'Mit Lampen sprechen: spielerisch verstehen, wie Computer mit 0 und 1 zählen (Binärzahlen)', 'Blinki’s Light Tower', 'Talking with lamps: a playful way to understand how computers count with 0 and 1 (binary)'] };
 const ptDate = iso => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(iso || ''); return m ? (S.cfg.plang === 'en' ? `${m[3]}/${m[2]}/${m[1]}` : `${m[3]}.${m[2]}.${m[1]}`) : ''; };
 const ptSw = (on, act, arg, label) => `<button class="sw ${on ? 'on' : ''}" role="switch" aria-checked="${on}" aria-label="${esc(label)}" data-act="${act}"${arg == null ? '' : ` data-arg="${esc(arg)}"`}><span class="sw-k"></span><span class="sw-t">${on ? PT('AN', 'ON') : PT('AUS', 'OFF')}</span></button>`;
-const ptSel = (id, opts, val) => `<select id="${id}" class="txt noprint">${opts.map(o => `<option value="${o[0]}" ${String(o[0]) === String(val) ? 'selected' : ''}>${o[1]}</option>`).join('')}</select>`;
+const ptSel = (id, opts, val) => `<select id="${id}" class="txt noprint" aria-label="${esc(ptSelectLabel(id))}">${opts.map(o => `<option value="${o[0]}" ${String(o[0]) === String(val) ? 'selected' : ''}>${o[1]}</option>`).join('')}</select>`;
 const ptRow = (title, sub, ctl) => `<div class="cfg"><div><b>${title}</b>${sub ? `<br><span class="small mute">${sub}</span>` : ''}</div><div class="row">${ctl}</div></div>`;
-const ptReset = (what, label) => `<button class="btn sm sec" data-act="rstTime" data-arg="${what}">${label || PT('Zurücksetzen', 'Reset')}</button>`;
-const ptMin = n => PT(`${n} Min`, `${n} min`);
 
-VIEWS.parent = () => {
+const ptMin = n => PT(`${n} Min`, `${n} min`);
+const ptSelectLabel = id => ({ cfgGoal: PT('Tagesziel', 'Daily goal'), cfgLimit: PT('Tageslimit für Üben', 'Daily practice limit'), cfgShop: PT('Shop-Zeit pro Tag', 'Daily shop time'), cfgCrMode: PT('Kreativzeit', 'Creative time'), cfgCrMin: PT('Minuten je Zeitfenster', 'Minutes per session'), cfgCrMax: PT('Zeitfenster pro Tag', 'Sessions per day'), ptTimeTarget: PT('Zusatzzeit für', 'Extra time for'), ptTimeMinutes: PT('Zusätzliche Minuten', 'Additional minutes') })[id] || id;
+const PT_TABS = [['time', 'Zeit & Zugriff', 'Time & access'], ['learning', 'Lernen', 'Learning'], ['features', 'Funktionen', 'Features'], ['stats', 'Statistik', 'Statistics']];
+const ptCard = (title, content, sub = '') => `<section class="card pt-card"><h3>${title}</h3>${sub ? `<p class="pt-description">${sub}</p>` : ''}${content}</section>`;
+function ptGlobal() {
+  const de = S.cfg.plang !== 'en';
+  const language = `<div class="seg" role="group" aria-label="Language / Sprache">${[['de','DE'],['en','EN']].map(([id,label]) => `<button class="${S.cfg.plang===id?'on':''}" data-act="plang" data-arg="${id}" aria-pressed="${S.cfg.plang===id}">${label}</button>`).join('')}</div>`;
+  const user = `<div class="seg" role="group" aria-label="${PT('Nutzer','User')}"><button class="${ADMIN?'':'on'}" ${ADMIN?'data-act="adminOff"':''} aria-pressed="${!ADMIN}">${PT('Kind','Child')}</button><button class="${ADMIN?'on':''}" ${ADMIN?'':'data-act="adminAsk"'} aria-pressed="${ADMIN}">Admin</button></div>`;
+  return `<div class="pt-global noprint"><div class="pt-global-bar"><div class="pt-global-group"><span class="pt-global-label">${PT('Nutzer','User')}</span>${user}${language}</div><div class="pt-global-actions"><button class="btn sm sec" data-act="ptUpdate">${ico('download',16)} Update</button><button class="btn sm" data-act="export">${ico('save',16)} ${PT('Backup speichern','Save backup')}</button></div></div>
+  <details class="pt-global-more" ${UI.ptGlobalOpen?'open':''}><summary>${PT('Profil, PIN & Daten','Profile, PIN & data')}<span>${esc(S.name || PT('Kein Name','No name'))} · Version ${APP_BUILD}</span></summary>
+  ${ptRow(PT('Name des Kindes','Child’s name'), PT('Gilt auch für den Avatar.','Also used for the avatar.'), `<input class="txt" id="nameIn" aria-label="${PT('Name des Kindes','Child’s name')}" maxlength="20" value="${esc(S.name)}"><button class="btn sm" data-act="saveName">${PT('Speichern','Save')}</button>`)}
+  ${ptRow('PIN', PT('Schützt die Eltern-Einstellungen.','Protects parent settings.'), `<button class="btn sm sec" data-act="pinChange">${PT('PIN ändern','Change PIN')}</button>`)}
+  ${ptRow(PT('Backup wiederherstellen','Restore backup'), PT('Lädt eine gespeicherte Sicherungsdatei.','Loads a saved backup file.'), `<label class="btn sm sec">${PT('Datei auswählen','Choose file')}<input type="file" id="impFile" accept=".json,application/json" class="hide"></label>`)}
+  <p class="small mute">${PT('Letztes Backup','Last backup')}: ${S.lastBackup?new Date(S.lastBackup).toLocaleDateString(de?'de-DE':'en-GB'):PT('noch keines','none yet')}. ${PT('Der Lernstand wird automatisch auf diesem Gerät gespeichert.','Progress is saved automatically on this device.')}</p>
+  <p class="small mute">${ADMIN?PT('Admin nutzt eigene Testdaten. Der Stand des Kindes bleibt erhalten.','Admin uses separate test data. Your child’s progress is preserved.'):PT('Admin öffnet einen eigenen Testspeicher.','Admin opens a separate test profile.')}</p>${persistOK?'':`<p class="text-destructive">${PT('Dauerhaftes Speichern ist in diesem Browser gerade nicht möglich.','Persistent storage is currently unavailable in this browser.')}</p>`}</details><textarea class="txt hide" id="expTxt" readonly aria-label="Backup JSON"></textarea></div>`;
+}
+function ptRepresentative(id) { return ({ minitest:'testSetup', KOPF:'kopf', geoCards:'geoCards' })[id] || id; }
+function ptRemaining(id) {
+  if (id==='practice') { const t=parentTimeData(); if(t.practiceLocked) return 0; return !S.cfg.limitMin || S.daily.unlocked ? Infinity : Math.max(0,S.cfg.limitMin*60+(t.practice||0)-S.daily.sec); }
+  const v=ptRepresentative(id), pm=permOf(v);
+  if(pm==='lock'||parentTimeLocked(v)) return 0;
+  if(ADMIN||pm==='open') return Infinity;
+  const a=pgArea(v), base=a?pgState(a):{open:true,left:Infinity};
+  const F=featOf(v); if(F&&F.creative&&creativeMode()==='locked') return 0;
+  return parentNormalLeft(v,base)+parentBonusLeft(v);
+}
+const ptTimeText = sec => sec===Infinity ? PT('Ohne Zeitlimit','No time limit') : `${fmtT(Math.max(0,sec))} ${PT('übrig','left')}`;
+function ptCanAdd(id) {
+  if(ADMIN) return false;
+  if(!['shared','practice'].includes(id) && !SEC_TREE().some(m=>m.subs.some(x=>x[0]===id))) return false;
+  if(id==='shared') return !parentTimeData().sharedLocked;
+  if(id==='practice') return !parentTimeData().practiceLocked && ptRemaining(id)!==Infinity;
+  const v=ptRepresentative(id), F=featOf(v);
+  return permOf(v)!=='lock' && !parentTimeLocked(v) && !(F&&F.creative&&creativeMode()==='locked') && ptRemaining(id)!==Infinity;
+}
+function ptTimeActions(id, showGive = true) {
+  const t=parentTimeData(), paused=id==='shared'?t.sharedLocked:id==='practice'?t.practiceLocked:t.locks[id];
+  const bonus=id==='shared'?(t.shared||0):id==='practice'?(t.practice||0):(t.areas[id]||0);
+  return `<div class="pt-time-actions">${showGive ? `<button class="btn sm" data-act="ptGiveTime" data-arg="${id}|5" ${ptCanAdd(id)?'':'disabled'}>+5 ${PT('Min heute','min today')}</button>` : ''}<button class="btn sm sec" data-act="ptPauseTime" data-arg="${id}|${paused?'off':'on'}">${paused?PT('Heute wieder öffnen','Resume today'):PT('Heute sperren','Pause today')}</button>${bonus>0?`<button class="btn sm ghost" data-act="ptRevokeTime" data-arg="${id}">${PT('Zusatzzeit streichen','Remove extra time')} (${fmtT(bonus)})</button>`:''}</div>`;
+}
+const ptPermSeg = (id, label) => { const v=permGet(id)||'auto';return `<div class="seg ptperm" role="group" aria-label="${esc(label)}">${[['auto','Regeln','Rules'],['open','Unbegrenzt','Unlimited'],['lock','Gesperrt','Locked']].map(o=>`<button class="${v===o[0]?'on':''}" data-act="permSetAct" data-arg="${id}|${o[0]}" aria-pressed="${v===o[0]}">${PT(o[1],o[2])}</button>`).join('')}</div>`; };
+function ptAreaState(id, free, parentId) {
+  const own=permGet(id), effective=own||(parentId?permGet(parentId):'');
+  if(effective==='lock') return PT('Gesperrt bis zur Änderung','Locked until changed');
+  if(effective==='open') return PT('Unbegrenzt bis zur Änderung','Unlimited until changed');
+  return free?PT('Normalerweise ohne Hausaufgaben-Sperre','Normally no homework gate'):PT('Normale Tagesregeln','Normal daily rules');
+}
+function ptAreaBlock(m) {
+  const rows=m.subs.map(x=>{const v=ptRepresentative(x[0]), F=featOf(v), timed=!m.free||!!(F&&F.creative), t=parentTimeData();return `<div class="ptarea sub"><div class="ptarea-t"><b>${esc(PT(x[1],x[2]))}</b><span class="small mute">${ptTimeText(ptRemaining(x[0]))}${t.locks[x[0]]?PT(' · heute pausiert',' · paused today'):''}${t.areas[x[0]]?` · ${fmtT(t.areas[x[0]])} ${PT('Zusatzzeit','extra time')}`:''}</span></div><div class="ptarea-c">${ptPermSeg(x[0],PT(x[1],x[2]))}</div>${timed?ptTimeActions(x[0]):''}</div>`;}).join('');
+  return `<div class="ptblock" data-sec="${m.id}"><div class="ptarea main"><div class="ptarea-t"><b>${esc(PT(m.de,m.en))}</b><span class="small mute">${ptAreaState(m.id,m.free)}</span></div><div class="ptarea-c">${ptPermSeg(m.id,PT(m.de,m.en))}</div></div><details class="ptsubs" ${UI.ptOpen&&UI.ptOpen[m.id]?'open':''} data-sec="${m.id}"><summary>${PT('Unterbereiche & heutige Zeit','Sub-areas & today’s time')} (${m.subs.length})</summary>${rows}</details></div>`;
+}
+function ptTimePage() {
+  const hw=hwInfo(), t=parentTimeData(), targets=[['shared',PT('Profil & Meine Welt gemeinsam','Profile & My World together')],['practice',PT('Üben','Practice')]].concat(SEC_TREE().flatMap(m=>m.subs.filter(x=>!m.free||!!((featOf(ptRepresentative(x[0]))||{}).creative)).map(x=>[x[0],PT(x[1],x[2])])));
+  return ptCard(PT('Mehr Zeit für heute','More time for today'), `<div class="pt-grant-form"><label>${PT('Für','For')}${ptSel('ptTimeTarget',targets,UI.ptTimeTarget||'shared')}</label><label>${PT('Zusätzlich','Additional')}${ptSel('ptTimeMinutes',[1,5,10,15,30].map(n=>[n,ptMin(n)]),UI.ptTimeMinutes||5)}</label><button class="btn" data-act="ptGiveSelected">${PT('Zeit geben','Give time')}</button></div><p class="pt-note">${PT('Zusatzzeit zählt ab jetzt zusätzlich. Verbrauch und Lernstatistik werden nicht zurückgesetzt. Sie endet automatisch um Mitternacht. Gesperrte Bereiche bleiben gesperrt.','Extra time is added to the remaining allowance. Usage and learning statistics are kept. It expires at midnight. Locked areas stay locked.')}</p><div class="pt-balance"><span>${PT('Gemeinsame Zusatzzeit noch verfügbar','Shared extra time remaining')}</span><strong>${fmtT(t.shared||0)}</strong>${t.sharedLocked?`<span class="tag">${PT('Heute pausiert','Paused today')}</span>`:''}</div>${ptTimeActions('shared', false)}`)
+  +ptCard(PT('Bereiche öffnen oder sperren','Open or lock areas'), `<p class="pt-note">${PT('Regeln = normale Einstellungen. Unbegrenzt = ohne Zeitlimit. Gesperrt = bis du es änderst. Eine eigene Einstellung im Unterbereich hat Vorrang. „Heute sperren“ endet um Mitternacht.','Rules = normal settings. Unlimited = no time limit. Locked = until you change it. A sub-area’s own setting takes priority. “Pause today” ends at midnight.')}</p><div class="ptareas">${SEC_TREE().map(ptAreaBlock).join('')}</div>`)
+  +ptCard(PT('Üben & normale Zeitregeln','Practice & normal time rules'), `${ptRow(PT('Tageslimit (Üben)','Daily limit (practice)'), `${PT('Heute','Today')}: ${ptTimeText(ptRemaining('practice'))} · ${PT('Genutzt','Used')}: ${fmtT(S.daily.sec||0)}`,ptSel('cfgLimit',[[0,PT('Kein Limit','No limit')],[15,ptMin(15)],[20,ptMin(20)],[30,ptMin(30)],[45,ptMin(45)],[60,ptMin(60)],[90,ptMin(90)]],S.cfg.limitMin))}${ptTimeActions('practice')}
+  <details class="pt-rule-details"><summary>${PT('Weitere normale Zeitregeln','More normal time rules')}</summary><p class="pt-note">${PT('Profil & Meine Welt: zuerst 4 freie Minuten. Nach 25 Aufgaben oder 20 Minuten Üben: 5 Minuten je Bereich, 10 Minuten gemeinsam. Zusatzzeit ist ein eigener Vorrat, der auch bei aufgebrauchten normalen Minuten genutzt werden kann.','Profile & My World: first 4 free minutes. After 25 tasks or 20 practice minutes: 5 minutes per area, 10 minutes together. Extra time is a separate allowance usable even when normal minutes are exhausted.')}</p>
+  ${ptRow(PT('Hausaufgaben heute','Homework today'),`${hw.n}/${hw.need} ${PT('Aufgaben','tasks')} · ${fmtT(hw.sec)}/${fmtT(hw.needSec)}`,hw.done?`<span class="tag on">${PT('Erledigt','Completed')}</span>`:`<button class="btn sm sec" data-act="hwUnlock">${PT('Für heute anerkennen','Approve for today')}</button>`)}
+  ${ptRow(PT('Shop-Zeit pro Tag','Daily shop time'),PT('Zusätzlich zu den Regeln für Meine Welt.','In addition to the My World rules.'),ptSel('cfgShop',[[0,PT('Unbegrenzt','Unlimited')],[3,ptMin(3)],[5,ptMin(5)],[10,ptMin(10)]],S.cfg.shopMin==null?5:S.cfg.shopMin))}
+  ${ptRow(PT('Kreativzeit','Creative time'),PT('Zusatzzeit kann ein geöffnetes Kreativangebot verlängern.','Extra time can extend an enabled creative activity.'),ptSel('cfgCrMode',[['after',PT('Nach dem Üben','After practice')],['locked',PT('Gesperrt','Locked')]],creativeMode()))}
+  ${ptRow(PT('Zeitfenster','Sessions'),PT('Minuten je Zeitfenster und Anzahl pro Tag.','Minutes per session and sessions per day.'),ptSel('cfgCrMin',[3,5,10,15,20].map(n=>[n,ptMin(n)]),S.cfg.creativeMin||5)+ptSel('cfgCrMax',[1,2,3].map(n=>[n,PT(n+'× pro Tag',n+'× per day')]),S.cfg.creativeMax||2))}</details>`);
+}
+function ptLearningPage() {
+  return ptCard(PT('Lernziel','Learning goal'),ptRow(PT('Tagesziel','Daily goal'),PT('Aufgaben pro Tag. Heute erledigt: ','Tasks per day. Completed today: ')+S.daily.n,ptSel('cfgGoal',[10,15,20,25,30,40,50].map(n=>[n,PT(n+' Aufgaben',n+' tasks')]),S.cfg.goal)))
+  +ptCard(PT('Kapitel-Termine','Chapter deadlines'),`<div class="pt-deadlines">${CHAPTERS.map(c=>{const fe=ferienFor(c);return `<label><b>${PT(c.season,PT_SEASON[c.season])} · ${c.id}</b><input type="date" class="txt" id="due_${c.id}" value="${dueOf(c)}">${fe?`<small>${PT('Ferien','Holidays')}: ${ptDate(fe.start)} – ${ptDate(fe.end)}</small>`:''}</label>`;}).join('')}</div><button class="btn sm sec" data-act="dueReset">${PT('Ferien-Vorschläge verwenden','Use holiday suggestions')}</button>`,PT('Jeder Termin kann angepasst werden.','Every deadline can be adjusted.'));
+}
+function ptFeaturesPage() {
+  return ptCard(PT('Sichtbare Zusatzfunktionen','Visible extra features'),DZ_FLAGS.map(f=>{const text=PT_FLAG[f.id],on=flagOn(f.id);return ptRow(PT(text[0],text[2]),PT(text[1],text[3]),ptSw(on,'dzFlag',f.id,PT(text[0],text[2])));}).join(''),PT('Ausblenden bewahrt alle Fortschritte. Fortschritte findest du unter Statistik.','Hiding keeps all progress. View progress in Statistics.'))
+  +ptCard(PT('Töne & Notenheft','Sounds & music book'),ptRow(PT('Alle App-Töne','All app sounds'),'',ptSw(S.cfg.sound!==false,'toggleSound',null,PT('Töne','Sounds')))+ptRow(PT('Notenheft: Ton-Knopf','Music book: sound button'),'',ptSw(S.cfg.noTone!==false,'noToneSw',null,PT('Notenheft Ton','Music book sound')))+ptRow(PT('Notenheft: Abspielen','Music book: playback'),'',ptSw(S.cfg.noPlay!==false,'noPlaySw',null,PT('Notenheft Abspielen','Music book playback'))));
+}
+function ptStatisticsPage() {
   const L = levelInfo(), rows = [], weak = [], de = S.cfg.plang !== 'en';
   MODULES.forEach(m => {
     rows.push(`<tr><th colspan="5">${m.icon} ${m.title} <span class="mute small">(${PT('Arbeitsheft', 'Workbook')} ${m.id} · ${m.wb})</span></th></tr>`);
@@ -9455,88 +9454,20 @@ VIEWS.parent = () => {
   touchDay();
   const today = S.daily.d === ymd() ? S.daily.n : 0, cr = S.daily.cr;
   const bonusDone = !!cr.bonus, needBonus = Math.min(10, S.cfg.goal || 20);
-  const lang = `<div class="seg noprint" role="group" aria-label="Language / Sprache"><button class="${de ? 'on' : ''}" data-act="plang" data-arg="de" aria-pressed="${de}">DE</button><button class="${de ? '' : 'on'}" data-act="plang" data-arg="en" aria-pressed="${!de}">EN</button></div>`;
-  const user = `<div class="seg" role="group" aria-label="${PT('Nutzer', 'User')}"><button class="${ADMIN ? '' : 'on'}" ${ADMIN ? 'data-act="adminOff"' : ''} aria-pressed="${!ADMIN}">${PT('Kind', 'Child')}</button><button class="${ADMIN ? 'on' : ''}" ${ADMIN ? '' : 'data-act="adminAsk"'} aria-pressed="${ADMIN}">Admin</button></div>`;
-  const sub = t => `<h4 class="ptsec">${t}</h4>`;
-  return topBar(ico('gear', 26) + ' ' + PT('Eltern', 'Parents'), 'home', `${lang}<button class="btn sm noprint" data-act="print">🖨️ ${PT('Drucken', 'Print')}</button>`) + `
-  <div class="card noprint"><h3>${PT('Einstellungen', 'Settings')}</h3>
-    ${ptRow(PT('Nutzer', 'User'), ADMIN
-      ? PT('Du bist im <b>Admin-Modus</b>: alles freigeschaltet, immer 9999 🪙 und ⭐, keine Zeitgrenzen. Der Stand deines Kindes ist unberührt.', 'You are in <b>Admin mode</b>: everything unlocked, always 9999 🪙 and ⭐, no time limits. Your child’s progress is untouched.')
-      : PT('„Kind“ ist der normale Stand. „Admin“ ist ein eigener Testspeicher mit allem freigeschaltet – der Stand deines Kindes bleibt unberührt.', '“Child” is the normal profile. “Admin” is a separate test profile with everything unlocked – your child’s progress stays untouched.'), user)}
-    ${sub(PT('Namen', 'Names'))}
-    ${ptRow(PT('Name des Kindes (= Name des Avatars)', 'Child’s name (= avatar’s name)'), PT('Wird überall angezeigt: Start, Profil, Avatar, Urkunde. Ein eigener Avatar-Name ist nicht nötig.', 'Shown everywhere: start, profile, avatar, certificate. No separate avatar name is needed.'), `<input class="txt" id="nameIn" maxlength="20" value="${esc(S.name)}" placeholder="Name"><button class="btn sm" data-act="saveName">${PT('Speichern', 'Save')}</button>`)}
-    ${sub(PT('Zusatzfunktionen in „Meine Welt“', 'Extra features in “My World”'))}
-    <p class="small mute" style="margin:0 0 6px">${PT('Ausgeschaltete Bereiche sind für das Kind unsichtbar. Was darin schon gesammelt wurde, bleibt immer erhalten.', 'Switched-off areas are hidden from your child. Anything already collected there is always kept.')}</p>
-    ${DZ_FLAGS.map(f => { const t = PT_FLAG[f.id], on = flagOn(f.id); return `<div class="cfg"><div><b>${PT(t[0], t[2])}</b> <span class="flagstate ${on ? 'on' : ''}">${on ? PT('sichtbar', 'visible') : PT('ausgeblendet', 'hidden')}</span><br><span class="small mute">${PT(t[1], t[3])}</span></div>${ptSw(on, 'dzFlag', f.id, PT(t[0], t[2]))}</div>`; }).join('')}
-    ${typeof vnParentCard === 'function' && flagOn('venola') ? vnParentCard() : ''}
-    ${typeof ltParentCard === 'function' && flagOn('licht') ? ltParentCard() : ''}
-    ${sub(PT('Lernziel', 'Learning goal'))}
-    ${ptRow(PT('Tagesziel', 'Daily goal'), PT('So viele Aufgaben pro Tag für Serie, Karte und Kreativzeit. Heute: ', 'Tasks per day for the streak, a card and creative time. Today: ') + `${today}`, ptSel('cfgGoal', [10, 15, 20, 25, 30, 40, 50].map(n => [n, PT(n + ' Aufgaben', n + ' tasks')]), S.cfg.goal))}
-    ${sub(PT('Hausaufgaben-Sperre', 'Homework gate'))}
-    <p class="small mute" style="margin:0 0 6px">${PT('Jeder Tag beginnt mit <b>4 Minuten freier Zeit</b> für Profil und Meine Welt (mit sichtbarer Uhr). Danach sind sie zu, bis 20 Minuten Hausaufgaben gemacht oder 25 Aufgaben gelöst wurden. Dann gilt: höchstens 5 Minuten je Bereich, höchstens 10 Minuten insgesamt – pro Tag. Meine Hefte, Europa Entdecker und die Ideenwerkstatt sind immer offen. Morgen beginnt alles von selbst neu.', 'Every day starts with <b>4 minutes of free time</b> for Profile and My World (with a visible timer). After that they stay locked until your child has done 20 minutes of homework or solved 25 tasks. Then: at most 5 minutes per area, at most 10 minutes in total – per day. Workbooks, Europe Explorer and the Idea Workshop are always open. Everything restarts by itself tomorrow.')}</p>
-    ${(() => { const hw = hwInfo(); return ptRow(PT('Heutiger Stand', "Today's status"), PT(`${hw.n} von ${hw.need} Aufgaben · ${fmtT(hw.sec)} von ${fmtT(hw.needSec)} Übungszeit.`, `${hw.n} of ${hw.need} tasks · ${fmtT(hw.sec)} of ${fmtT(hw.needSec)} practice time.`), hw.done
-      ? `<span class="tag on" style="margin-right:8px">${PT('Heute offen', 'Open today')}</span><button class="btn sm sec" data-act="hwReset">${PT('Wieder sperren', 'Lock again')}</button>`
-      : `<button class="btn sm sec" data-act="hwUnlock">${PT('Heute schon freigeben', 'Unlock for today')}</button>`); })()}
-    ${ptRow(PT('Freie Zeit (vor der Hausaufgabe)', 'Free time (before homework)'), PT(`Genutzt: ${fmtT(Math.min(FREE_SEC, freeUsed()))} von ${fmtT(FREE_SEC)}.`, `Used: ${fmtT(Math.min(FREE_SEC, freeUsed()))} of ${fmtT(FREE_SEC)}.`), `<button class="btn sm sec" data-act="freeResetAct">${PT('Zurücksetzen', 'Reset')}</button>`)}
-    <div class="cfg" style="display:block"><b>${PT('Zeit insgesamt heute', 'Total time today')}</b><br><span class="small mute">${PT(`Genutzt: ${fmtT(rgTotalUsed())} von ${fmtT(rgTotalCap())} (nach der Hausaufgabe).`, `Used: ${fmtT(rgTotalUsed())} of ${fmtT(rgTotalCap())} (after homework).`)}</span>
-      <div class="row" style="margin-top:8px"><button class="btn sm sec" data-act="rgResetAllAct">${PT('Zurücksetzen', 'Reset')}</button><button class="btn sm sec" data-act="rgExtendAllAct">+5 ${PT('Min', 'min')}</button></div></div>
-    ${sub(PT('Bereiche: öffnen, sperren, Zeit', 'Areas: open, lock, time'))}
-    <p class="small mute" style="margin:0 0 6px">${PT('Für jeden Bereich und Unterbereich: <b>Auto</b> = normale Regeln · <b>Offen</b> = immer offen, ohne Hausaufgabe und ohne Zeitgrenze · <b>Zu</b> = gesperrt, bis du es änderst. Ein Unterbereich mit eigener Einstellung gewinnt. „Zurücksetzen“ gibt heute neue Zeit, „+5 Min“ verlängert nur heute.', 'For every area and sub-area: <b>Auto</b> = normal rules · <b>Open</b> = always open, no homework needed and no time limit · <b>Locked</b> = locked until you change it. A sub-area with its own setting wins. “Reset” gives fresh time today, “+5 min” extends only for today.')}</p>
-    <div class="ptareas">${SEC_TREE().map(ptAreaBlock).join('')}</div>
-    ${sub(PT('Tageslimit (Üben)', 'Daily limit (practice)'))}
-    ${ptRow(PT('Tageslimit (Üben)', 'Daily limit (practice)'), PT(`Nach dieser Übungszeit gibt es eine Pause. Heute: ${usedMin()} Min · ${today} Aufgaben${S.daily.unlocked ? ' · heute ohne Limit' : ''}.`, `A break after this much practice. Today: ${usedMin()} min · ${today} tasks${S.daily.unlocked ? ' · no limit today' : ''}.`), ptSel('cfgLimit', [[0, PT('Kein Limit', 'No limit')], [15, ptMin(15)], [20, ptMin(20)], [30, ptMin(30)], [45, ptMin(45)], [60, ptMin(60)], [90, ptMin(90)]], S.cfg.limitMin) + ptReset('limit'))}
-    ${ptRow(PT('Shop-Zeit pro Tag', 'Shop time per day'), PT(`So lange darf das Kind pro Tag im Shop stöbern und einkaufen. Heute: ${Math.floor((S.daily.shopSec || 0) / 60)} Min.`, `How long your child may browse and buy in the shop per day. Today: ${Math.floor((S.daily.shopSec || 0) / 60)} min.`), ptSel('cfgShop', [[0, PT('Unbegrenzt', 'Unlimited')], [3, ptMin(3)], [5, ptMin(5)], [10, ptMin(10)]], S.cfg.shopMin == null ? 5 : S.cfg.shopMin) + ptReset('shop'))}
-    ${sub(PT('Kreativzeit (Avatar, Buch, Musik, Insel, Wesen)', 'Creative time (avatar, book, music, island, creatures)'))}
-    ${ptRow(PT('Kreativzeit', 'Creative time'), PT('Kreativzeit gibt es immer erst <b>nach dem Üben</b>: Tagesziel oder eine fertige Stufe öffnet ein Zeitfenster. „Gesperrt“ = nur ansehen, auch nach dem Üben.', 'Creative time always comes <b>after practice</b>: the daily goal or a finished Stufe opens a time window. “Locked” = view only, even after practice.'), ptSel('cfgCrMode', [['after', PT('Nach dem Üben', 'After practice')], ['locked', PT('Gesperrt', 'Locked')]], creativeMode()))}
-    ${ptRow(PT('Dauer und Anzahl', 'Length and count'), PT('Wie lange ein Zeitfenster dauert und wie oft es sich pro Tag öffnet.', 'How long a window lasts and how often it opens per day.'), ptSel('cfgCrMin', [3, 5, 10, 15, 20].map(n => [n, ptMin(n)]), S.cfg.creativeMin || 5) + ptSel('cfgCrMax', [1, 2, 3].map(n => [n, PT(n + '× pro Tag', n + '× per day')]), S.cfg.creativeMax || 2))}
-    ${ptRow(PT('Heute', 'Today'), PT(`Verdient: ${cr.grants}× · genutzt ${Math.round((cr.used || 0) / 60)} Min · übrig ${fmtT(cr.left || 0)}.`, `Earned: ${cr.grants}× · used ${Math.round((cr.used || 0) / 60)} min · left ${fmtT(cr.left || 0)}.`), ptReset('cr', PT('Kreativzeit zurücksetzen', 'Reset creative time')))}
-    ${ptRow(PT('Bonus-Kreativzeit', 'Bonus creative time'), bonusDone ? PT('Der Bonus für heute ist schon vergeben (höchstens 1× pro Tag).', 'Today’s bonus has already been given (once per day at most).') : (today >= needBonus ? PT(`Einmal pro Tag möglich, weil schon ${today} Aufgaben geübt wurden. Gibt ${S.cfg.creativeMin || 5} Minuten.`, `Possible once a day because ${today} tasks were practised. Gives ${S.cfg.creativeMin || 5} minutes.`) : PT(`Erst möglich, wenn heute mindestens ${needBonus} Aufgaben geübt wurden (jetzt ${today}).`, `Only possible once at least ${needBonus} tasks were practised today (now ${today}).`)), `<button class="btn sm sec" data-act="crGrant" ${bonusDone || today < needBonus ? 'disabled' : ''}>${PT('Bonus geben', 'Give bonus')}</button>`)}
-    ${ptRow(PT('Alle Zeiten von heute', 'All of today’s times'), PT('Setzt Tageslimit, Seitenzeiten (und Sperren), Shop-Zeit und Kreativzeit für heute auf Anfang.', 'Sets daily limit, page times (and locks), shop time and creative time back to the start of today.'), ptReset('all', PT('Alles zurücksetzen', 'Reset all')))}
-    ${sub(PT('Weiteres', 'More'))}
-    <div class="cfg" style="display:block"><b>${PT('Kapitel-Termine', 'Chapter deadlines')}</b><br><span class="small mute">${PT('Bis wann soll das Kapitel fertig sein? Vorgeschlagen ist der letzte Schultag vor den Ferien in Niedersachsen. Du kannst jedes Datum ändern.', 'When should the chapter be finished? The suggestion is the last school day before the school holidays in Lower Saxony (Niedersachsen). You can change any date.')}</span>
-      <div class="row wrap" style="margin-top:8px">${CHAPTERS.map(c => { const fe = ferienFor(c); return `<label class="small">${c.id} (${PT(c.season, PT_SEASON[c.season])})<br><input type="date" class="txt" id="due_${c.id}" value="${dueOf(c)}">${fe ? `<br><span class="mute">${PT('Ferien', 'Holidays')}: ${ptDate(fe.start)} – ${ptDate(fe.end)}</span>` : ''}</label>`; }).join('')}<button class="btn sm sec" data-act="dueReset">${PT('Auf Ferien-Vorschlag', 'Use holiday suggestion')}</button></div></div>
-    ${ptRow(PT('Töne &amp; Musik', 'Sounds &amp; music'), PT('Schaltet alle Töne der App aus (auch die Musik-Werkstatt). Das Kind kann das auch selbst auf der Startseite.', 'Turns off all sounds in the app (also the music workshop). Your child can also do this on the start screen.'), ptSw(S.cfg.sound !== false, 'toggleSound', null, PT('Töne', 'Sounds')))}
-    ${ptRow(PT('Notenheft: Ton-Knopf', 'Music book: sound button'), PT('An = kurzer Klavierton beim Antippen und Abspielen, mit Lautsprecher-Knopf. Aus = das Notenheft bleibt still und der Knopf ist ausgeblendet.', 'On = a short piano tone when tapping and playing notes, with a speaker button. Off = the music book stays silent and the button is hidden.'), ptSw(S.cfg.noTone !== false, 'noToneSw', null, PT('Notenheft Ton', 'Music book sound')))}
-    ${ptRow(PT('Notenheft: Abspielen-Knopf', 'Music book: play button'), PT('An = Lieder abspielen (mit Tempo). Aus = Lieder können geschrieben, aber nicht abgespielt werden.', 'On = play songs (with tempo). Off = songs can be written but not played.'), ptSw(S.cfg.noPlay !== false, 'noPlaySw', null, PT('Notenheft Abspielen', 'Music book play')))}
-    ${ptRow('PIN', PT('Schützt diesen Bereich, das Zurücksetzen von Gruppen und das Verlängern des Tageslimits.', 'Protects this area, resetting groups and extending the daily limit.'), `<button class="btn sm sec" data-act="pinChange">${PT('PIN ändern', 'Change PIN')}</button>`)}
-  </div>
-  <div class="card" style="margin-top:12px"><h3>${PT('Überblick', 'Overview')}</h3><p>${PT('Stufe', 'Level')} ${L.n} (${L.title}) · ${S.stats.q} ${PT('Aufgaben', 'tasks')} · ${S.stats.q ? Math.round(S.stats.c / S.stats.q * 100) : 0} % ${PT('gleich richtig', 'right first time')} · ${PT('Serie', 'streak')} ${streakNow()} ${PT('Tag(e)', 'day(s)')} · ${S.mistakes.length} ${PT('im Fehler-Heft', 'in the mistakes book')} · ${Object.keys(S.cards).length} ${PT('Karten', 'cards')} · ${stampCount()} ${PT('Stempel', 'stamps')} · ${(S.songs || []).length} ${PT('Beats', 'beats')} · ${PT('Kreativzeit heute', 'Creative time today')}: ${Math.round((cr.used || 0) / 60)} min · ${PT('Shop heute', 'Shop today')}: ${Math.floor((S.daily.shopSec || 0) / 60)} min</p>
+  return `<div class="pt-stat-tools"><button class="btn sm sec" data-act="print">${PT('Statistik drucken','Print statistics')}</button></div>` + `  <div class="card" style="margin-top:12px"><h3>${PT('Überblick', 'Overview')}</h3><p>${PT('Stufe', 'Level')} ${L.n} (${L.title}) · ${S.stats.q} ${PT('Aufgaben', 'tasks')} · ${S.stats.q ? Math.round(S.stats.c / S.stats.q * 100) : 0} % ${PT('gleich richtig', 'right first time')} · ${PT('Serie', 'streak')} ${streakNow()} ${PT('Tag(e)', 'day(s)')} · ${S.mistakes.length} ${PT('im Fehler-Heft', 'in the mistakes book')} · ${Object.keys(S.cards).length} ${PT('Karten', 'cards')} · ${stampCount()} ${PT('Stempel', 'stamps')} · ${(S.songs || []).length} ${PT('Beats', 'beats')} · ${PT('Kreativzeit heute', 'Creative time today')}: ${Math.round((cr.used || 0) / 60)} min · ${PT('Shop heute', 'Shop today')}: ${Math.floor((S.daily.shopSec || 0) / 60)} min</p>
   ${weak.length ? `<p><b>${PT('Das sollte noch geübt werden:', 'Still needs practice:')}</b> ${weak.join(', ')}</p>` : `<p class="mute small">${PT('Schwache Themen werden angezeigt, sobald genug Aufgaben gelöst wurden.', 'Weak topics appear once enough tasks have been solved.')}</p>`}</div>
   <div class="card" style="margin-top:12px"><h3>${PT('Gruppen', 'Groups')}</h3><div style="overflow-x:auto"><table class="tbl"><tr><th>${PT('Gruppe', 'Group')}</th><th>${PT('Fortschritt', 'Progress')}</th><th>${PT('Punkte', 'Points')}</th><th>${PT('1. Versuch', '1st try')}</th><th>${PT('Medaille', 'Medal')}</th></tr>${rows.join('')}</table></div></div>
   <div class="grid" style="margin-top:12px"><div class="card"><h3>${PT('Letzte Tage', 'Recent days')}</h3>${days.length ? `<table class="tbl">${days.map(d => `<tr><td>${d}</td><td>${S.log[d].n} ${PT('Aufgaben', 'tasks')}</td><td>${S.log[d].c} ${PT('gleich richtig', 'right first time')}</td></tr>`).join('')}</table>` : `<p class="mute">${PT('Noch nichts.', 'Nothing yet.')}</p>`}</div>
   <div class="card"><h3>${PT('Mini-Tests', 'Mini tests')}</h3>${tests.length ? `<table class="tbl">${tests.map(t => `<tr><td>${new Date(t.ts).toLocaleDateString(de ? 'de-DE' : 'en-GB')}</td><td>${t.score} / ${t.total}</td><td>${fmtT(t.secs)} min</td></tr>`).join('')}</table>` : `<p class="mute">${PT('Noch kein Test.', 'No test yet.')}</p>`}</div></div>
-  <div class="card noprint" style="margin-top:12px"><h3>${PT('Daten &amp; Sicherung', 'Data &amp; backup')}</h3>
-    <p class="small">${PT('Der Fortschritt wird <b>nie von der App gelöscht</b>. Er geht nur verloren, wenn die Browserdaten (Cookies / Websitedaten) gelöscht werden. Er liegt doppelt im Browser. Zusätzlich kann man hier eine Sicherungsdatei speichern (z. B. in die Cloud) und später wieder laden. Die Datei immer im selben Browser öffnen und nicht im privaten Modus.', 'The app <b>never deletes progress</b>. It is only lost if the browser data (cookies / site data) is cleared. It is stored twice in the browser. You can also save a backup file here (e.g. to the cloud) and load it later. Always open the file in the same browser, not in private mode.')}</p>
-    <p class="small mute">${PT('Letzte Sicherung', 'Last backup')}: ${S.lastBackup ? new Date(S.lastBackup).toLocaleDateString(de ? 'de-DE' : 'en-GB') : PT('noch nie', 'never')}</p>
-    <div class="row wrap"><button class="btn sm" data-act="export">💾 ${PT('Sichern', 'Back up')}</button><label class="btn sm sec" style="cursor:pointer">📂 ${PT('Laden', 'Load')}<input type="file" id="impFile" accept=".json,application/json" class="hide"></label></div>
-    <textarea class="txt hide" id="expTxt" readonly style="margin-top:10px"></textarea>
-    <h3 style="margin-top:16px">${PT('App-Version', 'App version')}</h3>
-    <p class="small mute">${PT('Version', 'Version')} <b>${APP_BUILD}</b>. ${PT('Mit Internet holt „Update“ die neueste Version. Der Lernstand bleibt dabei erhalten.', 'With internet, “Update” fetches the newest version. Progress is kept.')}</p>
-    <div class="row wrap"><button class="btn sm" data-act="ptUpdate">🔄 ${PT('Update', 'Update')}</button></div>
-    ${persistOK ? '' : `<p class="small" style="color:var(--bad)">${PT('In diesem Browser kann gerade nichts dauerhaft gespeichert werden (privater Modus?).', 'Nothing can be saved permanently in this browser right now (private mode?).')}</p>`}</div>`;
+` + `<div class="pt-feature-stats">${typeof vnParentCard==='function'?vnParentCard():''}${typeof ltParentCard==='function'?ltParentCard():''}</div>`;
+}
+VIEWS.parent = () => {
+  touchDay(); const active=PT_TABS.some(t=>t[0]===UI.parentTab)?UI.parentTab:'time';
+  const content={time:ptTimePage,learning:ptLearningPage,features:ptFeaturesPage,stats:ptStatisticsPage}[active]();
+  return topBar(PT('Eltern','Parents'),'home',`<button class="btn sec pt-notes" data-act="nzOpen" aria-label="${PT('Notizbuch öffnen','Open notebook')}">${ico('notebook',20)}</button>`)+ptGlobal()+`<div class="pt-workspace"><div class="pt-tabs noprint" role="tablist" aria-label="${PT('Eltern-Themen','Parent topics')}">${PT_TABS.map(([id,de,en])=>`<button id="pt-tab-${id}" role="tab" aria-selected="${id===active}" aria-controls="pt-panel" tabindex="${id===active?'0':'-1'}" class="${id===active?'selected':''}" data-act="ptTab" data-arg="${id}">${PT(de,en)}</button>`).join('')}</div><div id="pt-panel" role="tabpanel" aria-labelledby="pt-tab-${active}" class="pt-panel">${UI.ptNotice?`<div class="pt-notice" role="status">${esc(UI.ptNotice)}</div>`:''}${content}</div></div>`;
 };
-
-
-/* ---- Bereiche & Freigaben (je Haupt- und Unterbereich: Auto/Offen/Zu, Zeit zurücksetzen, +5 Min) ---- */
-const ptPermSeg = (id, label) => { const v = permGet(id) || 'auto';
-  return `<div class="seg ptperm" role="group" aria-label="${esc(label)}">${[['auto', 'Auto', 'Auto'], ['open', 'Offen', 'Open'], ['lock', 'Zu', 'Locked']].map(o => `<button class="${v === o[0] ? 'on' : ''}" data-act="permSetAct" data-arg="${id}|${o[0]}" aria-pressed="${v === o[0]}">${PT(o[1], o[2])}</button>`).join('')}</div>`; };
-function ptAreaState(id, free, parentId) {
-  const own = permGet(id), eff = own || (parentId ? permGet(parentId) : '');
-  if (eff === 'lock') return PT('Zu', 'Locked') + (own ? '' : PT(' (wie Hauptbereich)', ' (from main area)'));
-  if (eff === 'open') return PT('Immer offen, ohne Zeitgrenze', 'Always open, no time limit') + (own ? '' : PT(' (wie Hauptbereich)', ' (from main area)'));
-  if (free) return PT('Immer offen (normale Regel)', 'Always open (normal rule)');
-  return '';
-}
-function ptAreaBlock(m) {
-  const timed = !m.free, used = timed ? m.subs.reduce((a, x) => a + rgAreaUsed(x[0]), 0) : 0;
-  const st = ptAreaState(m.id, m.free) || PT(`Heute genutzt: ${fmtT(used)} (alle Unterbereiche)`, `Used today: ${fmtT(used)} (all sub-areas)`);
-  const tbtn = (act, arg) => timed ? `<button class="btn sm sec" data-act="${act}Reset" data-arg="${arg}">${PT('Zurücksetzen', 'Reset')}</button><button class="btn sm sec" data-act="${act}Ext" data-arg="${arg}">+5 ${PT('Min', 'min')}</button>` : '';
-  const subRow = x => { const used2 = rgAreaUsed(x[0]), cap = rgAreaCap(x[0]), st2 = ptAreaState(x[0], m.free, m.id) || PT(`${fmtT(used2)} von ${fmtT(cap)} heute`, `${fmtT(used2)} of ${fmtT(cap)} today`);
-    return `<div class="ptarea sub"><div class="ptarea-t"><b>${esc(PT(x[1], x[2]))}</b><span class="small mute">${st2}</span></div><div class="ptarea-c">${ptPermSeg(x[0], PT(x[1], x[2]))}${tbtn('ptSub', x[0])}</div></div>`; };
-  return `<div class="ptblock" data-sec="${m.id}"><div class="ptarea main"><div class="ptarea-t"><b>${esc(PT(m.de, m.en))}</b><span class="small mute">${st}</span></div><div class="ptarea-c">${ptPermSeg(m.id, PT(m.de, m.en))}${tbtn('ptMain', m.id)}</div></div>
-    <details class="ptsubs" ${UI.ptOpen && UI.ptOpen[m.id] ? 'open' : ''} data-sec="${m.id}"><summary>${PT('Unterbereiche', 'Sub-areas')} (${m.subs.length})</summary>${m.subs.map(subRow).join('')}</details></div>`;
-}
-document.addEventListener('toggle', e => { const d = e.target; if (d && d.classList && d.classList.contains('ptsubs')) { UI.ptOpen = UI.ptOpen || {}; UI.ptOpen[d.dataset.sec] = d.open; } }, true);
+document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.classList){if(d.classList.contains('ptsubs')){UI.ptOpen=UI.ptOpen||{};UI.ptOpen[d.dataset.sec]=d.open;}if(d.classList.contains('pt-global-more'))UI.ptGlobalOpen=d.open;}},true);
+document.addEventListener('keydown',e=>{const tab=e.target.closest('[role="tab"][data-act="ptTab"]');if(!tab)return;const i=PT_TABS.findIndex(t=>t[0]===tab.dataset.arg);let n=i;if(e.key==='ArrowRight')n=(i+1)%PT_TABS.length;else if(e.key==='ArrowLeft')n=(i+PT_TABS.length-1)%PT_TABS.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=PT_TABS.length-1;else return;e.preventDefault();ACT.ptTab(PT_TABS[n][0]);});
 
 /* ---- Aktionen ---- */
 function resetTime(what) {
@@ -9580,6 +9511,25 @@ Object.assign(ACT, {
   dzFlag: id => { S.flags = S.flags || {}; S.flags[id] = !flagOn(id); save(); render(); },
   toggleSound: () => { S.cfg.sound = S.cfg.sound === false; save(); render(); }
 });
+
+/* Explicit parent actions: never erase usage or learning counters. */
+function ptGiveTime(id, minutes) {
+  if(![1,5,10,15,30].includes(minutes)||!ptCanAdd(id)){UI.ptNotice=PT('Öffne den Bereich zuerst. Unbegrenzte Bereiche brauchen keine Zusatzzeit.','Open the area first. Unlimited areas do not need extra time.');render();return;}
+  const t=parentTimeData(),sec=minutes*60;
+  if(id==='shared')t.shared=(t.shared||0)+sec;
+  else if(id==='practice')t.practice=(t.practice||0)+sec;
+  else t.areas[id]=(t.areas[id]||0)+sec;
+  const name=id==='shared'?PT('Profil & Meine Welt','Profile & My World'):id==='practice'?PT('Üben','Practice'):secName(id); UI.ptNotice=PT(`${name}: ${minutes} zusätzliche Minuten für heute gegeben. Bisheriger Verbrauch bleibt erhalten.`,`${name}: ${minutes} extra minutes granted for today. Existing usage is kept.`);save();render();
+}
+Object.assign(ACT,{
+  ptTab:id=>{if(!PT_TABS.some(t=>t[0]===id))return;UI.parentTab=id;UI.ptNotice='';render();document.getElementById('pt-tab-'+id)?.focus({preventScroll:true});},
+  ptGiveSelected:()=>{const id=$('#ptTimeTarget').value,n=+$('#ptTimeMinutes').value;UI.ptTimeTarget=id;UI.ptTimeMinutes=n;ptGiveTime(id,n);},
+  ptGiveTime:arg=>{const[id,n]=String(arg).split('|');ptGiveTime(id,+n);},
+  ptRevokeTime:id=>{const t=parentTimeData();if(id==='shared')t.shared=0;else if(id==='practice')t.practice=0;else delete t.areas[id];UI.ptNotice=PT('Nur die übrige Zusatzzeit wurde gestrichen. Normale Zeit und Verbrauch bleiben erhalten.','Only the remaining extra time was removed. Normal time and usage are kept.');save();render();},
+  ptPauseTime:arg=>{const[id,state]=String(arg).split('|'),t=parentTimeData(),on=state==='on';if(id==='shared')t.sharedLocked=on;else if(id==='practice')t.practiceLocked=on;else if(on)t.locks[id]=true;else delete t.locks[id];UI.ptNotice=on?PT('Für den Rest des Tages gesperrt. Morgen gelten wieder die normalen Regeln.','Paused for the rest of today. Normal rules return tomorrow.'):PT('Heutige Pause aufgehoben. Verbleibende Zeit ist wieder verfügbar.','Today’s pause removed. Remaining time is available again.');save();render();}
+});
+
+document.addEventListener('change',e=>{const id=e.target.id;if(view!=='parent')return;if(id==='ptTimeTarget')UI.ptTimeTarget=e.target.value;if(id==='ptTimeMinutes')UI.ptTimeMinutes=+e.target.value;if(/^(cfgGoal|cfgLimit|cfgShop|cfgCrMode|cfgCrMin|cfgCrMax)$/.test(id))render();});
 
 /* =====================================================================
    LUSTIGE FAKTEN: kleine Staun-Häppchen zum Durchblättern. Keine Belohnung, kein Druck, keine Punkte.
@@ -10222,22 +10172,23 @@ registerFeature({
    BLINKIS LICHTERTURM (in Meine Welt, von den Eltern einschaltbar)
    Binärzahlen ohne Mathe-Gefühl: Blinki kann nur mit Lampen sprechen (AN / AUS), das Kind ist sein Übersetzer.
    Eine Idee pro Stufe: zwei Zustände → mehr Lampen, mehr Zeichen (Verdoppeln) → Lampen bekommen Punkte 1, 2, 4, 8 → Zahlen schicken
-   und lesen → AN = 1, AUS = 0 (Bit, Binärzahl). Stufen 1–8 hier, 9–15 folgen (Zählmaschine, Muster, Byte, Bilder, Buchstaben, Zaubertrick).
+   und bewegen → AN = 1, AUS = 0 → Lichtbilder. Acht direkte Experimente ohne Antwortauswahl.
    Belohnung NUR hier: Lichtpunkte → Werkstatt (Turm-Deko, Lampen-Looks, Lampen-Klänge, Blinki-Outfits, Sternbilder). Keine Münzen, Sticker, Pokale.
    Töne der Lampen sind standardmäßig AUS (eigener Schalter; die App-weite Ton-Einstellung gilt zusätzlich).
    Gespeichert: S.licht = { lv (höchste offene Stufe), done{n:{ts,hints}}, lp, lpLife, own{'cat.id':ts}, eq{lamp,snd,out}, snd, code[], snack[], rep{d,n} }
    Stufen und Schritte: feat_lichtlv.js
    ===================================================================== */
+const ltTop = (title, back) => topBar(title, back, `<button class="btn sec lt-notes" data-act="nzOpen" aria-label="Notizbuch öffnen">${ico('notebook', 20)}</button>`);
 const LT_MAX = 8;
 const LT_LV = [
-  { t: 'Ja oder Nein', s: 'Eine Lampe, zwei Antworten', c: 'Eine Lampe kann zwei Dinge sagen: AN oder AUS. Damit man sich versteht, muss man abmachen, was AN bedeutet.', nx: 'Ich habe Hunger … aber wie sage ich dir, welchen Snack ich möchte?' },
-  { t: 'Vier Snacks', s: 'Eine Lampe ist zu wenig', c: 'Mit einer Lampe gibt es nur zwei Zeichen. Mit zwei Lampen gibt es schon vier. Mehr Lampen – mehr Botschaften!', nx: 'Und wenn ich DREI Lampen habe? Wie viele Zeichen gibt es dann?' },
-  { t: 'Muster-Jagd', s: 'Wie viele Zeichen gibt es?', c: 'Jede neue Lampe verdoppelt die Zeichen: Jedes alte Zeichen gibt es einmal mit der neuen Lampe AUS und einmal mit AN. 2, 4, 8, 16, 32 …', nx: 'Lumi aus dem Turm gegenüber möchte Sterne zählen. Kannst du ihm Zahlen schicken?' },
-  { t: 'Leuchtpunkte', s: 'Lampen bekommen Punkte', c: 'Lampen können verschieden viel wert sein. Neben der 1 braucht die nächste Lampe 2 Punkte – sonst gibt es Lücken oder doppelte Zahlen.', nx: 'Lumi hat noch mehr Sterne! Wir brauchen eine dritte Lampe.' },
-  { t: 'Die dritte Lampe', s: '1, 2, 4 … und dann?', c: 'Jede neue Lampe ist eins mehr wert als alle anderen zusammen. Darum ist sie doppelt so viel wert wie die rechts daneben: 1, 2, 4, 8, 16 …', nx: 'Jetzt haben wir vier Lampen: 8, 4, 2 und 1. Lumi wünscht sich Sterne!' },
-  { t: 'Sterne schicken', s: 'Zahlen mit Lampen bauen', c: 'Mit den Lampen 8, 4, 2 und 1 kann man jede Zahl von 1 bis 15 bauen. Jede Lampe ist einmal dabei oder gar nicht.', nx: 'Jetzt schickt Lumi DIR Zahlen. Kannst du sie lesen?' },
-  { t: 'Lumis Antwort', s: 'Lampen-Zeichen lesen', c: 'Lesen geht genauso wie Schicken: Zähle die Punkte aller Lampen zusammen, die leuchten.', nx: 'Ich will Lumi einen Brief schreiben. Aber Lampen malen dauert ewig …' },
-  { t: 'Strich und Kreis', s: 'AN = 1, AUS = 0', c: 'AN schreibt man 1, AUS schreibt man 0. Jede Lampe heißt Bit, eine Zahl aus Bits heißt Binärzahl. 101 bedeutet 4 + 1 = 5.', nx: 'Mit 1 und 0 kann man jede Zahl aufschreiben. Bald baue ich eine Zählmaschine – die nächsten Stufen kommen!' }
+  { t: 'Die Lichtbrücke', s: 'Ein Schalter verändert die Welt', c: 'AN und AUS sind zwei klare Zustände. Beide können etwas mitteilen.', nx: '' },
+  { t: 'Die Lichtpost', s: 'Zwei Schalter, vier Ziele', c: 'Zwei Schalter ergeben vier verschiedene Muster. Auch AUS–AUS gehört dazu.', nx: '' },
+  { t: 'Der Mustersammler', s: 'Jede neue Lampe verdoppelt', c: 'Mit einer neuen Lampe gibt es jedes alte Muster zweimal: einmal mit ihr AUS und einmal AN.', nx: '' },
+  { t: 'Deine Vorratsmaschine', s: 'Mengen ohne Lücken bauen', c: 'Mit den Vorräten 2 und 1 kannst du jede Menge von 0 bis 3 genau einmal bauen.', nx: '' },
+  { t: 'Immer weiterbauen', s: '1, 2, 4, 8, 16 entdecken', c: 'Der neue Vorrat beginnt bei der ersten fehlenden Menge. Darum verdoppeln sich die Werte: 1, 2, 4, 8, 16.', nx: '' },
+  { t: 'Lumis Sternenschachtel', s: 'Eine Menge mit Licht schicken', c: 'Die leuchtenden Vorräte werden zusammengezählt. 4 und 1 ergeben 5.', nx: '' },
+  { t: 'Lumis Lichtbahn', s: 'Ein Muster wird Bewegung', c: 'Die Positionen haben unterschiedliche Werte. Das Spiel liest dein Muster als Strecke.', nx: '' },
+  { t: 'Zeichen und Lichtbilder', s: 'Aus Schaltern werden Bits', c: 'AN schreiben wir als 1, AUS als 0. Ein solcher Platz heißt Bit. Computer verwenden zwei unterscheidbare Signalzustände. Ein Programm bestimmt, ob ein Muster eine Zahl oder ein Bild beschreibt.', nx: '' }
 ];
 const LT_SHOP = [
   { cat: 'deco', n: 'Turm-Deko', s: 'Schmückt deinen Turm.', items: [{ id: 'laterne', n: 'Laterne', p: 10 }, { id: 'wimpel', n: 'Wimpel', p: 12 }, { id: 'blumen', n: 'Blumenkasten', p: 15 }, { id: 'kette', n: 'Lichterkette zu Lumi', p: 20 }, { id: 'teleskop', n: 'Teleskop', p: 25 }, { id: 'garten', n: 'Dachgarten', p: 30 }] },
@@ -10289,32 +10240,35 @@ function ltPlay(k, i, force) {
 }
 
 /* ---------- Figuren (Blinki und Lumi) ---------- */
-function ltBotG(mood, out, ant) {
-  const st = mood || 'idle', eye = '#9fe3ff', lit = ant ? '#ffd76a' : '#4a5470';
-  const bulb = out === 'regen' ? `<defs><linearGradient id="ltRb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a8a"/><stop offset=".35" stop-color="#ffd76a"/><stop offset=".65" stop-color="#7fd18a"/><stop offset="1" stop-color="#6fa8ff"/></linearGradient></defs><circle cx="50" cy="8" r="7" fill="url(#ltRb)"/>${ant ? '<circle cx="50" cy="8" r="12" fill="#ffd76a" opacity=".3"/>' : ''}` : `${ant ? '<circle cx="50" cy="8" r="12" fill="#ffd76a" opacity=".3"/>' : ''}<circle cx="50" cy="8" r="6" fill="${lit}"/>`;
-  const eyes = st === 'happy' ? `<path d="M34 48q6-8 12 0M54 48q6-8 12 0" stroke="${eye}" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M41 55q9 8 18 0" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
-    : st === 'curious' ? `<circle cx="40" cy="46" r="5.5" fill="${eye}"/><circle cx="60" cy="45" r="3.6" fill="${eye}"/><circle cx="50" cy="56" r="2.6" stroke="${eye}" stroke-width="2" fill="none"/>`
-      : st === 'confused' ? `<circle cx="40" cy="47" r="4" fill="${eye}"/><circle cx="60" cy="47" r="4" fill="${eye}"/><path d="M34 38l10 3" stroke="${eye}" stroke-width="2.4" stroke-linecap="round"/><path d="M43 57q3.5-3 7 0t7 0" stroke="${eye}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
-        : `<circle cx="40" cy="46" r="5" fill="${eye}"/><circle cx="60" cy="46" r="5" fill="${eye}"/><path d="M44 55q6 4 12 0" stroke="${eye}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-  const arms = st === 'happy' ? '<path d="M31 80q-12-4-15-16M69 80q12-4 15-16" stroke="#cbd5e8" stroke-width="6" stroke-linecap="round" fill="none"/>' : '<path d="M31 82q-10 4-12 13M69 82q10 4 12 13" stroke="#cbd5e8" stroke-width="6" stroke-linecap="round" fill="none"/>';
-  const hat = out === 'muetze' ? '<path d="M19 36q31-36 62 0z" fill="#5a7bd8"/><rect x="17" y="31" width="66" height="9" rx="4.5" fill="#3f5fbf"/><path d="M30 26l6-6M44 20l4-4M58 20l-1-6" stroke="#7d9bea" stroke-width="2" stroke-linecap="round"/>' : '';
-  const neck = out === 'schal' ? '<path d="M27 71h46v8H27z" fill="#ff8a5c"/><path d="M59 78v15h8V78z" fill="#ff8a5c"/><path d="M35 71v8M43 71v8M51 71v8M63 84h-4" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>'
-    : out === 'fliege' ? '<path d="M41 75l9 4.5-9 4.5zM59 75l-9 4.5 9 4.5z" fill="#e84f6a"/><circle cx="50" cy="79.5" r="2.4" fill="#b83a52"/>' : '';
-  return `<line x1="50" y1="22" x2="50" y2="10" stroke="#9aa8c7" stroke-width="3"/>${bulb}${arms}<rect x="30" y="73" width="40" height="29" rx="12" fill="#cbd5e8"/><circle cx="50" cy="88" r="4" fill="${lit}"/>
-    <rect x="16" y="20" width="68" height="54" rx="24" fill="#e3eaf6"/><rect x="25" y="30" width="50" height="34" rx="15" fill="#232c4a"/>${eyes}${st === 'happy' ? '<circle cx="28" cy="58" r="3" fill="#ffb3c7" opacity=".7"/><circle cx="72" cy="58" r="3" fill="#ffb3c7" opacity=".7"/>' : ''}${hat}${neck}
-    <rect x="34" y="100" width="10" height="7" rx="3" fill="#9aa8c7"/><rect x="56" y="100" width="10" height="7" rx="3" fill="#9aa8c7"/>${st === 'confused' ? '<text x="88" y="24" font-size="18" font-weight="800" fill="#ffd76a" font-family="sans-serif">?</text>' : ''}`;
+let ltSvgId = 0;
+function ltBotG(mood, out, ant, variant) {
+  const id = 'lt-shell-' + (++ltSvgId), lumi = variant === 'lumi';
+  const eye = lumi ? '#e9d5fb' : '#b7f2d7', shell = lumi ? '#e8def1' : '#e5eddb';
+  const shade = lumi ? '#b9a4d0' : '#a7c6b3', accent = lumi ? '#ceacef' : '#ffd76a';
+  const lit = ant ? accent : '#718c83', happy = mood === 'happy' || mood === 'laugh';
+  const eyes = happy
+    ? `<path d="M34 56q5-7 10 0M56 56q5-7 10 0" fill="none" stroke="${eye}" stroke-width="3.5" stroke-linecap="round"/>`
+    : `<rect x="34" y="${mood === 'curious' ? 47 : 49}" width="9" height="${mood === 'curious' ? 15 : 12}" rx="4.5" fill="${eye}"/><rect x="57" y="49" width="9" height="${mood === 'confused' ? 8 : 12}" rx="4.5" fill="${eye}"/>`;
+  const outfit = out === 'schal' ? '<path d="M22 76q28 9 56 0v9q-28 8-56 0z" fill="#e9926e"/><path d="M63 84v15h9V82" fill="#e9926e"/>'
+    : out === 'fliege' ? '<path d="M38 77l12 6-12 6zM62 77l-12 6 12 6z" fill="#d77381"/><circle cx="50" cy="83" r="3" fill="#b65468"/>'
+    : out === 'muetze' ? '<path d="M19 34q2-25 31-25t31 25" fill="#7198b2"/><rect x="17" y="28" width="66" height="9" rx="4.5" fill="#4a708b"/>' : '';
+  return `<defs><linearGradient id="${id}" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="${shell}"/><stop offset="1" stop-color="${shade}"/></linearGradient>${out === 'regen' ? `<linearGradient id="${id}-rainbow"><stop stop-color="#f6a79c"/><stop offset=".35" stop-color="#f2ce85"/><stop offset=".7" stop-color="#a8d9b6"/><stop offset="1" stop-color="#b6bcec"/></linearGradient>` : ''}</defs>
+    <ellipse cx="50" cy="108" rx="29" ry="3" fill="#071e22" opacity=".15"/>
+    <path d="M37 27v-7q0-12 13-12t13 12v7" fill="none" stroke="${shade}" stroke-width="4"/>
+    <path d="M50 20V9" stroke="${shell}" stroke-width="3"/>
+    ${ant ? `<circle cx="50" cy="8" r="9" fill="${accent}" opacity=".15"/>` : ''}<circle cx="50" cy="8" r="4.5" fill="${out === 'regen' ? 'url(#' + id + '-rainbow)' : lit}"/>
+    <path d="${happy ? 'M19 70Q5 64 8 52M81 70q14-6 11-18' : 'M19 71Q8 72 10 84M81 71q11 1 9 13'}" fill="none" stroke="${shade}" stroke-width="7" stroke-linecap="round"/>
+    <rect x="30" y="96" width="14" height="9" rx="4.5" fill="${shade}"/><rect x="56" y="96" width="14" height="9" rx="4.5" fill="${shade}"/>
+    <rect x="17" y="26" width="66" height="72" rx="23" fill="url(#${id})" stroke="${shell}" stroke-width="1.5"/>
+    <path d="M26 40q3-7 12-7h24" fill="none" stroke="white" stroke-opacity=".65" stroke-width="2" stroke-linecap="round"/>
+    <rect x="25" y="40" width="50" height="30" rx="13" fill="#173637"/>
+    <path d="M32 44h36" stroke="#355958" stroke-width="2" stroke-linecap="round"/>
+    ${eyes}<rect x="37" y="78" width="26" height="11" rx="5.5" fill="#173637" fill-opacity=".13"/>
+    <circle cx="44" cy="83.5" r="2" fill="${lit}"/><path d="M51 83.5h5" stroke="#496e62" stroke-width="2" stroke-linecap="round"/>
+    ${outfit}`;
 }
 const ltBot = (mood, ant, cls) => `<svg class="lt-bot ${cls || ''} m-${mood || 'idle'}" viewBox="0 0 100 112" role="img" aria-label="Blinki">${ltBotG(mood, ltS().eq.out, ant)}</svg>`;
-function ltLumiG(mood) {
-  const eye = '#ffb3e1', st = mood || 'idle';
-  const face = st === 'happy' ? `<path d="M36 48q6-7 12 0M52 48q6-7 12 0" stroke="${eye}" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M42 55q8 7 16 0" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
-    : st === 'laugh' ? `<path d="M36 46l6 3-6 3M64 46l-6 3 6 3" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M41 54h18q-1 8-9 8t-9-8z" fill="${eye}"/>`
-      : st === 'curious' ? `<circle cx="42" cy="47" r="5" fill="${eye}"/><circle cx="58" cy="46" r="3.4" fill="${eye}"/><circle cx="50" cy="56" r="2.4" stroke="${eye}" stroke-width="2" fill="none"/>`
-        : `<circle cx="42" cy="47" r="4.6" fill="${eye}"/><circle cx="58" cy="47" r="4.6" fill="${eye}"/><path d="M45 55q5 4 10 0" stroke="${eye}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
-  return `<path d="M38 20l-6-12M62 20l6-12" stroke="#b9a7e0" stroke-width="3" stroke-linecap="round"/><circle cx="31" cy="7" r="4" fill="#ffb3e1"/><circle cx="69" cy="7" r="4" fill="#ffb3e1"/>
-    <rect x="34" y="72" width="32" height="28" rx="12" fill="#d9ccf2"/><circle cx="50" cy="46" r="31" fill="#ece3fb"/><ellipse cx="50" cy="48" rx="21" ry="16" fill="#2e2550"/>${face}
-    <rect x="37" y="98" width="9" height="7" rx="3" fill="#b9a7e0"/><rect x="54" y="98" width="9" height="7" rx="3" fill="#b9a7e0"/>`;
-}
+function ltLumiG(mood) { return ltBotG(mood, '', true, 'lumi'); }
 const ltLumi = (mood, cls) => `<svg class="lt-bot lt-lumi ${cls || ''} m-${mood || 'idle'}" viewBox="0 0 100 112" role="img" aria-label="Lumi">${ltLumiG(mood)}</svg>`;
 
 /* ---------- Lampen ---------- */
@@ -10322,7 +10276,7 @@ const ltLumi = (mood, cls) => `<svg class="lt-bot lt-lumi ${cls || ''} m-${mood 
 function ltRow(bits, o) {
   o = o || {};
   const n = bits.length, vals = o.vals || bits.map((b, i) => 2 ** (n - 1 - i)), sk = ltS().eq.lamp || 'std';
-  return `<div class="lt-row ${o.cls || 'mine'}">${bits.map((b, i) => {
+  return `<div class="lt-row ${o.cls || 'mine'}" data-count="${n}" style="--lt-count:${n}">${bits.map((b, i) => {
     const v = vals[i], dig = (o.morph && o.morph[i]) || o.mode === 'digit', mode = dig ? 'digit' : (o.mode || 'plain');
     let inner = '';
     if (mode === 'dots' && v > 0) inner = `<span class="lt-dots${v > 8 ? ' sm' : ''}">${'<i class="lt-dot"></i>'.repeat(v)}</span>`;
@@ -10330,7 +10284,7 @@ function ltRow(bits, o) {
     const cls = ['lt-lamp', 'sk-' + sk, b ? 'on' : '', o.just === i ? (b ? 'just' : 'cool') : '', o.pulse && o.pulse.includes(i) ? 'pulse' : '', dig ? 'dg' : '', o.drop === i ? 'drop' : '', o.act ? 'tap' : ''].filter(Boolean).join(' ');
     const lab = `Lampe${(mode === 'dots' || o.showVal) && v ? ' ' + v : ''}: ${b ? 'AN' : 'AUS'}`;
     const el = o.act ? `<button class="${cls}" data-act="ltDo" data-arg="${o.act}:${i}" aria-pressed="${!!b}" aria-label="${lab}">` : `<div class="${cls}" role="img" aria-label="${lab}">`;
-    return `<div class="lt-lw">${el}<span class="lt-glass">${inner}</span>${o.act ? '</button>' : '</div>'}${o.showVal && v ? `<span class="lt-val">${v}</span>` : ''}${o.under ? o.under(i) : ''}</div>`;
+    return `<div class="lt-lw">${el}<span class="lt-glass" aria-hidden="true">${inner || '<span class="lt-light-core"></span>'}</span><span class="lt-switch-track" aria-hidden="true"><span></span></span><span class="lt-switch-state" aria-hidden="true">${b ? 'AN' : 'AUS'}</span>${o.act ? '</button>' : '</div>'}${o.showVal && v ? `<span class="lt-val">${v}</span>` : ''}${o.under ? o.under(i) : ''}</div>`;
   }).join('')}</div>`;
 }
 const ltMini = (p, cls) => `<span class="lt-minis ${cls || ''}">${String(p).split('').map(c => `<i class="lt-mini sk-${ltS().eq.lamp || 'std'}${c === '1' ? ' on' : ''}"></i>`).join('')}</span>`;
@@ -10365,22 +10319,22 @@ function ltTower() {
   const p = ltS(), done = p.done, gold = !!done[LT_MAX], lumiOn = p.lv >= 4 || !!done[3];
   const floors = [...Array(LT_MAX).keys()].map(i => {
     const lv = i + 1, y = 205 - (i + 1) * 17, isD = !!done[lv], cur = !isD && lv === p.lv;
-    return `<rect x="95" y="${y}" width="70" height="17" fill="${i % 2 ? '#2f3b66' : '#2a3560'}"/>${isD ? `<rect x="118" y="${y + 3}" width="24" height="11" rx="5" fill="#ffd76a" opacity=".35"/>` : ''}<rect x="122" y="${y + 4}" width="16" height="9" rx="4" fill="${isD ? '#ffd76a' : cur ? '#55639c' : '#1f2747'}" ${cur ? 'stroke="#ffd76a" stroke-width="1.4" stroke-dasharray="3 2"' : ''}/>`;
+    return `<rect x="95" y="${y}" width="70" height="17" fill="${i % 2 ? '#3b5e4d' : '#365747'}"/>${isD ? `<rect x="118" y="${y + 3}" width="24" height="11" rx="5" fill="#ffd76a" opacity=".35"/>` : ''}<rect x="122" y="${y + 4}" width="16" height="9" rx="4" fill="${isD ? '#ffd76a' : cur ? '#8ba78a' : '#203e32'}" ${cur ? 'stroke="#ffd76a" stroke-width="1.4" stroke-dasharray="3 2"' : ''}/>`;
   }).join('');
   const top = 205 - LT_MAX * 17;
   const own = k => !!p.own[k];
   return `<svg class="lt-scn" viewBox="0 0 360 230" role="img" aria-label="Dein Lichterturm: ${ltDoneN()} von ${LT_MAX} Stockwerken leuchten">
-    <defs><linearGradient id="ltSkyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141a33"/><stop offset="1" stop-color="#2b3766"/></linearGradient></defs>
+    <defs><linearGradient id="ltSkyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#102f30"/><stop offset="1" stop-color="#23493f"/></linearGradient></defs>
     <rect width="360" height="230" fill="url(#ltSkyG)"/>
     ${LT_STARS.map((s, i) => `<circle class="lt-tw" style="animation-delay:${(i % 7) * .45}s" cx="${s[0]}" cy="${s[1]}" r="${i % 3 ? 1.1 : 1.6}" fill="#dfe6ff"/>`).join('')}
     <circle cx="318" cy="40" r="14" fill="#f4f1d0"/><circle cx="312" cy="36" r="3" fill="#e3dfb9"/><circle cx="322" cy="46" r="2" fill="#e3dfb9"/>
     ${LT_SHOP[4].items.filter(it => own('sky.' + it.id)).map(it => ltSkySvg(it.id)).join('')}
     ${own('deco.kette') ? ltDecoSvg('kette') : ''}
-    <path d="M0 212Q90 196 180 206T360 204V230H0z" fill="#10152b"/>
-    <rect x="270" y="95" width="40" height="112" fill="#2a3560"/><path d="M266 95h48l-24-20z" fill="#3a4677"/><rect x="282" y="112" width="16" height="10" rx="4" fill="${lumiOn ? '#ffb3e1' : '#1f2747'}"/>
+    <path d="M0 212Q90 196 180 206T360 204V230H0z" fill="#112d26"/>
+    <rect x="270" y="95" width="40" height="112" fill="#365747"/><path d="M266 95h48l-24-20z" fill="#69836a"/><rect x="282" y="112" width="16" height="10" rx="4" fill="${lumiOn ? '#ffb3e1' : '#203e32'}"/>
     ${lumiOn ? `<g transform="translate(278 50) scale(.26)">${ltLumiG('idle')}</g>` : ''}
     ${floors}
-    <rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="${gold ? '#f2c94c' : '#3a4677'}"/>${gold ? `<rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="#ffe9a6" opacity=".4"/>` : ''}
+    <rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="${gold ? '#f2c94c' : '#69836a'}"/>${gold ? `<rect x="90" y="${top - 6}" width="80" height="8" rx="2" fill="#ffe9a6" opacity=".4"/>` : ''}
     <g transform="translate(115 ${top - 44}) scale(.34)">${ltBotG(ltDoneN() ? 'happy' : 'idle', p.eq.out, true)}</g>
     ${['laterne', 'wimpel', 'blumen', 'teleskop', 'garten'].filter(id => own('deco.' + id)).map(ltDecoSvg).join('')}
   </svg>`;
@@ -10395,23 +10349,27 @@ function ltHub() {
     return `<button class="lt-lvc${d ? ' done' : open ? ' cur' : ' lock'}" data-act="ltLv" data-arg="${n}" ${open ? '' : 'disabled'} aria-label="Stufe ${n}: ${esc(L.t)}${d ? ', geschafft' : open ? '' : ', noch zu'}">
       <span class="lt-lvn">${d ? '✓' : open ? n : ico('lock', 15)}</span><span class="lt-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="lt-lvr">Nochmal</span>' : open ? '<span class="lt-lvr go">Los!</span>' : ''}</button>`;
   }).join('');
-  return topBar('Blinkis Lichterturm', 'rewards') + `<section class="lt-hub">${ltTower()}
-    <div class="lt-hubbar"><span class="lt-lp" title="Lichtpunkte">✨ <b>${p.lp}</b> Lichtpunkte</span>${ltSndBtn()}</div>
-    <div class="lt-hubbtn"><button class="lt-btn" data-act="ltShop">🛠️ Werkstatt</button><button class="lt-btn sec" data-act="ltBook">📖 Codebuch</button></div></section>
-    <h3 class="lt-h">Stockwerke</h3><div class="lt-lvs">${list}</div>
-    <p class="lt-soon small mute">Stufen 9 bis 15 (Zählmaschine, Muster, Bilder, Buchstaben und ein Zaubertrick) kommen bald.</p>`;
+  const next = Math.min(p.lv, LT_MAX), finished = ltDoneN() === LT_MAX;
+  return ltTop('Blinkis Lichterturm', 'rewards') + `<section class="lt-hub">
+    <div class="lt-hero"><div class="lt-hero-copy"><span class="lt-eyebrow">DEINE LICHTWERKSTATT</span><h1>Kleine Lichter.<br>Große Ideen.</h1><p>Schalte, tüftle und schick ein Zeichen.<br>Blinki wartet schon auf dich.</p>
+    <button class="lt-btn" data-act="ltLv" data-arg="${next}">${finished ? 'Noch einmal entdecken' : ltDoneN() ? 'Weiterentdecken' : 'Lass uns anfangen'} <span aria-hidden="true">↗</span></button></div>
+    <div class="lt-hero-art">${ltTower()}<div class="lt-hero-bot">${ltBot('idle', true)}<span>Hallo, ich bin Blinki.</span></div></div></div>
+    <div class="lt-hubbar"><span class="lt-lp"><span class="lt-spark" aria-hidden="true">✦</span> <b>${p.lp}</b> Lichtpunkte</span>${ltSndBtn()}</div></section>
+    <div class="lt-hubbtn"><button class="lt-link" data-act="ltShop">${ico('sparkle', 20)}<span>Meine Werkstatt<small>Dein Turm, dein Stil</small></span><span aria-hidden="true">↗</span></button><button class="lt-link" data-act="ltBook">${ico('book', 20)}<span>Mein Codebuch<small>Was du entdeckt hast</small></span><span aria-hidden="true">↗</span></button></div>
+    <div class="lt-section-title"><h3 class="lt-h">Deine Entdeckungsreise</h3><span>${ltDoneN()} / ${LT_MAX} entdeckt</span></div><div class="lt-lvs">${list}</div>
+    <p class="lt-soon small mute">Ein Licht nach dem anderen. In deinem Tempo.</p>`;
 }
 function ltItemArt(cat, id) {
   if (cat === 'lamp') return `<span class="lt-lamp on sk-${id} lt-prev" aria-hidden="true"><span class="lt-glass"></span></span>`;
   if (cat === 'snd') return '<span class="lt-note" aria-hidden="true">♪</span>';
   if (cat === 'out') return `<svg viewBox="0 0 100 112" class="lt-prevsvg" aria-hidden="true">${ltBotG('happy', id, true)}</svg>`;
-  if (cat === 'deco') return `<svg viewBox="${LT_DECO[id].vb}" class="lt-prevsvg dark" aria-hidden="true"><rect x="0" y="0" width="400" height="300" fill="#1f2747"/>${id === 'kette' ? '' : '<rect x="95" y="40" width="70" height="170" fill="#2f3b66"/>'}${ltDecoSvg(id)}</svg>`;
+  if (cat === 'deco') return `<svg viewBox="${LT_DECO[id].vb}" class="lt-prevsvg dark" aria-hidden="true"><rect x="0" y="0" width="400" height="300" fill="#203e32"/>${id === 'kette' ? '' : '<rect x="95" y="40" width="70" height="170" fill="#3b5e4d"/>'}${ltDecoSvg(id)}</svg>`;
   if (cat === 'sky') return `<svg viewBox="${LT_SKY[id].vb}" class="lt-prevsvg dark" aria-hidden="true"><rect x="0" y="0" width="400" height="300" fill="#1b2340"/>${ltSkySvg(id)}</svg>`;
   return '';
 }
 function ltShopView() {
   const p = ltS();
-  return topBar('Werkstatt', 'licht') + `<section class="lt-wbar"><span class="lt-lp">✨ <b>${p.lp}</b> Lichtpunkte</span><small class="mute">Lichtpunkte verdienst du nur im Lichterturm – und gibst sie nur hier aus.</small></section>
+  return ltTop('Werkstatt', 'licht') + `<section class="lt-wbar"><span class="lt-lp">✨ <b>${p.lp}</b> Lichtpunkte</span><small class="mute">Lichtpunkte verdienst du nur im Lichterturm – und gibst sie nur hier aus.</small></section>
   ${LT_SHOP.map(c => `<section class="card lt-cat"><h3>${esc(c.n)}</h3><p class="small mute">${esc(c.s)}</p><div class="lt-items">${c.items.map(it => {
     const has = ltOwn(c.cat, it.id), on = c.eq && p.eq[c.cat] === it.id, can = p.lp >= it.p;
     const btn = !has ? `<button class="btn sm" data-act="ltBuy" data-arg="${c.cat}.${it.id}" ${can ? '' : 'disabled'}>✨ ${it.p}</button>`
@@ -10421,15 +10379,15 @@ function ltShopView() {
   ${S.cfg.sound === false ? '<p class="small mute center">Hinweis: Die Töne der ganzen App sind ausgeschaltet (Farben & Töne).</p>' : ''}`;
 }
 const LT_CODE = {
-  jn: ['Die Abmachung', () => `<div class="lt-cbrow">${ltMini('1')} heißt <b>Ja</b> · ${ltMini('0')} heißt <b>Nein</b></div>`],
+  jn: ['Die Lichtbrücke', () => `<div class="lt-cbrow">${ltMini('1')} Brücke da · ${ltMini('0')} Brücke eingefahren</div><p>Beide Zustände sind eine Nachricht. Diese Bedeutung gehört zu unserer Brückenmaschine.</p>`],
   snack: ['Unsere Snack-Zeichen', () => `<div class="lt-cbrow wrap">${ltS().snack.map(c => `<span class="lt-cbc">${ltMini(c.p)} ${LT_SN[c.s] ? LT_SN[c.s][0] : ''}</span>`).join('')}</div>`],
   dbl: ['Jede Lampe verdoppelt', () => '<p>1 Lampe: 2 Zeichen · 2 Lampen: 4 · 3 Lampen: 8 · 4 Lampen: 16 · 5 Lampen: 32</p>'],
   wert: ['Was die Lampen wert sind', () => `<p>Von rechts nach links: <b>1, 2, 4, 8, 16 …</b> Jede Lampe ist doppelt so viel wert wie die rechts daneben.</p>${ltRow([1, 0, 1], { vals: [4, 2, 1], mode: 'dots', cls: 'tiny', showVal: true })}<p>Lampe 4 und Lampe 1 leuchten: 4 + 1 = <b>5</b></p>`],
-  bit: ['Bits und Binärzahlen', () => '<p><b>AN = 1</b> und <b>AUS = 0</b>. Jede Lampe heißt <b>Bit</b>. Eine Zahl aus Bits heißt <b>Binärzahl</b> (binär = zwei Möglichkeiten). <b>101</b> heißt 4 + 1 = 5.</p>']
+  bit: ['Bits und Binärzahlen', () => '<p><b>AN = 1</b> und <b>AUS = 0</b>. Eine binäre Stelle heißt <b>Bit</b>. Eine Zahl aus Bits heißt <b>Binärzahl</b> (binär = zwei Möglichkeiten). <b>101</b> heißt 4 + 1 = 5.</p>']
 };
 function ltBookView() {
   const p = ltS(), ks = Object.keys(LT_CODE).filter(k => p.code.includes(k));
-  return topBar('Codebuch', 'licht') + `<section class="lt-book">${ks.length ? ks.map(k => `<article class="card lt-cb"><h3>${esc(LT_CODE[k][0])}</h3>${LT_CODE[k][1]()}</article>`).join('') : '<p class="card">Noch leer. Spiel die erste Stufe – dann steht hier eure erste Abmachung.</p>'}</section>`;
+  return ltTop('Codebuch', 'licht') + `<section class="lt-book">${ks.length ? ks.map(k => `<article class="card lt-cb"><h3>${esc(LT_CODE[k][0])}</h3>${LT_CODE[k][1]()}</article>`).join('') : '<p class="card">Noch leer. Spiel die erste Stufe – dann steht hier eure erste Abmachung.</p>'}</section>`;
 }
 
 /* ---------- Eltern-Karte ---------- */
@@ -10447,7 +10405,7 @@ function ltFinish(m) {
   const p = ltS(), lv = m.lv, first = !p.done[lv];
   let earned = 0, rep = false, capped = false, fresh = false, gold = false;
   if (first) {
-    earned = m.pts + 5 + (m.hints ? 0 : 3);
+    earned = m.pts + 8; // Neugier und Hilfe gehören zum Lernen; Tipps kosten keine Belohnung.
     p.done[lv] = { ts: Date.now(), hints: m.hints };
     if (lv === p.lv && lv < LT_MAX) { p.lv++; fresh = true; }
     if (lv === LT_MAX) gold = true;
@@ -10458,37 +10416,18 @@ function ltFinish(m) {
   p.lp += earned; p.lpLife += earned;
   m.res = { earned, first, rep, capped, fresh, gold };
   save(); ltPlay('big');
-  try { if (!rwCalm()) confetti(first ? 60 : 25); } catch (e) { }
+  // Der beleuchtete Turm und die kurze Klangfolge feiern die Entdeckung ohne Konfetti.
 }
 function ltResult(m) {
   const r = m.res, L = LT_LV[m.lv - 1], nxt = m.lv < LT_MAX && m.lv + 1 <= ltS().lv;
-  const why = r.first ? `${m.pts} für gelöste Aufgaben · 5 für die Stufe${m.hints ? '' : ' · 3 ganz ohne Tipp'}` : r.rep ? '2 fürs Wiederholen' : 'Heute gibt es fürs Wiederholen keine Lichtpunkte mehr. Schlauer wirst du trotzdem!';
-  return topBar('Blinkis Lichterturm', 'licht') + `<section class="lt-stage lt-res"><div class="lt-scene">${ltBot('happy', true)}<div class="lt-bub from-l">${esc(L.nx)}</div></div>
-    <h2>Stufe ${m.lv} geschafft!</h2>
-    ${r.earned ? `<p class="lt-earn">✨ +${r.earned} Lichtpunkte</p>` : ''}<p class="small lt-why">${esc(why)}</p>
-    ${r.gold ? '<p class="lt-gold">🏆 Dein Turm bekommt ein goldenes Dach!</p>' : ''}
-    <div class="lt-learn"><b>Das hast du entdeckt</b><p>${esc(L.c)}</p></div>
-    <div class="lt-act">${nxt ? `<button class="lt-btn" data-act="ltLv" data-arg="${m.lv + 1}">Weiter: Stufe ${m.lv + 1}</button>` : ''}<button class="lt-btn sec" data-act="ltHub">Zum Turm</button></div></section>`;
+  const why = r.first ? `${m.pts} fürs Entdecken · 8 fürs abgeschlossene Stockwerk` : r.rep ? '2 fürs Wiederholen' : 'Heute gibt es fürs Wiederholen keine Lichtpunkte mehr. Schlauer wirst du trotzdem!';
+  return ltTop('Blinkis Lichterturm', 'licht') + `<section class="lt-stage lt-res"><div class="lt-result-bot">${ltBot('happy', true)}</div><span class="lt-eyebrow">DEINE ENTDECKUNG</span><h2>${esc(L.t)}</h2><div class="lt-learn"><p>${esc(L.c)}</p></div>
+    ${r.earned ? `<p class="lt-earn">✦ +${r.earned} Lichtpunkte</p>` : ''}<p class="small lt-why">${esc(why)}</p>${r.gold ? '<p class="lt-gold">Alle acht Stockwerke leuchten jetzt.</p>' : ''}
+    <div class="lt-act">${nxt ? `<button class="lt-btn" data-act="ltLv" data-arg="${m.lv + 1}">Nächste Entdeckung →</button>` : ''}<button class="lt-btn sec" data-act="ltLv" data-arg="${m.lv}">Weiter ausprobieren</button><button class="lt-btn sec" data-act="ltHub">Zum Turm</button></div></section>`;
 }
 
-/* ---------- fliegende Leuchtpunkte (nach dem Zeichnen) ---------- */
-function ltAfter() {
-  const m = UI.lt; if (!m || !m.fx) return;
-  const fx = m.fx; m.fx = null;
-  if (fx.fly) {
-    const bowl = document.getElementById('ltBowl'); if (!bowl || rwCalm()) return;
-    const b = bowl.getBoundingClientRect(), dots = [...document.querySelectorAll('.lt-row.mine .lt-lamp.on .lt-dot')];
-    dots.forEach((d, k) => {
-      const r = d.getBoundingClientRect(), f = document.createElement('i'); f.className = 'lt-fly';
-      f.style.left = r.left + 'px'; f.style.top = r.top + 'px'; document.body.appendChild(f);
-      const dx = b.left + b.width / 2 - r.left, dy = b.top + b.height / 2 - r.top;
-      try {
-        const a = f.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${dx * .5}px,${dy * .5 - 60}px) scale(1.3)`, opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(.6)`, opacity: .2 }], { duration: 650 + k * 45, easing: 'cubic-bezier(.3,.1,.3,1)' });
-        a.onfinish = () => { f.remove(); if (k % 2 === 0) ltPlay('plink'); };
-      } catch (e) { f.remove(); }
-    });
-  }
-}
+/* Regeln laufen synchron mit dem Spielzustand, nie abhängig von Animationen. */
+function ltAfter() {}
 
 /* ---------- Registrierung ---------- */
 DZ_ART.licht = '<rect x="22" y="14" width="20" height="34" rx="3" fill="#2c3a63"/><path d="M19 15h26L32 4z" fill="#3f4f86"/><circle cx="32" cy="22" r="7" fill="#ffd76a" opacity=".25"/><circle cx="32" cy="32" r="7" fill="#ffd76a" opacity=".25"/><circle cx="32" cy="22" r="4" fill="#ffd76a"/><circle cx="32" cy="32" r="4" fill="#ffd76a"/><circle cx="32" cy="42" r="4" fill="#4a5480"/><path d="M9 9l1.5 3 3 .5-2.2 2 .5 3-2.8-1.5-2.8 1.5.5-3-2.2-2 3-.5z" fill="#ffd76a"/><circle cx="54" cy="12" r="1.6" fill="#7f8fd0"/><circle cx="50" cy="23" r="1.2" fill="#7f8fd0"/>';
@@ -10523,392 +10462,137 @@ registerFeature({
   }
 });
 
-/* =====================================================================
-   BLINKIS LICHTERTURM · Stufen 1–8 (Schritte und Ablauf). Grundlagen, Turm, Werkstatt: feat_licht.js
-   Eine Stufe = Liste von Schritten {k:'typ', ...}. Jeder Typ in LT_STEP hat init(sp, m) → st, view(sp, st, m) → {say, who, body, ant, bowl, next}
-   und act(sp, st, verb, arg, m). Klicks: data-act="ltDo" data-arg="verb:arg". Fehler gibt es nicht – nur Hinweise, was wirklich herauskam.
-   st.done = Schritt fertig („Weiter“), st.solved = zählt als gelöste Aufgabe (+1 Lichtpunkt beim ersten Mal). „Tipp“ zählt als Hilfe.
-   ===================================================================== */
-const LT_SN = { apfel: ['🍎', 'Apfel', 'der Apfel', 'ein Apfel'], keks: ['🍪', 'Keks', 'der Keks', 'ein Keks'], eis: ['🍦', 'Eis', 'das Eis', 'ein Eis'], banane: ['🍌', 'Banane', 'die Banane', 'eine Banane'] };
+/* Lichtwerkstatt: direktes Ausprobieren statt Dialog und Antwortauswahl.
+   Jede Szene zeigt Ziel, Werkzeug und sichtbare Wirkung. Bestehende Stufen-IDs bleiben erhalten. */
+const LT_SN = { apfel: ['🍎', 'Apfel'], keks: ['🍪', 'Keks'], eis: ['🍦', 'Eis'], banane: ['🍌', 'Banane'] };
 const LT_V4 = [8, 4, 2, 1];
-const ltShuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const ltRange = (a, b) => { const o = []; for (let i = a; i <= b; i++) o.push(i); return o; };
-const ltCap = s => s.charAt(0).toUpperCase() + s.slice(1);
-const ltOnOff = c => c === '1' ? 'AN' : 'AUS';
-
-/* ---------- Ablauf ---------- */
+const ltRange = (a, b) => Array.from({ length: Math.max(0, b - a + 1) }, (_, i) => a + i);
+const ltControl = (arg, label, cls = '', disabled = false) => `<button class="lt-btn ${cls}" data-act="ltDo" data-arg="${arg}"${disabled ? ' disabled' : ''}>${label}</button>`;
+const ltTokens = (n, cls = '') => `<span class="lt-token-group ${cls}" aria-label="${n} Leuchtpunkte">${Array.from({ length: n }, () => '<i></i>').join('')}</span>`;
+const LT_BUILD = {
+  1: () => [{ k: 'bridge', title: 'Mach den Weg frei.', goal: 'Schalte die Brücke ein. Schalte sie wieder aus.', hint: 'Tippe auf den großen Schalter. Die Brücke folgt deinem Licht.' }],
+  2: () => [{ k: 'post', title: 'Vier Zeichen. Vier Pakete.', goal: 'Schicke an jedes Fenster ein Paket.', hint: 'Jeder Schalter lässt sich einzeln ändern. Auch beide AUS ist ein Zeichen.' }],
+  3: () => [{ k: 'patterns', title: 'Sammle Lichtmuster.', goal: 'Fülle die acht Plätze mit verschiedenen Mustern.', hint: 'Lass links AUS und probiere die anderen beiden. Dann links AN.' }],
+  4: () => [{ k: 'factory', vals: [1], title: 'Baue einen lückenlosen Vorrat.', goal: 'Stell den linken Vorrat ein: Jede Menge von 0 bis 3 soll genau einmal gehen.', hint: 'Mit zwei Einser-Vorräten gibt es die 1 zweimal. Die 3 fehlt.' }],
+  5: () => [
+    { k: 'factory', vals: [2, 1], title: 'Ein neuer Platz für mehr.', goal: 'Die alten Plätze schaffen 0 bis 3. Ergänze den nächsten Vorrat.', hint: 'Der erste fehlende Vorrat ist 4. Stell den neuen Platz auf 4.' },
+    { k: 'factory', vals: [4, 2, 1], title: 'Und noch ein Platz.', goal: 'Bisher geht es bis 7. Mach die 8 möglich, ohne eine Lücke.', hint: 'Der neue Platz bekommt 8 Punkte: zweimal so viele wie der Vierer.' },
+    { k: 'factory', vals: [8, 4, 2, 1], title: 'Du kannst weiterbauen.', goal: 'Bisher geht es bis 15. Ergänze den nächsten Vorrat.', hint: 'Der neue Platz bekommt 16 Punkte. Immer doppelt so viel.' }
+  ],
+  6: () => [{ k: 'delivery', title: 'Fülle Lumis Sternenschachtel.', goal: 'Fülle die fünf Plätze und schicke die Schachtel ab.', hint: 'Nimm den Vorrat mit 4 Punkten. Ein Platz bleibt noch frei.' }],
+  7: () => [{ k: 'travel', title: 'Licht wird Bewegung.', goal: 'Lass Lumi zu zwei verschiedenen Stationen fahren.', hint: 'Die leuchtenden Vorräte bestimmen die Strecke. Tippe dann auf Losfahren.' }],
+  8: () => [
+    { k: 'notation', title: 'Schreib dein Licht auf.', goal: 'Mach die Zeichen sichtbar. Verändere dann einen Schalter.', hint: 'Tippe auf Zeichen sichtbar machen. AN bekommt eine 1, AUS eine 0.' },
+    { k: 'picture', title: 'Male mit AN und AUS.', goal: 'Gestalte ein Lichtbild und schicke es zu Lumi.', hint: 'Tippe auf die Bildfelder. Jedes Feld kann hell oder dunkel sein.' }
+  ]
+};
+function ltEnter(m) {
+  const sp = m.steps[m.si];
+  m.st = { bits: sp.k === 'factory' ? [0, ...sp.vals.map(() => 1)] : sp.k === 'bridge' ? [0] : sp.k === 'post' ? [0, 0] : sp.k === 'notation' ? [1, 0, 1] : sp.k === 'delivery' ? [0, 0, 0, 0] : [0, 0, 0], seen: [], just: null, done: false, solved: false, hint: false, v: sp.vals ? sp.vals[0] : 0, at: 0, received: null, digits: false, pixels: Array(16).fill(0), edits: 0, extended: false };
+}
 function ltStart(lv) {
-  const steps = LT_BUILD[lv](!!ltS().done[lv]);
+  if (!LT_BUILD[lv]) return;
   UI.ltV = null;
-  UI.lt = { lv, steps, si: 0, st: {}, pts: 0, hints: 0, mood: 'idle', fx: null, stars: 0, guess: 0, codes: [], ord: [0, 1, 2, 3] };
+  UI.lt = { lv, steps: LT_BUILD[lv](), si: 0, pts: 0, hints: 0, mood: 'idle', fx: null };
   ltEnter(UI.lt);
-  if (view !== 'licht') go('licht'); else { render(); try { window.scrollTo(0, 0); } catch (e) { } }
-}
-function ltEnter(m) { const sp = m.steps[m.si], T = LT_STEP[sp.k]; m.st = T.init ? T.init(sp, m) : {}; m.mood = sp.mood || 'idle'; }
-function ltNext(m) {
-  if (m.st.solved) m.pts++;
-  m.si++;
-  if (m.si >= m.steps.length) ltFinish(m); else ltEnter(m);
-  try { window.scrollTo(0, 0); } catch (e) { }
-}
-function ltDo(a) {
-  const m = UI.lt; if (!m || m.res) return;
-  const sp = m.steps[m.si], st = m.st, T = LT_STEP[sp.k], s = String(a == null ? '' : a), c = s.indexOf(':'), v = c < 0 ? s : s.slice(0, c), x = c < 0 ? '' : s.slice(c + 1);
-  if (v === 'next') { if (st.done) ltNext(m); render(); return; }
-  if (v === 'tip') { if (sp.tip && !st.done) { m.hints++; st.msg = sp.tip; st.who = 'blinki'; m.mood = 'curious'; } render(); return; }
-  st.just = null; st.pulse = null; st.wig = null; st.drop = null; st.last = null;
-  const r = T.act ? T.act(sp, st, v, x, m) : null;
-  if (r === 'next') ltNext(m);
-  render();
+  if (view !== 'licht') go('licht'); else render();
+  window.scrollTo(0, 0);
 }
 function ltTog(st, i) {
-  i = +i; if (!(i >= 0 && i < st.bits.length)) return;
-  st.bits[i] = st.bits[i] ? 0 : 1; st.just = i; ltPlay(st.bits[i] ? 'on' : 'off', st.bits.length - 1 - i);
+  i = +i; if (!Number.isInteger(i) || i < 0 || i >= st.bits.length) return;
+  st.bits[i] = st.bits[i] ? 0 : 1; st.just = i;
+  ltPlay(st.bits[i] ? 'on' : 'off', st.bits.length - 1 - i);
 }
-function ltSay(st, m, who, msg, mood, snd) { st.who = who; st.msg = msg; m.mood = mood || 'idle'; if (snd) ltPlay(snd); }
-
+function ltFactory(sp, st) {
+  const vals = [st.v, ...sp.vals], counts = {};
+  for (let n = 0; n < 2 ** vals.length; n++) { const sum = ltSum(ltBits(n, vals.length), vals); counts[sum] = (counts[sum] || 0) + 1; }
+  const target = sp.vals.reduce((a, b) => a + b, 0) + 1;
+  return { vals, counts, target, ok: st.v === target, max: target * 2 - 1 };
+}
+function ltMark(st, key) { if (!st.seen.includes(key)) st.seen.push(key); }
+function ltDo(arg) {
+  const m = UI.lt; if (!m || m.res) return;
+  const sp = m.steps[m.si], st = m.st, [act, raw] = String(arg).split(':'), n = +raw;
+  const focusArg = document.activeElement && document.activeElement.dataset.arg;
+  st.just = null;
+  if (act === 'next') {
+    if (!st.done) return;
+    m.pts += sp.k === 'patterns' ? 8 : sp.k === 'post' ? 4 : 2;
+    m.si++;
+    if (m.si === m.steps.length) {
+      const code = { 1: 'jn', 2: 'snack', 3: 'dbl', 4: 'wert', 5: 'wert', 8: 'bit' }[m.lv];
+      if (code) ltAddCode(code);
+      ltFinish(m);
+    } else ltEnter(m);
+    render(); window.scrollTo(0, 0); return;
+  }
+  if (act === 'tip') { if (!st.hint) m.hints++; st.hint = !st.hint; }
+  if (act === 'lamp') {
+    ltTog(st, n);
+    if (sp.k === 'bridge') { ltMark(st, st.bits[0]); st.done = st.seen.length === 2; }
+    if (sp.k === 'notation' && st.digits) st.done = true;
+  }
+  if (act === 'send' && sp.k === 'post') {
+    st.received = parseInt(st.bits.join(''), 2); ltMark(st, st.received); st.done = st.seen.length === 4; ltPlay('pop');
+    ltS().snack = ['apfel', 'keks', 'eis', 'banane'].map((s, i) => ({ p: ltBits(i, 2).join(''), s })); save();
+  }
+  if (act === 'catch' && sp.k === 'patterns') { ltMark(st, st.bits.join('')); st.done = st.seen.length === 8; ltPlay('pop'); }
+  if (act === 'extend' && sp.k === 'patterns' && st.done) st.extended = !st.extended;
+  if (sp.k === 'factory' && ['plus', 'minus'].includes(act)) {
+    const f = ltFactory(sp, st); st.v = Math.max(1, Math.min(f.target + 1, st.v + (act === 'plus' ? 1 : -1))); st.done = ltFactory(sp, st).ok; ltPlay('pop');
+  }
+  if (act === 'send' && sp.k === 'delivery') { st.received = ltSum(st.bits, LT_V4); st.done = st.received === 5; ltPlay(st.done ? 'ok' : 'pop'); }
+  if (act === 'drive' && sp.k === 'travel') { st.at = ltSum(st.bits, [4, 2, 1]); ltMark(st, st.at); st.done = st.seen.length >= 2; ltPlay('pop'); }
+  if (act === 'digits' && sp.k === 'notation') st.digits = !st.digits;
+  if (act === 'pixel' && sp.k === 'picture' && Number.isInteger(n) && n >= 0 && n < 16) { st.pixels[n] = 1 - st.pixels[n]; st.edits++; ltPlay(st.pixels[n] ? 'on' : 'off'); }
+  if (act === 'send' && sp.k === 'picture') { st.received = st.pixels.slice(); st.done = st.edits > 0; ltPlay('ok'); }
+  st.solved = st.done;
+  render();
+  // Whole-app rendering replaces controls; preserve keyboard focus on the same tool.
+  if (focusArg && act !== 'next') [...document.querySelectorAll('[data-act="ltDo"]')].find(el => el.dataset.arg === focusArg)?.focus({ preventScroll: true });
+}
+function ltBridge(on) {
+  return `<div class="lt-world lt-bridge ${on ? 'is-open' : ''}"><svg viewBox="0 0 420 160" role="img" aria-label="${on ? 'Die Brücke verbindet beide Ufer' : 'Die Brücke ist eingefahren'}">
+  <path d="M0 122Q105 99 210 122T420 122V160H0" fill="#285965"/><path d="M162 148q38-10 79 0M182 138h37" fill="none" stroke="#75b5b5" stroke-width="2"/>
+  <path d="M0 86h155v74H0M265 86h155v74H265" fill="#8daea0"/><path d="M0 86h155M265 86h155" stroke="#d3e4cb" stroke-width="9"/>
+  <g class="lt-bridge-deck" style="transform:translateX(${on ? 0 : -112}px)"><path d="M155 86h110" stroke="#f0c977" stroke-width="8"/><path d="M164 66v20m20-20v20m20-20v20m20-20v20m20-20v20m12-20v20M164 68h92" fill="none" stroke="#f0c977" stroke-width="3"/></g>
+  <g transform="translate(54 17) scale(.62)">${ltBotG(on ? 'happy' : 'idle', ltS().eq.out, on)}</g>
+  <path d="M328 48v35M328 49l23 8-23 8" fill="#e6a581" stroke="#e6a581" stroke-width="3"/>
+  <circle cx="289" cy="77" r="5" fill="${on ? '#ffd76a' : '#4a7065'}"/></svg><span class="lt-world-label">${on ? 'AN → Weg frei' : 'AUS → Brücke eingefahren'}</span></div>`;
+}
+function ltLabView(sp, st) {
+  const row = (vals, extra = {}) => ltRow(st.bits, { act: 'lamp', just: st.just, ...(vals ? { vals, mode: 'dots', showVal: true } : {}), ...extra });
+  if (sp.k === 'bridge') return { body: ltBridge(st.bits[0]) + '<div class="lt-flow-label">Dein Schalter steuert die Brücke ↓</div>' + row(), status: st.done ? 'Du hast beide Zustände ausprobiert.' : st.bits[0] ? 'Die Brücke ist da. Schalte sie wieder aus.' : 'Tippe auf den Schalter. Beobachte die Brücke.' };
+  if (sp.k === 'post') {
+    const dest = parseInt(st.bits.join(''), 2), keys = Object.keys(LT_SN);
+    return { body: `<div class="lt-destinations">${keys.map((k, i) => `<div class="lt-destination ${dest === i ? 'selected' : ''} ${st.seen.includes(i) ? 'visited' : ''}"><span class="lt-parcel">${LT_SN[k][0]}</span><b>${LT_SN[k][1]}</b>${ltMini(ltBits(i, 2).join(''))}<small>${st.seen.includes(i) ? 'angekommen ✓' : dest === i ? 'hierhin senden' : 'wartet'}</small></div>`).join('')}</div><div class="lt-flow-label">Dein Licht wählt das Fenster ↓</div>${row()}${ltControl('send', 'Paket schicken →')}`, status: st.received == null ? 'Verändere einen Schalter. Das ausgewählte Fenster wandert mit.' : `${LT_SN[keys[st.received]][1]} angekommen. ${st.seen.length} von 4 Fenstern besucht.` };
+  }
+  if (sp.k === 'patterns') return { body: `<div class="lt-pattern-board">${ltRange(0, 7).map(i => { const p = ltBits(i, 3).join(''), found = st.seen.includes(p); return `<div class="lt-pattern-slot ${found ? 'found' : ''}">${found ? ltMini(p) : '<span aria-hidden="true">· · ·</span>'}<span class="sr-only">${found ? p + ' gesammelt' : 'Noch ein freier Platz'}</span></div>`; }).join('')}</div><div class="lt-flow-label">Verändere die Lampen. Merke dir dein Muster.</div>${row()}${ltControl('catch', 'Muster aufbewahren +')}${st.done ? ltControl('extend', st.extended ? 'Wieder drei Lampen' : 'Eine Lampe dazu', 'sec') : ''}${st.extended ? `<div class="lt-double"><div><small>Neue Lampe AUS</small>${st.seen.map(p => ltMini('0' + p)).join('')}</div><div><small>Neue Lampe AN</small>${st.seen.map(p => ltMini('1' + p)).join('')}</div></div>` : ''}`, status: st.extended ? 'Jedes Muster gibt es zweimal. Aus 8 werden 16.' : `${st.seen.length} von 8 verschiedenen Mustern gesammelt. Auch alle AUS zählt.` };
+  if (sp.k === 'factory') {
+    const f = ltFactory(sp, st), sum = ltSum(st.bits, f.vals), firstGap = ltRange(0, f.max).find(n => !f.counts[n]), dup = ltRange(0, f.max).find(n => f.counts[n] > 1);
+    return { body: `<div class="lt-factory-top"><span>Neuer Vorrat links</span><div class="lt-stepper">${ltControl('minus', '−', '', st.v <= 1)}<strong aria-live="polite">${st.v}</strong>${ltControl('plus', '+', '', st.v >= f.target + 1)}</div><small>+ und − verändern nur diesen Vorrat.</small></div>${row(f.vals)}<div class="lt-live">Gerade ausgewählt: <b>${sum}</b> Punkte</div><div class="lt-coverage"><span>Diese Mengen kannst du bauen</span><div class="lt-line">${ltRange(0, f.max).map(n => `<span class="lt-n ${f.counts[n] === 1 ? 'ok' : f.counts[n] > 1 ? 'dup' : 'gap'}" aria-label="${n}: ${f.counts[n] === 1 ? 'einmal' : f.counts[n] > 1 ? 'doppelt' : 'fehlt'}">${n}${f.counts[n] > 1 ? '<i>2×</i>' : ''}</span>`).join('')}</div><small>Voll = möglich · gestrichelt = fehlt · 2× = doppelt</small></div>`, status: f.ok ? `Alles passt: 0 bis ${f.max}, ohne Lücke und ohne doppelte Menge.` : `${dup != null ? `Die ${dup} gibt es doppelt. ` : ''}${firstGap != null ? `Die ${firstGap} fehlt noch. ` : ''}Verändere den linken Vorrat.` };
+  }
+  if (sp.k === 'delivery') {
+    const sum = ltSum(st.bits, LT_V4), sent = st.received;
+    return { body: `<div class="lt-delivery-box"><span>Deine Schachtel · 5 Plätze</span><div class="lt-tray">${ltRange(0, 4).map(i => `<i class="${i < sum ? 'filled' : ''}">${i < sum ? '✦' : ''}</i>`).join('')}</div>${sum > 5 ? `<div class="lt-surplus">${ltTokens(sum - 5)}<small>${sum - 5} übrig</small></div>` : ''}</div><div class="lt-flow-label">Leuchtende Vorräte kommen in die Schachtel ↓</div>${row(LT_V4)}<div class="lt-live">${sum === 5 ? 'Alle fünf Plätze sind gefüllt.' : sum < 5 ? `Noch ${5 - sum} freie Plätze.` : `${sum - 5} Punkte passen noch nicht hinein.`}</div>${ltControl('send', 'Zu Lumi schicken →')}${sent != null ? `<div class="lt-receiver">${ltLumi('idle')}<span>Bei Lumi angekommen</span><div id="ltBowl" class="lt-bowl"><b>${sent}</b><small>Sterne</small></div></div>` : ''}`, status: sent == null ? 'Tippe die Vorräte an. Du siehst sofort, was in die Schachtel kommt.' : sent === 5 ? 'Die Schachtel ist vollständig angekommen.' : `${sent} Sterne angekommen. ${sent < 5 ? 'Es fehlen ' + (5 - sent) : (sent - 5) + ' sind übrig'}. Du kannst neu packen.` };
+  }
+  if (sp.k === 'travel') {
+    const sum = ltSum(st.bits, [4, 2, 1]);
+    return { body: `<div class="lt-travel"><div class="lt-track">${ltRange(0, 7).map(i => `<div class="lt-station ${st.at === i ? 'here' : ''} ${sum === i ? 'target' : ''}">${st.at === i ? ltLumi('idle') : '<span class="lt-track-space"></span>'}<b>${i}</b></div>`).join('')}</div><span>Ziel: Station ${sum}</span></div><div class="lt-flow-label">Dein Licht bestimmt die Strecke ↓</div>${row([4, 2, 1])}${ltControl('drive', 'Losfahren →')}`, status: st.seen.length ? `Lumi steht bei ${st.at}. ${st.seen.length} verschiedene Stationen besucht.` : 'Jeder leuchtende Vorrat zählt zur Strecke dazu.' };
+  }
+  if (sp.k === 'notation') {
+    const sum = ltSum(st.bits, [4, 2, 1]);
+    return { body: `<div class="lt-number-result">${ltTokens(sum)}<span>${sum} Leuchtpunkte</span></div>${row([4, 2, 1], st.digits ? { mode: 'digit' } : {})}${ltControl('digits', st.digits ? 'Wieder Leuchtpunkte zeigen' : 'Zeichen sichtbar machen', 'sec')}${st.digits ? '<p class="lt-discovery">AN wird <b>1</b>. AUS wird <b>0</b>.<br>Ein solcher Platz heißt <b>Bit</b>.</p>' : ''}`, status: st.digits ? `${st.bits.join('')} beschreibt dieselbe Menge: ${ltExpr(st.bits, [4, 2, 1])} = ${sum}.` : 'Dein Lichtmuster bleibt gleich. Gleich bekommt es kurze Zeichen.' };
+  }
+  if (sp.k === 'picture') return { body: `<div class="lt-picture-work"><div><span>Dein Lichtbild</span><div class="lt-pixel-grid">${st.pixels.map((b, i) => `<button class="lt-pixel ${b ? 'lit' : ''}" data-act="ltDo" data-arg="pixel:${i}" aria-pressed="${!!b}" aria-label="Bildfeld ${i + 1}: ${b ? 'AN' : 'AUS'}"></button>`).join('')}</div></div><div><span>Bei Lumi</span><div class="lt-pixel-grid received" role="img" aria-label="${st.received ? 'Dein gesendetes Lichtbild' : 'Noch kein Bild empfangen'}">${(st.received || Array(16).fill(0)).map(b => `<i class="lt-pixel ${b ? 'lit' : ''}"></i>`).join('')}</div></div></div>${ltControl('send', 'Bild schicken →')}<p class="lt-discovery">Hier bedeutet jedes Zeichen: ein Bildfeld an oder aus.<br>Ein Bildfeld heißt <b>Pixel</b>.</p>`, status: st.received ? 'Dein Bild ist angekommen. Du kannst es verändern und erneut senden.' : 'Tippe auf die Bildfelder. Auch dunkle Felder gehören zum Bild.' };
+  return { body: '', status: '' };
+}
 function ltLevelView(m) {
-  const sp = m.steps[m.si], st = m.st, o = LT_STEP[sp.k].view(sp, st, m) || {}, L = LT_LV[m.lv - 1];
-  const who = st.msg ? (st.who || o.who || 'blinki') : (o.who || 'blinki'), text = st.msg || o.say || '';
-  const lumi = m.lv >= 4;
-  const dots = m.steps.map((s, i) => `<i class="${i < m.si ? 'd' : i === m.si ? 'c' : ''}"></i>`).join('');
-  return topBar('Blinkis Lichterturm', 'licht') + `<div class="lt-head"><div class="lt-ht"><small>Stufe ${m.lv}</small><b>${esc(L.t)}</b></div><div class="lt-steps" role="progressbar" aria-label="Schritt ${m.si + 1} von ${m.steps.length}" aria-valuenow="${m.si + 1}" aria-valuemin="1" aria-valuemax="${m.steps.length}">${dots}</div>${ltSndBtn()}</div>
-  <section class="lt-stage"><div class="lt-scene${lumi ? ' two' : ''}">${ltBot(who === 'blinki' ? m.mood : 'idle', !!o.ant)}<div class="lt-bub ${who === 'lumi' ? 'from-r' : 'from-l'}" aria-live="polite">${text}</div>${lumi ? `<div class="lt-lumiw">${ltLumi(who === 'lumi' ? m.mood : 'idle')}${o.bowl != null ? `<div id="ltBowl" class="lt-bowl"><b>${o.bowl}</b><small>${o.bowl === 1 ? 'Stern' : 'Sterne'}</small></div>` : ''}</div>` : ''}</div>
-  <div class="lt-body">${o.body || ''}</div>${st.done ? `<div class="lt-act"><button class="lt-btn" data-act="ltDo" data-arg="next">${esc(o.next || 'Weiter')}</button></div>` : ''}</section>
-  <div class="lt-foot"><span class="lt-pts" title="Gelöst in dieser Stufe">✨ ${m.pts}</span>${sp.tip && !st.done ? '<button class="lt-tipb" data-act="ltDo" data-arg="tip">💡 Tipp</button>' : ''}</div>`;
+  const sp = m.steps[m.si], st = m.st, o = ltLabView(sp, st);
+  return ltTop('Blinkis Lichterturm', 'licht') + `<div class="lt-head"><span class="lt-eyebrow">ENTDECKUNG ${m.lv} VON ${LT_MAX}${m.steps.length > 1 ? ' · ' + (m.si + 1) + '/' + m.steps.length : ''}</span>${ltSndBtn()}</div>
+  <section class="lt-stage"><div class="lt-task-head"><div><h1>${sp.title}</h1><p>${sp.goal}</p></div>${ltBot(st.done ? 'happy' : 'idle', st.bits.some(Boolean))}</div><div class="lt-body">${o.body}</div><p class="lt-status ${st.done ? 'complete' : ''}" role="status">${st.done ? '<span aria-hidden="true">✓ </span>' : ''}${o.status}</p>${st.done ? `<div class="lt-act">${ltControl('next', m.si + 1 < m.steps.length ? 'Weiterbauen →' : 'Entdeckung mitnehmen →')}</div>` : ''}</section>
+  <div class="lt-foot"><span>In deinem Tempo.</span><button class="lt-tipb" data-act="ltDo" data-arg="tip" aria-expanded="${st.hint}">Ein kleiner Hinweis</button></div>${st.hint ? `<p class="lt-hint" role="status">${sp.hint}</p>` : ''}`;
 }
-
-/* ---------- kleine Bausteine ---------- */
-const ltB = (arg, label, cls, dis) => `<button class="lt-btn${cls ? ' ' + cls : ''}" data-act="ltDo" data-arg="${arg}"${dis ? ' disabled' : ''}>${label}</button>`;
-const ltLab = t => `<div class="lt-lab">${t}</div>`;
-const ltOpts = (opts, miss) => `<div class="lt-opts">${opts.map(o => { const v = Array.isArray(o) ? o[0] : o, l = Array.isArray(o) ? o[1] : o; return ltB('pick:' + v, l, 'sec', miss && miss.includes(String(v))); }).join('')}</div>`;
-const ltCard = (p, extra, cls) => `<span class="lt-cbc ${cls || ''}">${ltMini(p)}${extra || ''}</span>`;
-function ltLine(max, cnt, sum) {
-  return `<div class="lt-line" role="list">${ltRange(1, max).map(n => { const c = cnt[n] || 0, k = c > 1 ? 'dup' : c === 1 ? 'ok' : n > sum ? 'far' : 'gap'; return `<span class="lt-n ${k}" role="listitem" aria-label="${n}: ${{ ok: 'geht', dup: 'geht doppelt', gap: 'Lücke', far: 'zu groß' }[k]}">${n}${c > 1 ? '<i>2×</i>' : ''}</span>`; }).join('')}</div>`;
-}
-function ltFac(sp, v) {
-  const vals = sp.vals.map(x => x == null ? v : x), cnt = {}, k = vals.length;
-  for (let mask = 1; mask < (1 << k); mask++) { let s = 0; for (let i = 0; i < k; i++) if (mask & (1 << i)) s += vals[i]; cnt[s] = (cnt[s] || 0) + 1; }
-  const sum = vals.reduce((a, b) => a + b, 0), top = Math.max(sum, sp.need || 0);
-  let gap = 0, dup = 0, reach = 0;
-  for (let n = 1; n <= top; n++) { if (!cnt[n] && !gap) gap = n; if (cnt[n] > 1 && !dup) dup = n; }
-  while (cnt[reach + 1]) reach++;
-  return { vals, cnt, sum, gap, dup, reach, ok: !gap && !dup };
-}
-const ltSnackBtns = (st, can, assigned) => `<div class="lt-snacks">${Object.keys(LT_SN).map(k => { const a = assigned && assigned.find(c => c.s === k); return `<button class="lt-snack${a ? ' has' : ''}" data-act="ltDo" data-arg="pick:${k}" ${can(k) ? '' : 'disabled'} aria-label="${LT_SN[k][1]}"><span>${LT_SN[k][0]}</span><small>${LT_SN[k][1]}</small></button>`; }).join('')}</div>`;
-const ltBook = (codes, st) => codes.length ? `<div class="lt-cbook"><small>Codebuch</small><div class="lt-cbrow wrap">${codes.map(c => ltCard(c.p, ' ' + LT_SN[c.s][0], (st.wig === c.p ? 'wig' : '') + (st.glow === c.p ? ' glow' : ''))).join('')}</div></div>` : '';
-
-/* ---------- Schritt-Typen ---------- */
-const LT_STEP = {
-  talk: {
-    init: sp => { if (sp.code) ltAddCode(sp.code); return { done: true, bits: sp.bits ? sp.bits.slice() : null }; },
-    view: (sp, st) => ({ say: sp.say, who: sp.who, next: sp.btn, ant: !!(st.bits && st.bits.some(Boolean)), body: (st.bits ? ltRow(st.bits, { vals: sp.vals, mode: sp.mode, showVal: sp.showVal, just: st.just }) : '') + (sp.html || '') })
-  },
-  /* Stufe 1 */
-  meaning: {
-    init: () => ({ bits: [1], just: 0 }),
-    view: (sp, st) => ({ ant: true, next: 'Lass uns etwas abmachen', say: 'Hallo, ich bin <b>Blinki</b>! Sprechen kann ich nicht. Ich kann nur meine Lampe an- und ausmachen. Pass auf, ich sage dir jetzt etwas … Was meine ich wohl?', body: ltLab('Blinkis Lampe') + ltRow(st.bits, { just: st.just }) + (st.done ? '' : ltOpts([['ja', 'Ja'], ['nein', 'Nein']])) }),
-    act: (sp, st, v, x, m) => {
-      if (v !== 'pick' || st.done) return; st.done = true;
-      if (x === 'ja') ltSay(st, m, 'blinki', 'Gut geraten! Aber woher solltest du das wissen? AN hätte genauso gut <b>Nein</b> heißen können.', 'curious', 'hm');
-      else ltSay(st, m, 'blinki', 'Oh! Ich meinte <b>Ja</b>. Aber woher solltest du das wissen? Wir haben nie abgemacht, was AN bedeutet.', 'confused', 'hm');
-    }
-  },
-  deal: {
-    view: () => ({ ant: true, say: 'Lass uns abmachen: Wenn meine Lampe <b>AN</b> ist, heißt das <b>Ja</b>. Ist sie <b>AUS</b>, heißt das <b>Nein</b>. Einverstanden?', body: `<div class="lt-deal"><div class="lt-dc">${ltRow([1], { cls: 'tiny' })}<b>= Ja</b></div><div class="lt-dc">${ltRow([0], { cls: 'tiny' })}<b>= Nein</b></div></div><div class="lt-act">${ltB('deal', 'Abgemacht! 🤝')}</div>` }),
-    act: (sp, st, v) => { if (v === 'deal') { ltAddCode('jn'); ltPlay('ok'); toast('📖', 'Neu im Codebuch: eure Abmachung'); return 'next'; } }
-  },
-  ask: {
-    init: () => ({ bits: [0], taps: 0 }),
-    view: (sp, st) => ({ ant: !!st.bits[0], say: `${sp.q}<br><small>Antworte mit deiner Lampe: AN heißt Ja, AUS heißt Nein. Dann tippe auf „Senden“.</small>`, body: ltLab('Deine Lampe') + ltRow(st.bits, { act: st.done ? null : 'lamp', just: st.just }) + (st.done ? '' : `<div class="lt-act">${ltB('send', 'Senden')}</div>`) }),
-    act: (sp, st, v, x, m) => {
-      if (st.done) return;
-      if (v === 'lamp') { ltTog(st, x); st.taps++; if (st.taps === 8) ltSay(st, m, 'blinki', 'Hihi, das kitzelt! Meine Antenne blinkt mit.', 'happy'); else if (st.taps > 8) st.msg = ''; }
-      if (v === 'send') { st.done = st.solved = true; ltSay(st, m, 'blinki', st.bits[0] ? sp.yes : sp.no, 'happy', 'ok'); }
-    }
-  },
-  readyn: {
-    init: sp => ({ bits: [sp.on], just: 0 }),
-    view: (sp, st) => ({ ant: !!sp.on, say: `Jetzt fragst du mich: „${sp.q}“ Ich antworte mit meiner Lampe. Was sage ich?`, body: ltLab('Blinkis Lampe') + ltRow(st.bits, { just: st.just, pulse: st.pulse }) + (st.done ? '' : ltOpts([['ja', 'Ja'], ['nein', 'Nein']])) }),
-    act: (sp, st, v, x, m) => {
-      if (v !== 'pick' || st.done) return;
-      if ((x === 'ja') === !!sp.on) { st.done = st.solved = true; ltSay(st, m, 'blinki', sp.after, 'happy', 'ok'); }
-      else { st.pulse = [0]; ltSay(st, m, 'blinki', 'Hm? Wir haben doch abgemacht: <b>AN</b> heißt Ja und <b>AUS</b> heißt Nein. Schau noch mal auf meine Lampe!', 'confused', 'hm'); }
-    }
-  },
-  /* Stufe 2 */
-  snack: {
-    init: () => ({ n: 1, bits: [0], codes: [], pend: null }),
-    view: (sp, st) => {
-      const full1 = st.n === 1 && st.codes.length >= 2;
-      const ctl = st.done ? '' : st.pend ? '' : full1 ? `<div class="lt-act">${ltB('more', 'Noch eine Lampe!')}</div>` : `<div class="lt-act">${ltB('keep', 'Zeichen merken')}</div>`;
-      return {
-        ant: st.bits.some(Boolean), say: 'Ich habe Hunger! Ich möchte dir mit meiner Lampe sagen, welchen Snack ich will. Gib jedem Snack ein eigenes Zeichen: Stell die Lampe ein, tippe auf „Zeichen merken“ und dann auf einen Snack.',
-        body: ltLab(st.n === 1 ? 'Meine Lampe' : 'Meine Lampen') + ltRow(st.bits, { act: st.done || st.pend ? null : 'lamp', just: st.just, drop: st.drop }) + ctl + ltSnackBtns(st, k => !!st.pend && !st.codes.some(c => c.s === k), st.codes) + ltBook(st.codes, st)
-      };
-    },
-    act: (sp, st, v, x, m) => {
-      if (st.done) return;
-      if (v === 'lamp' && !st.pend) ltTog(st, x);
-      else if (v === 'keep' && !st.pend) {
-        const p = st.bits.join(''), ex = st.codes.find(c => c.p === p);
-        if (ex) { st.wig = p; ltSay(st, m, 'blinki', `Dieses Zeichen hat schon ${LT_SN[ex.s][2]}. Zwei Snacks mit dem gleichen Zeichen kann ich nicht auseinanderhalten!`, 'confused', 'hm'); }
-        else { st.pend = p; ltSay(st, m, 'blinki', 'Welcher Snack bekommt dieses Zeichen?', 'curious'); }
-      } else if (v === 'pick' && st.pend && LT_SN[x] && !st.codes.some(c => c.s === x)) {
-        st.codes.push({ p: st.pend, s: x }); st.pend = null; ltPlay('pop');
-        if (st.codes.length === 4) {
-          st.done = st.solved = true; m.codes = st.codes.map(c => ({ p: c.p, s: c.s })); m.ord = ltShuf([0, 1, 2, 3]);
-          ltS().snack = m.codes.map(c => ({ p: c.p, s: c.s })); ltAddCode('snack');
-          ltSay(st, m, 'blinki', 'Perfekt! Jetzt hat jeder Snack sein eigenes Zeichen. Es steht alles im Codebuch.', 'happy', 'ok');
-        } else if (st.n === 1 && st.codes.length === 2) {
-          const left = Object.keys(LT_SN).filter(k => !st.codes.some(c => c.s === k)).map(k => LT_SN[k][1]).join(' und ');
-          ltSay(st, m, 'blinki', `Oh nein! Mit einer Lampe gibt es nur zwei Zeichen: AN und AUS. Für ${left} ist kein Zeichen mehr übrig!`, 'confused', 'hm');
-        } else ltSay(st, m, 'blinki', st.codes.length === 3 ? 'Super! Noch ein Snack.' : 'Prima! Und der nächste Snack?', 'happy');
-      } else if (v === 'more' && st.n === 1) {
-        st.n = 2; st.bits = [0].concat(st.bits); st.codes.forEach(c => { c.p = '0' + c.p; }); st.drop = 0; ltPlay('pop');
-        ltSay(st, m, 'blinki', 'Die neue Lampe kommt links dazu. Deine alten Zeichen bekommen die neue Lampe AUS. Und mit der neuen Lampe AN gibt es neue Zeichen!', 'happy');
-      }
-    }
-  },
-  order: {
-    init: (sp, m) => { const c = m.codes[m.ord[sp.i % m.codes.length]] || { p: '01', s: 'apfel' }; return { c, bits: c.p.split('').map(Number), just: c.p.indexOf('1') }; },
-    view: (sp, st) => ({ ant: true, say: 'Rate mal, was ich jetzt möchte!', body: ltLab('Blinkis Lampen') + ltRow(st.bits, { just: st.just, pulse: st.pulse }) + (st.done ? '' : ltSnackBtns(st, () => true)) + ltBook(ltS().snack.length ? ltS().snack : [], st) }),
-    act: (sp, st, v, x, m) => {
-      if (v !== 'pick' || st.done || !LT_SN[x]) return;
-      if (x === st.c.s) { st.done = st.solved = true; st.glow = null; ltSay(st, m, 'blinki', `Mmh, ${LT_SN[x][3]}! Lecker. Danke!`, 'happy', 'ok'); }
-      else { st.glow = st.c.p; ltSay(st, m, 'blinki', `Hm? ${ltCap(LT_SN[x][2])} hat doch ein anderes Zeichen. Schau ins Codebuch!`, 'confused', 'hm'); }
-    }
-  },
-  /* Stufe 3 */
-  guessn: {
-    view: () => ({ say: 'Jetzt habe ich <b>drei</b> Lampen! Wie viele verschiedene Zeichen kann ich damit machen? Schätz mal – ganz ohne Rechnen.', body: ltRow([0, 0, 0]) + ltOpts(ltRange(3, 12)) }),
-    act: (sp, st, v, x, m) => { if (v === 'pick') { m.guess = +x; ltPlay('pop'); return 'next'; } }
-  },
-  hunt: {
-    init: () => ({ bits: [0, 0, 0], found: [] }),
-    view: (sp, st) => ({
-      ant: st.bits.some(Boolean), say: 'Bau ein Zeichen und tippe auf „Fangen“. Wie viele verschiedene findest du? Wenn du glaubst, du hast alle, tippe auf „Fertig?“.',
-      body: ltRow(st.bits, { act: st.done ? null : 'lamp', just: st.just }) + (st.done ? '' : `<div class="lt-act">${ltB('catch', 'Fangen')}${ltB('fertig', 'Fertig?', 'sec')}</div>`) +
-        `<div class="lt-cnt">Gefunden: <b>${st.found.length}</b></div><div class="lt-gal">${st.found.map(p => ltCard(p, '', st.wig === p ? 'wig' : st.last === p ? 'new' : '')).join('')}</div>`
-    }),
-    act: (sp, st, v, x, m) => {
-      if (st.done) return;
-      if (v === 'lamp') ltTog(st, x);
-      else if (v === 'catch') {
-        const p = st.bits.join('');
-        if (st.found.includes(p)) { st.wig = p; ltSay(st, m, 'blinki', 'Den haben wir schon! Probier ein anderes Zeichen.', 'curious', 'hm'); return; }
-        st.found.push(p); st.last = p; ltPlay('pop');
-        if (st.found.length === 8) { st.done = st.solved = true; const g = m.guess; ltSay(st, m, 'blinki', `Alle gefunden! Du hast ${g || '?'} geschätzt – es sind <b>8</b>. ${g === 8 ? 'Genau richtig!' : 'Hättest du das gedacht?'}`, 'happy', 'ok'); }
-        else ltSay(st, m, 'blinki', st.found.length === 1 ? 'Gefangen! Und noch eins?' : `Schon ${st.found.length}! Weiter so.`, 'happy');
-      } else if (v === 'fertig') {
-        const q = ltRange(0, 7).map(n => ltBits(n, 3).join('')).find(p => !st.found.includes(p));
-        ltSay(st, m, 'blinki', `Ich glaube, da fehlen noch welche. Eins fängt links mit ${ltOnOff(q[0])}, ${ltOnOff(q[1])} an.`, 'curious');
-      }
-    }
-  },
-  copy: {
-    init: () => ({ ph: 0 }),
-    view: (sp, st) => {
-      const two = ['00', '01', '10', '11'], mk = (lead, p) => `<span class="lt-minis"><i class="lt-mini nw sk-${ltS().eq.lamp}${lead === '1' ? ' on' : ''}"></i>${p.split('').map(c => `<i class="lt-mini sk-${ltS().eq.lamp}${c === '1' ? ' on' : ''}"></i>`).join('')}</span>`;
-      if (!st.ph) return { say: 'Weißt du noch? Mit zwei Lampen gab es <b>4</b> Zeichen. Was passiert, wenn die dritte Lampe dazukommt?', body: `<div class="lt-copy"><div class="lt-grp">${two.map(p => ltMini(p)).join('')}</div></div><div class="lt-act">${ltB('add', 'Dritte Lampe dazu')}</div>` };
-      return { ant: true, say: 'Jedes alte Zeichen gibt es jetzt <b>zweimal</b>: einmal mit der neuen Lampe AUS und einmal mit AN. Aus 4 werden 8!', body: `<div class="lt-copy two"><div class="lt-grp"><small>Neue Lampe AUS</small>${two.map(p => mk('0', p)).join('')}</div><div class="lt-grp b"><small>Neue Lampe AN</small>${two.map(p => mk('1', p)).join('')}</div></div><p class="lt-eq">4 + 4 = 8</p>` };
-    },
-    act: (sp, st, v, x, m) => { if (v === 'add' && !st.ph) { st.ph = 1; st.done = true; ltAddCode('dbl'); m.mood = 'happy'; ltPlay('ok'); } }
-  },
-  predict: {
-    init: () => ({ miss: [] }),
-    view: (sp, st) => ({
-      who: sp.who, say: sp.q, ant: true,
-      body: (sp.show || '') + ((st.done || (st.miss.length && sp.afterWrong)) && sp.after ? sp.after : '') + (st.done ? '' : ltOpts(sp.opts, st.miss))
-    }),
-    act: (sp, st, v, x, m) => {
-      if (v !== 'pick' || st.done) return;
-      if (String(sp.ans) === x) { st.done = st.solved = true; if (sp.code) ltAddCode(sp.code); ltSay(st, m, sp.who || 'blinki', sp.ok, 'happy', 'ok'); }
-      else { st.miss.push(x); ltSay(st, m, 'blinki', typeof sp.no === 'function' ? sp.no(+x) : sp.no, 'curious', 'hm'); }
-    }
-  },
-  /* Stufe 4 und 5 */
-  factory: {
-    init: sp => ({ v: sp.start }),
-    view: (sp, st) => {
-      const f = ltFac(sp, st.v), fi = sp.vals.indexOf(null);
-      const stepper = i => i === fi && !st.done ? `<div class="lt-stepper"><button data-act="ltDo" data-arg="minus" ${st.v <= sp.min ? 'disabled' : ''} aria-label="Ein Punkt weniger">−</button><button data-act="ltDo" data-arg="plus" ${st.v >= sp.max ? 'disabled' : ''} aria-label="Ein Punkt mehr">+</button></div>` : '';
-      const parts = [];
-      if (f.dup) parts.push(`Die ${f.dup} kann ich auf zwei Arten schicken. Verschwendet!`);
-      if (f.gap) parts.push(`Die ${f.gap} kann ich gar nicht schicken – eine Lücke!`);
-      if (!f.gap && !f.dup && sp.need && f.sum < sp.need) parts.push(`Die ${f.sum + 1} kann ich nicht schicken.`);
-      const stat = st.done ? `Jede Zahl von 1 bis ${f.sum} genau einmal!` : (parts.join(' ') + (sp.line > 3 ? ` Ohne Lücke komme ich bis ${f.reach}.` : ''));
-      return {
-        ant: true, say: sp.intro,
-        body: ltRow(f.vals.map(() => 1), { vals: f.vals, mode: 'dots', showVal: true, under: stepper, cls: 'mine fac' }) + `<div class="lt-lab">Welche Zahlen kann ich schicken?</div>` + ltLine(sp.line, f.cnt, f.sum) + `<p class="lt-stat${st.done ? ' ok' : ''}">${stat}</p>`
-      };
-    },
-    act: (sp, st, v, x, m) => {
-      if (st.done || (v !== 'plus' && v !== 'minus')) return;
-      st.v = Math.max(sp.min, Math.min(sp.max, st.v + (v === 'plus' ? 1 : -1)));
-      const f = ltFac(sp, st.v), fi = sp.vals.indexOf(null);
-      st.just = fi; ltPlay('pop');
-      if (f.ok && (!sp.need || f.sum >= sp.need)) { st.done = st.solved = true; ltSay(st, m, 'blinki', sp.ok, 'happy', 'ok'); }
-      else { st.msg = ''; m.mood = 'curious'; }
-    }
-  },
-  send: {
-    init: sp => ({ bits: sp.vals.map(() => 0), miss: 0, got: null }),
-    view: (sp, st, m) => {
-      const sum = ltSum(st.bits, sp.vals);
-      return {
-        who: sp.intro ? 'blinki' : 'lumi', ant: st.bits.some(Boolean), bowl: st.got == null ? 0 : st.got,
-        say: sp.intro || `Schick mir <b>${sp.t}</b> ${sp.t === 1 ? 'Stern' : 'Sterne'}!`,
-        body: (sp.sky ? `<div class="lt-sky" aria-label="Lumis Himmel: ${m.stars} von ${sp.sky} Sternen">${'<i class="on">★</i>'.repeat(m.stars)}${'<i>★</i>'.repeat(Math.max(0, sp.sky - m.stars))}</div>` : '') +
-          ltRow(st.bits, { vals: sp.vals, mode: 'dots', showVal: sp.vals.length > 1, act: st.done ? null : 'lamp', just: st.just, pulse: st.pulse }) +
-          `<div class="lt-live">Leuchtpunkte an: <b>${sum}</b></div>` + (st.done ? '' : `<div class="lt-act">${ltB('send', 'Senden')}</div>`)
-      };
-    },
-    act: (sp, st, v, x, m) => {
-      if (st.done) return;
-      if (v === 'lamp') { ltTog(st, x); if (st.miss) st.msg = ''; }
-      else if (v === 'send') {
-        const sum = ltSum(st.bits, sp.vals), d = sum - sp.t;
-        if (!d) { st.done = st.solved = true; st.got = sum; m.fx = { fly: true }; m.stars++; ltSay(st, m, 'lumi', sp.okMsg || `Danke! ${sum === 1 ? 'Ein Stern' : sum + ' Sterne'} für meinen Himmel.`, 'happy', 'ok'); return; }
-        st.miss++;
-        const pi = d > 0 ? st.bits.findIndex((b, i) => b && sp.vals[i] === d) : st.bits.findIndex((b, i) => !b && sp.vals[i] === -d);
-        st.pulse = pi >= 0 ? [pi] : null;
-        ltSay(st, m, 'lumi', (sum === 0 ? 'Bei mir ist nichts angekommen. Mach Lampen an!' : `Ich habe ${sum}. Ich wollte ${sp.t} – das sind ${Math.abs(d)} zu ${d > 0 ? 'viel' : 'wenig'}.`) + (st.miss >= 2 && sp.tipAuto ? `<br><small>${sp.tipAuto}</small>` : ''), 'curious', 'hm');
-      }
-    }
-  },
-  /* Stufe 7 */
-  readnum: {
-    init: sp => ({ bits: ltBits(sp.t, 4) }),
-    view: (sp, st) => ({
-      who: 'lumi', say: sp.dots ? 'Ich schicke dir eine Zahl. Wie viele Sterne sind es?' : 'Jetzt ohne Punkte! Die kleinen Zahlen sagen, was jede Lampe wert ist. Welche Zahl schicke ich?',
-      body: ltLab('Lumis Lampen') + ltRow(st.bits, { vals: LT_V4, cls: 'lumi', mode: sp.dots ? 'dots' : 'plain', showVal: true, act: st.done ? null : 'whis', pulse: st.pulse }) +
-        (st.done ? '' : `<div class="lt-pad">${ltRange(1, 15).map(n => `<button class="lt-num" data-act="ltDo" data-arg="pick:${n}">${n}</button>`).join('')}</div>`)
-    }),
-    act: (sp, st, v, x, m) => {
-      if (st.done) return;
-      if (v === 'whis') { const i = +x; if (i >= 0 && i < 4) ltSay(st, m, 'lumi', `Psst … diese Lampe ist <b>${LT_V4[i]}</b> wert. Gerade ist sie ${st.bits[i] ? 'AN' : 'AUS'}.`, 'curious', null); }
-      if (v === 'pick') {
-        if (+x === sp.t) { st.done = st.solved = true; ltSay(st, m, 'lumi', `Richtig! ${ltExpr(st.bits, LT_V4)} = <b>${sp.t}</b>.`, 'happy', 'ok'); }
-        else {
-          let run = 0; const steps = []; st.bits.forEach((b, i) => { if (b) { run += LT_V4[i]; steps.push(run); } });
-          st.pulse = st.bits.map((b, i) => b ? i : -1).filter(i => i >= 0);
-          ltSay(st, m, 'blinki', `Hm, nicht ganz. Lass uns zusammen zählen – nur die Lampen, die leuchten: ${steps.join(' … ')}.`, 'curious', 'hm');
-        }
-      }
-    }
-  },
-  /* Stufe 8 */
-  morph: {
-    init: () => ({ mor: [false, false, false, false] }),
-    view: (sp, st) => ({
-      ant: true, say: 'Ich schreibe Lumi einen Brief. Aber Lampen malen dauert ewig! Meine Idee: Für eine Lampe, die AN ist, schreibe ich einen Strich: <b>1</b>. Für eine Lampe, die AUS ist, einen Kreis: <b>0</b>. Tippe auf jede Lampe!',
-      body: ltRow(sp.bits, { vals: LT_V4, mode: 'dots', showVal: true, morph: st.mor, act: st.done ? null : 'm', just: st.just }) + `<div class="lt-digits">${sp.bits.map((b, i) => `<span class="${st.mor[i] ? 'on' : ''}">${st.mor[i] ? b : '·'}</span>`).join('')}</div>`
-    }),
-    act: (sp, st, v, x, m) => {
-      const i = +x; if (v !== 'm' || st.done || !(i >= 0 && i < 4) || st.mor[i]) return;
-      st.mor[i] = true; st.just = i; ltPlay('pop');
-      if (st.mor.every(Boolean)) { st.done = st.solved = true; ltSay(st, m, 'blinki', `Aus Lampen werden Ziffern! <b>${sp.bits.join('')}</b> heißt: ${ltExpr(sp.bits, LT_V4)} = ${ltSum(sp.bits, LT_V4)}.`, 'happy', 'ok'); }
-    }
-  },
-  todig: {
-    init: () => ({ d: [null, null, null, null], bad: [] }),
-    view: (sp, st) => ({
-      ant: true, say: 'Schreib dieses Zeichen in Ziffern! Tippe auf die Felder: AN wird <b>1</b>, AUS wird <b>0</b>.',
-      body: ltRow(sp.bits, { vals: LT_V4, mode: 'dots', showVal: true, pulse: st.pulse }) +
-        `<div class="lt-slots">${st.d.map((d, i) => `<button class="lt-slot${st.bad.includes(i) ? ' bad' : ''}${d != null ? ' set' : ''}" data-act="ltDo" data-arg="slot:${i}" ${st.done ? 'disabled' : ''} aria-label="Ziffer ${i + 1}: ${d == null ? 'leer' : d}">${d == null ? '?' : d}</button>`).join('')}</div>` +
-        (st.done ? '' : `<div class="lt-act">${ltB('chk', 'Prüfen')}</div>`)
-    }),
-    act: (sp, st, v, x, m) => {
-      if (st.done) return;
-      if (v === 'slot') { const i = +x; if (i >= 0 && i < 4) { st.d[i] = st.d[i] == null ? 1 : (st.d[i] ? 0 : 1); st.bad = st.bad.filter(j => j !== i); ltPlay('pop'); } }
-      if (v === 'chk') {
-        if (st.d.includes(null)) { ltSay(st, m, 'blinki', 'Fülle erst alle vier Felder aus.', 'curious'); return; }
-        st.bad = st.d.map((d, i) => d !== sp.bits[i] ? i : -1).filter(i => i >= 0);
-        if (st.bad.length) { st.pulse = st.bad.slice(); ltSay(st, m, 'blinki', 'Fast! Schau auf die Lampe über dem roten Feld: Ist sie AN oder AUS?', 'confused', 'hm'); }
-        else { st.done = st.solved = true; ltSay(st, m, 'blinki', `Genau! <b>${sp.bits.join('')}</b> – das sind ${ltExpr(sp.bits, LT_V4)} = ${ltSum(sp.bits, LT_V4)}.`, 'happy', 'ok'); }
-      }
-    }
-  },
-  tolamp: {
-    init: () => ({ bits: [0, 0, 0, 0] }),
-    view: (sp, st) => ({
-      who: 'lumi', ant: st.bits.some(Boolean), say: `Ich schreibe dir: <b>${sp.bits.join('')}</b>. Stell deine Lampen so ein!`,
-      body: `<div class="lt-bigd">${sp.bits.join('')}</div>` + ltRow(st.bits, { vals: LT_V4, mode: 'dots', showVal: true, act: st.done ? null : 'lamp', just: st.just, pulse: st.pulse, under: i => `<span class="lt-udig">${sp.bits[i]}</span>` }) +
-        (st.done ? '' : `<div class="lt-act">${ltB('chk', 'Prüfen')}</div>`)
-    }),
-    act: (sp, st, v, x, m) => {
-      if (st.done) return;
-      if (v === 'lamp') ltTog(st, x);
-      if (v === 'chk') {
-        const bad = st.bits.map((b, i) => b !== sp.bits[i] ? i : -1).filter(i => i >= 0);
-        if (bad.length) { st.pulse = bad; ltSay(st, m, 'blinki', 'Fast! Die blinkende Lampe passt noch nicht zu der Ziffer darunter.', 'confused', 'hm'); }
-        else { st.done = st.solved = true; ltSay(st, m, 'lumi', `Richtig! <b>${sp.bits.join('')}</b> = ${ltExpr(sp.bits, LT_V4)} = ${ltSum(sp.bits, LT_V4)}.`, 'happy', 'ok'); }
-      }
-    }
-  },
-  trap: {
-    init: () => ({ bits: [0, 0, 0] }),
-    view: (sp, st) => ({
-      ant: true, say: 'Lumi hat mir geschrieben: <b>101</b>. Ist das … Hunderteins?! Was meint Lumi?',
-      body: `<div class="lt-bigd">101</div>` + ltRow(st.bits, { vals: [4, 2, 1], mode: 'dots', showVal: true, just: st.just, under: i => st.done ? `<span class="lt-udig">${'101'[i]}</span>` : '' }) + (st.done ? '' : ltOpts([['hundert', 'Hunderteins'], ['fuenf', 'Fünf'], ['eins', 'Eins']]))
-    }),
-    act: (sp, st, v, x, m) => {
-      if (v !== 'pick' || st.done) return;
-      st.bits = [1, 0, 1]; st.just = 0; st.done = st.solved = true;
-      if (x === 'fuenf') ltSay(st, m, 'blinki', 'Genau! <b>1 0 1</b> heißt: Lampe 4 AN, Lampe 2 AUS, Lampe 1 AN. 4 + 1 = 5.', 'happy', 'ok');
-      else if (x === 'hundert') ltSay(st, m, 'lumi', 'Haha, nein! In Lampensprache ist <b>101</b> eine 5: Lampe 4 AN, Lampe 2 AUS, Lampe 1 AN. 4 + 1 = 5.', 'laugh', 'ok');
-      else ltSay(st, m, 'blinki', 'Fast! Da sind aber zwei Einsen: Lampe 4 AN und Lampe 1 AN. 4 + 1 = 5.', 'curious', 'ok');
-    }
-  }
-};
-
-/* ---------- Stufen ---------- */
-const LT_ASKQ = [
-  { q: 'Soll ich das Fenster aufmachen?', yes: 'Ahh, frische Nachtluft! Meine Antenne wackelt im Wind.', no: 'Gut, dann bleibt es hier oben schön warm.' },
-  { q: 'Magst du Sterne?', yes: 'Ich auch! Von hier oben sehe ich ganz viele.', no: 'Schade! Vielleicht zeige ich dir bald die schönsten.' },
-  { q: 'Soll ich dir bald meinen Freund Lumi vorstellen? Er wohnt im Turm gegenüber.', yes: 'Juhu! Lumi freut sich schon.', no: 'Okay, vielleicht später. Lumi ist sehr nett!' }
-];
-/* gemischte Zahlen 1–15: drei kleine (1–8), drei große (9–15) */
-const ltMix = () => { const s = ltShuf(ltRange(1, 8)), b = ltShuf(ltRange(9, 15)); return [s[0], s[1], b[0], s[2], b[1], b[2]]; };
-const ltValueQ = n => {
-  const bits = ltBits(n, 4), d = bits.join(''), wrong = ltShuf([+d.replace(/^0+/, '') || 0, n + 1 <= 15 ? n + 1 : n - 1, ltSum(bits.slice().reverse(), LT_V4)].filter((x, i, a) => x !== n && a.indexOf(x) === i)).slice(0, 3);
-  return {
-    k: 'predict', q: `Welche Zahl ist <b>${d}</b> in Lampensprache?`, opts: ltShuf([n].concat(wrong)), ans: n, afterWrong: true,
-    show: `<div class="lt-bigd">${d}</div>`, after: ltRow(bits, { vals: LT_V4, mode: 'dots', showVal: true, under: i => `<span class="lt-udig">${d[i]}</span>` }),
-    ok: `Richtig: ${ltExpr(bits, LT_V4)} = ${n}.`,
-    no: x => String(x) === d.replace(/^0+/, '') ? 'So würde man das in unseren normalen Zahlen lesen. In Lampensprache ist jede Stelle eine Lampe – schau sie dir an!' : 'Schau dir die Lampen an: Welche leuchten, und was sind sie wert?'
-  };
-};
-const LT_BUILD = {
-  1: () => [{ k: 'meaning' }, { k: 'deal' }].concat(LT_ASKQ.map(q => Object.assign({ k: 'ask' }, q)), [
-    { k: 'readyn', q: 'Hast du Hunger?', on: 1, after: 'Genau, Ja! Ich hätte gern einen Snack.' },
-    { k: 'readyn', q: 'Bist du müde?', on: 0, after: 'Genau, Nein! Ich bin hellwach.' }]),
-  2: () => [{ k: 'snack' }, { k: 'order', i: 0 }, { k: 'order', i: 1 }, { k: 'order', i: 2 }],
-  3: () => [{ k: 'guessn' }, { k: 'hunt', tip: 'Tipp: Geh der Reihe nach vor. Lass die linke Lampe AUS und probier alles mit den anderen zwei. Dann dasselbe mit der linken Lampe AN.' }, { k: 'copy' },
-    { k: 'predict', q: 'Und mit <b>vier</b> Lampen? Wie viele Zeichen gibt es dann?', opts: [8, 10, 12, 16, 20], ans: 16, ok: '16! Die 8 Zeichen gibt es einmal mit der neuen Lampe AUS und einmal mit AN.', no: 'Denk an die neue Lampe: Jedes der 8 alten Zeichen gibt es einmal mit ihr AUS und einmal mit ihr AN.' },
-    { k: 'predict', q: 'Und mit <b>fünf</b> Lampen?', opts: [20, 24, 30, 32, 40], ans: 32, ok: '32! Jede neue Lampe verdoppelt: 2, 4, 8, 16, 32.', no: 'Fast! Nimm die 16 Zeichen von vier Lampen – einmal mit der neuen Lampe AUS, einmal mit AN.' }],
-  4: () => [
-    { k: 'send', vals: [1], t: 1, intro: 'Das ist <b>Lumi</b>, mein Freund im Turm gegenüber! Lumi sammelt Sterne. Meine Lampe hat jetzt einen <b>Leuchtpunkt</b>. Wenn sie leuchtet, fliegt der Punkt zu Lumi. Mach sie an und tippe auf „Senden“!', okMsg: 'Danke! Ein Stern für meinen Himmel.' },
-    { k: 'factory', vals: [null, 1], start: 1, min: 1, max: 5, line: 3, need: 3, intro: 'Lumi möchte 1, 2 oder 3 Sterne bekommen können. Die rechte Lampe hat 1 Punkt. Wie viele Punkte braucht die linke Lampe, damit jede Zahl genau einmal klappt? Stell es mit − und + ein.', ok: 'Keine Lücke! Mit 2 und 1 kann ich 1, 2 und 3 schicken – jede Zahl genau einmal.', tip: 'Tipp: Die 1 schafft die rechte Lampe schon allein. Welche Zahl ist die nächste, die noch fehlt?' },
-    { k: 'send', vals: [2, 1], t: 3 }, { k: 'send', vals: [2, 1], t: 2 }],
-  5: () => [
-    { k: 'factory', vals: [null, 2, 1], start: 3, min: 1, max: 9, line: 10, intro: 'Lumi hat noch mehr Sterne! Eine dritte Lampe kommt links dazu. Wie viele Punkte bekommt sie, damit wir möglichst weit ohne Lücke kommen – und jede Zahl nur einmal?', ok: '1 bis 7 – jede Zahl genau einmal. Perfekt!', tip: 'Tipp: Mit 2 und 1 komme ich schon bis 3. Welche Zahl fehlt als Nächstes?' },
-    { k: 'talk', code: 'wert', bits: [1, 1, 1], vals: [4, 2, 1], mode: 'dots', showVal: true, say: 'Schau mal: 4 + 2 + 1 = 7. Für die 8 braucht es eine neue Lampe. Die neue Lampe ist immer <b>eins mehr</b> als alle anderen zusammen. Und siehst du das Muster? 1, 2, 4 – jede Lampe ist <b>doppelt</b> so viel wert wie die rechts daneben. Wie bei den Zeichen in Stufe 3!', html: '<p class="lt-eq">4 + 2 + 1 = 7 → die nächste Lampe: 8</p>' },
-    { k: 'predict', q: 'Wie viele Punkte bekommt Lampe Nummer 4?', opts: [5, 6, 7, 8, 9, 10], ans: 8, ok: 'Genau, 8! Jetzt geht es ohne Lücke von 1 bis 15.', after: ltLine(15, Object.fromEntries(ltRange(1, 15).map(n => [n, 1])), 15), no: x => x < 8 ? `Mit ${x} könnte ich die ${x} zweimal schicken: mit der neuen Lampe und mit den alten. Verschwendet!` : `Mit ${x} fehlt die 8 – da wäre eine Lücke.` },
-    { k: 'predict', q: 'Und Lampe Nummer 5?', opts: [9, 12, 15, 16, 20], ans: 16, ok: '16! Immer doppelt so viel: 1, 2, 4, 8, 16.', no: x => x < 16 ? `Mit ${x} gäbe es eine Zahl doppelt. Die vier Lampen zusammen sind schon 15 …` : `Mit ${x} fehlt die 16. Die vier Lampen zusammen sind 15 – welche Zahl kommt danach?` }],
-  6: rep => (rep ? ltMix() : [5, 6, 3, 9, 12, 15]).map(t => ({ k: 'send', vals: LT_V4, t, sky: 6, tip: 'Tipp: Fang mit der größten Lampe an, die noch passt. Dann schau, was noch fehlt.', tipAuto: 'Fang mit der größten Lampe an, die noch passt.' })),
-  7: rep => (rep ? ltMix() : [6, 9, 3, 12, 7, 13]).map((t, i) => ({ k: 'readnum', t, dots: i < 3 })),
-  8: rep => {
-    const r = rep ? ltShuf(ltRange(1, 15)) : [10, 12, 7, 9, 6, 11, 12, 7];
-    const tip = 'Tipp: Eine leuchtende Lampe wird zur 1, eine dunkle zur 0. Geh von links nach rechts.';
-    return [{ k: 'morph', bits: [0, 1, 0, 1] }]
-      .concat(r.slice(0, 3).map(n => ({ k: 'todig', bits: ltBits(n, 4), tip })), r.slice(3, 6).map(n => ({ k: 'tolamp', bits: ltBits(n, 4), tip: 'Tipp: Unter jeder Lampe steht ihre Ziffer. Bei 1 muss die Lampe AN sein, bei 0 AUS.' })), [
-        { k: 'trap' },
-        { k: 'talk', code: 'bit', say: 'Jetzt kennst du ein Geheimnis von Computern! Jede Lampe heißt <b>Bit</b>. Eine Zahl aus Bits heißt <b>Binärzahl</b>. „Binär“ heißt: zwei Möglichkeiten – 0 oder 1. In deinem Tablet stecken Milliarden winziger Schalter, die genau so AN und AUS sind.', html: '<div class="lt-terms"><span><b>1</b> = AN</span><span><b>0</b> = AUS</span><span><b>Bit</b> = eine Lampe</span><span><b>Binärzahl</b> = Zahl aus Bits</span></div>' }],
-        r.slice(6, 8).map(ltValueQ));
-  }
-};
 
 /* =====================================================================
    BELOHNUNGS-MOMENTE: was das Kind sieht, wenn es etwas verdient
@@ -14709,7 +14393,7 @@ const HW_HUB = /^(rewards)$/;
 const HW_N = 25, HW_SEC = 20 * 60, RG_AREA_CAP = 5 * 60, RG_TOTAL_CAP = 10 * 60, FREE_SEC = 4 * 60;
 
 /* ---------- Hausaufgaben-Status (aus den schon vorhandenen Zählern: Aufgaben heute, Übungszeit heute) ---------- */
-function hwDone() { if (ADMIN) return true; touchDay(); return (S.daily.n || 0) >= HW_N || (S.daily.sec || 0) >= HW_SEC; }
+function hwDone() { if (ADMIN) return true; touchDay(); return !!S.daily.hwApproved || (S.daily.n || 0) >= HW_N || (S.daily.sec || 0) >= HW_SEC; }
 function hwInfo() { touchDay(); return { n: S.daily.n || 0, need: HW_N, sec: S.daily.sec || 0, needSec: HW_SEC, done: hwDone() }; }
 
 /* ---------- Bereich (Ordner/Unterordner) für eine Ansicht; null = kein Bereich (frei oder Sammel-Seite) ---------- */
@@ -14761,8 +14445,8 @@ function pageLock(v, st) {
   if (st.perm) {
     const sc = secOf(v) || {}, pn = secName(sc.s) || secName(sc.m) || nm;
     return `${topBar(esc(pn), 'home')}
-    <div class="lockscr pglock"><div class="lockic">${ico('lock', 44)}</div>${lockBadge()}<h2>„${esc(pn)}“ ist gerade zu</h2>
-    <p>Deine Eltern haben diesen Bereich im Eltern-Bereich geschlossen. Frag sie, wenn du ihn öffnen möchtest.</p><p class="small mute">Alles ist gespeichert.</p>
+    <div class="lockscr pglock"><div class="lockic">${ico('lock', 44)}</div>${lockBadge()}<h2>${parentTimeLocked(v)?'Für heute pausiert':`„${esc(pn)}“ ist gerade zu`}</h2>
+    <p>${parentTimeLocked(v)?'Deine Eltern haben diesen Bereich für heute pausiert. Morgen gelten wieder die normalen Regeln.':'Deine Eltern haben diesen Bereich im Eltern-Bereich geschlossen. Frag sie, wenn du ihn öffnen möchtest.'}</p><p class="small mute">Alles ist gespeichert.</p>
     <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="home">Start</button></div></div>`;
   }
   if (st.hw) {
@@ -14843,13 +14527,53 @@ const permGet = id => ((S.cfg && S.cfg.perm) || {})[id] || '';
 function permOfSec(sc) { if (!sc) return ''; const own = sc.s === 'KOPF' ? (permGet('KOPF') || permGet('EMAL') || permGet('SCHR')) : (sc.s && permGet(sc.s)); return own || permGet(sc.m) || ''; }     // Kopfrechnen: frühere Einstellungen für Einmaleins/Schriftlich gelten weiter
 const permOf = v => permOfSec(secOf(v));
 function permSet(id, val) { if (!S.cfg.perm || typeof S.cfg.perm !== 'object') S.cfg.perm = {}; if (val === 'open' || val === 'lock') S.cfg.perm[id] = val; else delete S.cfg.perm[id]; save(); }
-/* Gesamtzustand einer Ansicht: Eltern-Freigabe → Hausaufgabe/freie Zeit → Zeitgrenzen */
+/* Zusatzzeit ist ein separater heutiger Vorrat. Verbrauch und Lernfortschritt bleiben erhalten. */
+function parentTimeData() {
+  touchDay();
+  const d = S.daily;
+  if (!isObj(d.parentTime)) d.parentTime = { shared: 0, areas: {}, locks: {}, practice: 0, practiceLocked: false, used: 0 };
+  if (!isObj(d.parentTime.areas)) d.parentTime.areas = {};
+  if (!isObj(d.parentTime.locks)) d.parentTime.locks = {};
+  return d.parentTime;
+}
+function parentTimeArea(v) { return rgArea(v) || ((featOf(v) || {}).id) || ''; }
+function parentSharedArea(v) { return !!pgArea(v) && !!rgArea(v); }
+function parentTimeLocked(v) {
+  const t = parentTimeData(), a = parentTimeArea(v);
+  return !!t.locks[a] || !!(t.sharedLocked && parentSharedArea(v));
+}
+function parentBonusLeft(v) {
+  const t = parentTimeData(), a = parentTimeArea(v);
+  return Math.max(0, t.areas[a] || 0) + (parentSharedArea(v) ? Math.max(0, t.shared || 0) : 0);
+}
+function parentNormalLeft(v, base) {
+  if (!base.open) return 0;
+  let left = base.left;
+  if (v === 'shop') left = Math.min(left, shopNormalLeft());
+  const F = featOf(v);
+  if (F && F.creative && creativeMode() === 'after') left = Math.min(left, creativeLeft());
+  return left;
+}
+let parentNormalTick = 0;
+function parentMarkNormalTick() { parentNormalTick = Date.now(); }
+function parentConsumeBonus(v) {
+  const t = parentTimeData(), a = parentTimeArea(v);
+  if ((t.areas[a] || 0) > 0) t.areas[a]--;
+  else if (parentSharedArea(v) && (t.shared || 0) > 0) t.shared--;
+  else return;
+  t.used = (t.used || 0) + 1;
+}
+/* Eltern-Sperre → heutige Pause → normale Zeit plus Zusatzzeit. */
 function viewState(v) {
   const pm = ADMIN ? '' : permOf(v);
-  if (pm === 'lock') return { open: false, perm: true };
+  if (pm === 'lock' || (!ADMIN && parentTimeLocked(v))) return { open: false, perm: true };
   if (ADMIN || pm === 'open') return { open: true, left: Infinity };
-  const a = pgArea(v); if (!a) return { open: true, left: Infinity };
-  return pgState(a);
+  const a = pgArea(v), base = a ? pgState(a) : { open: true, left: Infinity };
+  const bonus = parentBonusLeft(v), F = featOf(v);
+  if (!bonus || (F && F.creative && creativeMode() === 'locked')) return base;
+  const normal = parentNormalLeft(v, base);
+  if (normal === Infinity) return base;
+  return { open: true, left: normal + bonus, bonus: true, bonusOnly: normal <= 0, normal, base };
 }
 /* „Noch zu“ für Kacheln, auch tief in Ordnern: die Kachel weiß über data-act, wohin sie führt */
 const ACT_VIEW = { geoGo: 'geoPlay', gCard: 'geoCard', goNext: null, toggleSound: null, parent: null, home: null };
@@ -14872,22 +14596,33 @@ function lockTilesPass() {
 setInterval(() => {
   if (document.hidden || ADMIN) return;
   try {
-    const a = rgArea(view); if (!a) return;
-    const st = viewState(view); if (!st.open || st.left === Infinity) return;
+    const a = rgArea(view);
+    const st = viewState(view); if (!a && !st.bonus) return; if (!st.open || st.left === Infinity) return;
     if (Date.now() - lastInput > 120000) return;
-    if (st.free) {                                                          // freie Zeit vor der Hausaufgabe
+    if (st.bonusOnly) {
+      // The other timer may just have consumed the last normal second.
+      if (Date.now() - parentNormalTick < 500) return;
+      parentConsumeBonus(view);
+      const next = viewState(view), el = $('#pgT'); if (el) el.textContent = fmtT(next.left || 0);
+      if (!parentBonusLeft(view) || !next.open || next.left <= 0) { save(); leaveHook(view); render(); }
+      else if (parentTimeData().used % 15 === 0) save();
+      return;
+    }
+    if (!a) return;
+    const normalState = st.bonus ? st.base : st;
+    if (normalState.free) {                                                          // freie Zeit vor der Hausaufgabe
       S.daily.free = (S.daily.free || 0) + 1; const fl = freeLeft();
-      const el = $('#pgT'); if (el) el.textContent = fmtT(fl);
+      const el = $('#pgT'); if (el) el.textContent = fmtT(fl + parentBonusLeft(view));
       if (fl === 30) toast('⏳', 'Noch 30 Sekunden freie Zeit. Alles wird automatisch gespeichert.');
-      if (fl <= 0) { save(); leaveHook(view); render(); freeOver(); }
+      if (fl <= 0 && !parentBonusLeft(view)) { save(); leaveHook(view); render(); freeOver(); }
       else if (S.daily.free % 15 === 0) save();
       return;
     }
     const d = rgData(); d.rg.a[a] = (d.rg.a[a] || 0) + 1; d.rg.tot = (d.rg.tot || 0) + 1;
     const left = Math.min(Math.max(0, rgTotalCap() - rgTotalUsed()), Math.max(0, rgAreaCap(a) - rgAreaUsed(a)));
-    const el = $('#pgT'); if (el) el.textContent = fmtT(left);
+    const el = $('#pgT'); if (el) el.textContent = fmtT(left + parentBonusLeft(view));
     if (left === 30) toast('⏳', 'Noch 30 Sekunden hier. Alles wird automatisch gespeichert.');
-    if (left <= 0) { save(); leaveHook(view); toast('⏳', 'Die Zeit hier ist für heute um. Alles ist gespeichert.'); render(); }
+    if (left <= 0 && !parentBonusLeft(view)) { save(); leaveHook(view); toast('⏳', 'Die Zeit hier ist für heute um. Alles ist gespeichert.'); render(); }
     else if (d.rg.tot % 15 === 0) save();
   } catch (e) { console.error(e); }
 }, 1000);
@@ -14898,7 +14633,7 @@ function rgResetArea(a) { const d = rgData(); d.rg.tot = Math.max(0, d.rg.tot - 
 function rgExtendAll(sec) { const d = rgData(); d.rgExt.tot = (d.rgExt.tot || 0) + sec; save(); }
 function rgExtendArea(a, sec) { const d = rgData(); d.rgExt.a[a] = (d.rgExt.a[a] || 0) + sec; save(); }
 function freeReset() { touchDay(); S.daily.free = 0; S.daily.freeMsg = false; save(); }
-function hwForceDone(on) { touchDay(); if (on) S.daily.n = Math.max(S.daily.n || 0, HW_N); else { S.daily.n = 0; S.daily.sec = 0; } save(); }
+function hwForceDone(on) { touchDay(); S.daily.hwApproved = !!on; save(); }
 
 /* ---------- Tageswechsel: Hausaufgaben-Ergebnis des alten Tages merken (für den „2 Tage“-Hinweis) ---------- */
 function onDayRollover(oldDaily) {
