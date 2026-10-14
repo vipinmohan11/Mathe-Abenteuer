@@ -244,15 +244,15 @@ const vnTop = (back) => topBar('Venola Holmes', back || 'rewards');
 /* ---------- Detektiv-Regeln: vor der ersten Akte (und nach jeder Regeländerung) einmal lesen und jede Regel einzeln abhaken ---------- */
 const VN_RULES_VER = 1;
 const VN_RULE_TXT = [
-  ['✌️', 'Zwei Versuche', 'Für jede Antwort hast du zwei Versuche. Eine falsche Antwort wird durchgestrichen. Ist auch der zweite Versuch falsch, zeigt Venola dir die Lösung – für dieses Rätsel gibt es dann keine Beweismarken.'],
-  ['🔎', 'Beweise es!', 'Im Kriminalfall reicht die richtige Antwort nicht. Danach kommt eine Beweis-Frage. Die kannst du nur beantworten, wenn du den Fall wirklich gelöst hast. Auch hier hast du zwei Versuche.'],
-  ['➖', 'Fehler kosten Marken', 'Jeder falsche Versuch kostet eine Beweismarke. Münzen verlierst du nie, und unter null geht es nicht. Raten lohnt sich also nicht – lieber genau lesen!'],
-  ['✅', 'Erst alles, dann prüfen', 'Bei den Analogien beantwortest du zuerst alle Aufgaben und drückst dann einmal auf „Prüfen“. Du hast zwei Prüfungen.'],
-  ['⭐', 'Fehlerfrei lohnt sich', 'Nur ohne Fehler und ohne Hinweis gibt es den Bonus. Die nächste Stufe öffnet sich nur, wenn du jedes Rätsel der Akte gelöst hast.']
+  ['✌️', 'Zwei Versuche', 'Pro Antwort hast du 2 Versuche. Danach zeigt Venola die Lösung.'],
+  ['🔎', 'Beweise es!', 'Im Kriminalfall kommt nach der richtigen Antwort noch eine Beweis-Frage.'],
+  ['➖', 'Fehler kosten Marken', 'Jeder Fehler kostet 1 Beweismarke. Münzen verlierst du nie.'],
+  ['✅', 'Erst alles, dann prüfen', 'Bei Analogien: erst alle Aufgaben beantworten, dann einmal prüfen.'],
+  ['⭐', 'Fehlerfrei lohnt sich', 'Ohne Fehler gibt es Bonus. Neue Stufe nur, wenn jedes Rätsel gelöst ist.']
 ];
 function vnRulesView() {
   const p = vnS(), gate = !!UI.vnRulesNext, ok = UI.vnRk || (UI.vnRk = {}), all = VN_RULE_TXT.every((r, i) => ok[i]);
-  return vnTop() + `<div class="vn-hero"><h2 class="vn-title2">📜 Detektiv-Regeln</h2><p class="small mute">${gate ? 'Bevor du ermittelst: Lies jede Regel und tippe auf „Verstanden“.' : 'So funktionieren die Akten.'}</p>
+  return vnTop() + `<div class="vn-hero"><h2 class="vn-title2">📜 Detektiv-Regeln</h2><p class="small mute">${gate ? 'Lies jede Regel und tippe auf „Verstanden“.' : 'So funktionieren die Akten.'}</p><p class="vn-pause">⏸ Die Uhr ist angehalten, solange du die Regeln liest.</p>
     ${typeof wSpeak === 'function' ? '<button class="btn sec" data-act="vnRulesRead">🔊 Vorlesen</button>' : ''}</div>
     ${VN_RULE_TXT.map((r, i) => `<section class="card vn-rl${ok[i] || !gate ? ' done' : ''}"><span class="vn-rl-i">${r[0]}</span><div><h3>${i + 1}. ${esc(r[1])}</h3><p>${esc(r[2])}</p>${gate ? (ok[i] ? '<p class="vn-rl-ok">✓ Verstanden</p>' : `<button class="btn sm" data-act="vnRuleOk" data-arg="${i}">Verstanden</button>`) : ''}</div></section>`).join('')}
     <div class="center" style="margin-top:12px">${gate ? `<button class="btn big" data-act="vnRulesGo" ${all ? '' : 'disabled'}>${all ? 'Alles klar – los geht’s!' : `Noch ${VN_RULE_TXT.filter((r, i) => !ok[i]).length} ${VN_RULE_TXT.filter((r, i) => !ok[i]).length === 1 ? 'Regel' : 'Regeln'} lesen`}</button>` : '<button class="btn big" data-act="vnMenu">Zurück</button>'}</div>`;
@@ -325,6 +325,7 @@ function vnRepView() {
     e.rp.map((d, k) => { let p = null; try { p = vnBuild(d, {}); } catch (x) { } if (!p) return ''; return `<section class="card vn-card"><h3 class="vn-h">${k + 1}. ${esc(p.title)}</h3>${p.body}<p class="vn-note">Lösung: ${vnSol(p)}</p><details class="vn-det"><summary>Wie komme ich darauf?</summary><ol>${p.ex.map(l => `<li>${vnExHtml(l)}</li>`).join('')}</ol></details></section>`; }).join('');
 }
 VIEWS.venola = () => {
+  UI.noClock = UI.vnV === 'rules' ? 'venola' : null;                                // Regeln lesen kostet keine Spielzeit
   if (UI.vnV === 'rules') return vnRulesView();
   if (UI.vnV === 'koffer') return vnKofferView();
   if (UI.vnV === 'hist') return UI.vnRep >= 0 && UI.vnRep !== undefined && UI.vnRep !== null ? vnRepView() : vnHistView();
@@ -370,7 +371,7 @@ document.addEventListener('keydown', e => { const t = e.target; if (e.key === 'E
 
 registerFeature({
   id: 'venola', title: 'Venola Holmes', icon: 'sparkle', tint: 'sky', group: 'spiel', order: 82, view: 'venola',
-  leave: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; UI.vnRulesNext = null; try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
+  leave: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; UI.vnRulesNext = null; UI.noClock = null; try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
   check: () => { vnS(); vnRewardsCheck(false); },
   acts: {
     venola: () => { vnStop(); UI.vn = null; UI.vnSet = null; UI.vnV = null; UI.vnAsk = false; go('venola'); },

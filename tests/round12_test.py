@@ -66,6 +66,8 @@ with sync_playwright() as p:
     pg.click('[data-act=vnStart]'); pg.wait_for_timeout(50)
     ok(E("()=>UI.vnV")=='rules' and E("()=>!UI.vn"), 'Erste Akte: zuerst die Detektiv-Regeln')
     ok(E("()=>document.querySelectorAll('.vn-rl').length")==5 and E("()=>document.querySelector('[data-act=vnRulesGo]').disabled"), 'Los erst, wenn jede Regel abgehakt ist')
+    pg.mouse.click(5, 5); f0 = E("()=>S.daily.free||0"); pg.wait_for_timeout(2600)
+    ok(E("()=>S.daily.free||0") == f0 and E("()=>!!document.querySelector('.vn-pause')"), 'Regeln lesen kostet keine Spielzeit (Uhr angehalten)')
     for i in range(4): pg.click('[data-act=vnRuleOk][data-arg="%d"]' % i)
     ok(E("()=>document.querySelector('[data-act=vnRulesGo]').disabled") and 'Noch 1 Regel' in pg.inner_text('[data-act=vnRulesGo]'), 'Noch eine Regel offen')
     pg.click('[data-act=vnRuleOk][data-arg="4"]'); pg.click('[data-act=vnRulesGo]'); pg.wait_for_timeout(50)

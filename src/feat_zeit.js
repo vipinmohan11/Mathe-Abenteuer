@@ -222,7 +222,7 @@ function lockTilesPass() {
 
 /* ---------- Uhr: zählt nur in einem echten Bereich, nach der Hausaufgabe, bei sichtbarer App und frischem Antippen ---------- */
 setInterval(() => {
-  if (document.hidden || ADMIN) return;
+  if (document.hidden || ADMIN || (UI.noClock && UI.noClock === view)) return;
   try {
     const a = rgArea(view);
     const st = viewState(view); if (!a && !st.bonus) return; if (!st.open || st.left === Infinity) return;

@@ -90,6 +90,7 @@ setInterval(() => {
   if (document.hidden) return;
   tickN++;
   try {
+    if (UI.noClock && UI.noClock === view) { if (tickN % 15 === 0) save(); return; }   // z. B. Venola-Regeln: Lesen kostet keine Zeit
     if (view === 'shop' && (S.cfg.shopMin || 0) > 0 && shopNormalLeft() > 0 && !viewState(view).bonusOnly) {
       touchDay(); S.daily.shopSec++; parentMarkNormalTick();
       const el = $('#shopT'); if (el) el.textContent = fmtT(shopLeft());
