@@ -105,3 +105,7 @@
 .vn-det{display:block;margin:8px 0}.vn-title2{margin:0 0 6px;text-align:center}
 @media (max-width:520px){.vn-kof{grid-template-columns:repeat(2,minmax(0,1fr))}.vn-lvrow .btn{font-size:.85rem}}
 .vn-lvrow button{display:flex;flex-direction:column;align-items:center;line-height:1.15;padding-left:4px;padding-right:4px}.vn-lvrow button small{display:block;font-size:.7rem;opacity:.8}
+.vn-try{text-align:center;font-size:.9rem;color:var(--dz-mute);margin:6px 0}
+.card.vn-pf{margin:12px 0;border:2px solid var(--dz-accent)}.vn-pf h3{margin:0 0 4px}
+.card.vn-missc{border:2px solid #c0392b;background:rgba(192,57,43,.06)}
+.vn-dots i.miss{background:#c0392b}

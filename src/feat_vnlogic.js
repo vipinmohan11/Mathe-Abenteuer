@@ -18,6 +18,10 @@ const vnList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' un
 const vnPop = m => { let c = 0; while (m) { m &= m - 1; c++; } return c; };
 const vnCap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const vnRoomT = rm => rm[1] + ' ' + rm[0];
+/* Beweis-Frage: nach der richtigen Antwort muss das Kind zeigen, dass es den Fall wirklich gelöst hat (Raten reicht nicht).
+   Eigener Zufall aus den Rätseldaten, damit das Rätsel selbst gleich bleibt. Rückgabe { q, opts, ans } */
+const vnPfR = (...k) => pzRng(pzSeed('pf' + k.join('|')));
+const vnPfMix = (right, wrong, r) => { const o = pzShuf([right].concat(wrong), r); return { opts: o, ans: o.indexOf(right) }; };
 function vnDur(d) {
   if (d === 1) return 'eine Minute'; if (d === 15) return 'eine Viertelstunde'; if (d === 30) return 'eine halbe Stunde'; if (d === 45) return 'eine Dreiviertelstunde'; if (d === 60) return 'eine Stunde';
   if (d > 60) { const h = Math.floor(d / 60), m = d % 60; return (h === 1 ? 'eine Stunde' : h + ' Stunden') + (m ? ' und ' + (m === 1 ? 'eine Minute' : m + ' Minuten') : ''); }
@@ -65,7 +69,13 @@ function vnGenLie(lv, r) {
       else L.slice(0, 2).forEach(x => { const tr = N.filter((_, i) => (x[1] >> i) & 1), k = tr.length; ex.push(`Wäre ${N[c]} der Täter: Es sprächen ${k === 0 ? 'niemand' : vnList(tr)} die Wahrheit – das ${k === 1 ? 'ist 1 Person' : 'sind ' + k + ' Personen'}, erlaubt ${R === 1 ? 'ist 1' : 'sind ' + R}. ${k === R ? 'Das passt!' : 'Das passt nicht.'}`); });
     }
     ex.push(`Nur bei ${N[ans]} passt alles. ${N[ans]} ist der Täter.`);
-    return { t: 'lie', title: 'Wer lügt?', body: `<p>${esc(loot)} wurde gestohlen. Der Täter ist unter diesen ${n} Verdächtigen. Jeder sagt einen Satz.</p><ul class="vn-st">${S.map((s, i) => `<li><b>${esc(N[i])}:</b> „${esc(txt(s, i))}“</li>`).join('')}</ul><p class="vn-rule">${esc(ruleT)}</p>`, q: 'Wer ist der Täter?', kind: 'choice', opts: N, ans, ex };
+    const mk = sols[0][1], tr = N.filter((_, i) => (mk >> i) & 1), lr = N.filter((_, i) => !((mk >> i) & 1)), rp = vnPfR('lie', N.join(), ans, mk);
+    let pf;
+    if (R === 1) pf = Object.assign({ q: 'Beweise es: Wer sagt dann die Wahrheit?' }, vnPfMix(tr[0], N.filter(x => x !== tr[0]), rp));
+    else if (R === n - 1) pf = Object.assign({ q: 'Beweise es: Wer lügt dann?' }, vnPfMix(lr[0], N.filter(x => x !== lr[0]), rp));
+    else { const key = vnList(tr), wr = new Set(); for (let k = 0; k < 80 && wr.size < 3; k++) { const t = vnList(pzShuf(N, rp).slice(0, R).sort((a, b) => N.indexOf(a) - N.indexOf(b))); if (t !== key) wr.add(t); } pf = Object.assign({ q: `Beweise es: Welche ${R} Personen sagen dann die Wahrheit?` }, vnPfMix(key, [...wr], rp)); }
+    ex.push(`Beweis: Wenn ${N[ans]} der Täter ist, ${tr.length === 1 ? 'sagt nur ' + tr[0] : 'sagen ' + vnList(tr)} die Wahrheit${lr.length ? ' und ' + (lr.length === 1 ? lr[0] + ' lügt' : vnList(lr) + ' lügen') : ''}.`);
+    return { pf, t: 'lie', title: 'Wer lügt?', body: `<p>${esc(loot)} wurde gestohlen. Der Täter ist unter diesen ${n} Verdächtigen. Jeder sagt einen Satz.</p><ul class="vn-st">${S.map((s, i) => `<li><b>${esc(N[i])}:</b> „${esc(txt(s, i))}“</li>`).join('')}</ul><p class="vn-rule">${esc(ruleT)}</p>`, q: 'Wer ist der Täter?', kind: 'choice', opts: N, ans, ex };
   }
   return null;
 }
@@ -109,7 +119,9 @@ function vnGenGrid(lv, r) {
     const ex = ['Lege dir ein Gitter an: oben die Räume, links die Personen. Streiche jeden Hinweis ab, dann füllt sich der Rest von selbst.'].concat(pr.log.slice(0, 16));
     if (pr.log.length > 16) ex.push('… und so weiter, bis jede Person genau einen Raum hat.');
     ex.push(`Ergebnis: ${N.map((x, p) => `${x} → ${RM[perm[p]][0]}`).join(', ')}. ${vnRoomT(RM[tgt])} war ${N[ansP]}.`);
-    return { t: 'grid', title: 'Alibi-Gitter', body: `<p>Um ${hour} Uhr verschwand ${esc(loot.replace(/^(Der|Die|Das)/, m => m.toLowerCase()))} ${esc(vnRoomT(RM[tgt]))}. Zu dieser Zeit waren ${n} Verdächtige in ${n} verschiedenen Räumen – jeder in einem eigenen: ${esc(vnList(RM.map(x => x[0])))}.</p><ul class="vn-st">${acc.map(c => `<li>${esc(vnGridText(c, N, RM))}</li>`).join('')}</ul>`, q: `Wer war um ${hour} Uhr ${vnRoomT(RM[tgt])}?`, kind: 'choice', opts: N, ans: ansP, ex, dbg: { n, perm, clues: acc } };
+    const rp = vnPfR('grid', N.join(), perm.join()), direct = new Set(acc.filter(c => c.k === 'in').map(c => c.p)), cand = [...Array(n).keys()].filter(q => q !== ansP && !direct.has(q)), pp = (cand.length ? cand : [...Array(n).keys()].filter(q => q !== ansP))[vnRi(rp, cand.length || n - 1)];
+    const pf = Object.assign({ q: `Beweise es: In welchem Raum war ${N[pp]}?` }, vnPfMix(RM[perm[pp]][0], RM.filter((x, i) => i !== perm[pp]).map(x => x[0]), rp));
+    return { pf, t: 'grid', title: 'Alibi-Gitter', body: `<p>Um ${hour} Uhr verschwand ${esc(loot.replace(/^(Der|Die|Das)/, m => m.toLowerCase()))} ${esc(vnRoomT(RM[tgt]))}. Zu dieser Zeit waren ${n} Verdächtige in ${n} verschiedenen Räumen – jeder in einem eigenen: ${esc(vnList(RM.map(x => x[0])))}.</p><ul class="vn-st">${acc.map(c => `<li>${esc(vnGridText(c, N, RM))}</li>`).join('')}</ul>`, q: `Wer war um ${hour} Uhr ${vnRoomT(RM[tgt])}?`, kind: 'choice', opts: N, ans: ansP, ex, dbg: { n, perm, clues: acc } };
   }
   return null;
 }
@@ -140,8 +152,9 @@ function vnGenTime(lv, r) {
   ex.push(`Der Einbrecher war im Haus von ${vnT(E)} bis ${vnT(X)} Uhr.`);
   al.forEach((x, i) => ex.push(`${N[i]}: ${vnT(x[0])}–${vnT(x[1])} Uhr ${places[i]}. ${x[0] <= E && x[1] >= X ? 'Deckt die ganze Zeit ab ✔' : `Deckt ${x[0] > E ? 'den Anfang (' + vnT(E) + '–' + vnT(x[0]) + ')' : 'das Ende (' + vnT(x[1]) + '–' + vnT(X) + ')'} nicht ab ✘`}`));
   ex.push(`Nur ${N[cu]} hat kein lückenloses Alibi.`);
+  const rp = vnPfR('time', N.join(), tt.join()), pf = Object.assign({ q: 'Beweise es: Um wie viel Uhr kam der Einbrecher ins Haus?' }, vnPfMix(vnT(E) + ' Uhr', pzShuf(tt.filter(t => t !== E), rp).slice(0, 3).map(t => vnT(t) + ' Uhr'), rp));
   const body = `<p>Im Museum wurde eingebrochen. Ein Einbrecher war vom Einbruch bis zu seiner Flucht im Haus. Das weißt du über den Abend:</p><ul class="vn-st"><li>${vnNom(evs[0])} war um ${vnT(T0)} Uhr.</li>${clues.map(c => `<li>${esc(c)}</li>`).join('')}</ul><p>Das sagen die Verdächtigen (alle Angaben sind von Zeugen bestätigt):</p><ul class="vn-st">${al.map((x, i) => `<li><b>${esc(N[i])}:</b> „Ich war von ${vnT(x[0])} bis ${vnT(x[1])} Uhr ${places[i]}.“</li>`).join('')}</ul>`;
-  return { t: 'time', title: 'Zeitleiste', body, q: 'Wer hat für die ganze Zeit, in der der Einbrecher im Haus war, kein lückenloses Alibi?', kind: 'choice', opts: N, ans: cu, ex };
+  return { t: 'time', title: 'Zeitleiste', body, q: 'Wer hat für die ganze Zeit, in der der Einbrecher im Haus war, kein lückenloses Alibi?', kind: 'choice', opts: N, ans: cu, ex, pf };
 }
 
 /* ===================== 4) Widerspruch (Zeugen) ===================== */
@@ -163,8 +176,11 @@ function vnGenWit(lv, r) {
     const ex = ['Der Dieb kann nicht schneller sein als die Gehzeit zwischen zwei Orten. Prüfe jedes Paar von Aussagen: Reicht die Zeit dazwischen?'];
     cf.slice(0, 3).forEach(x => ex.push(`${N[fw]} (${stm(bs)}) und ${N[x.w]} (${stm(x)}): ${sp[bs.p][0]} ↔ ${sp[x.p][0]} braucht mindestens ${Math.abs(d[bs.p] - d[x.p])} Min, es liegen aber nur ${Math.abs(bs.t - x.t)} Min dazwischen. Das geht nicht.`));
     ex.push(`Streicht man ${N[fw]}, passen alle übrigen Aussagen zusammen. Streicht man jemand anderen, bleibt der Widerspruch bestehen. Also irrt sich ${N[fw]}.`);
+    const rp = vnPfR('wit', N.join(), T.join()), all = S.flatMap((s, w) => s.map(x => `${N[w]}: ${stm(x)}`)), right = `${N[fw]}: ${stm(bs)}`;
+    const pf = Object.assign({ q: `Beweise es: Welche Angabe stimmt nicht?` }, vnPfMix(right, all.filter(x => x !== right), rp));
+    ex.push(`Beweis: Falsch ist die Angabe „${right}“.`);
     const way = sp.map((s, i) => i ? `${sp[i - 1][0]} → ${s[0]}: ${seg[i - 1]} Min` : '').filter(Boolean);
-    return { t: 'wit', title: 'Widerspruch', body: `<p>Ein Dieb ist durch die Stadt gelaufen. Er geht zu Fuß und ist nie schneller als die Gehzeit zwischen zwei Orten. Die Orte liegen an einer Straße:</p><p class="vn-way">${esc(way.join('  ·  '))}</p><p>Das sagen die Zeugen. Genau ein Zeuge irrt sich bei einer Angabe:</p><ul class="vn-st">${S.map((s, w) => `<li><b>${esc(N[w])}:</b> „Ich sah den Dieb ${s.map(x => esc(stm(x))).join(' und ')}.“</li>`).join('')}</ul>`, q: 'Welcher Zeuge irrt sich?', kind: 'choice', opts: N, ans: fw, ex };
+    return { t: 'wit', title: 'Widerspruch', body: `<p>Ein Dieb ist durch die Stadt gelaufen. Er geht zu Fuß und ist nie schneller als die Gehzeit zwischen zwei Orten. Die Orte liegen an einer Straße:</p><p class="vn-way">${esc(way.join('  ·  '))}</p><p>Das sagen die Zeugen. Genau ein Zeuge irrt sich bei einer Angabe:</p><ul class="vn-st">${S.map((s, w) => `<li><b>${esc(N[w])}:</b> „Ich sah den Dieb ${s.map(x => esc(stm(x))).join(' und ')}.“</li>`).join('')}</ul>`, q: 'Welcher Zeuge irrt sich?', kind: 'choice', opts: N, ans: fw, ex, pf };
   }
   return null;
 }
@@ -225,7 +241,8 @@ function vnGenEin(lv, r) {
     const ex = ['Zeichne dir ' + n + ' Kästchen für die Häuser (von links nach rechts). Notiere bei jeder Eigenschaft, in welchen Häusern sie noch stehen kann, und streiche mit jedem Hinweis Möglichkeiten weg.'].concat(pr.log.slice(0, 18));
     if (pr.log.length > 18) ex.push('… so geht es weiter, bis überall nur noch ein Haus übrig bleibt.');
     ex.push(`${vnCap(np(sv))} wohnt in Haus ${pos[sv] + 1} – und dort wohnt ${tcat.show(tcat.vals[vi(tv)])} (${tcat.lab}).`);
-    return { t: 'ein', title: 'Einstein-Rätsel', body: `<p>${n} Häuser stehen in einer Reihe (Haus 1 ist ganz links). In jedem wohnt eine Person. Von jeder Person kennst du: ${vnList(cs.map(c => c.lab))}. Alles ist verschieden.</p><ul class="vn-st">${acc.map(c => `<li>${esc(txt(c))}</li>`).join('')}</ul>`, q: `${tcat.art} ${tcat.lab} hat ${np(sv)}?`, kind: 'choice', opts: vals[tc].map(i => tcat.show(tcat.vals[i])), ans: vals[tc].indexOf(vi(tv)), ex, dbg: { n, nv, catOf, clues: acc, pos } };
+    const rp = vnPfR('ein', pos.join(), sv, tv), pf = Object.assign({ q: `Beweise es: In welchem Haus wohnt ${np(sv)}?` }, vnPfMix('Haus ' + (pos[sv] + 1), [...Array(n).keys()].filter(k => k !== pos[sv]).map(k => 'Haus ' + (k + 1)), rp));
+    return { pf, t: 'ein', title: 'Einstein-Rätsel', body: `<p>${n} Häuser stehen in einer Reihe (Haus 1 ist ganz links). In jedem wohnt eine Person. Von jeder Person kennst du: ${vnList(cs.map(c => c.lab))}. Alles ist verschieden.</p><ul class="vn-st">${acc.map(c => `<li>${esc(txt(c))}</li>`).join('')}</ul>`, q: `${tcat.art} ${tcat.lab} hat ${np(sv)}?`, kind: 'choice', opts: vals[tc].map(i => tcat.show(tcat.vals[i])), ans: vals[tc].indexOf(vi(tv)), ex, dbg: { n, nv, catOf, clues: acc, pos } };
   }
   return null;
 }

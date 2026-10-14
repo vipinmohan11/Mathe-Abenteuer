@@ -18,9 +18,13 @@ SOLVE = """()=>{const m=UI.vn,p=vnPz(m),a=m.ans;
  if(p.kind==='cross'){Object.keys(p.cells).forEach(k=>vnCrossSet(m,k,p.cells[k]));return 'cross'}}"""
 def solve_stage(pg):
     E = pg.evaluate; kind = E(SOLVE)
-    if kind == 'choice': pg.click('[data-act=vnOk]')
+    if kind == 'choice':
+        pg.click('[data-act=vnOk]')
+        if E("()=>!!vnPz(UI.vn).pf"):
+            pg.click('[data-act=vnPfOpt][data-arg="%d"]' % E("()=>vnPz(UI.vn).pf.ans")); pg.click('[data-act=vnPfOk]')
     elif kind == 'multi':
         for i, q in enumerate(E("()=>vnPz(UI.vn).qs.map(q=>q.ans)")): pg.click(f'[data-act=vnMq][data-arg="{i},{q}"]')
+        pg.click('[data-act=vnMqChk]')
     elif kind == 'fields': pg.click('[data-act=vnFldChk]')
     return kind
 def play(pg, game, lv, tm=0):
@@ -135,6 +139,57 @@ with sync_playwright() as p:
     E("()=>{S.puz={hist:[],hint:{},venWins:3,venClean:1};save()}"); pg.reload(); pg.wait_for_timeout(300)
     E("()=>{S.flags.venola=true;go('venola')}"); pg.wait_for_timeout(80)
     ok(E("()=>vnS().venWins")==3 and E("()=>vnS().vnCaseLvl")>=1, 'Alter Spielstand bleibt erhalten')
+
+
+    # ---------- Versuche, Beweis, Abzug ----------
+    r = E("""()=>{let bad=0;for(const t of ['lie','grid','time','wit','ein'])for(let lv=1;lv<=5;lv++)for(let i=0;i<5;i++){const q=VN_LOGIC[t](lv,pzRng(3000+i*17+lv));const f=q&&q.pf;
+      if(!f||!f.q||!f.opts||f.opts.length<2||!(f.ans>=0&&f.ans<f.opts.length)||new Set(f.opts).size!==f.opts.length)bad++;
+      const q2=VN_LOGIC[t](lv,pzRng(3000+i*17+lv));if(JSON.stringify(q2.pf)!==JSON.stringify(f))bad++}return bad}""")
+    ok(r == 0, 'Kriminalfall: jede Aufgabe hat eine eindeutige Beweis-Frage (%s Fehler)' % r)
+    def start_case(lv, game='case'):
+        E("()=>{vnStop();UI.vn=null;UI.vnSet=null;UI.vnV=null;vnS().vnCaseLvl=Math.max(vnS().vnCaseLvl,%d);vnS().vnCodeLvl=Math.max(vnS().vnCodeLvl,%d);go('venola')}" % (lv, lv)); pg.wait_for_timeout(30)
+        pg.click(f'[data-act=vnGame][data-arg={game}]'); pg.click(f'[data-act=vnLvl][data-arg="{lv}"]'); pg.click('[data-act=vnStart]'); pg.wait_for_timeout(50)
+    E("()=>{const p=vnS();p.vnCaseLvl=3}")
+    start_case(3)
+    E("()=>{const m=UI.vn;m.stages=[{t:'grid',lv:3,sd:4242},{t:'time',lv:3,sd:4343}];m.sv=[0,0];m.miss=[0,0];m._pz={};m.si=0;m.ans=vnAnsNew(vnPz(m));render()}")
+    wa = E("()=>{const p=vnPz(UI.vn);return [0,1,2,3].filter(i=>i!==p.ans).slice(0,2)}")
+    pg.click('[data-act=vnOpt][data-arg="%d"]' % wa[0]); pg.click('[data-act=vnOk]')
+    ok(E("()=>UI.vn.ans.tr")==1 and E("()=>UI.vn.wr")==1 and E("()=>!UI.vn.sv[0]"), '1. falscher Versuch: noch 1 Versuch')
+    ok(E("()=>document.querySelector('[data-act=vnOpt][data-arg=\"%d\"]').disabled" % wa[0]), 'Falsche Antwort ist gesperrt')
+    pg.click('[data-act=vnOpt][data-arg="%d"]' % wa[1]); pg.click('[data-act=vnOk]')
+    ok(E("()=>UI.vn.sv[0]===1&&UI.vn.miss[0]===1"), '2. falscher Versuch: Rätsel nicht gelöst, Lösung wird gezeigt')
+    ok(E("()=>!!document.querySelector('.vn-missc')") and E("()=>!!document.querySelector('[data-act=vnNext]')"), 'Akte geht weiter')
+    pg.click('[data-act=vnNext]'); pg.wait_for_timeout(30)
+    pg.click('[data-act=vnOpt][data-arg="%d"]' % E("()=>vnPz(UI.vn).ans")); pg.click('[data-act=vnOk]')
+    ok(E("()=>UI.vn.ans.ph")=='proof' and E("()=>!UI.vn.sv[1]") and E("()=>!!document.querySelector('.vn-pf')"), 'Richtige Antwort → erst noch beweisen')
+    pf = E("()=>vnPz(UI.vn).pf"); wrongpf = [i for i in range(len(pf['opts'])) if i != pf['ans']][0]
+    pg.click('[data-act=vnPfOpt][data-arg="%d"]' % wrongpf); pg.click('[data-act=vnPfOk]')
+    ok(E("()=>UI.vn.ans.pf.tr")==1 and E("()=>UI.vn.wr")==3, 'Falscher Beweis zählt als Fehler')
+    pg.click('[data-act=vnPfOpt][data-arg="%d"]' % pf['ans']); pg.click('[data-act=vnPfOk]')
+    ok(E("()=>UI.vn.sv[1]===1&&!UI.vn.miss[1]"), 'Richtiger Beweis löst das Rätsel')
+    mk0 = E("()=>vnS().vnMk"); lv0 = E("()=>vnS().vnCaseLvl")
+    pg.click('[data-act=vnNext]'); pg.wait_for_timeout(50)
+    ok(E("()=>UI.vn.st")=='win' and E("()=>UI.vn.bm")==0 and E("()=>vnS().vnMk")==mk0, 'Marken: halbe Akte (2 von 5) minus 3 Fehler = 0, nie negativ')
+    ok(E("()=>vnS().vnCaseLvl")==lv0, 'Nicht gelöstes Rätsel: keine neue Stufe')
+    ok('abgeschlossen' in pg.inner_text('.pz-res'), 'Ergebnis heißt „Akte abgeschlossen“')
+    # alles verpasst → wie Aufgeben
+    w0 = E("()=>vnS().venWins"); start_case(1)
+    E("()=>{const m=UI.vn;m.stages=[{t:'lie',lv:1,sd:77}];m.sv=[0];m.miss=[0];m._pz={};m.si=0;m.ans=vnAnsNew(vnPz(m));render()}")
+    for i in [x for x in range(5) if x != E("()=>vnPz(UI.vn).ans")][:2]:
+        pg.click('[data-act=vnOpt][data-arg="%d"]' % i); pg.click('[data-act=vnOk]')
+    pg.click('[data-act=vnNext]'); pg.wait_for_timeout(50)
+    ok(E("()=>UI.vn.st")=='gave' and E("()=>vnS().venWins")==w0, 'Kein Rätsel geschafft: keine Belohnung, zählt nicht')
+    # Analogien: erst alles beantworten, dann einmal prüfen
+    start_case(2, 'code')
+    E("()=>{const m=UI.vn;m.stages=[{t:'ana',lv:2,sd:99}];m.sv=[0];m.miss=[0];m._pz={};m.si=0;m.ans=vnAnsNew(vnPz(m));render()}")
+    qs = E("()=>vnPz(UI.vn).qs.map(q=>q.ans)")
+    ok(E("()=>document.querySelector('[data-act=vnMqChk]').disabled"), 'Analogien: Prüfen erst wenn alles beantwortet')
+    for i, a in enumerate(qs): pg.click(f'[data-act=vnMq][data-arg="{i},{(a + 1) % 3 if i == 0 else a}"]')
+    ok(E("()=>UI.vn.ans.qa.every(x=>!x.ok)"), 'Analogien: kein Sofort-Feedback beim Antippen')
+    pg.click('[data-act=vnMqChk]')
+    ok(E("()=>UI.vn.ans.tr")==1 and E("()=>UI.vn.ans.qa.filter(x=>x.ok).length")==len(qs)-1, 'Prüfen: Ergebnis erst danach, falsche durchgestrichen')
+    pg.click(f'[data-act=vnMq][data-arg="0,{qs[0]}"]'); pg.click('[data-act=vnMqChk]')
+    ok(E("()=>UI.vn.sv[0]===1&&!UI.vn.miss[0]"), 'Analogien: zweite Prüfung richtig → gelöst')
 
     # ---------- Handy ----------
     pg.set_viewport_size({'width': 390, 'height': 800}); E("()=>{go('venola')}"); pg.wait_for_timeout(100)

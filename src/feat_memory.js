@@ -2,11 +2,11 @@
    MEMORY (in Meine Welt): Paare finden mit Zeit nach Wahl, vier Stufen (4×4, 5×5, 6×6, 7×7) und wechselnden Themen
    (Länder, Mathe, Deutsch, Wissen aus „Lustige Karten“, oder Zufall). Keine Belohnung – nur Spaß; gespeichert wird
    die höchste freigeschaltete Stufe und der beste Zug-Rekord je Stufe: S.memory = { lvl, wins, best: { '1': Züge } }.
-   Zeit: ganze Runde, startet beim ersten Aufdecken. Aus / 10 / 15 / 20 / 30 / 60 Sekunden; Vorgabe je nach Größe.
+   Zeit: ganze Runde, startet beim ersten Aufdecken. Aus / 30 Sekunden / 1 Minute / 2 Minuten; Vorgabe je nach Größe.
    Bei 5×5 und 7×7 liegt in der Mitte ein Joker-Stern (schon aufgedeckt).
    ===================================================================== */
-const MM_SIZES = [{ n: 4, t: 15 }, { n: 5, t: 30 }, { n: 6, t: 60 }, { n: 7, t: 60 }];
-const MM_TIMES = [0, 10, 15, 20, 30, 60];
+const MM_SIZES = [{ n: 4, t: 30 }, { n: 5, t: 60 }, { n: 6, t: 120 }, { n: 7, t: 120 }];
+const MM_TIMES = [0, 30, 60, 120];
 const MM_THEMES = [['zufall', 'Zufall', '🎲'], ['laender', 'Länder', '🌍'], ['mathe', 'Mathe', '🔢'], ['deutsch', 'Deutsch', '✏️'], ['wissen', 'Wissen', '💡']];
 const mmS = () => { const m = S.memory || (S.memory = {}); if (!(m.lvl >= 1)) m.lvl = 1; if (!(m.wins >= 0)) m.wins = 0; if (!(m.plays >= 0)) m.plays = 0; if (!m.best) m.best = {}; return m; };
 const MM_THEME_AFTER = 2;                                            // ab der 3. Runde frei: 2 gespielte Runden genügen (gewonnen oder nicht)
@@ -94,7 +94,7 @@ function mmSetup() {
   const tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm;
   const lv = MM_SIZES.map((z, i) => { const ok = i + 1 <= g.lvl, c = z.n * z.n;
     return `<button class="mm-lv${u.lvl === i + 1 ? ' on' : ''}${ok ? '' : ' lock'}" data-act="mmLvl" data-arg="${i + 1}" ${ok ? '' : 'disabled'} aria-pressed="${u.lvl === i + 1}"><b>${z.n} × ${z.n}</b><small>${ok ? c + ' Karten' : ico('lock', 14) + ' Noch zu'}</small></button>`; }).join('');
-  const tms = MM_TIMES.map(t => `<button class="mm-chip${tm === t ? ' on' : ''}" data-act="mmTime" data-arg="${t}" aria-pressed="${tm === t}">${t ? t + ' s' : 'Aus'}</button>`).join('');
+  const tms = MM_TIMES.map(t => `<button class="mm-chip${tm === t ? ' on' : ''}" data-act="mmTime" data-arg="${t}" aria-pressed="${tm === t}">${!t ? 'Aus' : t < 60 ? t + ' s' : t / 60 + ' Min'}</button>`).join('');
   const tOpen = mmThemesOpen(), ths = MM_THEMES.map(t => { const dis = !tOpen && t[0] !== 'zufall'; return `<button class="mm-chip${u.theme === t[0] ? ' on' : ''}${dis ? ' lock' : ''}" data-act="mmTheme" data-arg="${t[0]}" aria-pressed="${u.theme === t[0]}" ${dis ? 'disabled' : ''}>${dis ? ico('lock', 13) : t[2]} ${t[1]}</button>`; }).join('');
   const best = g.best[String(u.lvl)];
   return topBar('Memory', 'rewards') + `<section class="card mm-setup"><h3>Stufe</h3><div class="mm-lvs">${lv}</div>

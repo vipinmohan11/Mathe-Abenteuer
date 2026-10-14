@@ -1257,6 +1257,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .vn-det{display:block;margin:8px 0}.vn-title2{margin:0 0 6px;text-align:center}
 @media (max-width:520px){.vn-kof{grid-template-columns:repeat(2,minmax(0,1fr))}.vn-lvrow .btn{font-size:.85rem}}
 .vn-lvrow button{display:flex;flex-direction:column;align-items:center;line-height:1.15;padding-left:4px;padding-right:4px}.vn-lvrow button small{display:block;font-size:.7rem;opacity:.8}
+.vn-try{text-align:center;font-size:.9rem;color:var(--dz-mute);margin:6px 0}
+.card.vn-pf{margin:12px 0;border:2px solid var(--dz-accent)}.vn-pf h3{margin:0 0 4px}
+.card.vn-missc{border:2px solid #c0392b;background:rgba(192,57,43,.06)}
+.vn-dots i.miss{background:#c0392b}
 
 /* ===== Schatzkammer ===== */
 .tkopen{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
@@ -9370,7 +9374,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = 'a39f34ea';
+const APP_BUILD = '3d300c67';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -10719,11 +10723,11 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.g
    MEMORY (in Meine Welt): Paare finden mit Zeit nach Wahl, vier Stufen (4×4, 5×5, 6×6, 7×7) und wechselnden Themen
    (Länder, Mathe, Deutsch, Wissen aus „Lustige Karten“, oder Zufall). Keine Belohnung – nur Spaß; gespeichert wird
    die höchste freigeschaltete Stufe und der beste Zug-Rekord je Stufe: S.memory = { lvl, wins, best: { '1': Züge } }.
-   Zeit: ganze Runde, startet beim ersten Aufdecken. Aus / 10 / 15 / 20 / 30 / 60 Sekunden; Vorgabe je nach Größe.
+   Zeit: ganze Runde, startet beim ersten Aufdecken. Aus / 30 Sekunden / 1 Minute / 2 Minuten; Vorgabe je nach Größe.
    Bei 5×5 und 7×7 liegt in der Mitte ein Joker-Stern (schon aufgedeckt).
    ===================================================================== */
-const MM_SIZES = [{ n: 4, t: 15 }, { n: 5, t: 30 }, { n: 6, t: 60 }, { n: 7, t: 60 }];
-const MM_TIMES = [0, 10, 15, 20, 30, 60];
+const MM_SIZES = [{ n: 4, t: 30 }, { n: 5, t: 60 }, { n: 6, t: 120 }, { n: 7, t: 120 }];
+const MM_TIMES = [0, 30, 60, 120];
 const MM_THEMES = [['zufall', 'Zufall', '🎲'], ['laender', 'Länder', '🌍'], ['mathe', 'Mathe', '🔢'], ['deutsch', 'Deutsch', '✏️'], ['wissen', 'Wissen', '💡']];
 const mmS = () => { const m = S.memory || (S.memory = {}); if (!(m.lvl >= 1)) m.lvl = 1; if (!(m.wins >= 0)) m.wins = 0; if (!(m.plays >= 0)) m.plays = 0; if (!m.best) m.best = {}; return m; };
 const MM_THEME_AFTER = 2;                                            // ab der 3. Runde frei: 2 gespielte Runden genügen (gewonnen oder nicht)
@@ -10811,7 +10815,7 @@ function mmSetup() {
   const tm = u.tm == null ? MM_SIZES[u.lvl - 1].t : u.tm;
   const lv = MM_SIZES.map((z, i) => { const ok = i + 1 <= g.lvl, c = z.n * z.n;
     return `<button class="mm-lv${u.lvl === i + 1 ? ' on' : ''}${ok ? '' : ' lock'}" data-act="mmLvl" data-arg="${i + 1}" ${ok ? '' : 'disabled'} aria-pressed="${u.lvl === i + 1}"><b>${z.n} × ${z.n}</b><small>${ok ? c + ' Karten' : ico('lock', 14) + ' Noch zu'}</small></button>`; }).join('');
-  const tms = MM_TIMES.map(t => `<button class="mm-chip${tm === t ? ' on' : ''}" data-act="mmTime" data-arg="${t}" aria-pressed="${tm === t}">${t ? t + ' s' : 'Aus'}</button>`).join('');
+  const tms = MM_TIMES.map(t => `<button class="mm-chip${tm === t ? ' on' : ''}" data-act="mmTime" data-arg="${t}" aria-pressed="${tm === t}">${!t ? 'Aus' : t < 60 ? t + ' s' : t / 60 + ' Min'}</button>`).join('');
   const tOpen = mmThemesOpen(), ths = MM_THEMES.map(t => { const dis = !tOpen && t[0] !== 'zufall'; return `<button class="mm-chip${u.theme === t[0] ? ' on' : ''}${dis ? ' lock' : ''}" data-act="mmTheme" data-arg="${t[0]}" aria-pressed="${u.theme === t[0]}" ${dis ? 'disabled' : ''}>${dis ? ico('lock', 13) : t[2]} ${t[1]}</button>`; }).join('');
   const best = g.best[String(u.lvl)];
   return topBar('Memory', 'rewards') + `<section class="card mm-setup"><h3>Stufe</h3><div class="mm-lvs">${lv}</div>
@@ -12535,13 +12539,13 @@ function vnNew(kind, lv, tm, wk) {
     let di = -1; if (due) { p.vnLater.splice(p.vnLater.indexOf(due), 1); di = ty.indexOf(due.t); if (di < 0) di = ty.length - 1; }
     descs = ty.map((t, i) => { if (i === di) { const x = { t: due.t, lv: due.lv, sd: due.sd }; if (due.ids) x.ids = due.ids; return x; } const r = vnMakeStage(t, lv); vnSeenMark(r.d, r.rep); return r.d; });
   }
-  return { st: 'play', kind, lv, tm, wk, el: 0, t0: 0, up: false, hints: 0, stages: descs, si: 0, sv: descs.map(() => 0), ans: null, exp: false };
+  return { st: 'play', kind, lv, tm, wk, el: 0, t0: 0, up: false, hints: 0, stages: descs, si: 0, sv: descs.map(() => 0), miss: descs.map(() => 0), wr: 0, ans: null, exp: false };
 }
 function vnPz(m) { m._pz = m._pz || {}; if (!m._pz[m.si]) m._pz[m.si] = vnBuild(m.stages[m.si], {}); return m._pz[m.si]; }
 function vnAnsNew(p) {
   switch (p.kind) {
-    case 'choice': return { sel: null, bad: [] };
-    case 'multi': return { qa: p.qs.map(() => ({ ok: false, bad: [] })) };
+    case 'choice': return { sel: null, bad: [], tr: 0, ph: 'main', pf: null };
+    case 'multi': return { qa: p.qs.map(() => ({ ok: false, bad: [], sel: null })), tr: 0, msg: '' };
     case 'pool': return { fill: p.groups.map(g => Array(g.n).fill(-1)), act: null, lk: {}, chk: false };
     case 'fields': return { v: p.items.map(() => ''), lk: p.items.map(() => false), chk: false };
     default: return { g: {}, lk: {}, sel: null, d: 'h', chk: false };
@@ -12556,7 +12560,7 @@ function vnPersist(m) {
 }
 const vnRestore = d => Object.assign({ st: 'play', t0: 0 }, JSON.parse(JSON.stringify(d)));
 function vnStop() { const m = UI.vn; if (m) { PzT.stop(m); if (m.st === 'play') vnPersist(m); } }
-function vnBegin(m) { UI.vn = m; UI.vnAsk = false; m.save = () => vnPersist(m); PzT.start(m, 'venola', () => { sfx('tap'); if (view === 'venola') render(); }); if (!m.ans) m.ans = vnAnsNew(vnPz(m)); vnPersist(m); render(); }
+function vnBegin(m) { if (!m.miss) m.miss = m.stages.map(() => 0); if (!(m.wr >= 0)) m.wr = 0; UI.vn = m; UI.vnAsk = false; m.save = () => vnPersist(m); PzT.start(m, 'venola', () => { sfx('tap'); if (view === 'venola') render(); }); if (!m.ans) m.ans = vnAnsNew(vnPz(m)); vnPersist(m); render(); }
 const vnWeekState = () => { const p = vnS(), wk = pzWeek(); if (!p.vnWk || p.vnWk.wk !== wk) p.vnWk = { wk, done: false, cur: null }; return p.vnWk; };
 
 /* ---------- Belohnungen ---------- */
@@ -12572,19 +12576,32 @@ function vnBuy(id) {
 }
 function vnWin(m) {
   PzT.stop(m); m.st = 'win'; const p = vnS(), secs = PzT.el(m), wk = m.kind === 'week', lv = m.lv, g = m.kind;
-  const base = wk ? 12 : VN_BM[lv - 1]; m.bm = base + (m.hints ? 0 : Math.max(1, Math.round(base / 2))); p.vnMk += m.bm; p.vnMkT = (p.vnMkT || 0) + m.bm;
+  const base = wk ? 12 : VN_BM[lv - 1], nS = m.stages.length, nMiss = (m.miss || []).filter(Boolean).length, wr = m.wr || 0, clean = !m.hints && !wr && !nMiss;
+  m.bmBase = Math.round(base * (nS - nMiss) / nS); m.bmBonus = clean ? Math.max(1, Math.round(base / 2)) : 0; m.bmLost = Math.min(wr, m.bmBase);
+  m.bm = m.bmBase - m.bmLost + m.bmBonus; m.nMiss = nMiss; p.vnMk += m.bm; p.vnMkT = (p.vnMkT || 0) + m.bm;
   const key = g === 'code' ? 'vnCodeLvl' : 'vnCaseLvl'; m.fresh = '';
-  if (!wk && lv === p[key] && lv < 5) { p[key]++; m.fresh = (g === 'code' ? 'Geheimakte' : 'Kriminalfall') + ' · Stufe ' + p[key]; }
-  if (!wk) { const q = !m.hints && secs <= VN_QUICK[lv - 1]; p.vnQuick[g] = q ? (p.vnQuick[g] || 0) + 1 : 0; p.vnLast[g] = lv; }
+  if (!wk && !nMiss && lv === p[key] && lv < 5) { p[key]++; m.fresh = (g === 'code' ? 'Geheimakte' : 'Kriminalfall') + ' · Stufe ' + p[key]; }
+  if (!wk) { const q = clean && secs <= VN_QUICK[lv - 1]; p.vnQuick[g] = q ? (p.vnQuick[g] || 0) + 1 : 0; p.vnLast[g] = lv; }
   const rkB = vnRank(p.venWins).i;
   m.coins = pzCoins(VN_COIN[lv - 1], 'Akte gelöst') + (wk ? (() => { giveCoins(10, 'Großer Fall gelöst'); return 10; })() : 0);
   if (!wk && lv === 5) p.venL5 = (p.venL5 || 0) + 1;
   if (wk && p.vnWk) { p.vnWk.done = true; p.vnWk.cur = null; }
   m.find = null; if (wk) { const left = VN_KOF.filter(x => !p.vnKof[x.id]); if (left.length) { m.find = left[Math.floor(Math.random() * left.length)]; p.vnKof[m.find.id] = Date.now(); } }
   m.entry = pzFinish('ven', vnLbl(g, lv), secs, m.hints, { weekly: wk, inc: g === 'code' ? ['venCode'] : g === 'case' ? ['venCase'] : [] });
-  Object.assign(m.entry, { k: g, lv, bm: m.bm, st: m.stages.map(s => s.t), rp: m.stages.map(s => ({ t: s.t, lv: s.lv, sd: s.sd, ids: s.ids })) });
+  if (!m.hints && !clean) p.venClean = Math.max(0, p.venClean - 1);                  // „ohne Hilfe“ zählt nur ganz fehlerfrei
+  Object.assign(m.entry, { k: g, lv, bm: m.bm, wr, miss: nMiss, st: m.stages.map(s => s.t), rp: m.stages.map(s => ({ t: s.t, lv: s.lv, sd: s.sd, ids: s.ids })) });
   const rk = vnRank(p.venWins); m.rankUp = rk.i > rkB ? rk : null;
   vnRewardsCheck(true); vnPersist(m); save(); sfx('ok'); try { if (!rwCalm()) confetti(70); } catch (x) { }
+}
+/* Höchstens VN_TRIES Versuche pro Antwort (und pro Beweis). Danach zeigt Venola die Lösung, das Rätsel zählt als „nicht gelöst“
+   (keine Beweismarken dafür), die Akte geht weiter. Jeder falsche Versuch kostet 1 Beweismarke – Münzen werden nie abgezogen. */
+const VN_TRIES = 2;
+function vnMiss(m) { m.sv[m.si] = 1; m.miss[m.si] = 1; m.exp = true; sfx('pop'); vnPersist(m); render(); }
+function vnLose(m) {                                                                     // kein einziges Rätsel geschafft: wie Aufgeben (keine Belohnung, kein Verlust, Rätsel kommen wieder)
+  PzT.stop(m); const p = vnS();
+  if (m.kind !== 'week') m.stages.forEach(d => { const x = { g: m.kind === 'code' ? 'w' : 'l', t: d.t, lv: d.lv, sd: d.sd, n: 2 }; if (d.ids) x.ids = d.ids; p.vnLater.push(x); });
+  else if (p.vnWk) p.vnWk.cur = null;
+  m.st = 'gave'; m.lost = true; vnPersist(m); save(); render();
 }
 function vnSolveStage(m) {
   m.sv[m.si] = 1; m.exp = false; sfx('ok'); vnPersist(m); render();
@@ -12600,12 +12617,25 @@ function vnPoolEval(p, a) {
   });
 }
 const vnFldEval = (p, a) => p.chk ? p.chk(a.v) : (() => { const ok = a.v.map((v, i) => v.trim() ? p.items[i].ans.map(vnNz).includes(vnNz(v)) : null); return { ok, done: ok.every(x => x === true), msg: '' }; })();
+const vnTryInfo = (tr, done) => done ? '' : `<p class="vn-try">${tr ? '⚠️ Noch <b>1 Versuch</b>. Lies die Hinweise noch einmal genau.' : 'Du hast <b>2 Versuche</b>. Jeder falsche kostet eine Beweismarke.'}</p>`;
+function vnUiOpts(opts, ans, st, act, done, sm) {
+  return `<div class="vn-opts${sm ? ' sm' : ''}">${opts.map((o, i) => { const bad = st.bad.includes(i), on = st.sel === i, ok = done && i === ans; return `<button class="vn-opt${on && !done ? ' sel' : ''}${bad ? ' bad' : ''}${ok ? ' ok' : ''}" data-act="${act}" data-arg="${i}" ${bad || done ? 'disabled' : ''} aria-pressed="${on}">${esc(String(o))}${bad ? ' ✕' : ''}${ok ? ' ✔' : ''}</button>`; }).join('')}</div>`;
+}
 function vnUiChoice(p, a, solved) {
-  return `<div class="vn-opts">${p.opts.map((o, i) => { const bad = a.bad.includes(i), on = a.sel === i, ok = solved && i === p.ans; return `<button class="vn-opt${on ? ' sel' : ''}${bad ? ' bad' : ''}${ok ? ' ok' : ''}" data-act="vnOpt" data-arg="${i}" ${bad || solved ? 'disabled' : ''} aria-pressed="${on}">${esc(String(o))}${bad ? ' ✕' : ''}${ok ? ' ✔' : ''}</button>`; }).join('')}</div>
-    ${a.msg && !solved ? `<p class="pz-msg">${esc(a.msg)}</p>` : ''}${solved ? '' : `<div class="center"><button class="btn big" data-act="vnOk" ${a.sel === null ? 'disabled' : ''}>Das ist meine Antwort</button></div>`}`;
+  const proof = a.ph === 'proof' || (solved && p.pf), mainDone = solved || a.ph === 'proof', pf = a.pf || { sel: null, bad: [], tr: 0 };
+  let h = vnUiOpts(p.opts, p.ans, a, 'vnOpt', mainDone);
+  if (!mainDone) return h + (a.msg ? `<p class="pz-msg">${esc(a.msg)}</p>` : '') + vnTryInfo(a.tr) + `<div class="center"><button class="btn big" data-act="vnOk" ${a.sel === null ? 'disabled' : ''}>Das ist meine Antwort</button></div>`;
+  if (proof && p.pf) {
+    h += `<section class="card vn-pf"><h3>🔎 ${solved ? 'Beweis' : 'Richtig! Jetzt beweise es'}</h3><p class="vn-q">${esc(p.pf.q.replace(/^Beweise es: /, ''))}</p>${vnUiOpts(p.pf.opts, p.pf.ans, pf, 'vnPfOpt', solved, p.pf.opts.length <= 6)}`;
+    if (!solved) h += (pf.msg ? `<p class="pz-msg">${esc(pf.msg)}</p>` : '') + vnTryInfo(pf.tr) + `<div class="center"><button class="btn big" data-act="vnPfOk" ${pf.sel === null ? 'disabled' : ''}>Beweis abgeben</button></div>`;
+    h += '</section>';
+  }
+  return h;
 }
 function vnUiMulti(p, a, solved) {
-  return p.qs.map((q, k) => { const st = a.qa[k]; return `<div class="vn-mq${st.ok ? ' ok' : ''}"><div class="vn-mh">${k + 1}. ${q.h}${st.ok ? ' ✔' : ''}</div><div class="vn-opts sm">${q.opts.map((o, i) => { const bad = st.bad.includes(i), ok = st.ok && i === q.ans; return `<button class="vn-opt${bad ? ' bad' : ''}${ok ? ' ok' : ''}" data-act="vnMq" data-arg="${k},${i}" ${bad || st.ok ? 'disabled' : ''}>${esc(String(o))}${bad ? ' ✕' : ''}</button>`; }).join('')}</div></div>`; }).join('');
+  const all = a.qa.every(st => st.ok || st.sel !== null);
+  return p.qs.map((q, k) => { const st = a.qa[k]; return `<div class="vn-mq${st.ok ? ' ok' : ''}"><div class="vn-mh">${k + 1}. ${q.h}${st.ok ? ' ✔' : ''}</div>${vnUiOpts(q.opts, q.ans, st, 'vnMq', st.ok || solved, true).replace(/data-arg="(\d+)"/g, `data-arg="${k},$1"`)}</div>`; }).join('')
+    + (solved ? '' : (a.msg ? `<p class="pz-msg">${esc(a.msg)}</p>` : '') + `<p class="vn-try">${a.tr ? '⚠️ Noch <b>1 Prüfung</b>. Die falschen Antworten sind durchgestrichen.' : 'Beantworte alle Aufgaben, dann prüfe einmal. Du hast <b>2 Prüfungen</b>.'}</p><div class="center"><button class="btn big" data-act="vnMqChk" ${all ? '' : 'disabled'}>Prüfen</button></div>`);
 }
 function vnUiPool(p, a, solved) {
   const ev = vnPoolEval(p, a), used = new Set(a.fill.flat().filter(x => x >= 0));
@@ -12667,10 +12697,10 @@ function vnSetup() {
 }
 function vnPlay(m) {
   const p = vnPz(m), a = m.ans || (m.ans = vnAnsNew(p)), solved = !!m.sv[m.si], last = m.si === m.stages.length - 1, kindK = m.kind === 'code' ? 'vg' : 'vc';
-  const dots = `<div class="vn-dots" aria-label="Rätsel ${m.si + 1} von ${m.stages.length}">${m.stages.map((s, i) => `<i class="${m.sv[i] ? 'ok' : i === m.si ? 'on' : ''}"></i>`).join('')}</div>`;
+  const dots = `<div class="vn-dots" aria-label="Rätsel ${m.si + 1} von ${m.stages.length}">${m.stages.map((s, i) => `<i class="${m.miss && m.miss[i] ? 'miss' : m.sv[i] ? 'ok' : i === m.si ? 'on' : ''}"></i>`).join('')}</div>`;
   if (UI.vnAsk && !solved) return vnTop() + `${pzClock(m)}${dots}<section class="card vn-ask"><h3>Wirklich aufgeben?</h3><p>Du siehst die Lösung und den Lösungsweg. Diese Akte endet <b>ohne Belohnung</b> – aber auch <b>ohne Verlust</b>. Das Rätsel kommt später wieder.</p><div class="row wrap" style="justify-content:center"><button class="btn" data-act="vnGiveYes">Ja, Lösungsweg zeigen</button><button class="btn sec" data-act="vnGiveNo">Nein, weiter knobeln</button></div></section>`;
   const tools = solved ? '' : `<div class="pz-tools">${pzHintBtn('vnHint', kindK)}<button class="btn sec pz-tool" data-act="vnGiveAsk">Aufgeben &amp; Lösungsweg</button></div>`;
-  const after = solved ? `<p class="pz-msg ok">Gelöst! ✔</p><div class="pz-tools"><button class="btn sec pz-tool" data-act="vnExp" aria-expanded="${!!m.exp}">${m.exp ? 'Lösungsweg zudecken' : 'Wie komme ich darauf?'}</button></div>${m.exp ? vnExpCard(p) : ''}<div class="center" style="margin-top:8px"><button class="btn big" data-act="vnNext">${last ? 'Akte abschließen' : 'Nächstes Rätsel'}</button></div>` : '';
+  const missed = !!(m.miss && m.miss[m.si]), after = solved ? `${missed ? `<section class="card vn-missc"><p><b>Leider nicht.</b> Für dieses Rätsel gibt es keine Beweismarken. So wäre es richtig: ${vnSol(p)}${p.pf ? ` · Beweis: <b>${esc(String(p.pf.opts[p.pf.ans]))}</b>` : ''}</p></section>` : '<p class="pz-msg ok">Gelöst! ✔</p>'}<div class="pz-tools"><button class="btn sec pz-tool" data-act="vnExp" aria-expanded="${!!m.exp}">${m.exp ? 'Lösungsweg zudecken' : 'Wie komme ich darauf?'}</button></div>${m.exp ? vnExpCard(p) : ''}<div class="center" style="margin-top:8px"><button class="btn big" data-act="vnNext">${last ? 'Akte abschließen' : 'Nächstes Rätsel'}</button></div>` : '';
   const flag = (solved || m.fl && m.fl[m.si]) ? (m.fl && m.fl[m.si] ? '<p class="small mute center">Gemeldet. Diese Frage kommt nicht wieder.</p>' : '') : '<div class="center"><button class="vn-link" data-act="vnFlagQ">Frage melden</button></div>';
   return vnTop() + `${pzClock(m)}${dots}<p class="sd-info small mute">${esc(vnLbl(m.kind, m.lv))} · Rätsel ${m.si + 1} von ${m.stages.length}${m.hints ? ' · Hinweise: ' + m.hints : ''}</p>
     <section class="card vn-card"><h3 class="vn-h">${esc(p.title)}</h3>${p.body}${p.q ? `<p class="vn-q">${esc(p.q)}</p>` : ''}</section>${vnUi(p, a, solved)}${tools}${after}${flag}
@@ -12678,13 +12708,15 @@ function vnPlay(m) {
 }
 function vnWinView(m) {
   const e = m.entry || { pk: [], fg: [] }, p = vnS();
-  return vnTop() + `<section class="card result pz-res"><h2>Akte gelöst! 🕵️</h2><p>${esc(vnLbl(m.kind, m.lv))} in <b>${fmtT(e.secs || 0)}</b> Min${m.hints ? ` mit ${m.hints} ${m.hints === 1 ? 'Hinweis' : 'Hinweisen'}` : ' ganz ohne Hinweis'}.</p>
+  return vnTop() + `<section class="card result pz-res"><h2>${m.nMiss ? 'Akte abgeschlossen 🕵️' : 'Akte gelöst! 🕵️'}</h2><p>${esc(vnLbl(m.kind, m.lv))} in <b>${fmtT(e.secs || 0)}</b> Min${m.hints ? ` mit ${m.hints} ${m.hints === 1 ? 'Hinweis' : 'Hinweisen'}` : ' ganz ohne Hinweis'}.</p>
+    ${m.nMiss || m.bmLost ? `<p class="small">${m.nMiss ? `${m.nMiss} ${m.nMiss === 1 ? 'Rätsel' : 'Rätsel'} nicht gelöst (keine Marken dafür${m.kind === 'week' ? '' : ', keine neue Stufe'}). ` : ''}${m.bmLost ? `−${m.bmLost} 🔎 für falsche Versuche.` : ''}</p>` : (!m.hints ? '<p class="small">Fehlerfrei gelöst – Bonus! ⭐</p>' : '')}
     <p class="vn-gain">+${m.bm} 🔎 Beweismarken${m.coins ? ` · +${m.coins} 🪙` : ''}</p>${m.find ? `<p>Du findest ein Beweisstück für den Koffer: <b>${esc(m.find.n)}</b>!</p>` : ''}${m.rankUp ? `<p class="vn-rup">${m.rankUp.ic} Neuer Rang: <b>${esc(m.rankUp.name)}</b>!</p>` : ''}${m.fresh ? `<p>Neue Stufe frei: <b>${esc(m.fresh)}</b></p>` : ''}${pzResultExtras(e)}
     <p class="small mute">Du hast jetzt ${p.vnMk} 🔎. Im Detektivkoffer kannst du Beweisstücke kaufen.</p>
     <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="vnAgain">Noch eine Akte</button><button class="btn sec" data-act="vnKoffer">🧳 Koffer</button><button class="btn sec" data-act="vnMenu">Menü</button></div></section>`;
 }
 function vnGaveView(m) {
   const p = vnPz(m);
+  if (m.lost) return vnTop() + `<section class="card result pz-res"><h2>Das war knifflig 🧩</h2><p>Diesmal hat kein Rätsel geklappt. Die Akte endet ohne Belohnung und ohne Verlust – die Rätsel kommen später wieder. Schau dir im Verlauf oder beim nächsten Mal genau den Lösungsweg an.</p><div class="row wrap" style="justify-content:center"><button class="btn big" data-act="vnAgain">Neue Akte</button><button class="btn sec" data-act="vnMenu">Menü</button></div></section>`;
   return vnTop() + `<section class="card result pz-res"><h2>Das war knifflig 🧩</h2><p>Hier ist die Lösung. Die Akte endet ohne Belohnung und ohne Verlust – dieses Rätsel kommt später wieder, dann kannst du es lösen.</p></section>
     <section class="card vn-card"><h3 class="vn-h">${esc(p.title)}</h3>${p.body}<p class="vn-note">Lösung: ${vnSol(p)}</p></section>${vnExpCard(p)}
     <div class="row wrap" style="justify-content:center"><button class="btn big" data-act="vnAgain">Neue Akte</button><button class="btn sec" data-act="vnMenu">Menü</button></div>`;
@@ -12724,7 +12756,7 @@ DZ_ART.venola = '<rect x="6" y="6" width="38" height="40" rx="7" fill="#f4efe4" 
 const vnCur = () => { const m = UI.vn; return m && m.st === 'play' && !(m.sv && m.sv[m.si]) ? m : null; };
 function vnAfterPool(m) {
   const p = vnPz(m), a = m.ans, ev = vnPoolEval(p, a);
-  if (ev.every(g => g.full)) { if (ev.every(g => g.good)) { vnSolveStage(m); return; } a.chk = true; sfx('no'); }
+  if (ev.every(g => g.full)) { if (ev.every(g => g.good)) { vnSolveStage(m); return; } a.chk = true; m.wr++; sfx('no'); }
   vnPersist(m); render();
 }
 function vnPlace(m, ci) {
@@ -12742,7 +12774,7 @@ function vnCrossSet(m, key, L) {
   a.chk = false;
   if (L) { const w = vnWordAt(p, key, a.d); if (w) { const cs = vnWordCells(w), i = cs.indexOf(key); if (i >= 0 && i < cs.length - 1) a.sel = cs[i + 1]; } }
   const full = Object.keys(p.cells).every(k => a.g[k]);
-  if (full) { if (Object.keys(p.cells).every(k => a.g[k] === p.cells[k])) { vnSolveStage(m); return; } a.chk = true; sfx('no'); }
+  if (full) { if (Object.keys(p.cells).every(k => a.g[k] === p.cells[k])) { vnSolveStage(m); return; } a.chk = true; m.wr++; sfx('no'); }
   vnPersist(m); render();
 }
 function vnGiveUp(m) {
@@ -12779,15 +12811,31 @@ registerFeature({
     vnAgain: () => { UI.vn = null; UI.vnV = null; render(); },
     vnOpt: i => { const m = vnCur(); if (!m) return; const a = m.ans; a.sel = +i; a.msg = ''; sfx('tap'); render(); },
     vnOk: () => {
-      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m); if (a.sel === null) return;
-      if (a.sel === p.ans) { vnSolveStage(m); return; }
-      a.bad.push(a.sel); a.sel = null; a.msg = 'Das stimmt nicht. Lies noch einmal genau – diese Antwort ist jetzt durchgestrichen.'; sfx('no'); vnPersist(m); render();
+      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m); if (a.sel === null || a.ph === 'proof') return;
+      if (a.sel === p.ans) { if (p.pf) { a.ph = 'proof'; a.pf = a.pf || { sel: null, bad: [], tr: 0, msg: '' }; a.msg = ''; sfx('ok'); vnPersist(m); render(); } else vnSolveStage(m); return; }
+      a.bad.push(a.sel); a.sel = null; a.tr = (a.tr || 0) + 1; m.wr++;
+      if (a.tr >= VN_TRIES) { vnMiss(m); return; }
+      a.msg = 'Das stimmt nicht – diese Antwort ist jetzt durchgestrichen.'; sfx('no'); vnPersist(m); render();
+    },
+    vnPfOpt: i => { const m = vnCur(); if (!m || m.ans.ph !== 'proof') return; m.ans.pf.sel = +i; m.ans.pf.msg = ''; sfx('tap'); render(); },
+    vnPfOk: () => {
+      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m), f = a.pf; if (!f || f.sel === null) return;
+      if (f.sel === p.pf.ans) { vnSolveStage(m); return; }
+      f.bad.push(f.sel); f.sel = null; f.tr++; m.wr++;
+      if (f.tr >= VN_TRIES) { vnMiss(m); return; }
+      f.msg = 'Dieser Beweis stimmt nicht. Prüfe die Hinweise noch einmal.'; sfx('no'); vnPersist(m); render();
     },
     vnMq: s => {
-      const m = vnCur(); if (!m) return; const [k, i] = s.split(',').map(Number), a = m.ans, p = vnPz(m), st = a.qa[k]; if (st.ok || st.bad.includes(i)) return;
-      if (i === p.qs[k].ans) { st.ok = true; sfx('ok'); } else { st.bad.push(i); sfx('no'); }
-      if (a.qa.every(x => x.ok)) { vnSolveStage(m); return; }
-      vnPersist(m); render();
+      const m = vnCur(); if (!m) return; const [k, i] = s.split(',').map(Number), st = m.ans.qa[k]; if (st.ok || st.bad.includes(i)) return;
+      st.sel = st.sel === i ? null : i; m.ans.msg = ''; sfx('tap'); render();
+    },
+    vnMqChk: () => {
+      const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m); if (!a.qa.every(st => st.ok || st.sel !== null)) return;
+      let wrong = 0; a.qa.forEach((st, k) => { if (st.ok) return; if (st.sel === p.qs[k].ans) st.ok = true; else { st.bad.push(st.sel); wrong++; } st.sel = null; });
+      if (!wrong) { vnSolveStage(m); return; }
+      a.tr++; m.wr += wrong;
+      if (a.tr >= VN_TRIES) { vnMiss(m); return; }
+      a.msg = `${p.qs.length - wrong} von ${p.qs.length} richtig. Die falschen sind durchgestrichen – such dir dort eine neue Antwort aus.`; sfx('no'); vnPersist(m); render();
     },
     vnChip: i => { const m = vnCur(); if (m) vnPlace(m, +i); },
     vnSlot: key => {
@@ -12800,7 +12848,7 @@ registerFeature({
       const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m); a.chk = true;
       document.querySelectorAll('.vn-in').forEach(el => { a.v[+el.dataset.i] = el.value; });
       const ev = vnFldEval(p, a); if (ev.done) { vnSolveStage(m); return; }
-      sfx(ev.ok.some(x => x === false) ? 'no' : 'tap'); vnPersist(m); render();
+      if (ev.ok.some(x => x === false)) m.wr++; sfx(ev.ok.some(x => x === false) ? 'no' : 'tap'); vnPersist(m); render();
     },
     vnCell: key => {
       const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m), cov = p.words.filter(w => vnWordCells(w).includes(key)); if (!cov.length) return;
@@ -12812,7 +12860,7 @@ registerFeature({
     vnExp: () => { const m = UI.vn; if (!m) return; m.exp = !m.exp; render(); },
     vnNext: () => {
       const m = UI.vn; if (!m || m.st !== 'play' || !m.sv[m.si]) return;
-      if (m.si >= m.stages.length - 1) { vnWin(m); render(); return; }
+      if (m.si >= m.stages.length - 1) { if (m.miss && m.miss.every(Boolean)) { vnLose(m); return; } vnWin(m); render(); return; }
       m.si++; m.ans = vnAnsNew(vnPz(m)); m.exp = false; sfx('tap'); vnPersist(m); render();
     },
     vnGiveAsk: () => { UI.vnAsk = true; render(); },
@@ -12828,7 +12876,7 @@ registerFeature({
       const m = vnCur(); if (!m) return; const a = m.ans, p = vnPz(m), g = m.kind === 'code' ? 'vg' : 'vc';
       if (pzHintLeft(g) <= 0) { render(); return; }
       let done = false;
-      if (p.kind === 'choice') { const c = p.opts.map((o, i) => i).filter(i => i !== p.ans && !a.bad.includes(i)); if (c.length > 1) { a.bad.push(c[Math.floor(Math.random() * c.length)]); if (a.sel !== null && a.bad.includes(a.sel)) a.sel = null; done = true; } }
+      if (p.kind === 'choice') { const pr = a.ph === 'proof', o = pr ? p.pf.opts : p.opts, an = pr ? p.pf.ans : p.ans, st = pr ? a.pf : a; const c = o.map((x, i) => i).filter(i => i !== an && !st.bad.includes(i)); if (c.length > 1) { st.bad.push(c[Math.floor(Math.random() * c.length)]); if (st.sel !== null && st.bad.includes(st.sel)) st.sel = null; done = true; } }
       else if (p.kind === 'multi') { for (let k = 0; k < p.qs.length && !done; k++) { const st = a.qa[k]; if (st.ok) continue; const c = p.qs[k].opts.map((o, i) => i).filter(i => i !== p.qs[k].ans && !st.bad.includes(i)); if (c.length > 1) { st.bad.push(c[Math.floor(Math.random() * c.length)]); done = true; } } }
       else if (p.kind === 'pool') {
         const used = () => new Set(a.fill.flat().filter(x => x >= 0));
@@ -13335,6 +13383,10 @@ const vnList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' un
 const vnPop = m => { let c = 0; while (m) { m &= m - 1; c++; } return c; };
 const vnCap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const vnRoomT = rm => rm[1] + ' ' + rm[0];
+/* Beweis-Frage: nach der richtigen Antwort muss das Kind zeigen, dass es den Fall wirklich gelöst hat (Raten reicht nicht).
+   Eigener Zufall aus den Rätseldaten, damit das Rätsel selbst gleich bleibt. Rückgabe { q, opts, ans } */
+const vnPfR = (...k) => pzRng(pzSeed('pf' + k.join('|')));
+const vnPfMix = (right, wrong, r) => { const o = pzShuf([right].concat(wrong), r); return { opts: o, ans: o.indexOf(right) }; };
 function vnDur(d) {
   if (d === 1) return 'eine Minute'; if (d === 15) return 'eine Viertelstunde'; if (d === 30) return 'eine halbe Stunde'; if (d === 45) return 'eine Dreiviertelstunde'; if (d === 60) return 'eine Stunde';
   if (d > 60) { const h = Math.floor(d / 60), m = d % 60; return (h === 1 ? 'eine Stunde' : h + ' Stunden') + (m ? ' und ' + (m === 1 ? 'eine Minute' : m + ' Minuten') : ''); }
@@ -13382,7 +13434,13 @@ function vnGenLie(lv, r) {
       else L.slice(0, 2).forEach(x => { const tr = N.filter((_, i) => (x[1] >> i) & 1), k = tr.length; ex.push(`Wäre ${N[c]} der Täter: Es sprächen ${k === 0 ? 'niemand' : vnList(tr)} die Wahrheit – das ${k === 1 ? 'ist 1 Person' : 'sind ' + k + ' Personen'}, erlaubt ${R === 1 ? 'ist 1' : 'sind ' + R}. ${k === R ? 'Das passt!' : 'Das passt nicht.'}`); });
     }
     ex.push(`Nur bei ${N[ans]} passt alles. ${N[ans]} ist der Täter.`);
-    return { t: 'lie', title: 'Wer lügt?', body: `<p>${esc(loot)} wurde gestohlen. Der Täter ist unter diesen ${n} Verdächtigen. Jeder sagt einen Satz.</p><ul class="vn-st">${S.map((s, i) => `<li><b>${esc(N[i])}:</b> „${esc(txt(s, i))}“</li>`).join('')}</ul><p class="vn-rule">${esc(ruleT)}</p>`, q: 'Wer ist der Täter?', kind: 'choice', opts: N, ans, ex };
+    const mk = sols[0][1], tr = N.filter((_, i) => (mk >> i) & 1), lr = N.filter((_, i) => !((mk >> i) & 1)), rp = vnPfR('lie', N.join(), ans, mk);
+    let pf;
+    if (R === 1) pf = Object.assign({ q: 'Beweise es: Wer sagt dann die Wahrheit?' }, vnPfMix(tr[0], N.filter(x => x !== tr[0]), rp));
+    else if (R === n - 1) pf = Object.assign({ q: 'Beweise es: Wer lügt dann?' }, vnPfMix(lr[0], N.filter(x => x !== lr[0]), rp));
+    else { const key = vnList(tr), wr = new Set(); for (let k = 0; k < 80 && wr.size < 3; k++) { const t = vnList(pzShuf(N, rp).slice(0, R).sort((a, b) => N.indexOf(a) - N.indexOf(b))); if (t !== key) wr.add(t); } pf = Object.assign({ q: `Beweise es: Welche ${R} Personen sagen dann die Wahrheit?` }, vnPfMix(key, [...wr], rp)); }
+    ex.push(`Beweis: Wenn ${N[ans]} der Täter ist, ${tr.length === 1 ? 'sagt nur ' + tr[0] : 'sagen ' + vnList(tr)} die Wahrheit${lr.length ? ' und ' + (lr.length === 1 ? lr[0] + ' lügt' : vnList(lr) + ' lügen') : ''}.`);
+    return { pf, t: 'lie', title: 'Wer lügt?', body: `<p>${esc(loot)} wurde gestohlen. Der Täter ist unter diesen ${n} Verdächtigen. Jeder sagt einen Satz.</p><ul class="vn-st">${S.map((s, i) => `<li><b>${esc(N[i])}:</b> „${esc(txt(s, i))}“</li>`).join('')}</ul><p class="vn-rule">${esc(ruleT)}</p>`, q: 'Wer ist der Täter?', kind: 'choice', opts: N, ans, ex };
   }
   return null;
 }
@@ -13426,7 +13484,9 @@ function vnGenGrid(lv, r) {
     const ex = ['Lege dir ein Gitter an: oben die Räume, links die Personen. Streiche jeden Hinweis ab, dann füllt sich der Rest von selbst.'].concat(pr.log.slice(0, 16));
     if (pr.log.length > 16) ex.push('… und so weiter, bis jede Person genau einen Raum hat.');
     ex.push(`Ergebnis: ${N.map((x, p) => `${x} → ${RM[perm[p]][0]}`).join(', ')}. ${vnRoomT(RM[tgt])} war ${N[ansP]}.`);
-    return { t: 'grid', title: 'Alibi-Gitter', body: `<p>Um ${hour} Uhr verschwand ${esc(loot.replace(/^(Der|Die|Das)/, m => m.toLowerCase()))} ${esc(vnRoomT(RM[tgt]))}. Zu dieser Zeit waren ${n} Verdächtige in ${n} verschiedenen Räumen – jeder in einem eigenen: ${esc(vnList(RM.map(x => x[0])))}.</p><ul class="vn-st">${acc.map(c => `<li>${esc(vnGridText(c, N, RM))}</li>`).join('')}</ul>`, q: `Wer war um ${hour} Uhr ${vnRoomT(RM[tgt])}?`, kind: 'choice', opts: N, ans: ansP, ex, dbg: { n, perm, clues: acc } };
+    const rp = vnPfR('grid', N.join(), perm.join()), direct = new Set(acc.filter(c => c.k === 'in').map(c => c.p)), cand = [...Array(n).keys()].filter(q => q !== ansP && !direct.has(q)), pp = (cand.length ? cand : [...Array(n).keys()].filter(q => q !== ansP))[vnRi(rp, cand.length || n - 1)];
+    const pf = Object.assign({ q: `Beweise es: In welchem Raum war ${N[pp]}?` }, vnPfMix(RM[perm[pp]][0], RM.filter((x, i) => i !== perm[pp]).map(x => x[0]), rp));
+    return { pf, t: 'grid', title: 'Alibi-Gitter', body: `<p>Um ${hour} Uhr verschwand ${esc(loot.replace(/^(Der|Die|Das)/, m => m.toLowerCase()))} ${esc(vnRoomT(RM[tgt]))}. Zu dieser Zeit waren ${n} Verdächtige in ${n} verschiedenen Räumen – jeder in einem eigenen: ${esc(vnList(RM.map(x => x[0])))}.</p><ul class="vn-st">${acc.map(c => `<li>${esc(vnGridText(c, N, RM))}</li>`).join('')}</ul>`, q: `Wer war um ${hour} Uhr ${vnRoomT(RM[tgt])}?`, kind: 'choice', opts: N, ans: ansP, ex, dbg: { n, perm, clues: acc } };
   }
   return null;
 }
@@ -13457,8 +13517,9 @@ function vnGenTime(lv, r) {
   ex.push(`Der Einbrecher war im Haus von ${vnT(E)} bis ${vnT(X)} Uhr.`);
   al.forEach((x, i) => ex.push(`${N[i]}: ${vnT(x[0])}–${vnT(x[1])} Uhr ${places[i]}. ${x[0] <= E && x[1] >= X ? 'Deckt die ganze Zeit ab ✔' : `Deckt ${x[0] > E ? 'den Anfang (' + vnT(E) + '–' + vnT(x[0]) + ')' : 'das Ende (' + vnT(x[1]) + '–' + vnT(X) + ')'} nicht ab ✘`}`));
   ex.push(`Nur ${N[cu]} hat kein lückenloses Alibi.`);
+  const rp = vnPfR('time', N.join(), tt.join()), pf = Object.assign({ q: 'Beweise es: Um wie viel Uhr kam der Einbrecher ins Haus?' }, vnPfMix(vnT(E) + ' Uhr', pzShuf(tt.filter(t => t !== E), rp).slice(0, 3).map(t => vnT(t) + ' Uhr'), rp));
   const body = `<p>Im Museum wurde eingebrochen. Ein Einbrecher war vom Einbruch bis zu seiner Flucht im Haus. Das weißt du über den Abend:</p><ul class="vn-st"><li>${vnNom(evs[0])} war um ${vnT(T0)} Uhr.</li>${clues.map(c => `<li>${esc(c)}</li>`).join('')}</ul><p>Das sagen die Verdächtigen (alle Angaben sind von Zeugen bestätigt):</p><ul class="vn-st">${al.map((x, i) => `<li><b>${esc(N[i])}:</b> „Ich war von ${vnT(x[0])} bis ${vnT(x[1])} Uhr ${places[i]}.“</li>`).join('')}</ul>`;
-  return { t: 'time', title: 'Zeitleiste', body, q: 'Wer hat für die ganze Zeit, in der der Einbrecher im Haus war, kein lückenloses Alibi?', kind: 'choice', opts: N, ans: cu, ex };
+  return { t: 'time', title: 'Zeitleiste', body, q: 'Wer hat für die ganze Zeit, in der der Einbrecher im Haus war, kein lückenloses Alibi?', kind: 'choice', opts: N, ans: cu, ex, pf };
 }
 
 /* ===================== 4) Widerspruch (Zeugen) ===================== */
@@ -13480,8 +13541,11 @@ function vnGenWit(lv, r) {
     const ex = ['Der Dieb kann nicht schneller sein als die Gehzeit zwischen zwei Orten. Prüfe jedes Paar von Aussagen: Reicht die Zeit dazwischen?'];
     cf.slice(0, 3).forEach(x => ex.push(`${N[fw]} (${stm(bs)}) und ${N[x.w]} (${stm(x)}): ${sp[bs.p][0]} ↔ ${sp[x.p][0]} braucht mindestens ${Math.abs(d[bs.p] - d[x.p])} Min, es liegen aber nur ${Math.abs(bs.t - x.t)} Min dazwischen. Das geht nicht.`));
     ex.push(`Streicht man ${N[fw]}, passen alle übrigen Aussagen zusammen. Streicht man jemand anderen, bleibt der Widerspruch bestehen. Also irrt sich ${N[fw]}.`);
+    const rp = vnPfR('wit', N.join(), T.join()), all = S.flatMap((s, w) => s.map(x => `${N[w]}: ${stm(x)}`)), right = `${N[fw]}: ${stm(bs)}`;
+    const pf = Object.assign({ q: `Beweise es: Welche Angabe stimmt nicht?` }, vnPfMix(right, all.filter(x => x !== right), rp));
+    ex.push(`Beweis: Falsch ist die Angabe „${right}“.`);
     const way = sp.map((s, i) => i ? `${sp[i - 1][0]} → ${s[0]}: ${seg[i - 1]} Min` : '').filter(Boolean);
-    return { t: 'wit', title: 'Widerspruch', body: `<p>Ein Dieb ist durch die Stadt gelaufen. Er geht zu Fuß und ist nie schneller als die Gehzeit zwischen zwei Orten. Die Orte liegen an einer Straße:</p><p class="vn-way">${esc(way.join('  ·  '))}</p><p>Das sagen die Zeugen. Genau ein Zeuge irrt sich bei einer Angabe:</p><ul class="vn-st">${S.map((s, w) => `<li><b>${esc(N[w])}:</b> „Ich sah den Dieb ${s.map(x => esc(stm(x))).join(' und ')}.“</li>`).join('')}</ul>`, q: 'Welcher Zeuge irrt sich?', kind: 'choice', opts: N, ans: fw, ex };
+    return { t: 'wit', title: 'Widerspruch', body: `<p>Ein Dieb ist durch die Stadt gelaufen. Er geht zu Fuß und ist nie schneller als die Gehzeit zwischen zwei Orten. Die Orte liegen an einer Straße:</p><p class="vn-way">${esc(way.join('  ·  '))}</p><p>Das sagen die Zeugen. Genau ein Zeuge irrt sich bei einer Angabe:</p><ul class="vn-st">${S.map((s, w) => `<li><b>${esc(N[w])}:</b> „Ich sah den Dieb ${s.map(x => esc(stm(x))).join(' und ')}.“</li>`).join('')}</ul>`, q: 'Welcher Zeuge irrt sich?', kind: 'choice', opts: N, ans: fw, ex, pf };
   }
   return null;
 }
@@ -13542,7 +13606,8 @@ function vnGenEin(lv, r) {
     const ex = ['Zeichne dir ' + n + ' Kästchen für die Häuser (von links nach rechts). Notiere bei jeder Eigenschaft, in welchen Häusern sie noch stehen kann, und streiche mit jedem Hinweis Möglichkeiten weg.'].concat(pr.log.slice(0, 18));
     if (pr.log.length > 18) ex.push('… so geht es weiter, bis überall nur noch ein Haus übrig bleibt.');
     ex.push(`${vnCap(np(sv))} wohnt in Haus ${pos[sv] + 1} – und dort wohnt ${tcat.show(tcat.vals[vi(tv)])} (${tcat.lab}).`);
-    return { t: 'ein', title: 'Einstein-Rätsel', body: `<p>${n} Häuser stehen in einer Reihe (Haus 1 ist ganz links). In jedem wohnt eine Person. Von jeder Person kennst du: ${vnList(cs.map(c => c.lab))}. Alles ist verschieden.</p><ul class="vn-st">${acc.map(c => `<li>${esc(txt(c))}</li>`).join('')}</ul>`, q: `${tcat.art} ${tcat.lab} hat ${np(sv)}?`, kind: 'choice', opts: vals[tc].map(i => tcat.show(tcat.vals[i])), ans: vals[tc].indexOf(vi(tv)), ex, dbg: { n, nv, catOf, clues: acc, pos } };
+    const rp = vnPfR('ein', pos.join(), sv, tv), pf = Object.assign({ q: `Beweise es: In welchem Haus wohnt ${np(sv)}?` }, vnPfMix('Haus ' + (pos[sv] + 1), [...Array(n).keys()].filter(k => k !== pos[sv]).map(k => 'Haus ' + (k + 1)), rp));
+    return { pf, t: 'ein', title: 'Einstein-Rätsel', body: `<p>${n} Häuser stehen in einer Reihe (Haus 1 ist ganz links). In jedem wohnt eine Person. Von jeder Person kennst du: ${vnList(cs.map(c => c.lab))}. Alles ist verschieden.</p><ul class="vn-st">${acc.map(c => `<li>${esc(txt(c))}</li>`).join('')}</ul>`, q: `${tcat.art} ${tcat.lab} hat ${np(sv)}?`, kind: 'choice', opts: vals[tc].map(i => tcat.show(tcat.vals[i])), ans: vals[tc].indexOf(vi(tv)), ex, dbg: { n, nv, catOf, clues: acc, pos } };
   }
   return null;
 }
