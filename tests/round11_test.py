@@ -94,6 +94,7 @@ with sync_playwright() as p:
     ok(E("()=>S.puz.hist.some(e=>e.wk)"), 'Verlauf markiert Wochenrätsel')
 
     # ---------- Venola (v2 siehe round12) ----------
+    E("()=>{pzS().vnRulesV=1;save()}")
     E("()=>go('venola')"); pg.wait_for_timeout(100)
     ok(E("()=>document.querySelectorAll('.vn-title span').length")==12, 'Titel „VENOLA HOLMES“ in einzelnen Buchstaben')
     f1 = E("()=>getComputedStyle(document.querySelector('.vn-title span:nth-child(1)')).fontFamily"); f2 = E("()=>getComputedStyle(document.querySelector('.vn-title span:nth-child(2)')).fontFamily")

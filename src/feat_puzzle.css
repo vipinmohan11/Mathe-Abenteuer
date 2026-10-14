@@ -109,3 +109,5 @@
 .card.vn-pf{margin:12px 0;border:2px solid var(--dz-accent)}.vn-pf h3{margin:0 0 4px}
 .card.vn-missc{border:2px solid #c0392b;background:rgba(192,57,43,.06)}
 .vn-dots i.miss{background:#c0392b}
+.card.vn-rl{display:flex;gap:12px;align-items:flex-start;margin:10px 0;border:2px solid var(--dz-line)}.card.vn-rl.done{border-color:#2e8b57}
+.vn-rl-i{font-size:1.9rem;line-height:1}.vn-rl h3{margin:0 0 4px}.vn-rl p{margin:0 0 8px;line-height:1.5}.vn-rl-ok{color:#2e8b57;font-weight:800}

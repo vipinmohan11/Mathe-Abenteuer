@@ -62,6 +62,19 @@ with sync_playwright() as p:
 
     # ---------- Hub / Stufen ----------
     ok(E("()=>document.querySelectorAll('.vn-lvrow button').length")==5, 'Hub: 5 Stufen')
+    # ---------- Regeln müssen gelesen werden ----------
+    pg.click('[data-act=vnStart]'); pg.wait_for_timeout(50)
+    ok(E("()=>UI.vnV")=='rules' and E("()=>!UI.vn"), 'Erste Akte: zuerst die Detektiv-Regeln')
+    ok(E("()=>document.querySelectorAll('.vn-rl').length")==5 and E("()=>document.querySelector('[data-act=vnRulesGo]').disabled"), 'Los erst, wenn jede Regel abgehakt ist')
+    for i in range(4): pg.click('[data-act=vnRuleOk][data-arg="%d"]' % i)
+    ok(E("()=>document.querySelector('[data-act=vnRulesGo]').disabled") and 'Noch 1 Regel' in pg.inner_text('[data-act=vnRulesGo]'), 'Noch eine Regel offen')
+    pg.click('[data-act=vnRuleOk][data-arg="4"]'); pg.click('[data-act=vnRulesGo]'); pg.wait_for_timeout(50)
+    ok(E("()=>UI.vn&&UI.vn.st")=='play' and E("()=>vnS().vnRulesV")==1, 'Nach dem Lesen startet die Akte, Regeln gemerkt')
+    E("()=>{vnStop();vnS().vnCur=null;UI.vn=null;UI.vnSet=null;go('venola')}"); pg.wait_for_timeout(30)
+    pg.click('[data-act=vnStart]'); ok(E("()=>UI.vn&&UI.vn.st")=='play', 'Danach kein Regel-Stopp mehr')
+    E("()=>{vnStop();vnS().vnCur=null;UI.vn=null;UI.vnSet=null;go('venola')}"); pg.wait_for_timeout(30)
+    pg.click('[data-act=vnRules]'); ok(E("()=>UI.vnV")=='rules' and E("()=>!document.querySelector('[data-act=vnRuleOk]')"), 'Regeln jederzeit im Hub nachlesbar')
+    E("()=>{UI.vnV=null;go('venola')}")
     ok(E("()=>vnS().vnCaseLvl")==1 and E("()=>vnS().vnCodeLvl")==1, 'Start: nur Stufe 1 offen')
     # ---------- Stufen nacheinander freischalten (1→5) ----------
     for lv in range(1, 6):
@@ -147,7 +160,7 @@ with sync_playwright() as p:
       const q2=VN_LOGIC[t](lv,pzRng(3000+i*17+lv));if(JSON.stringify(q2.pf)!==JSON.stringify(f))bad++}return bad}""")
     ok(r == 0, 'Kriminalfall: jede Aufgabe hat eine eindeutige Beweis-Frage (%s Fehler)' % r)
     def start_case(lv, game='case'):
-        E("()=>{vnStop();UI.vn=null;UI.vnSet=null;UI.vnV=null;vnS().vnCaseLvl=Math.max(vnS().vnCaseLvl,%d);vnS().vnCodeLvl=Math.max(vnS().vnCodeLvl,%d);go('venola')}" % (lv, lv)); pg.wait_for_timeout(30)
+        E("()=>{vnStop();UI.vn=null;UI.vnSet=null;UI.vnV=null;vnS().vnCaseLvl=Math.max(vnS().vnCaseLvl,%d);vnS().vnCodeLvl=Math.max(vnS().vnCodeLvl,%d);vnS().vnRulesV=1;go('venola')}" % (lv, lv)); pg.wait_for_timeout(30)
         pg.click(f'[data-act=vnGame][data-arg={game}]'); pg.click(f'[data-act=vnLvl][data-arg="{lv}"]'); pg.click('[data-act=vnStart]'); pg.wait_for_timeout(50)
     E("()=>{const p=vnS();p.vnCaseLvl=3}")
     start_case(3)

@@ -1261,6 +1261,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .card.vn-pf{margin:12px 0;border:2px solid var(--dz-accent)}.vn-pf h3{margin:0 0 4px}
 .card.vn-missc{border:2px solid #c0392b;background:rgba(192,57,43,.06)}
 .vn-dots i.miss{background:#c0392b}
+.card.vn-rl{display:flex;gap:12px;align-items:flex-start;margin:10px 0;border:2px solid var(--dz-line)}.card.vn-rl.done{border-color:#2e8b57}
+.vn-rl-i{font-size:1.9rem;line-height:1}.vn-rl h3{margin:0 0 4px}.vn-rl p{margin:0 0 8px;line-height:1.5}.vn-rl-ok{color:#2e8b57;font-weight:800}
 
 /* ===== Schatzkammer ===== */
 .tkopen{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
@@ -9374,7 +9376,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = '3d300c67';
+const APP_BUILD = '61a03bf1';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -12678,6 +12680,23 @@ const vnExpCard = p => `<section class="card vn-exp"><h3>So kommst du darauf</h3
 /* ---------- Ansichten ---------- */
 const vnTitle = () => `<h1 class="vn-title" aria-label="Venola Holmes">${'VENOLA HOLMES'.split('').map(c => c === ' ' ? '<i class="vn-sp"></i>' : `<span>${c}</span>`).join('')}</h1>`;
 const vnTop = (back) => topBar('Venola Holmes', back || 'rewards');
+/* ---------- Detektiv-Regeln: vor der ersten Akte (und nach jeder Regeländerung) einmal lesen und jede Regel einzeln abhaken ---------- */
+const VN_RULES_VER = 1;
+const VN_RULE_TXT = [
+  ['✌️', 'Zwei Versuche', 'Für jede Antwort hast du zwei Versuche. Eine falsche Antwort wird durchgestrichen. Ist auch der zweite Versuch falsch, zeigt Venola dir die Lösung – für dieses Rätsel gibt es dann keine Beweismarken.'],
+  ['🔎', 'Beweise es!', 'Im Kriminalfall reicht die richtige Antwort nicht. Danach kommt eine Beweis-Frage. Die kannst du nur beantworten, wenn du den Fall wirklich gelöst hast. Auch hier hast du zwei Versuche.'],
+  ['➖', 'Fehler kosten Marken', 'Jeder falsche Versuch kostet eine Beweismarke. Münzen verlierst du nie, und unter null geht es nicht. Raten lohnt sich also nicht – lieber genau lesen!'],
+  ['✅', 'Erst alles, dann prüfen', 'Bei den Analogien beantwortest du zuerst alle Aufgaben und drückst dann einmal auf „Prüfen“. Du hast zwei Prüfungen.'],
+  ['⭐', 'Fehlerfrei lohnt sich', 'Nur ohne Fehler und ohne Hinweis gibt es den Bonus. Die nächste Stufe öffnet sich nur, wenn du jedes Rätsel der Akte gelöst hast.']
+];
+function vnRulesView() {
+  const p = vnS(), gate = !!UI.vnRulesNext, ok = UI.vnRk || (UI.vnRk = {}), all = VN_RULE_TXT.every((r, i) => ok[i]);
+  return vnTop() + `<div class="vn-hero"><h2 class="vn-title2">📜 Detektiv-Regeln</h2><p class="small mute">${gate ? 'Bevor du ermittelst: Lies jede Regel und tippe auf „Verstanden“.' : 'So funktionieren die Akten.'}</p>
+    ${typeof wSpeak === 'function' ? '<button class="btn sec" data-act="vnRulesRead">🔊 Vorlesen</button>' : ''}</div>
+    ${VN_RULE_TXT.map((r, i) => `<section class="card vn-rl${ok[i] || !gate ? ' done' : ''}"><span class="vn-rl-i">${r[0]}</span><div><h3>${i + 1}. ${esc(r[1])}</h3><p>${esc(r[2])}</p>${gate ? (ok[i] ? '<p class="vn-rl-ok">✓ Verstanden</p>' : `<button class="btn sm" data-act="vnRuleOk" data-arg="${i}">Verstanden</button>`) : ''}</div></section>`).join('')}
+    <div class="center" style="margin-top:12px">${gate ? `<button class="btn big" data-act="vnRulesGo" ${all ? '' : 'disabled'}>${all ? 'Alles klar – los geht’s!' : `Noch ${VN_RULE_TXT.filter((r, i) => !ok[i]).length} ${VN_RULE_TXT.filter((r, i) => !ok[i]).length === 1 ? 'Regel' : 'Regeln'} lesen`}</button>` : '<button class="btn big" data-act="vnMenu">Zurück</button>'}</div>`;
+}
+const vnRulesGate = (act, arg) => { const p = vnS(); if ((p.vnRulesV || 0) >= VN_RULES_VER) return false; UI.vnRulesNext = { act, arg }; UI.vnRk = {}; UI.vnV = 'rules'; sfx('tap'); render(); return true; };
 function vnSetup() {
   const p = vnS(), u = UI.vnSet || (UI.vnSet = { game: 'case', lv: p.vnLast.case || 1, tm: 0 }), wkS = vnWeekState(), rk = vnRank(p.venWins), key = u.game === 'code' ? 'vnCodeLvl' : 'vnCaseLvl', top = p[key];
   if (u.lv > top) u.lv = top;
@@ -12693,7 +12712,7 @@ function vnSetup() {
     <section class="card sd-setup"><h3>Neue Akte</h3><div class="vn-games"><button class="vn-g${u.game === 'case' ? ' on' : ''}" data-act="vnGame" data-arg="case">🔍<b>Kriminalfall</b><small>Logik · Stufe ${p.vnCaseLvl} von 5 offen</small></button><button class="vn-g${u.game === 'code' ? ' on' : ''}" data-act="vnGame" data-arg="code">🗝️<b>Geheimakte</b><small>Wörter · Stufe ${p.vnCodeLvl} von 5 offen</small></button></div>
     <p class="small mute" style="margin:8px 0 0">${u.game === 'case' ? 'Wer lügt? · Alibi-Gitter · Zeitleiste · Widerspruch · Einstein-Rätsel' : 'Silbenrätsel · Wortleiter · Wörterkette · Analogien · Versteckte Wörter · Kreuzworträtsel · Lückentext'}</p>
     <h3>Stufe</h3><div class="sd-lvrow vn-lvrow">${lvs}</div>${next}${quick}<h3>Zeit</h3>${pzTimeChips('vnTime', u.tm)}<p class="small mute">Wenn die Zeit um ist, kannst du ohne Zeit weiterspielen.</p>
-    <div class="center" style="margin-top:12px"><button class="btn big" data-act="vnStart">Los geht’s</button></div><div class="center" style="margin-top:10px"><button class="btn sec" data-act="vnHist">Meine Akten (${p.hist.filter(e => e.g === 'ven').length})</button></div>${rep}</section>`;
+    <div class="center" style="margin-top:12px"><button class="btn big" data-act="vnStart">Los geht’s</button></div><div class="center" style="margin-top:10px"><button class="btn sec" data-act="vnHist">Meine Akten (${p.hist.filter(e => e.g === 'ven').length})</button> <button class="btn sec" data-act="vnRules">📜 Regeln</button></div>${rep}</section>`;
 }
 function vnPlay(m) {
   const p = vnPz(m), a = m.ans || (m.ans = vnAnsNew(p)), solved = !!m.sv[m.si], last = m.si === m.stages.length - 1, kindK = m.kind === 'code' ? 'vg' : 'vc';
@@ -12745,6 +12764,7 @@ function vnRepView() {
     e.rp.map((d, k) => { let p = null; try { p = vnBuild(d, {}); } catch (x) { } if (!p) return ''; return `<section class="card vn-card"><h3 class="vn-h">${k + 1}. ${esc(p.title)}</h3>${p.body}<p class="vn-note">Lösung: ${vnSol(p)}</p><details class="vn-det"><summary>Wie komme ich darauf?</summary><ol>${p.ex.map(l => `<li>${vnExHtml(l)}</li>`).join('')}</ol></details></section>`; }).join('');
 }
 VIEWS.venola = () => {
+  if (UI.vnV === 'rules') return vnRulesView();
   if (UI.vnV === 'koffer') return vnKofferView();
   if (UI.vnV === 'hist') return UI.vnRep >= 0 && UI.vnRep !== undefined && UI.vnRep !== null ? vnRepView() : vnHistView();
   const m = UI.vn; if (!m) return vnSetup();
@@ -12789,15 +12809,25 @@ document.addEventListener('keydown', e => { const t = e.target; if (e.key === 'E
 
 registerFeature({
   id: 'venola', title: 'Venola Holmes', icon: 'sparkle', tint: 'sky', group: 'spiel', order: 82, view: 'venola',
-  leave: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; },
+  leave: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; UI.vnRulesNext = null; try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
   check: () => { vnS(); vnRewardsCheck(false); },
   acts: {
     venola: () => { vnStop(); UI.vn = null; UI.vnSet = null; UI.vnV = null; UI.vnAsk = false; go('venola'); },
     vnGame: g => { const p = vnS(); UI.vnSet.game = g; UI.vnSet.lv = p.vnLast[g] || 1; render(); },
     vnLvl: l => { const p = vnS(); if (+l <= p[UI.vnSet.game === 'code' ? 'vnCodeLvl' : 'vnCaseLvl']) { UI.vnSet.lv = +l; p.vnQuick[UI.vnSet.game] = 0; } render(); },
     vnTime: t => { UI.vnSet.tm = +t; render(); },
-    vnStart: () => { const u = UI.vnSet; sfx('tap'); vnBegin(vnNew(u.game, u.lv, u.tm)); },
+    vnStart: () => { if (vnRulesGate('vnStart')) return; const u = UI.vnSet; sfx('tap'); vnBegin(vnNew(u.game, u.lv, u.tm)); },
+    vnRules: () => { vnStop(); UI.vn = null; UI.vnRulesNext = null; UI.vnV = 'rules'; render(); },
+    vnRuleOk: i => { (UI.vnRk || (UI.vnRk = {}))[+i] = 1; sfx('tap'); render(); },
+    vnRulesRead: () => { if (typeof wSpeak === 'function') wSpeak('Detektiv-Regeln. ' + VN_RULE_TXT.map((r, i) => (i + 1) + '. ' + r[1] + '. ' + r[2]).join(' '), 'de-DE'); },
+    vnRulesGo: () => {
+      if (!VN_RULE_TXT.every((r, i) => UI.vnRk && UI.vnRk[i])) return;
+      const p = vnS(), nx = UI.vnRulesNext; p.vnRulesV = VN_RULES_VER; save(); UI.vnRulesNext = null; UI.vnV = null;
+      try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { }
+      if (nx && ACT[nx.act]) ACT[nx.act](nx.arg); else render();
+    },
     vnCont: w => {
+      if (vnRulesGate('vnCont', w)) return;
       const p = vnS(); let m;
       if (w === 'week') { const ws = vnWeekState(); m = ws.cur ? vnRestore(ws.cur) : vnNew('week', 5, (UI.vnSet && UI.vnSet.tm) || 0, ws.wk); } else if (p.vnCur) m = vnRestore(p.vnCur);
       if (m) vnBegin(m);
@@ -12807,7 +12837,7 @@ registerFeature({
     vnRep: i => { UI.vnRep = +i; render(); },
     vnKoffer: () => { vnStop(); UI.vn = null; UI.vnV = 'koffer'; render(); },
     vnBuy: id => vnBuy(id),
-    vnMenu: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; render(); },
+    vnMenu: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; UI.vnRulesNext = null; render(); },
     vnAgain: () => { UI.vn = null; UI.vnV = null; render(); },
     vnOpt: i => { const m = vnCur(); if (!m) return; const a = m.ans; a.sel = +i; a.msg = ''; sfx('tap'); render(); },
     vnOk: () => {
