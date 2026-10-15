@@ -79,18 +79,19 @@ function pktT() {
   if (!Array.isArray(t.pix)) t.pix = [];
   return t;
 }
-const pktOn = () => !!pkS().done[7];
+const pktOn = () => pkFree() || !!pkS().done[7];
 function pktOpen(m, l) {
   if (!pktOn()) return false;
   const d = pkS().done, T = pktT();
-  if (l === 1) return true;
+  if (l === 1 || pkFree()) return true;
   if (l === 2) return !!d[12] && !!(T.lv[m + 1] && T.lv[m + 1].n);
   return !!(T.lv[m + 2] && T.lv[m + 2].n);
 }
 const pktRankIdx = n => { let r = 0; PKT_RANKS.forEach((x, k) => { if (n >= x.at) r = k; }); return r; };
 const pktBest = (m, l) => (pktT().lv[m + l] || {}).best || 0;
 /* Das Level einer Kachel: immer das höchste offene – nach einer Runde kommt das nächste Level von selbst dazu */
-const pktCur = m => pktOpen(m, 3) ? 3 : pktOpen(m, 2) ? 2 : 1;
+/* Aktuelles Level einer Übung: das höchste, das durch Spielen erreicht ist (auch bei freier Wahl – dort startet die Eltern-Karte jedes Level) */
+const pktCur = m => { const T = pktT(), d = pkS().done; return (T.lv[m + 2] && T.lv[m + 2].n) ? 3 : (d[12] && T.lv[m + 1] && T.lv[m + 1].n) ? 2 : 1; };
 function pktRecommend() {
   for (const M of PKT_MODES) { const l = pktCur(M.id); if (pktBest(M.id, l) < 3) return { m: M.id, l }; }
   return { m: PKT_MODES[0].id, l: pktCur(PKT_MODES[0].id) };
@@ -336,7 +337,7 @@ PK_RUN.train = {
 
 /* ---------- Übersicht: Trainingslager, Rang, Sammlung ---------- */
 function pktHub() {
-  if (!pkS().done[4]) return '';
+  if (!pkFree() && !pkS().done[4]) return '';
   if (!pktOn()) return '<h3 class="pk-h">Trainingslager</h3><p class="pk-foot-note">Das Trainingslager öffnet nach „Mehr Karten“.</p>';
   const T = pktT(), rec = pktRecommend();
   const tiles = PKT_MODES.map(M => {

@@ -63,7 +63,9 @@ function pkS() {
 }
 const pkDoneN = () => PK_LV.filter(L => pkS().done[L.id]).length;
 const pkIdx = id => PK_LV.findIndex(L => L.id === id);
-const pkOpen = n => { const i = pkIdx(n), d = pkS().done; return i === 0 || !!d[n] || (i > 0 && !!d[PK_LV[i - 1].id]); };
+/* Freie Wahl (Eltern-Schalter) oder Admin-Modus: alle Entdeckungen, Rätsel, Freunde und Trainings-Level sind offen – ohne etwas als geschafft zu zählen */
+const pkFree = () => (typeof ADMIN !== 'undefined' && ADMIN) || !!pkS().free;
+const pkOpen = n => { const i = pkIdx(n), d = pkS().done; return pkFree() || i === 0 || !!d[n] || (i > 0 && !!d[PK_LV[i - 1].id]); };
 const pkNextLv = () => { const L = PK_LV.find(L => !pkS().done[L.id]); return L ? L.id : 1; };
 const pkSub = () => { const n = pkDoneN(); return n ? `${n} von ${PK_MAX} entdeckt` : 'Zählen wie ein Computer'; };
 
@@ -1043,7 +1045,7 @@ const PK_RUN = {
 };
 
 /* ---------- Blinkis Rätsel: so viele, wie das Kind mag; gezählt werden nur Erfolge. Meilensteine bringen ein kleines Fest. ---------- */
-const pkTagOpen = () => !!pkS().done[4];
+const pkTagOpen = () => pkFree() || !!pkS().done[4];
 const PK_MILE = [5, 10, 25, 50, 75, 100, 150, 200, 300, 400, 500, 750, 1000];
 const pkIsMile = n => PK_MILE.includes(n) || (n > 1000 && n % 500 === 0);
 const pkNextMile = n => PK_MILE.find(m => m > n) || (Math.floor(n / 500) + 1) * 500;
@@ -1191,7 +1193,7 @@ function pkLookHtml(tg) {
 function pkWordHtml(word) {
   return `<div class="pk-word" role="img" aria-label="Computer-Wort: ${esc(word.join(''))}">${word.map(l => { const n = l.charCodeAt(0); return `<span class="pk-wl"><b>${esc(l)}</b><span class="pk-wbits">${[64, 32, 16, 8, 4, 2, 1].map(v => `<i class="${n & v ? 'on' : ''}" style="${pkCol(v)}">${n & v ? 1 : 0}</i>`).join('')}</span><small>${n}</small></span>`; }).join('')}</div>`;
 }
-const pkFrOpen = () => !!pkS().done[10];
+const pkFrOpen = () => pkFree() || !!pkS().done[10];
 /* Perlen-Plan: zählt die Perlen pro Farbe des gewählten Musters */
 function pkBeadPlan(f) {
   const D = pkDes(f.d || 'eins'), L = [...f.n], cnt = {}, sep = L.length - 1;
@@ -1224,15 +1226,9 @@ function pkFrPrint() {
 
 /* ---------- Übersicht ---------- */
 /* Die eine Karte oben: der nächste Schritt (Entdeckung oder Übung) – statt eines großen Titelbilds */
-function pkNextCard() {
-  const all = pkDoneN() === PK_MAX, fig = `<span class="pk-nfig" aria-hidden="true">${pkBotSvg('blinki', pkDoneN() ? 'happy' : 'idle')}</span>`;
-  let eb, t, s, act, arg, ic = '';
-  if (!all) { const L = PK_LV.find(x => x.id === pkNextLv()); eb = pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'; t = L.t; s = L.s; act = 'pkLv'; arg = L.id; }
-  else if (typeof pktRecommend === 'function' && pktOn()) {
-    const r = pktRecommend(), M = PKT_MODES.find(x => x.id === r.m), b = pktBest(r.m, r.l);
-    eb = 'Weiter üben'; ic = M.ic + ' '; t = `${M.n} · Level ${r.l}`; s = b ? `${b} von 3 Sternen – hol dir mehr` : 'Noch nicht gespielt'; act = 'pkTr'; arg = `${r.m}|${r.l}`;
-  } else { eb = 'Noch einmal'; t = 'Entdeckungsreise'; s = 'Alles entdeckt'; act = 'pkLv'; arg = 1; }
-  return `<div class="pk-next">${fig}<div class="pk-ntxt"><span class="pk-eyebrow">${eb}</span><b>${ic}${esc(t)}</b><small>${esc(s)}</small></div><button type="button" class="btn big" data-act="${act}" data-arg="${arg}">Los</button></div>`;
+function pkHeroArt() {
+  const card = (v, up) => `<span class="pk-hcard${up ? '' : ' down'}" style="${pkCol(v)}"><span class="pk-dots" data-v="${v}">${up ? '<i></i>'.repeat(v) : ''}</span></span>`;
+  return `<div class="pk-hart"><div class="pk-hfig">${pkBotSvg('blinki', pkDoneN() ? 'happy' : 'idle')}</div><div class="pk-hcards">${card(4, 1)}${card(2, 0)}${card(1, 1)}</div><div class="pk-hcode" aria-hidden="true">${pkPill(4, 1)}${pkPill(2, '0').replace('pk-pill', 'pk-pill off')}${pkPill(1, 1)}<span>= 5</span></div></div>`;
 }
 /* Ein ruhiges Band mit kleinen Symbolen (wie Segmente): Fortschritt · Sterne · Armband · Wort · Freunde · Ton */
 function pkRibbon() {
@@ -1273,8 +1269,11 @@ function pkHub() {
     return `<button class="pk-lv${d ? ' done' : op ? ' cur' : ' lock'}" data-act="pkLv" data-arg="${L.id}" ${op ? '' : 'disabled'} aria-label="Entdeckung ${k + 1}: ${esc(L.t)}${d ? ', geschafft' : op ? '' : ', noch zu'}">
       <span class="pk-lvn">${d ? ico('check', 18) : op ? k + 1 : ico('lock', 16)}</span><span class="pk-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="pk-lvr">Nochmal</span>' : op ? '<span class="pk-lvr go">Los</span>' : ''}</button>`;
   }).join('');
+  const rec = all && typeof pktRecommend === 'function' && pktOn() ? pktRecommend() : null;
+  const heroBtn = rec ? `<button class="btn big" data-act="pkTr" data-arg="${rec.m}|${rec.l}">Weiter üben</button>` : `<button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button>`;
   return topBar('Blinkis Punktkarten', 'rewards') + `<section class="pk-hub">
-    ${pkNextCard()}
+    <div class="pk-hero"><div class="pk-hero-copy"><span class="pk-eyebrow">Punkte · Karten · Geheimcodes</span><h1>Zählen wie ein Computer</h1><p>Dreh Karten um, finde Zahlen und entdecke den Code aus 0 und 1.</p>
+      ${heroBtn}</div>${pkHeroArt()}</div>
     ${pkRibbon()}
     ${pkRaetselW()}
     ${typeof pktHub === 'function' ? pktHub() : ''}
@@ -1299,10 +1298,14 @@ function pkPrintView() {
 /* ---------- Eltern-Karte (Statistik): Stand und offene Fragen statt Prüfung ---------- */
 function pkParentCard() {
   const p = pkS(), P = typeof PT === 'function' ? PT : (de => de);
-  const rows = PK_LV.map((L, k) => `<span class="tag${p.done[L.id] ? ' on' : ''}" title="${esc(L.t)}">${k + 1}${p.done[L.id] ? ' ✓' : ''}</span>`).join(' ');
+  const rows = PK_LV.map((L, k) => `<button type="button" class="tag pk-ptag${p.done[L.id] ? ' on' : ''}" data-act="pkLv" data-arg="${L.id}" ${pkOpen(L.id) ? '' : 'disabled'} title="${esc(L.t)}" aria-label="${esc(L.t)} ${P('starten', 'start')}">${k + 1}${p.done[L.id] ? ' ✓' : ''}</button>`).join(' ');
+  const free = typeof ptSw === 'function' ? ptSw(!!p.free, 'pkFreeT', null, P('Freie Wahl', 'Free choice')) : `<button class="btn sm sec" data-act="pkFreeT">${p.free ? 'AN' : 'AUS'}</button>`;
+  const trs = typeof PKT_MODES !== 'undefined' && pktOn() ? PKT_MODES.map(M => `<span class="pk-ptr"><i aria-hidden="true">${M.ic}</i>${[1, 2, 3].map(l => `<button type="button" class="tag pk-ptag" data-act="pkTr" data-arg="${M.id}|${l}" ${pktOpen(M.id, l) ? '' : 'disabled'} aria-label="${esc(M.n)} Level ${l} ${P('starten', 'start')}">${l}</button>`).join('')}</span>`).join('') : '';
   return `<div class="card noprint pk-parent"><h3>${P('Blinkis Punktkarten: Stand', 'Blinki’s dot cards: progress')}</h3>
     <p class="small mute" style="margin:0 0 6px">${P('Binärzahlen mit Punktkarten (CS Unplugged „Count the Dots“), Gedankenlese-Trick (cs4fn), Stellenwert-Vergleich, Bestell-Codes, Buchstaben-Armband, Karten bis 64 und ASCII (A = 65). Rätsel, so viele das Kind mag – gezählt werden nur Erfolge. Leuchtsterne für perfekte Züge schalten Armband-Muster und Anhänger frei; einige gibt es auch im Shop.', 'Binary numbers with dot cards (CS Unplugged “Count the Dots”), a mind-reading trick (cs4fn), place-value comparison, order codes, a letter bracelet, cards up to 64 and ASCII (A = 65). As many puzzles as your child likes – only successes are counted. Stars for perfect moves unlock bracelet patterns and charms; some are also in the shop.')}</p>
-    <div class="cfg"><div><b>${P('Entdeckungen', 'Discoveries')}</b><br><span class="small mute">${pkDoneN()} ${P('von', 'of')} ${PK_MAX}</span></div><div class="row wrap" style="gap:4px">${rows}</div></div>
+    <div class="cfg"><div><b>${P('Freie Wahl: alles offen', 'Free choice: everything open')}</b><br><span class="small mute">${P('Jede Entdeckung, Rätsel, Freunde und alle Trainings-Level sind sofort spielbar – z. B. gleich mit Entdeckung 13 anfangen. Nichts wird als geschafft gezählt; Fortschritt bleibt erhalten.', 'Every discovery, puzzles, friends and all practice levels are playable right away – e.g. start with discovery 13. Nothing is counted as done; progress is kept.')}${ADMIN ? ' ' + P('(Im Admin-Modus immer an.)', '(Always on in admin mode.)') : ''}</span></div><div class="row">${free}</div></div>
+    <div class="cfg"><div><b>${P('Entdeckungen', 'Discoveries')}</b><br><span class="small mute">${pkDoneN()} ${P('von', 'of')} ${PK_MAX} · ${P('Nummer antippen = direkt starten', 'tap a number to start it')}</span></div><div class="row wrap" style="gap:4px">${rows}</div></div>
+    ${trs ? `<div class="cfg"><div><b>${P('Trainingslager direkt starten', 'Start practice directly')}</b><br><span class="small mute">${P('Übung und Level antippen', 'tap exercise and level')}</span></div><div class="row wrap pk-ptrs">${trs}</div></div>` : ''}
     <div class="cfg"><div><b>${P('Zaubertrick', 'Magic trick')}</b><br><span class="small mute">${p.trick.guess}× ${P('erraten', 'guessed')} · ${p.trick.show}× ${P('selbst vorgeführt', 'performed by your child')}</span></div></div>
     <div class="cfg"><div><b>${P('Blinkis Rätsel', 'Blinki’s puzzles')}</b><br><span class="small mute">${p.tag.total} ${P('gelöst', 'solved')} · ${P('heute', 'today')} ${+p.tag.days[ymd()] || 0}</span></div>${pkWeekHtml()}</div>
     <div class="cfg"><div><b>${P('Leuchtsterne', 'Light stars')}</b><br><span class="small mute">✦ ${p.stars} · ${P('für perfekte Züge (getrennt von den ⭐ der App)', 'for perfect moves (separate from the app’s ⭐)')}</span></div></div>
@@ -1337,6 +1340,7 @@ registerFeature({
     punkte: () => go('punkte'),
     pkLv: n => pkStart(n),
     pkDruck: () => go('pkDruck'),
+    pkFreeT: () => { const p = pkS(); p.free = !p.free; save(); render(); },
     pkShow: k => { UI.pkShow = UI.pkShow === k ? null : k; UI.pkPopAnim = !!UI.pkShow; render(); },
     pkFreunde: () => { if (pkFrOpen()) go('pkFreunde', { pkFr: -1, pkDel: false }); },
     pkFr: k => { k = +k; UI.pkFr = UI.pkFr === k ? -1 : k; UI.pkDel = false; render(); },

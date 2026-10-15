@@ -105,3 +105,8 @@ body[data-theme="nacht"] .pkt-pic{padding:4%;box-sizing:border-box}
 .pk-lk.locked .pk-lksw,.pk-lk.locked .pk-lke{opacity:.7}
 .pkt-bds small{font-size:.7rem}
 .pkt-bds span:not(.ok){opacity:.8}
+.pk-ptag{border:0;font:inherit;cursor:pointer}
+.pk-ptag:disabled{opacity:.45;cursor:default}
+.pk-ptrs{gap:8px}
+.pk-ptr{display:inline-flex;align-items:center;gap:3px}
+.pk-ptr i{font-style:normal;margin-right:2px}

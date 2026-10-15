@@ -47,7 +47,8 @@ with sync_playwright() as p:
     ok(not pg.query_selector('.pk-rw'), 'Rätsel erst nach Entdeckung 4')
     ok('blinki' in E("()=>shopGroups()"), 'Shop: Gruppe Blinki erscheint mit dem Schalter')
     shot(pg, 'hub')
-    pg.click('.pk-next .btn'); pg.wait_for_timeout(250)
+    ok(bool(pg.query_selector('.pk-hero')) and 'Zählen wie ein Computer' in pg.inner_text('.pk-hero'), 'Titelbild oben')
+    pg.click('.pk-hero .btn'); pg.wait_for_timeout(250)
     ok(E("()=>view")=='pkLevel' and E("()=>UI.pkLv")==1, 'Los geht’s startet Entdeckung 1')
 
     # 1 – eine Karte
@@ -419,7 +420,7 @@ with sync_playwright() as p:
     ys = E("()=>[...document.querySelectorAll('.pkt-t')].map(e=>Math.round(e.getBoundingClientRect().top))")
     ok(len(ys)==6 and len(set(ys))==1, 'Trainingslager: sechs kleine Kacheln in einer Zeile')
     ok(not any(w in pg.inner_text('.pk-hub') for w in ('Leicht','Mittel','Profi')) and all(x.endswith('|1') for x in E("()=>[...document.querySelectorAll('.pkt-t')].map(e=>e.dataset.arg)")), 'Trainingslager: keine Level-Namen, jede Kachel startet Level 1')
-    ok('weiter üben' in pg.inner_text('.pk-next').lower() and not pg.query_selector('.pk-hero') and '${' not in pg.inner_text('.pk-hub'), 'Oben eine kleine Weiter-Karte („Weiter üben“) statt Titelbild')
+    ok('weiter üben' in pg.inner_text('.pk-hero .btn').lower() and pg.get_attribute('.pk-hero .btn','data-act')=='pkTr' and not pg.query_selector('.pk-next') and '${' not in pg.inner_text('.pk-hub'), 'Titelbild: „Weiter üben“ startet die empfohlene Übung')
     shot(pg, 'lager_hub')
     def sol_of(m):
         if m == 'les':
@@ -563,6 +564,26 @@ with sync_playwright() as p:
     E("()=>{S.flags.venola=true;UI.pkShow=null;ACT.venola()}"); pg.wait_for_timeout(200); shot(pg, 'phone_venola')
     ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: Venola-Band passt')
     E("()=>{S.flags.venola=false;go('punkte')}")
+
+    # Freie Wahl (Eltern): alles offen, z. B. gleich Entdeckung 13 – ohne etwas als geschafft zu zählen
+    pg.set_viewport_size({'width': 834, 'height': 1112})
+    saved = E("()=>JSON.stringify(S.punkte)")
+    E("()=>{S.punkte.done={};S.punkte.tr={};S.punkte.les=true;save();go('punkte')}"); pg.wait_for_timeout(150)
+    ok(pg.locator('.pk-lv.lock').count()==13 and not E("()=>pktOpen('bau', 2)"), 'Neu: nur Entdeckung 1 offen, Training zu')
+    E("()=>{S.pin={h:hashStr('1234'),r:'x'};UI.pinUntil=Date.now()+1e9;S.cfg.plang='de';go('parent')}"); pg.wait_for_timeout(150)
+    pg.click('.pt-tabs [data-arg=stats]'); pg.wait_for_timeout(150)
+    pg.click('.pk-parent [data-act=pkFreeT]'); pg.wait_for_timeout(150)
+    ok(E("()=>S.punkte.free")==True, 'Eltern: freie Wahl eingeschaltet')
+    ok(pg.locator('.pk-parent .pk-ptag[data-act=pkTr]:not([disabled])').count()==18, 'Eltern: alle 18 Trainings-Level startbar')
+    pg.click('.pk-parent .pk-ptag[data-arg="13"]'); pg.wait_for_timeout(300)
+    ok(E("()=>[view,UI.pkLv].join()")=='pkLevel,13' and pg.locator('#pkRoot .pk-card').count()>=7, 'Eltern: Entdeckung 13 direkt gestartet')
+    E("()=>go('punkte')"); pg.wait_for_timeout(150)
+    ok(pg.locator('.pk-lv.lock').count()==0 and pg.locator('.pkt-t').count()==6 and bool(pg.query_selector('.pk-rw')) and E("()=>pkDoneN()")==0, 'Freie Wahl: alle Entdeckungen, Rätsel und Training offen, nichts als geschafft gezählt')
+    E("()=>{S.pin={h:hashStr('1234'),r:'x'};UI.pinUntil=Date.now()+1e9;go('parent')}"); pg.wait_for_timeout(150)
+    pg.click('.pt-tabs [data-arg=stats]'); pg.wait_for_timeout(150)
+    pg.click('.pk-parent .pk-ptag[data-arg="blitz|3"]'); pg.wait_for_timeout(300)
+    ok(E("()=>[view,JSON.stringify(UI.pkTr)].join()")=='pkLevel,{"m":"blitz","l":3}', 'Eltern: Blitz Level 3 direkt gestartet')
+    E("(j)=>{S.punkte=JSON.parse(j);save();go('punkte')}", saved); pg.wait_for_timeout(150)
 
     # Schalter aus: Daten bleiben, Shop-Gruppe verschwindet
     ok('blinki' in E("()=>shopGroups()"), 'Shop: Gruppe Blinki bei eingeschalteten Punktkarten')

@@ -504,10 +504,21 @@ button.pk-seg:active{transform:scale(.97)}
 .pk-bump{animation:pkPopK .35s ease}
 @media (prefers-reduced-motion:reduce){.pk-root *,.pk-hub *{animation:none!important;transition:none!important}}
 
-/* Oben: der nächste Schritt */
-.pk-next{display:flex;align-items:center;gap:14px;padding:10px 12px 10px 14px;border-radius:var(--dz-r-xl);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
-.pk-nfig{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--dz-t2)}
-.pk-nfig svg{width:46px;height:52px}
-.pk-ntxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
-.pk-ntxt b{font-size:1.25rem;font-weight:800;letter-spacing:-.015em;color:var(--dz-ink);line-height:1.15}
-.pk-ntxt small{font-size:.9rem;font-weight:600;color:var(--dz-mute)}
+/* Titelbild (wie 831e555) */
+.pk-hero{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:20px;background:linear-gradient(135deg,var(--dz-hero-a),var(--dz-hero-b));border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-panel);padding:22px 26px}
+.pk-hero::after{content:"";position:absolute;right:-60px;top:-70px;width:220px;height:220px;border-radius:50%;background:var(--dz-glow);opacity:.6;filter:blur(30px);pointer-events:none}
+.pk-hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;gap:8px;align-items:flex-start;max-width:30rem}
+.pk-hero h1{margin:0;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.08;letter-spacing:-.035em;font-weight:800;color:var(--dz-ink);text-wrap:balance}
+.pk-hero p{margin:0 0 6px;font-weight:600;color:var(--dz-ink);opacity:.86}
+.pk-hart{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
+.pk-hfig svg{width:84px;height:94px}
+.pk-hcards{display:flex;gap:8px}
+.pk-hcard{--w:46px;width:46px;height:60px;box-sizing:border-box;border-radius:10px;border:3px solid var(--c);background:var(--dz-surface);display:grid;place-items:center;box-shadow:var(--dz-sh-soft)}
+.pk-hcard.down{border:var(--dz-bd-w) solid var(--dz-bd);background:repeating-linear-gradient(45deg,var(--dz-t2) 0 6px,var(--dz-surface2) 6px 12px)}
+.pk-hcard .pk-dots i{box-shadow:none}
+.pk-hcode{display:flex;gap:5px;align-items:center;font-weight:800;font-size:1.15rem}
+.pk-hcode span{color:var(--dz-ink);margin-left:2px}
+@media(max-width:560px){
+  .pk-hero{flex-direction:column;align-items:flex-start;padding:18px}
+  .pk-hart{flex-direction:row;align-self:center}
+}
