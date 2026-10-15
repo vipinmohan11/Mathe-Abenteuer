@@ -1,8 +1,8 @@
 /* ===================== BLINKIS PUNKTKARTEN =====================
    Ruhige Denkzauber-Flächen (dz-Token, jedes Farbthema), die Karten selbst leuchten in den hellen Zauberfarben.
-   Kartenfarbe = Wert: 1 Sternengelb · 2 Zauberblau · 4 Fino-Orange · 8 Hutviolett · 16 Türkis (kein Pink).
-   Schrift auf der Kartenfarbe: --pk-iN (dunkel auf Gelb/Orange, weiß auf Blau/Violett/Türkis). */
-.pk-root,.pk-hub,.pk-print,.pk-parent{--pk-c1:#f5b40f;--pk-i1:#2b2233;--pk-c2:#1764d5;--pk-i2:#fff;--pk-c4:#F28C28;--pk-i4:#2b2233;--pk-c8:#7b5cd6;--pk-i8:#fff;--pk-c16:#24877c;--pk-i16:#fff}
+   Kartenfarbe = Wert, jede klar verschieden: 1 Gelb · 2 Blau · 4 Grün · 8 Violett · 16 Orange · 32 Braun · 64 Petrol (kein Pink).
+   Schrift auf der Kartenfarbe: --pk-iN (dunkel auf Gelb/Orange, sonst weiß). */
+.pk-root,.pk-hub,.pk-print,.pk-parent{--pk-c1:#f5b40f;--pk-i1:#2b2233;--pk-c2:#1764d5;--pk-i2:#fff;--pk-c4:#1f8443;--pk-i4:#fff;--pk-c8:#7b5cd6;--pk-i8:#fff;--pk-c16:#F28C28;--pk-i16:#2b2233;--pk-c32:#94582a;--pk-i32:#fff;--pk-c64:#14817a;--pk-i64:#fff}
 .pk-root [hidden],.pk-hub [hidden]{display:none!important}
 .pk-root{max-width:780px;margin:6px auto 0;display:flex;flex-direction:column;gap:16px;padding-bottom:22px}
 .pk-body{display:flex;flex-direction:column;gap:16px}
@@ -38,6 +38,9 @@
 .pk-code i,.pk-xcode i,.pk-bit{font-style:normal;min-width:34px;height:42px;box-sizing:border-box;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:1.45rem;border:2px solid var(--dz-line);color:var(--dz-mute);background:var(--dz-surface);transition:transform .14s var(--dz-ease)}
 .pk-code i.on,.pk-xcode i.on,.pk-bit.on{background:var(--c);border-color:var(--c);color:var(--ci)}
 .pk-code i.say{transform:translateY(-6px) scale(1.14)}
+.pk-counter.many .pk-crow{flex-wrap:wrap;justify-content:center;row-gap:4px}
+.pk-counter.many .pk-tray{display:none}
+.pk-counter.many .pk-code i{min-width:26px;height:34px;font-size:1.1rem;border-radius:9px}
 .pk-tray{display:flex;gap:12px;min-height:14px;flex-wrap:wrap;justify-content:center}
 .pk-tray span{display:flex;gap:3px;flex-wrap:wrap;max-width:60px}
 .pk-tray i{width:10px;height:10px;border-radius:50%;background:var(--c)}
@@ -48,6 +51,10 @@
 .pk-card{--w:clamp(88px,25vw,142px);position:relative;width:var(--w);aspect-ratio:3/4;padding:0;border:0;background:none;cursor:pointer;perspective:800px;border-radius:20px;touch-action:manipulation}
 .pk-cards.n4 .pk-card{--w:clamp(66px,19vw,124px)}
 .pk-cards.n5 .pk-card{--w:clamp(52px,15.5vw,112px)}
+.pk-cards.n6,.pk-cards.n7{gap:clamp(4px,1.4vw,14px)}
+.pk-cards.n6 .pk-card{--w:clamp(46px,13.4vw,104px)}
+.pk-cards.n7 .pk-card{--w:clamp(40px,11.4vw,96px)}
+.pk-cards.n6 .pk-bit,.pk-cards.n7 .pk-bit{min-width:28px;height:36px;font-size:1.15rem}
 .pk-flip{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.3,1.3,.5,1)}
 .pk-card.down .pk-flip{transform:rotateY(180deg)}
 .pk-card:active .pk-flip{scale:.96}
@@ -63,6 +70,10 @@
 .pk-dots[data-v="8"] i{width:calc(var(--w,100px)*.14)}
 .pk-dots[data-v="16"]{grid-template-columns:repeat(4,1fr);gap:calc(var(--w,100px)*.06)}
 .pk-dots[data-v="16"] i{width:calc(var(--w,100px)*.11);box-shadow:0 0 6px color-mix(in srgb,var(--c) 50%,transparent)}
+.pk-dots[data-v="32"]{grid-template-columns:repeat(4,1fr);gap:calc(var(--w,100px)*.045)}
+.pk-dots[data-v="32"] i{width:calc(var(--w,100px)*.085);box-shadow:none}
+.pk-dots[data-v="64"]{grid-template-columns:repeat(8,1fr);gap:calc(var(--w,100px)*.03)}
+.pk-dots[data-v="64"] i{width:calc(var(--w,100px)*.075);box-shadow:none}
 /* erstes Aufdecken: zwei Hälften – die neue Karte ist zweimal die Karte davor */
 .pk-card.split .pk-dots i{animation:pkDotIn .35s both .15s}
 .pk-card.split .pk-dots[data-v="2"] i:nth-child(2),.pk-card.split .pk-dots[data-v="4"] i:nth-child(even),.pk-card.split .pk-dots[data-v="8"] i:nth-child(even),.pk-card.split .pk-dots[data-v="16"] i:nth-child(4n+3),.pk-card.split .pk-dots[data-v="16"] i:nth-child(4n+4){animation-delay:.6s}
@@ -152,7 +163,18 @@
 .pk-dien.p100{gap:0}
 .pk-dien.p100 i.pl{width:42px;height:42px;border-radius:3px;margin:-15px -13px 0 0;background-image:linear-gradient(rgba(120,84,50,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(120,84,50,.4) 1px,transparent 1px);background-size:4.2px 4.2px;box-shadow:0 2px 3px rgba(0,0,0,.08)}
 .pk-dien.p100 i.pl:first-child{margin-top:0}
-.pk-x{font-weight:800;font-size:.86rem;color:var(--dz-accent);background:var(--dz-t2);border-radius:var(--dz-r-pill);padding:2px 8px;align-self:center;margin-bottom:56px}
+/* Summenzeile: Karten nebeneinander, darunter „2 × 100 + 1 × 10 + 5 × 1 = 215“; der Wert-Pfeil steht oben zwischen den Karten */
+.pk-sumrow{display:flex;justify-content:center;align-items:stretch;gap:clamp(2px,1vw,8px)}
+.pk-scol,.pk-sumrow .pk-slot{display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:30px}
+.pk-sumrow .pk-sval,.pk-scol .pk-sval{font-weight:800;font-size:.9rem;color:var(--dz-mute)}
+.pk-term{font-weight:800;font-size:clamp(.88rem,2.8vw,1.05rem);color:var(--dz-ink);white-space:nowrap;line-height:26px;margin-top:2px}
+.pk-sep{display:flex;flex-direction:column;align-items:center;justify-content:space-between;min-width:30px}
+.pk-rel{display:flex;flex-direction:column;align-items:center;font-size:.72rem;font-weight:800;color:var(--dz-accent);line-height:1.05;white-space:nowrap}
+.pk-plus{font-weight:800;font-size:1.35rem;line-height:26px;color:var(--dz-ink)}
+.pk-seq{display:flex;align-items:flex-end;gap:6px;margin-left:2px}
+.pk-tot{font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:clamp(1.5rem,5vw,2rem);line-height:26px;color:var(--dz-ink);min-width:2ch}
+.pk-sumrow .pk-card{--w:clamp(60px,17vw,104px)}
+.pk-sumrow .pk-scard{width:clamp(60px,17vw,104px)}
 .pk-stotal{display:flex;flex-direction:column;align-items:center;margin-left:6px;align-self:center}
 .pk-stotal span{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dz-mute)}
 .pk-stotal b{font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:2.2rem;line-height:1;color:var(--dz-ink);min-width:2.2ch;text-align:center}
@@ -187,11 +209,44 @@
 .pk-beads i.on{background:var(--c);border-color:var(--c)}
 .pk-bead b{font-size:1.05rem}
 
+/* Computer-Code (ASCII) */
+.pk-ascii{align-self:center;display:flex;align-items:center;gap:12px;background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);border-radius:var(--dz-r-pill);box-shadow:var(--dz-sh-soft);padding:4px 18px}
+.pk-ascii b{font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:2.2rem;line-height:1.1;min-width:1.2ch;text-align:center;color:var(--dz-accent)}
+.pk-word{display:flex;flex-direction:column;gap:6px;padding:12px 16px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
+.pk-wl{display:flex;align-items:center;gap:10px}
+.pk-wl b{font-size:1.4rem;min-width:1.2ch;text-align:center}
+.pk-wl small{font-weight:800;color:var(--dz-mute);min-width:3ch}
+.pk-wbits{display:flex;gap:3px}
+.pk-wbits i{font-style:normal;width:22px;height:26px;border-radius:7px;display:grid;place-items:center;font-weight:800;font-size:.9rem;border:1.5px solid var(--dz-line);color:var(--dz-mute);background:var(--dz-surface)}
+.pk-wbits i.on{background:var(--c);border-color:var(--c);color:var(--ci)}
+
+/* Tagesrätsel */
+.pk-target{align-self:center;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--dz-surface);border:2px solid var(--dz-gold);border-radius:var(--dz-r-l);box-shadow:var(--dz-sh-card);padding:8px 28px 10px}
+.pk-target>b{font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:2.6rem;line-height:1.05;color:var(--dz-ink)}
+.pk-chain{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.5rem}
+.pk-chain span{min-width:44px;text-align:center;padding:2px 8px;border-radius:12px;border:2px dashed var(--dz-line);color:var(--dz-mute)}
+.pk-chain span.ok{border:2px solid var(--dz-ok);background:var(--dz-ok-bg);color:var(--dz-ok)}
+.pk-chain span.cur{border:2px solid var(--dz-gold);color:var(--dz-ink)}
+.pk-chain i{font-style:normal;color:var(--dz-mute)}
+.pk-tag{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-card);padding:14px 18px}
+.pk-tag-copy{flex:1 1 200px;min-width:0}
+.pk-tag h3{margin:2px 0;font-size:1.25rem;font-weight:800;letter-spacing:-.01em}
+.pk-tag p{margin:0;font-weight:700;color:var(--dz-mute)}
+.pk-week{display:flex;gap:6px}
+.pk-week span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;font-weight:800;color:var(--dz-mute)}
+.pk-week i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px dashed var(--dz-line);box-sizing:border-box}
+.pk-week span.ok i{border:0;background:var(--dz-ok);color:#fff}
+.pk-week span.today{color:var(--dz-ink)}
+.pk-week span.today i{border-color:var(--dz-gold)}
+.pk-result .pk-week{margin:2px 0 4px}
+
 /* Ergebnis */
 .pk-result{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;background:linear-gradient(135deg,var(--dz-hero-a),var(--dz-hero-b));border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-panel);padding:22px var(--dz-pad) 18px}
 .pk-result-fig svg{width:100px;height:112px}
 .pk-result h2{margin:0;font-size:clamp(1.6rem,5vw,2.1rem);font-weight:800;letter-spacing:-.03em;color:var(--dz-ink)}
-.pk-learn{margin:0;max-width:52ch;background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);border-radius:var(--dz-r-m);padding:14px 18px;font-size:1.08rem;font-weight:700;line-height:1.45;color:var(--dz-ink);text-wrap:pretty}
+.pk-learn{margin:4px 0;max-width:26ch;background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);border-radius:var(--dz-r-l);box-shadow:var(--dz-sh-card);padding:18px 24px;font-size:clamp(1.4rem,4.6vw,1.85rem);font-weight:800;line-height:1.3;letter-spacing:-.01em;color:var(--dz-ink);text-wrap:balance;animation:pkLearn .6s var(--dz-ease) both .2s}
+.pk-learn b{color:var(--dz-accent)}
+.pk-result .pk-foot{min-height:58px}
 .pk-keep{max-width:100%}
 .pk-done-n{margin:0;font-weight:800;color:var(--dz-accent)}
 
@@ -248,6 +303,8 @@
 .pk-pcard.note{color:#555;font-weight:700;text-align:center}
 .pk-pgrid.three .pk-pcard{aspect-ratio:auto;padding:18px 10px}
 .pk-pcard.trick div{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 22px;font-size:2.2rem;font-weight:800}
+.pk-pgrid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pk-pcard.trick.big div{grid-template-columns:repeat(4,1fr);gap:6px 16px;font-size:1.8rem}
 .pk-credit{font-size:.8rem;color:#555;margin:0}
 @media print{.pk-print{box-shadow:none;padding:0;max-width:none}.pk-pgrid{gap:10mm}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 
@@ -260,11 +317,12 @@
   .pk-bubble{font-size:.98rem;padding:9px 12px}
   .pk-menu{grid-template-columns:repeat(4,minmax(0,1fr))}
   .pk-abc{grid-template-columns:repeat(7,minmax(0,1fr))}
-  .pk-x{display:none}
-  .pk-stotal b{font-size:1.7rem}
+  .pk-rel{font-size:.62rem}
+  .pk-sep{min-width:22px}
 }
 @media(max-height:640px) and (orientation:landscape){.pk-card{--w:min(clamp(60px,15vw,120px),22vh)}.pk-num{font-size:3rem}}
 
+@keyframes pkLearn{from{opacity:0;transform:translateY(8px) scale(.97)}}
 @keyframes pkHop{30%{transform:translateY(-12px) rotate(-6deg)}60%{transform:translateY(0) rotate(4deg)}}
 @keyframes pkShake{20%{transform:rotate(-12deg)}40%{transform:rotate(10deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(4deg)}}
 @keyframes pkTalk{to{transform:translateY(-3px) scale(1.02)}}

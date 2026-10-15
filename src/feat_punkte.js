@@ -5,26 +5,31 @@
    Bestell-Spiel (Cornell) und Buchstaben-Armband (Code.org). Fragen statt Erklären: Garlikov (Eltern-Karte).
    Eine Idee pro Entdeckung. Die Karten sind das einzige Werkzeug: antippen = umdrehen (offen / zu).
    Keine Münzen, Sticker oder Pokale – die Entdeckung ist die Belohnung; das Armband bleibt als eigenes Werk.
-   Gespeichert: S.punkte = { done{n:ts}, snd (Kartentöne, Standard AN; „Töne aus“ der App gilt immer), trick{guess,show}, lumi, arm[] }
+   Gespeichert: S.punkte = { done{n:ts}, snd (Kartentöne, Standard AN; „Töne aus“ der App gilt immer), trick{guess,show}, lumi, arm[], word[], tag{days{ymd:1}} }
+   Blinkis Tagesrätsel (UI.pkLv = 'tag'): jeden Tag drei kurze Rätsel aus dem Datum, ab Entdeckung 4; der Zähler bleibt sichtbar.
    Aufbau: Übersicht (VIEWS.punkte, normales Zeichnen) · Entdeckung (VIEWS.pkLevel: Rahmen, Inhalt wird in AFTER aufgebaut,
    damit Karten wirklich umklappen) · Druckbogen (VIEWS.pkDruck)
    ===================================================================== */
 const PK_LV = [
-  { id: 1, t: 'Eine Karte', s: 'Offen oder zu', c: 'Eine Karte kann offen oder zu sein. Offen zeigt sie ihre Punkte, zu zählt sie nichts. Zwei Zustände – das ist der Anfang von allem.' },
-  { id: 2, t: 'Zwei Karten', s: 'Welche Zahlen gehen?', c: 'Mit der 2-Karte und der 1-Karte legst du 0, 1, 2 und 3 – jede Zahl genau einmal. Für die 4 fehlt eine Karte.' },
-  { id: 3, t: 'Die neue Karte', s: 'Wie viele Punkte hat sie?', c: 'Jede neue Karte hat doppelt so viele Punkte wie die davor: 1, 2, 4. Mit drei Karten gehen alle Zahlen von 0 bis 7.' },
-  { id: 4, t: 'Der Geheimcode', s: 'Offen = 1, zu = 0', c: 'Eine offene Karte schreiben wir als 1, eine zugedrehte als 0. 101 heißt: 4 + 1 = 5. So zählen Computer – nur mit 0 und 1.' },
-  { id: 5, t: 'Der Zaubertrick', s: 'Blinki liest Gedanken', c: 'Die erste Zahl jeder Zauberkarte ist eine Punktkarte: 4, 2 oder 1. Blinki zählt nur die ersten Zahlen der getippten Karten zusammen.' },
-  { id: 6, t: 'Schule und Blinki', s: 'Was ist gleich, was ist anders?', c: 'In der Schule ist jede Karte zehnmal so viel wert und darf bis zu 9-mal liegen. Bei Blinki ist jede Karte doppelt so viel wert und liegt nur offen oder zu.' },
-  { id: 7, t: 'Mehr Karten', s: 'Die 8 und die 16', c: 'Die 8-Karte und die 16-Karte kommen dazu. Mit fünf Karten gehen alle Zahlen von 0 bis 31.' },
-  { id: 8, t: 'Lumi bestellt', s: 'Eine Nachricht aus Licht', c: 'Lumi schickt nur Lampen an und aus – und du weißt genau, was sie möchte. So schicken Computer Nachrichten.' },
-  { id: 9, t: 'Erklär es Lumi', s: 'Jetzt erklärst du', c: 'Du hast Lumi gezeigt, welche Karten offen sein müssen. Wer etwas erklären kann, hat es wirklich verstanden.' },
-  { id: 10, t: 'Dein Licht-Armband', s: 'Buchstaben als Code', c: 'Jeder Buchstabe bekommt eine Zahl: A = 1, B = 2 … Z = 26. Mit fünf Karten wird daraus ein Code. So speichern Computer auch Wörter.' }
+  { id: 1, t: 'Eine Karte', s: 'Offen oder zu', c: 'Eine Karte hat zwei Zustände: <b>offen</b> oder <b>zu</b>.' },
+  { id: 2, t: 'Zwei Karten', s: 'Welche Zahlen gehen?', c: 'Zwei Karten schaffen <b>0, 1, 2 und 3</b> – jede Zahl genau einmal.' },
+  { id: 3, t: 'Die neue Karte', s: 'Wie viele Punkte hat sie?', c: 'Jede neue Karte hat <b>doppelt so viele</b> Punkte: 1, 2, 4.' },
+  { id: 4, t: 'Der Geheimcode', s: 'Offen = 1, zu = 0', c: 'Offen = <b>1</b>, zu = <b>0</b>. 101 heißt 4 + 1 = 5.' },
+  { id: 5, t: 'Der Zaubertrick', s: 'Blinki liest Gedanken', c: 'Die <b>erste Zahl</b> jeder Zauberkarte ist ihre Punktkarte.' },
+  { id: 6, t: 'Schule und Blinki', s: 'Was ist gleich, was ist anders?', c: 'Schule: <b>10-mal</b> so viel. Blinki: <b>doppelt</b> so viel.' },
+  { id: 7, t: 'Mehr Karten', s: 'Die 8 und die 16', c: 'Fünf Karten schaffen alle Zahlen von <b>0 bis 31</b>.' },
+  { id: 8, t: 'Lumi bestellt', s: 'Eine Nachricht aus Licht', c: 'Nur mit <b>an</b> und <b>aus</b> kann man Nachrichten schicken.' },
+  { id: 9, t: 'Erklär es Lumi', s: 'Jetzt erklärst du', c: 'Die offenen Karten <b>zusammenzählen</b> – dann stimmt die Zahl.' },
+  { id: 10, t: 'Dein Licht-Armband', s: 'Buchstaben als Code', c: 'Jeder Buchstabe ist eine Zahl: <b>A = 1</b> … Z = 26.' },
+  { id: 11, t: 'Der große Zaubertrick', s: 'Vier Karten, Zahlen bis 15', c: 'Vier Zauberkarten erraten jede Zahl von <b>1 bis 15</b>.' },
+  { id: 12, t: 'Die 32 und die 64', s: 'Wie groß geht es?', c: 'Die größte Zahl ist immer <b>eins weniger</b> als die nächste Karte.' },
+  { id: 13, t: 'Der echte Computer-Code', s: 'Bonus: A = 65', c: 'Im Computer ist <b>A = 64 + 1 = 65</b>.' }
 ];
 const PK_MAX = PK_LV.length;
-const PK_NOTE = { 1: 1318.5, 2: 987.8, 4: 659.3, 8: 493.9, 16: 329.6 };
+const PK_NOTE = { 1: 1318.5, 2: 987.8, 4: 659.3, 8: 493.9, 16: 329.6, 32: 261.6, 64: 196 };
 const PK_SNACK = [null, ['🍎', 'Apfel'], ['🥨', 'Brezel'], ['🍪', 'Keks'], ['🧃', 'Saft'], ['🍌', 'Banane'], ['🥕', 'Möhre'], ['🧁', 'Muffin']];
 const PK_TRICK = [{ v: 4, nums: [4, 5, 6, 7] }, { v: 2, nums: [2, 3, 6, 7] }, { v: 1, nums: [1, 3, 5, 7] }];
+const PK_TRICK4 = [8, 4, 2, 1].map(v => ({ v, nums: Array.from({ length: 15 }, (_, k) => k + 1).filter(n => n & v) }));
 const PK_ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 function pkS() {
@@ -35,6 +40,9 @@ function pkS() {
   if (!(p.trick.guess >= 0)) p.trick.guess = 0; if (!(p.trick.show >= 0)) p.trick.show = 0;
   if (!(p.lumi >= 0)) p.lumi = 0;
   if (!Array.isArray(p.arm)) p.arm = [];
+  if (!Array.isArray(p.word)) p.word = [];
+  if (!p.tag || typeof p.tag !== 'object' || Array.isArray(p.tag)) p.tag = {};
+  if (!p.tag.days || typeof p.tag.days !== 'object' || Array.isArray(p.tag.days)) p.tag.days = {};
   return p;
 }
 const pkDoneN = () => PK_LV.filter(L => pkS().done[L.id]).length;
@@ -48,7 +56,7 @@ const pkSub = () => { const n = pkDoneN(); return n ? `${n} von ${PK_MAX} entdec
 const pkSnd = () => pkS().snd && !(S.cfg && S.cfg.sound === false);
 function pkTone(f, t, d, type, vol) { if (!pkSnd()) return; try { tone(f, t, d, type, vol); } catch (e) { } }
 const pkBi = (v, t = 0) => { pkTone(PK_NOTE[v], t, .09, 'square', .035); pkTone(PK_NOTE[v] * 2, t, .07, 'triangle', .03); };
-const pkBup = (v, t = 0) => pkTone(PK_NOTE[v] / 4, t, .16, 'sine', .17);
+const pkBup = (v, t = 0) => pkTone(Math.max(PK_NOTE[v] / 4, 60), t, .16, 'sine', .17);
 const pkNope = () => { pkTone(300, 0, .13, 'sawtooth', .03); pkTone(240, .14, .18, 'sawtooth', .03); };
 const pkAsk = () => { pkTone(523, 0, .14, 'triangle', .09); pkTone(784, .16, .3, 'triangle', .09); };
 const pkTick = () => pkTone(660, 0, .05, 'triangle', .05);
@@ -114,11 +122,12 @@ function pkStage(root, cfg) {
   A.build = (vals, ups, fresh) => {
     fresh = fresh || [];
     A.cards = vals.map((v, i) => ({ v, up: !!ups[i], fresh: fresh.includes(v), seen: !!ups[i], invite: fresh.includes(v) }));
-    deck.className = 'pk-cards n' + vals.length; deck.innerHTML = ''; A.slots = [];
+    deck.className = 'pk-cards n' + vals.length + (cfg.terms ? ' pk-sumrow' : ''); deck.innerHTML = ''; A.slots = [];
+    counter.classList.toggle('many', vals.length > 4);
     A.cards.forEach((c, i) => {
       const s = pkEl('div', 'pk-slot' + (c.fresh ? ' arrive' : ''));
       s.setAttribute('style', pkCol(c.v)); s.dataset.v = c.v;
-      s.innerHTML = `<span class="pk-lamp"${A.lamps ? '' : ' hidden'} aria-hidden="true"></span><button class="pk-card" type="button"><span class="pk-flip"><span class="pk-face pk-front"><span class="pk-dots" data-v="${c.v}">${'<i></i>'.repeat(c.v)}</span></span><span class="pk-face pk-back"></span></span></button><span class="pk-bit"${A.code ? '' : ' hidden'} aria-hidden="true"></span>`;
+      s.innerHTML = `<span class="pk-lamp"${A.lamps ? '' : ' hidden'} aria-hidden="true"></span><button class="pk-card" type="button"><span class="pk-flip"><span class="pk-face pk-front"><span class="pk-dots" data-v="${c.v}">${'<i></i>'.repeat(c.v)}</span></span><span class="pk-face pk-back"></span></span></button>${cfg.terms ? `<span class="pk-sval">${c.v}</span>` : ''}<span class="pk-bit"${A.code ? '' : ' hidden'} aria-hidden="true"></span>${cfg.terms ? '<span class="pk-term"></span>' : ''}`;
       s.querySelector('.pk-card').addEventListener('click', () => A.tap(i));
       deck.append(s); A.slots.push(s);
     });
@@ -151,6 +160,7 @@ function pkStage(root, cfg) {
       card.setAttribute('aria-label', `Karte mit ${c.v} ${c.v === 1 ? 'Punkt' : 'Punkten'}: ${c.up ? 'offen' : 'zugedreht'}`);
       const b = s.querySelector('.pk-bit'); b.textContent = c.up ? '1' : '0'; b.classList.toggle('on', c.up); b.hidden = !A.code;
       const l = s.querySelector('.pk-lamp'); l.classList.toggle('on', c.up); l.hidden = !A.lamps;
+      const tm = s.querySelector('.pk-term'); if (tm) tm.textContent = `${c.up ? 1 : 0} × ${c.v}`;
     });
     const num = counter.querySelector('.pk-num');
     if (num.textContent !== String(t)) { num.textContent = t; pkAnim(num, 'bump'); }
@@ -237,16 +247,16 @@ function pkFootSet(foot, btns) {
 function pkMount() {
   const root = document.getElementById('pkRoot'); if (!root) return;
   pkClear(); root.innerHTML = '';
-  const n = +UI.pkLv, L = PK_LV.find(x => x.id === n);
-  if (!L) { root.innerHTML = '<p class="card">Diese Entdeckung gibt es nicht.</p>'; return; }
-  if (UI.pkRes) { pkResult(root, L); return; }
+  const tag = UI.pkLv === 'tag', n = tag ? 'tag' : +UI.pkLv, L = tag ? { id: 'tag', t: 'Blinkis Tagesrätsel' } : PK_LV.find(x => x.id === n);
+  if (!L || !PK_RUN[n]) { root.innerHTML = '<p class="card">Diese Entdeckung gibt es nicht.</p>'; return; }
+  if (UI.pkRes) { if (tag) pkTagResult(root); else pkResult(root, L); return; }
   const who = PK_RUN[n].who || 'blinki';
   const scene = pkScene(root, who), body = pkEl('div', 'pk-body'), foot = pkEl('div', 'pk-foot');
   root.append(body, foot);
   const api = {
     scene, body, foot, n,
     setFoot: btns => pkFootSet(foot, btns),
-    finish: () => pkFinish(n)
+    finish: () => tag ? pkTagDone() : pkFinish(n)
   };
   PK_RUN[n].run(api);
 }
@@ -258,15 +268,16 @@ function pkFinish(n) {
   UI.pkRes = true; pkMount(); window.scrollTo(0, 0);
 }
 function pkStart(n) {
-  n = +n; if (!PK_RUN[n] || !pkOpen(n)) return;
+  if (n === 'tag') { if (!pkTagOpen()) return; }
+  else { n = +n; if (!PK_RUN[n] || !pkOpen(n)) return; }
   if (view === 'pkLevel') { UI.pkLv = n; UI.pkRes = false; render(); window.scrollTo(0, 0); }
   else go('pkLevel', { pkLv: n, pkRes: false });
 }
 function pkResult(root, L) {
   const nxt = PK_LV.find(x => x.id === L.id + 1), p = pkS();
   const w = pkEl('section', 'pk-result');
-  w.innerHTML = `<div class="pk-result-fig">${pkBotSvg('blinki', 'happy')}</div><span class="pk-eyebrow">Deine Entdeckung</span><h2>${esc(L.t)}</h2><p class="pk-learn">${esc(L.c)}</p>
-    ${L.id === 10 && p.arm.length ? `<div class="pk-keep">${pkArmHtml(p.arm)}</div>` : ''}
+  w.innerHTML = `<div class="pk-result-fig">${pkBotSvg('blinki', 'happy')}</div><span class="pk-eyebrow">Deine Entdeckung · ${esc(L.t)}</span><p class="pk-learn">${L.c}</p>
+    ${L.id === 10 && p.arm.length ? `<div class="pk-keep">${pkArmHtml(p.arm)}</div>` : ''}${L.id === 13 && p.word.length ? `<div class="pk-keep">${pkWordHtml(p.word)}</div>` : ''}
     <p class="pk-done-n">${pkDoneN()} von ${PK_MAX} Entdeckungen</p>`;
   const foot = pkEl('div', 'pk-foot');
   w.append(foot); root.append(w);
@@ -274,8 +285,90 @@ function pkResult(root, L) {
   if (nxt) btns.push({ label: 'Nächste Entdeckung', on: () => pkStart(nxt.id) });
   btns.push({ label: 'Nochmal', sec: true, on: () => pkStart(L.id) });
   btns.push({ label: 'Zur Übersicht', sec: true, on: () => go('punkte') });
-  pkFootSet(foot, btns);
+  // Die Knöpfe kommen erst nach einer kurzen Pause: Zeit, den einen Satz zu lesen.
+  pkLater(2200, () => pkFootSet(foot, btns));
   pkLater(300, () => { const f = w.querySelector('.pk-result-fig'); if (f) pkAnim(f, 'pop'); });
+}
+
+/* ---------- Zaubertrick (cs4fn): 3 Karten für 1–7, 4 Karten für 1–15 ---------- */
+function pkTrick(api, SET, MAX) {
+  const { scene, body } = api, T = { mode: 'guess', phase: 'pick', picked: new Set(), last: null, rounds: 0, xp: null };
+  const box = pkEl('div', 'pk-ncards'); body.append(box);
+  const CHK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+  const sum = s => [...s].reduce((a, b) => a + b, 0);
+  function draw() {
+    box.innerHTML = '';
+    SET.forEach(c => {
+      const on = T.picked.has(c.v), b = pkEl('button', 'pk-ncard' + (on ? ' picked' : ''));
+      b.type = 'button'; b.setAttribute('style', pkCol(c.v)); b.disabled = T.phase !== 'pick';
+      b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', 'Zauberkarte mit ' + c.nums.join(', '));
+      b.innerHTML = `<span class="pk-nums">${c.nums.map(n => `<b>${n}</b>`).join('')}</span><span class="pk-chk">${CHK}</span>`;
+      b.addEventListener('click', () => {
+        if (T.phase !== 'pick') return;
+        const now = !T.picked.has(c.v); now ? T.picked.add(c.v) : T.picked.delete(c.v);
+        (now ? pkBi : pkBup)(c.v); draw();
+      });
+      box.append(b);
+    });
+  }
+  const singPicked = s => pkSing(SET.map(c => ({ v: c.v, up: s.has(c.v) })), 0, (i, on) => { const b = box.children[i]; if (b) b.classList.toggle(s.has(SET[i].v) ? 'sing' : 'sing-off', on); }, scene);
+  function start(mode) {
+    T.mode = mode; T.phase = 'pick'; T.picked = new Set(); pkClear();
+    box.hidden = false; xp.hidden = true; draw(); scene.mood('idle');
+    scene.say(mode === 'guess' ? `Denk dir eine Zahl von 1 bis ${MAX}. Tippe jede Karte, auf der sie steht.`
+      : `Jetzt zauberst <b>du</b>! Lass jemanden eine Zahl von 1 bis ${MAX} denken und die Karten tippen.`);
+    api.setFoot([{ label: 'Fertig', on: done }]);
+  }
+  function done() {
+    const s = sum(T.picked); T.phase = 'shown'; T.last = new Set(T.picked); draw(); api.setFoot([]);
+    if (T.mode === 'show') {
+      scene.say('Und? Welche Zahl ist es? Sag sie laut!');
+      api.setFoot([{
+        label: 'Auflösen', on: () => {
+          scene.mood('happy'); scene.say(`Es ist die <span class="pk-big">${s}</span>!`); singPicked(T.picked); scene.hop();
+          pkS().trick.show++; save();
+          api.setFoot([{ label: 'Nochmal vorführen', on: () => start('show') }, { label: 'Fertig', sec: true, on: api.finish }]);
+        }
+      }]);
+      return;
+    }
+    scene.mood('curious'); scene.say('Hmm …'); scene.talk(true);
+    pkLater(1100, () => {
+      scene.talk(false);
+      if (!s) { scene.say('Keine Karte? Dann hast du an die 0 gedacht!'); scene.shake(); api.setFoot([{ label: 'Nochmal', on: () => start('guess') }]); return; }
+      scene.mood('happy'); scene.say(`Deine Zahl ist die <span class="pk-big">${s}</span>!`); singPicked(T.picked);
+      api.setFoot([{ label: 'Stimmt!', on: right }, { label: 'Stimmt nicht', sec: true, on: wrong }]);
+    });
+  }
+  function right() {
+    T.rounds++; scene.hop(); pkS().trick.guess++; save();
+    if (T.rounds >= 2) { scene.say('Willst du wissen, wie ich das mache?'); api.setFoot([{ label: 'Wie geht das?', on: explain }, { label: 'Nochmal', sec: true, on: () => start('guess') }]); }
+    else { scene.say('Hihi! Noch eine Zahl?'); api.setFoot([{ label: 'Nochmal', on: () => start('guess') }]); }
+  }
+  // Falsch geraten heißt: eine Karte fehlt oder ist zu viel. Das Kind prüft selbst.
+  function wrong() {
+    scene.shake(); scene.mood('confused'); pkNope();
+    scene.say('Schau genau: Steht deine Zahl auf jeder Karte, die du getippt hast? Und auf keiner anderen?');
+    T.phase = 'pick'; draw();
+    api.setFoot([{ label: 'Fertig', on: done }, { label: 'Neue Zahl', sec: true, on: () => start('guess') }]);
+  }
+  /* So geht’s: jede Zauberkarte neben ihrer Punktkarte; antippen ändert die Summe sofort */
+  const xp = pkEl('div', 'pk-xp'); xp.hidden = true; body.append(xp);
+  function explain() {
+    pkClear(); box.hidden = true; xp.hidden = false;
+    T.xp = new Set(T.last && T.last.size ? T.last : [SET[0].v, 1]);
+    scene.mood('happy'); scene.say('Mein Geheimnis: Die erste Zahl jeder Karte ist eine Punktkarte. Ich zähle nur zusammen.');
+    drawX();
+    api.setFoot([{ label: 'Trick vorführen', on: () => start('show') }, { label: 'Fertig', sec: true, on: api.finish }]);
+  }
+  function drawX() {
+    const P = T.xp;
+    xp.innerHTML = `<div class="pk-xrows">${SET.map(c => `<button type="button" class="pk-xrow${P.has(c.v) ? ' picked' : ''}" style="${pkCol(c.v)}" data-v="${c.v}" aria-pressed="${P.has(c.v)}" aria-label="Zauberkarte ${c.nums.join(', ')}, gehört zur ${c.v}-Punkte-Karte"><span class="pk-nums">${c.nums.map(n => `<b>${n}</b>`).join('')}</span><span class="pk-mcard"><span class="pk-dots" data-v="${c.v}">${'<i></i>'.repeat(c.v)}</span></span></button>`).join('')}</div>
+      <div class="pk-equation">${SET.filter(c => P.has(c.v)).map(c => pkPill(c.v)).join('<span class="pk-op">+</span>') || pkPill(0, '0')}${P.size ? `<span class="pk-op">=</span><b>${sum(P)}</b>` : ''}</div>
+      <div class="pk-xcode" aria-label="Code ${SET.map(c => P.has(c.v) ? 1 : 0).join('')}">${SET.map(c => `<i class="${P.has(c.v) ? 'on' : ''}" style="${pkCol(c.v)}">${P.has(c.v) ? 1 : 0}</i>`).join('')}</div>`;
+    xp.querySelectorAll('.pk-xrow').forEach(b => b.addEventListener('click', () => { const v = +b.dataset.v, now = !P.has(v); now ? P.add(v) : P.delete(v); (now ? pkBi : pkBup)(v); drawX(); }));
+  }
+  start('guess');
 }
 
 /* ---------- Die Entdeckungen ---------- */
@@ -367,96 +460,17 @@ const PK_RUN = {
       pkLater(800, sing);
     }
   },
-  5: {
-    run(api) {
-      const { scene, body } = api, T = { mode: 'guess', phase: 'pick', picked: new Set(), last: null, rounds: 0, xp: null };
-      const box = pkEl('div', 'pk-ncards'); body.append(box);
-      const CHK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
-      const sum = s => [...s].reduce((a, b) => a + b, 0);
-      function draw() {
-        box.innerHTML = '';
-        PK_TRICK.forEach(c => {
-          const on = T.picked.has(c.v), b = pkEl('button', 'pk-ncard' + (on ? ' picked' : ''));
-          b.type = 'button'; b.setAttribute('style', pkCol(c.v)); b.disabled = T.phase !== 'pick';
-          b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', 'Zauberkarte mit ' + c.nums.join(', '));
-          b.innerHTML = `<span class="pk-nums">${c.nums.map(n => `<b>${n}</b>`).join('')}</span><span class="pk-chk">${CHK}</span>`;
-          b.addEventListener('click', () => {
-            if (T.phase !== 'pick') return;
-            const now = !T.picked.has(c.v); now ? T.picked.add(c.v) : T.picked.delete(c.v);
-            (now ? pkBi : pkBup)(c.v); draw();
-          });
-          box.append(b);
-        });
-      }
-      const singPicked = s => pkSing(PK_TRICK.map(c => ({ v: c.v, up: s.has(c.v) })), 0, (i, on) => { const b = box.children[i]; if (b) b.classList.toggle(s.has(PK_TRICK[i].v) ? 'sing' : 'sing-off', on); }, scene);
-      function start(mode) {
-        T.mode = mode; T.phase = 'pick'; T.picked = new Set(); pkClear();
-        box.hidden = false; xp.hidden = true; draw(); scene.mood('idle');
-        scene.say(mode === 'guess' ? 'Denk dir eine Zahl von 1 bis 7. Tippe jede Karte, auf der sie steht.'
-          : 'Jetzt zauberst <b>du</b>! Lass jemanden eine Zahl von 1 bis 7 denken und die Karten tippen.');
-        api.setFoot([{ label: 'Fertig', on: done }]);
-      }
-      function done() {
-        const s = sum(T.picked); T.phase = 'shown'; T.last = new Set(T.picked); draw(); api.setFoot([]);
-        if (T.mode === 'show') {
-          scene.say('Und? Welche Zahl ist es? Sag sie laut!');
-          api.setFoot([{
-            label: 'Auflösen', on: () => {
-              scene.mood('happy'); scene.say(`Es ist die <span class="pk-big">${s}</span>!`); singPicked(T.picked); scene.hop();
-              pkS().trick.show++; save();
-              api.setFoot([{ label: 'Nochmal vorführen', on: () => start('show') }, { label: 'Fertig', sec: true, on: api.finish }]);
-            }
-          }]);
-          return;
-        }
-        scene.mood('curious'); scene.say('Hmm …'); scene.talk(true);
-        pkLater(1100, () => {
-          scene.talk(false);
-          if (!s) { scene.say('Keine Karte? Dann hast du an die 0 gedacht!'); scene.shake(); api.setFoot([{ label: 'Nochmal', on: () => start('guess') }]); return; }
-          scene.mood('happy'); scene.say(`Deine Zahl ist die <span class="pk-big">${s}</span>!`); singPicked(T.picked);
-          api.setFoot([{ label: 'Stimmt!', on: right }, { label: 'Stimmt nicht', sec: true, on: wrong }]);
-        });
-      }
-      function right() {
-        T.rounds++; scene.hop(); pkS().trick.guess++; save();
-        if (T.rounds >= 2) { scene.say('Willst du wissen, wie ich das mache?'); api.setFoot([{ label: 'Wie geht das?', on: explain }, { label: 'Nochmal', sec: true, on: () => start('guess') }]); }
-        else { scene.say('Hihi! Noch eine Zahl?'); api.setFoot([{ label: 'Nochmal', on: () => start('guess') }]); }
-      }
-      // Falsch geraten heißt: eine Karte fehlt oder ist zu viel. Das Kind prüft selbst.
-      function wrong() {
-        scene.shake(); scene.mood('confused'); pkNope();
-        scene.say('Schau genau: Steht deine Zahl auf jeder Karte, die du getippt hast? Und auf keiner anderen?');
-        T.phase = 'pick'; draw();
-        api.setFoot([{ label: 'Fertig', on: done }, { label: 'Neue Zahl', sec: true, on: () => start('guess') }]);
-      }
-      /* So geht’s: jede Zauberkarte neben ihrer Punktkarte; antippen ändert die Summe sofort */
-      const xp = pkEl('div', 'pk-xp'); xp.hidden = true; body.append(xp);
-      function explain() {
-        pkClear(); box.hidden = true; xp.hidden = false;
-        T.xp = new Set(T.last && T.last.size ? T.last : [4, 1]);
-        scene.mood('happy'); scene.say('Mein Geheimnis: Die erste Zahl jeder Karte ist eine Punktkarte. Ich zähle nur zusammen.');
-        drawX();
-        api.setFoot([{ label: 'Trick vorführen', on: () => start('show') }, { label: 'Fertig', sec: true, on: api.finish }]);
-      }
-      function drawX() {
-        const P = T.xp;
-        xp.innerHTML = `<div class="pk-xrows">${PK_TRICK.map(c => `<button type="button" class="pk-xrow${P.has(c.v) ? ' picked' : ''}" style="${pkCol(c.v)}" data-v="${c.v}" aria-pressed="${P.has(c.v)}" aria-label="Zauberkarte ${c.nums.join(', ')}, gehört zur ${c.v}-Punkte-Karte"><span class="pk-nums">${c.nums.map(n => `<b>${n}</b>`).join('')}</span><span class="pk-mcard"><span class="pk-dots" data-v="${c.v}">${'<i></i>'.repeat(c.v)}</span></span></button>`).join('')}</div>
-          <div class="pk-equation">${PK_TRICK.filter(c => P.has(c.v)).map(c => pkPill(c.v)).join('<span class="pk-op">+</span>') || pkPill(0, '0')}${P.size ? `<span class="pk-op">=</span><b>${sum(P)}</b>` : ''}</div>
-          <div class="pk-xcode" aria-label="Code ${PK_TRICK.map(c => P.has(c.v) ? 1 : 0).join('')}">${PK_TRICK.map(c => `<i class="${P.has(c.v) ? 'on' : ''}" style="${pkCol(c.v)}">${P.has(c.v) ? 1 : 0}</i>`).join('')}</div>`;
-        xp.querySelectorAll('.pk-xrow').forEach(b => b.addEventListener('click', () => { const v = +b.dataset.v, now = !P.has(v); now ? P.add(v) : P.delete(v); (now ? pkBi : pkBup)(v); drawX(); }));
-      }
-      start('guess');
-    }
-  },
+  5: { run(api) { pkTrick(api, PK_TRICK, 7); } },
+  11: { run(api) { pkTrick(api, PK_TRICK4, 15); } },
   6: {
     run(api) {
       const { scene, body } = api, cnt = [0, 0, 0], PV = [100, 10, 1];
       scene.say('So rechnest du in der Schule – und so rechnet Blinki. Was ist gleich? Was ist anders?');
       let sTaps = 0;
       const school = pkEl('section', 'pk-cmp school');
-      school.innerHTML = `<h3 class="pk-cmph">In der Schule</h3><div class="pk-scards"></div><p class="pk-cmpc">Jede Karte ist zehnmal so viel wert. Sie darf bis zu 9-mal liegen.</p>`;
+      school.innerHTML = `<h3 class="pk-cmph">In der Schule</h3><div class="pk-scards pk-sumrow"></div><p class="pk-cmpc">Jede Karte ist zehnmal so viel wert wie die rechts daneben. Sie darf bis zu 9-mal liegen.</p>`;
       const blk = pkEl('section', 'pk-cmp blinki');
-      blk.innerHTML = `<h3 class="pk-cmph">Bei Blinki</h3><div class="pk-bwrap"></div><p class="pk-cmpc">Jede Karte ist doppelt so viel wert. Sie ist nur offen oder zu.</p>`;
+      blk.innerHTML = `<h3 class="pk-cmph">Bei Blinki</h3><div class="pk-bwrap"></div><p class="pk-cmpc">Jede Karte ist doppelt so viel wert wie die rechts daneben. Sie ist nur offen oder zu.</p>`;
       body.append(school, blk);
       const row = school.querySelector('.pk-scards');
       const pic = (p, n) => {
@@ -464,23 +478,26 @@ const PK_RUN = {
         const one = p === 100 ? '<i class="pl"></i>' : p === 10 ? '<i class="rod"></i>' : '<i class="cube"></i>';
         return `<span class="pk-dien p${p}" aria-hidden="true">${one.repeat(n)}</span>`;
       };
+      // Zwischen den Karten: oben der Pfeil „so viel mehr wert“ (nach links), unten das Plus der Rechnung
+      const sep = rel => `<div class="pk-sep" aria-hidden="true"><span class="pk-rel"><svg viewBox="0 0 40 18" width="34" height="16"><path d="M36 14C30 3 12 3 6 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M3 7l3 6 6-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>${rel}</span><span class="pk-plus">+</span></div>`;
+      const eq = v => `<div class="pk-seq"><span class="pk-plus">=</span><b class="pk-tot">${v}</b></div>`;
       function drawSchool() {
-        row.innerHTML = PV.map((p, i) => `<div class="pk-sslot"><button type="button" class="pk-scard" data-i="${i}" aria-label="${p}er-Karte, liegt ${cnt[i]}-mal">${pic(p, cnt[i])}<span class="pk-times">${cnt[i]}×</span></button><span class="pk-sval">${p}</span><span class="pk-digit">${cnt[i]}</span></div>`).join('<span class="pk-x" aria-hidden="true">×10</span>')
-          + `<div class="pk-stotal"><span>Zahl</span><b>${cnt[0] * 100 + cnt[1] * 10 + cnt[2]}</b></div>`;
+        row.innerHTML = PV.map((p, i) => `<div class="pk-scol"><button type="button" class="pk-scard" data-i="${i}" aria-label="${p}er-Karte, liegt ${cnt[i]}-mal">${pic(p, cnt[i])}<span class="pk-times">${cnt[i]}×</span></button><span class="pk-sval">${p}</span><span class="pk-digit">${cnt[i]}</span><span class="pk-term">${cnt[i]} × ${p}</span></div>`).join(sep('10-mal'))
+          + eq(cnt[0] * 100 + cnt[1] * 10 + cnt[2]);
         row.querySelectorAll('.pk-scard').forEach(b => b.addEventListener('click', () => {
           const i = +b.dataset.i; cnt[i] = (cnt[i] + 1) % 10; sTaps++; pkTick(); drawSchool(); check();
           if (cnt[i] === 0) scene.say('Nach der 9 ist Schluss: Zehn Stück tauscht man gegen die nächste Karte.');
         }));
       }
-      const A = pkStage(blk.querySelector('.pk-bwrap'), { code: true, noCounter: true, onChange(t, o) { if (o.byTap) { tot.querySelector('b').textContent = t; check(); } } });
+      const A = pkStage(blk.querySelector('.pk-bwrap'), { code: true, noCounter: true, terms: true, onChange(t, o) { const b = blk.querySelector('.pk-tot'); if (b) b.textContent = t; if (o.byTap) check(); } });
       A.build([4, 2, 1], [1, 0, 1], []);
-      A.slots.forEach((s, i) => { if (i) s.before(pkEl('span', 'pk-x', '×2')); });
-      const tot = pkEl('div', 'pk-stotal', `<span>Zahl</span><b>${A.total()}</b>`); A.el.deck.append(tot);
+      A.slots.forEach((s, i) => { if (i) s.insertAdjacentHTML('beforebegin', sep('doppelt')); });
+      A.el.deck.insertAdjacentHTML('beforeend', eq(A.total()));
       drawSchool();
       function check() {
         if (api.ok || sTaps < 4 || A.taps < 3) return;
         api.ok = true; scene.mood('happy'); scene.hop();
-        scene.say('Gleich: Jede Karte hat ihren Platz und ihren Wert. Anders: Schule mal 10 und bis zu 9-mal – Blinki mal 2 und nur offen oder zu.');
+        scene.say('Gleich: Jede Karte hat ihren Platz und ihren Wert – man zählt alles zusammen. Anders: Schule 10-mal so viel und bis zu 9-mal, Blinki doppelt so viel und nur offen oder zu.');
         api.setFoot([{ label: 'Fertig', on: api.finish }]);
       }
     }
@@ -617,8 +634,176 @@ const PK_RUN = {
       function fin() { const p = pkS(); p.arm = letters.slice(0, 12); save(); api.finish(); }
       A.build([16, 8, 4, 2, 1], [0, 0, 0, 0, 0], []);
     }
+  },
+  12: {
+    run(api) {
+      const { scene, body } = api;
+      let step = 'max31';
+      scene.say('Mach die <b>größte</b> Zahl, die diese fünf Karten schaffen.');
+      const A = pkStage(body, {
+        code: true,
+        onChange(t, o) {
+          if (!o.byTap) return;
+          const all = A.cards.every(c => c.up), w = o.wait * 1000;
+          const grow = (v, said) => {
+            step = 'wait';
+            pkLater(w, () => {
+              scene.mood('happy'); scene.hop(); scene.say(said);
+              pkLater(1700, () => { A.build([v, ...A.cards.map(c => c.v)], [0, ...A.cards.map(c => c.up)], [v]); step = 'rev' + v; scene.mood('curious'); scene.say('Eine neue Karte! Wie viele Punkte hat sie?'); });
+            });
+          };
+          if (step === 'max31' && all) grow(32, '31! Mehr geht mit fünf Karten nicht. Für die 32 braucht es …');
+          else if (step === 'rev32' && A.cards[0].up) {
+            if (all) grow(64, '32 Punkte – doppelt so viel wie die 16! Jetzt sind alle offen: 63. Wieder eins weniger als die nächste Karte …');
+            else { step = 'max63'; pkLater(w, () => scene.say('32 Punkte – doppelt so viel wie die 16! Und jetzt wieder die größte Zahl?')); }
+          }
+          else if (step === 'max63' && all) grow(64, '63! Wieder eins weniger als die nächste Karte. Die heißt …');
+          else if (step === 'rev64' && A.cards[0].up) {
+            if (all) { step = 'b100'; pkLater(w, () => { scene.mood('happy'); scene.hop(); scene.say('64 Punkte! Alle offen: 127 – die größte Zahl mit sieben Karten. Jetzt für Profis: Bau die <span class="pk-big">100</span>.'); }); }
+            else { step = 'max127'; pkLater(w, () => scene.say('64 Punkte! Schaffst du die größte Zahl mit sieben Karten?')); }
+          }
+          else if (step === 'max127' && all) { step = 'b100'; pkLater(w, () => { scene.mood('happy'); scene.hop(); scene.say('127! Jetzt eine Zahl für Profis: Bau die <span class="pk-big">100</span>.'); }); }
+          else if (step === 'b100' && t === 100) {
+            step = 'done';
+            pkLater(w, () => { scene.mood('happy'); scene.hop(); scene.say(`${A.cards.filter(c => c.up).map(c => c.v).join(' + ')} = 100. Stark!`); A.song(0); api.setFoot([{ label: 'Fertig', on: api.finish }]); });
+          }
+        }
+      });
+      A.build([16, 8, 4, 2, 1], [0, 0, 0, 0, 0], []);
+    }
+  },
+  13: {
+    run(api) {
+      const { scene, body } = api, word = [];
+      let phase = 'a', small = false;
+      const ltr = n => (n >= 65 && n <= 90) || (n >= 97 && n <= 122) ? String.fromCharCode(n) : '';
+      scene.say('Dein Armband sagt A = 1. Ein Computer sagt A = 65: Er schaltet die <b>64-Karte</b> an – und dann die 1. Bau das A!');
+      const A = pkStage(body, { code: true, label: 'Zahl', onChange(t, o) { paint(t); if (o.byTap) react(t, o); } });
+      const show = pkEl('div', 'pk-ascii', '<span class="pk-label">Buchstabe</span><b>–</b>');
+      A.el.deck.before(show);
+      const chart = pkEl('div', 'pk-abc', [...PK_ABC].map((ch, k) => `<span class="pk-ch" data-n="${65 + k}"><b>${ch}</b><small>${65 + k}</small></span>`).join(''));
+      const out = pkEl('div', 'pk-armwrap');
+      body.append(chart, out);
+      function react(t, o) {
+        if (phase === 'a' && t === 65) {
+          phase = 'free';
+          pkLater(o.wait * 1000, () => { scene.mood('happy'); scene.hop(); A.song(0); scene.say('Das A! 64 + 1 = 65. Jetzt du: Bau die Buchstaben deines Namens und speichere sie.'); paint(A.total()); });
+        } else if (t >= 97 && t <= 122 && !small) { small = true; scene.say(`Ein kleines ${ltr(t)}! Kleine Buchstaben haben zusätzlich die 32 an.`); }
+      }
+      function paint(t) {
+        const l = ltr(t), big = t >= 97 ? t - 32 : t;
+        show.querySelector('b').textContent = l || '–';
+        chart.querySelectorAll('.pk-ch').forEach(e => e.classList.toggle('now', !!l && +e.dataset.n === big));
+        out.innerHTML = word.length ? pkWordHtml(word) : '';
+        if (phase === 'a') { api.setFoot([]); return; }
+        api.setFoot([
+          { label: l ? `${l} speichern` : 'Speichern', disabled: !l || word.length >= 10, on: add },
+          ...(word.length ? [{ label: 'Letzten entfernen', sec: true, on: () => { word.pop(); paint(A.total()); } }, { label: 'Fertig', sec: true, disabled: word.length < 2, on: fin }] : [])
+        ]);
+      }
+      function add() {
+        const l = ltr(A.total()); if (!l || word.length >= 10) return;
+        word.push(l); A.song(0, scene); scene.mood('happy');
+        scene.say(word.length === 1 ? 'Gespeichert! Noch ein Buchstabe.' : `${word.join('')} – so speichert ein Computer dein Wort.`);
+        A.lock = true;
+        pkLater(1500, () => { A.cards.forEach((c, k) => A.set(k, false)); A.lock = false; A.refresh(false); });
+        paint(A.total());
+      }
+      function fin() { const p = pkS(); p.word = word.slice(0, 10); save(); api.finish(); }
+      A.build([64, 32, 16, 8, 4, 2, 1], [0, 0, 0, 0, 0, 0, 0], []);
+    }
+  },
+  tag: {
+    run(api) {
+      const { scene, body } = api, day = ymd(), plan = pkTagPlan(day);
+      let i = 0, sub = 0, solved = false;
+      const head = pkEl('div', 'pk-prog pk-tagprog');
+      const target = pkEl('div', 'pk-target');
+      const msg = pkEl('div', 'pk-msg', '<span class="pk-label">Lumis Lampen</span><div class="pk-mlamps"></div>');
+      body.append(head, target, msg);
+      const A = pkStage(body, { code: true, onChange(t, o) { if (o.byTap) check(t, o); } });
+      const chart = pkEl('div', 'pk-abc', [...PK_ABC].map((ch, k) => `<span class="pk-ch" data-n="${k + 1}"><b>${ch}</b><small>${k + 1}</small></span>`).join(''));
+      body.append(chart);
+      const bitsOf = n => plan.vals.map(v => n & v ? 1 : 0);
+      function load() {
+        const T = plan.tasks[i]; sub = 0; solved = false;
+        head.innerHTML = plan.tasks.map((x, k) => `<i class="${k < i ? 'ok' : k === i ? 'cur' : ''}"></i>`).join('');
+        msg.hidden = T.k !== 'lampen'; chart.hidden = T.k !== 'abc'; target.hidden = T.k === 'lampen';
+        A.lamps = T.k === 'lampen';
+        A.build(plan.vals, T.k === 'kette' ? bitsOf(T.ns[0]) : plan.vals.map(() => 0), []);
+        scene.mood('idle'); api.setFoot([]);
+        if (T.k === 'bau') { scene.say('Bau diese Zahl mit deinen Karten.'); target.innerHTML = `<span class="pk-label">Rätsel ${i + 1}</span><b>${T.n}</b>`; }
+        if (T.k === 'lampen') {
+          scene.say('Lumi schickt ein Lichtzeichen. Stell deine Karten genauso – welche Zahl meint sie?');
+          msg.querySelector('.pk-mlamps').innerHTML = bitsOf(T.n).map((b, k) => `<span class="pk-lamp${b ? ' on' : ''}" style="${pkCol(plan.vals[k])}" role="img" aria-label="Lampe ${b ? 'an' : 'aus'}"></span>`).join('');
+        }
+        if (T.k === 'kette') { scene.say(`Hier liegt die ${T.ns[0]}. Zähl weiter: Bau die nächste Zahl und dann die übernächste.`); chain(); }
+        if (T.k === 'abc') { scene.say('Bau die Zahl für diesen Buchstaben.'); target.innerHTML = `<span class="pk-label">Rätsel ${i + 1} · Buchstabe</span><b>${PK_ABC[T.n - 1]}</b>`; }
+      }
+      function chain() { const T = plan.tasks[i]; target.innerHTML = `<span class="pk-label">Rätsel ${i + 1} · Weiterzählen</span><div class="pk-chain">${T.ns.map((n, k) => `<span class="${k <= sub ? 'ok' : k === sub + 1 ? 'cur' : ''}">${n}</span>`).join('<i aria-hidden="true">→</i>')}</div>`; }
+      function check(t, o) {
+        const T = plan.tasks[i]; if (solved) return;
+        if (T.k === 'kette') {
+          if (t === T.ns[sub + 1]) { sub++; chain(); if (sub === 2) ok('Gut weitergezählt! Schau, welche Karten sich dabei umgedreht haben.', o); else pkLater(o.wait * 1000, () => { scene.mood('happy'); scene.say(`Die ${t}! Und jetzt die ${T.ns[2]}.`); }); }
+          return;
+        }
+        if (t !== T.n) return;
+        const parts = A.cards.filter(c => c.up).map(c => c.v).join(' + ');
+        if (T.k === 'bau') ok(`${parts} = ${t}. Richtig gebaut!`, o);
+        if (T.k === 'lampen') ok(`Lumi meinte die ${t}!${parts.includes('+') ? ` (${parts})` : ''}`, o);
+        if (T.k === 'abc') ok(`${PK_ABC[t - 1]} = ${t}. Genau!`, o);
+      }
+      function ok(txt, o) {
+        solved = true;
+        pkLater(o.wait * 1000, () => {
+          scene.mood('happy'); scene.hop(); scene.say(txt); A.song(.1);
+          api.setFoot([{ label: i < plan.tasks.length - 1 ? 'Nächstes Rätsel' : 'Fertig', on: () => { i++; if (i >= plan.tasks.length) api.finish(); else load(); } }]);
+        });
+      }
+      load();
+    }
   }
 };
+
+/* ---------- Blinkis Tagesrätsel: drei kurze Rätsel pro Tag, aus dem Datum gewürfelt ---------- */
+const pkTagOpen = () => !!pkS().done[4];
+function pkRand(seed) {
+  let h = 2166136261; for (const ch of seed) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return (h >>> 0) / 4294967296; };
+}
+function pkTagPlan(day) {
+  const d = pkS().done, r = pkRand('pk' + day), vals = d[7] ? [16, 8, 4, 2, 1] : [4, 2, 1], max = vals.reduce((a, b) => a + b, 0);
+  const kinds = ['bau', 'lampen', 'kette'].concat(d[10] ? ['abc'] : []), pick = () => kinds[Math.floor(r() * kinds.length)];
+  const tasks = []; let last = '';
+  for (let k = 0; k < 3; k++) {
+    let kind = pick(); if (kind === last) kind = pick(); if (kind === last) kind = kinds[(kinds.indexOf(kind) + 1) % kinds.length]; last = kind;
+    if (kind === 'kette') { const s = Math.floor(r() * (max - 2)); tasks.push({ k: kind, ns: [s, s + 1, s + 2] }); }
+    else if (kind === 'abc') tasks.push({ k: kind, n: 1 + Math.floor(r() * 26) });
+    else tasks.push({ k: kind, n: 1 + Math.floor(r() * max) });
+  }
+  return { vals, tasks };
+}
+function pkWeekHtml() {
+  const days = pkS().tag.days, wd = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'], out = [];
+  for (let k = 6; k >= 0; k--) { const dt = new Date(); dt.setDate(dt.getDate() - k); const y = ymd(dt); out.push(`<span class="${days[y] ? 'ok' : ''}${k ? '' : ' today'}"><i>${days[y] ? ico('check', 14) : ''}</i>${wd[dt.getDay()]}</span>`); }
+  return `<div class="pk-week" aria-label="Tagesrätsel der letzten sieben Tage">${out.join('')}</div>`;
+}
+function pkTagDone() {
+  const p = pkS(); p.tag.days[ymd()] = 1;
+  const ks = Object.keys(p.tag.days).sort(); while (ks.length > 120) delete p.tag.days[ks.shift()];
+  save();
+  pkTone(523, 0, .14, 'triangle', .08); pkTone(659, .1, .14, 'triangle', .08); pkTone(784, .2, .3, 'triangle', .08);
+  UI.pkRes = true; pkMount(); window.scrollTo(0, 0);
+}
+function pkTagResult(root) {
+  const w = pkEl('section', 'pk-result');
+  w.innerHTML = `<div class="pk-result-fig">${pkBotSvg('blinki', 'happy')}</div><span class="pk-eyebrow">Blinkis Tagesrätsel</span><p class="pk-learn">Geschafft! Morgen gibt es <b>neue Rätsel</b>.</p>${pkWeekHtml()}`;
+  const foot = pkEl('div', 'pk-foot'); w.append(foot); root.append(w);
+  pkLater(1200, () => pkFootSet(foot, [{ label: 'Zur Übersicht', on: () => go('punkte') }, { label: 'Nochmal', sec: true, on: () => pkStart('tag') }]));
+}
+function pkWordHtml(word) {
+  return `<div class="pk-word" role="img" aria-label="Computer-Wort: ${esc(word.join(''))}">${word.map(l => { const n = l.charCodeAt(0); return `<span class="pk-wl"><b>${esc(l)}</b><span class="pk-wbits">${[64, 32, 16, 8, 4, 2, 1].map(v => `<i class="${n & v ? 'on' : ''}" style="${pkCol(v)}">${n & v ? 1 : 0}</i>`).join('')}</span><small>${n}</small></span>`; }).join('')}</div>`;
+}
 function pkArmHtml(letters) {
   return `<div class="pk-arm" role="img" aria-label="Armband: ${esc(letters.join(''))}">${letters.map(ch => { const n = PK_ABC.indexOf(ch) + 1; return `<span class="pk-bead"><span class="pk-beads">${[16, 8, 4, 2, 1].map(v => `<i class="${n & v ? 'on' : ''}" style="${pkCol(v)}"></i>`).join('')}</span><b>${esc(ch)}</b></span>`; }).join('')}</div>`;
 }
@@ -640,7 +825,9 @@ function pkHub() {
     <div class="pk-hero"><div class="pk-hero-copy"><span class="pk-eyebrow">Punkte · Karten · Geheimcodes</span><h1>Zählen wie ein Computer</h1><p>Dreh Karten um, finde Zahlen und entdecke den Code aus 0 und 1.</p>
       <button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button></div>${pkHeroArt()}</div>
     <div class="pk-hubbar"><span class="pk-prog-t"><b>${pkDoneN()}</b> von ${PK_MAX} entdeckt</span><button class="pk-sndbtn${on ? ' on' : ''}" data-act="pkSnd" aria-pressed="${on}" aria-label="${on ? 'Kartentöne ausschalten' : 'Kartentöne einschalten'}">${ico(on ? 'speaker' : 'speakerOff', 18)}<span>${on ? 'Ton an' : 'Ton aus'}</span></button></div>
+    ${pkTagOpen() ? (() => { const today = !!p.tag.days[ymd()]; return `<div class="pk-tag"><div class="pk-tag-copy"><span class="pk-eyebrow">Jeden Tag neu</span><h3>Blinkis Tagesrätsel</h3><p>${today ? 'Heute geschafft! Morgen gibt es neue Rätsel.' : 'Drei kurze Rätsel für heute.'}</p></div>${pkWeekHtml()}<button class="btn${today ? ' sec' : ''}" data-act="pkLv" data-arg="tag">${today ? 'Nochmal' : 'Los'}</button></div>`; })() : ''}
     ${p.arm.length ? `<div class="pk-keepcard"><span class="pk-eyebrow">Dein Licht-Armband</span>${pkArmHtml(p.arm)}</div>` : ''}
+    ${p.word.length ? `<div class="pk-keepcard"><span class="pk-eyebrow">Dein Computer-Wort</span>${pkWordHtml(p.word)}</div>` : ''}
     <h3 class="pk-h">Deine Entdeckungsreise</h3><div class="pk-lvs">${list}</div>
     <p class="pk-foot-note">Eine Karte nach der anderen. In deinem Tempo.</p>
     <p class="pk-foot-note"><button class="pk-link" data-act="pkDruck">${ico('print', 16)} Karten zum Ausdrucken (für Eltern)</button></p></section>`;
@@ -649,11 +836,12 @@ function pkHub() {
 /* ---------- Druckbogen (für Eltern): Punktkarten und Zauberkarten zum Ausschneiden ---------- */
 function pkPrintView() {
   const dots = v => `<div class="pk-pcard"><span class="pk-dots" data-v="${v}">${'<i></i>'.repeat(v)}</span></div>`;
-  const tc = c => `<div class="pk-pcard trick"><div>${c.nums.map(n => `<b>${n}</b>`).join('')}</div></div>`;
+  const tc = c => `<div class="pk-pcard trick${c.nums.length > 4 ? ' big' : ''}"><div>${c.nums.map(n => `<b>${n}</b>`).join('')}</div></div>`;
   return `<div class="top noprint"><button class="btn sec back" data-act="back" data-arg="punkte" aria-label="Zurück">${ico('back', 20)}<span>Zurück</span></button><h2>Punktkarten zum Ausdrucken</h2><button class="btn" data-act="print">${ico('print', 20)} Drucken</button></div>
   <p class="pk-pnote noprint">Auf Karton drucken, ausschneiden, Rückseiten leer lassen. Am Tisch spielen Sie dasselbe wie in der App: Karten umdrehen, Punkte zählen, Zahlen bauen.</p>
   <section class="pk-print"><h3>Blinkis Punktkarten</h3><div class="pk-pgrid">${[16, 8, 4, 2, 1].map(dots).join('')}<div class="pk-pcard note"><span>Rückseiten bleiben leer.</span></div></div>
   <h3>Zauberkarten (Gedankenlesen 1–7)</h3><div class="pk-pgrid three">${PK_TRICK.map(tc).join('')}</div>
+  <h3>Großer Zaubertrick (Gedankenlesen 1–15)</h3><div class="pk-pgrid four">${PK_TRICK4.map(tc).join('')}</div>
   <p class="pk-credit">Nach „Count the Dots“ von CS Unplugged (csunplugged.org, CC BY-SA 4.0) und dem Gedankenlese-Trick von cs4fn (Queen Mary University of London).</p></section>`;
 }
 
@@ -662,10 +850,12 @@ function pkParentCard() {
   const p = pkS(), P = typeof PT === 'function' ? PT : (de => de);
   const rows = PK_LV.map(L => `<span class="tag${p.done[L.id] ? ' on' : ''}" title="${esc(L.t)}">${L.id}${p.done[L.id] ? ' ✓' : ''}</span>`).join(' ');
   return `<div class="card noprint pk-parent"><h3>${P('Blinkis Punktkarten: Stand', 'Blinki’s dot cards: progress')}</h3>
-    <p class="small mute" style="margin:0 0 6px">${P('Binärzahlen mit Punktkarten (CS Unplugged „Count the Dots“), Gedankenlese-Trick (cs4fn), Stellenwert-Vergleich, Nachrichten und Buchstaben-Armband. Keine Münzen, Sticker oder Pokale.', 'Binary numbers with dot cards (CS Unplugged “Count the Dots”), a mind-reading trick (cs4fn), place-value comparison, messages and a letter bracelet. No coins, stickers or trophies.')}</p>
+    <p class="small mute" style="margin:0 0 6px">${P('Binärzahlen mit Punktkarten (CS Unplugged „Count the Dots“), Gedankenlese-Trick (cs4fn), Stellenwert-Vergleich, Nachrichten, Buchstaben-Armband, Karten bis 64 und ASCII (A = 65). Täglich drei kurze Rätsel. Keine Münzen, Sticker oder Pokale.', 'Binary numbers with dot cards (CS Unplugged “Count the Dots”), a mind-reading trick (cs4fn), place-value comparison, messages, a letter bracelet, cards up to 64 and ASCII (A = 65). Three short puzzles a day. No coins, stickers or trophies.')}</p>
     <div class="cfg"><div><b>${P('Entdeckungen', 'Discoveries')}</b><br><span class="small mute">${pkDoneN()} ${P('von', 'of')} ${PK_MAX}</span></div><div class="row wrap" style="gap:4px">${rows}</div></div>
     <div class="cfg"><div><b>${P('Zaubertrick', 'Magic trick')}</b><br><span class="small mute">${p.trick.guess}× ${P('erraten', 'guessed')} · ${p.trick.show}× ${P('selbst vorgeführt', 'performed by your child')}</span></div></div>
+    <div class="cfg"><div><b>${P('Tagesrätsel', 'Daily puzzle')}</b><br><span class="small mute">${Object.keys(p.tag.days).length} ${P('Tage gelöst', 'days solved')}</span></div>${pkWeekHtml()}</div>
     ${p.arm.length ? `<div class="cfg"><div><b>${P('Armband', 'Bracelet')}</b><br><span class="small mute">${esc(p.arm.join(''))}</span></div></div>` : ''}
+    ${p.word.length ? `<div class="cfg"><div><b>${P('Computer-Wort (ASCII)', 'Computer word (ASCII)')}</b><br><span class="small mute">${esc(p.word.join(''))}</span></div></div>` : ''}
     <div class="pk-q"><b>${P('Nach dem Spielen fragen (nicht prüfen):', 'Ask after playing (do not test):')}</b><ol>
       <li>${P('Warum gibt es keine Karte mit 3 Punkten?', 'Why is there no card with 3 dots?')}</li>
       <li>${P('Wie viele Karten brauchst du für die 10? Welche?', 'How many cards do you need for 10? Which ones?')}</li>
@@ -675,14 +865,14 @@ function pkParentCard() {
 }
 
 /* ---------- Registrierung ---------- */
-DZ_ART.punkte = '<rect x="4" y="10" width="17" height="23" rx="4" fill="#fbfaf7" stroke="#F28C28" stroke-width="2"/><circle cx="9.5" cy="17" r="2.3" fill="#F28C28"/><circle cx="15.5" cy="17" r="2.3" fill="#F28C28"/><circle cx="9.5" cy="26" r="2.3" fill="#F28C28"/><circle cx="15.5" cy="26" r="2.3" fill="#F28C28"/><rect x="24" y="10" width="17" height="23" rx="4" fill="#d9dfe0" stroke="#7f9a9f" stroke-width="2"/><path d="M27 13l11 17M33 13l5 8M27 21l6 9" stroke="#fbfaf7" stroke-width="2"/><rect x="44" y="10" width="17" height="23" rx="4" fill="#fbfaf7" stroke="#e8a90c" stroke-width="2"/><circle cx="52.5" cy="21.5" r="3" fill="#FFC93C"/><rect x="8" y="38" width="9" height="10" rx="3" fill="#F28C28"/><text x="12.5" y="46" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" font-size="8" text-anchor="middle" fill="#2b2233">1</text><rect x="28" y="38" width="9" height="10" rx="3" fill="none" stroke="#7f9a9f" stroke-width="1.5"/><text x="32.5" y="46" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" font-size="8" text-anchor="middle" fill="#526a70">0</text><rect x="48" y="38" width="9" height="10" rx="3" fill="#FFC93C"/><text x="52.5" y="46" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" font-size="8" text-anchor="middle" fill="#2b2233">1</text>';
+DZ_ART.punkte = '<rect x="4" y="10" width="17" height="23" rx="4" fill="#fbfaf7" stroke="#1f8443" stroke-width="2"/><circle cx="9.5" cy="17" r="2.3" fill="#1f8443"/><circle cx="15.5" cy="17" r="2.3" fill="#1f8443"/><circle cx="9.5" cy="26" r="2.3" fill="#1f8443"/><circle cx="15.5" cy="26" r="2.3" fill="#1f8443"/><rect x="24" y="10" width="17" height="23" rx="4" fill="#d9dfe0" stroke="#7f9a9f" stroke-width="2"/><path d="M27 13l11 17M33 13l5 8M27 21l6 9" stroke="#fbfaf7" stroke-width="2"/><rect x="44" y="10" width="17" height="23" rx="4" fill="#fbfaf7" stroke="#e8a90c" stroke-width="2"/><circle cx="52.5" cy="21.5" r="3" fill="#FFC93C"/><rect x="8" y="38" width="9" height="10" rx="3" fill="#1f8443"/><text x="12.5" y="46" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" font-size="8" text-anchor="middle" fill="#fff">1</text><rect x="28" y="38" width="9" height="10" rx="3" fill="none" stroke="#7f9a9f" stroke-width="1.5"/><text x="32.5" y="46" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" font-size="8" text-anchor="middle" fill="#526a70">0</text><rect x="48" y="38" width="9" height="10" rx="3" fill="#FFC93C"/><text x="52.5" y="46" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" font-size="8" text-anchor="middle" fill="#2b2233">1</text>';
 Object.assign(DZ_LABEL, { punkte: 'Punktkarten', pkLevel: 'Entdeckung', pkDruck: 'Druckbogen' });
 DZ_PARENT.pkLevel = 'punkte';
 VIEWS.punkte = () => { pkS(); return pkHub(); };
 registerFeature({
   id: 'punkte', title: 'Blinkis Punktkarten', icon: 'grid', tint: 'butter', group: 'spiel', order: 84, view: 'punkte',
   views: {
-    pkLevel: () => { pkS(); const L = PK_LV.find(x => x.id === +UI.pkLv); return topBar(L ? esc(L.t) : 'Punktkarten', 'punkte') + '<div class="pk-root" id="pkRoot"></div>'; },
+    pkLevel: () => { pkS(); const L = UI.pkLv === 'tag' ? { t: 'Blinkis Tagesrätsel' } : PK_LV.find(x => x.id === +UI.pkLv); return topBar(L ? esc(L.t) : 'Punktkarten', 'punkte') + '<div class="pk-root" id="pkRoot"></div>'; },
     pkDruck: () => pkPrintView()
   },
   leave: () => { pkClear(); },

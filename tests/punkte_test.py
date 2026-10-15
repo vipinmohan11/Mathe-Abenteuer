@@ -1,4 +1,4 @@
-"""Blinkis Punktkarten (Entdeckungen 1–10): Schalter (Standard aus), alle Entdeckungen über die Oberfläche durchspielen,
+"""Blinkis Punktkarten (Entdeckungen 1–13, Tagesrätsel): Schalter (Standard aus), alle Entdeckungen über die Oberfläche durchspielen,
 Zaubertrick, Lumi, Armband, Druckbogen, Eltern-Karte, keine Münzen.
 Aufruf: python3 punkte_test.py /abs/pfad/Mathe-Abenteuer_Klasse4.html [screenshot-ordner]"""
 import sys, re
@@ -41,8 +41,9 @@ with sync_playwright() as p:
     E("()=>go('rewards')"); pg.wait_for_timeout(80)
     ok(bool(pg.query_selector('[data-act=punkte]')), 'Meine Welt: Kachel erscheint')
     pg.click('[data-act=punkte]'); pg.wait_for_timeout(150)
-    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv').count()==10, 'Übersicht mit 10 Entdeckungen')
-    ok(pg.locator('.pk-lv.lock').count()==9, 'Nur die erste Entdeckung ist offen')
+    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv').count()==13, 'Übersicht mit 13 Entdeckungen')
+    ok(pg.locator('.pk-lv.lock').count()==12, 'Nur die erste Entdeckung ist offen')
+    ok(not pg.query_selector('.pk-tag'), 'Tagesrätsel erst nach Entdeckung 4')
     shot(pg, 'hub')
     pg.click('.pk-hero .btn'); pg.wait_for_timeout(250)
     ok(E("()=>view")=='pkLevel' and E("()=>UI.pkLv")==1, 'Los geht’s startet Entdeckung 1')
@@ -55,6 +56,9 @@ with sync_playwright() as p:
     shot(pg, 'l1')
     foot(pg, 'Fertig'); pg.wait_for_timeout(300)
     ok(bool(pg.query_selector('.pk-result')) and E("()=>!!S.punkte.done[1]"), '1: Ergebnis mit Entdeckung, gespeichert')
+    ok(pg.locator('.pk-result .pk-foot .btn').count()==0 and len(pg.inner_text('.pk-learn')) < 70, 'Entdeckung: ein kurzer Satz, Knöpfe erst nach einer Pause')
+    pg.wait_for_timeout(2300)
+    ok(pg.locator('.pk-result .pk-foot .btn').count()==3, 'Entdeckung: danach erscheinen die Knöpfe')
     shot(pg, 'result')
     next_lv(pg)
 
@@ -99,9 +103,13 @@ with sync_playwright() as p:
 
     # 6 – Schule und Blinki
     for i in (0, 0, 1, 2, 2, 2, 2, 2): pg.locator('#pkRoot .pk-scard').nth(i).click(); pg.wait_for_timeout(40)
-    ok(pg.inner_text('#pkRoot .school .pk-stotal b')=='215', '6: Schulkarten 2×100, 1×10, 5×1 = 215')
+    ok(pg.inner_text('#pkRoot .school .pk-tot')=='215', '6: Schulkarten 2×100, 1×10, 5×1 = 215')
+    terms = E("()=>[...document.querySelectorAll('#pkRoot .school .pk-term')].map(e=>e.textContent)")
+    ok(terms==['2 × 100','1 × 10','5 × 1'] and pg.locator('#pkRoot .school .pk-plus').count()==3, '6: Rechnung 2 × 100 + 1 × 10 + 5 × 1 = 215 mit Plus und Gleich')
+    ok(not pg.query_selector('#pkRoot .pk-x') and pg.locator('#pkRoot .pk-rel').count()==4, '6: kein „×10“ zwischen den Karten, Wert-Pfeile oben')
     for i in (1, 0, 2): pg.locator('#pkRoot .pk-card').nth(i).click(); pg.wait_for_timeout(200)
-    ok(pg.inner_text('#pkRoot .blinki .pk-stotal b')=='2', '6: Blinkis Karten zeigen 2')
+    bterms = E("()=>[...document.querySelectorAll('#pkRoot .blinki .pk-term')].map(e=>e.textContent)")
+    ok(pg.inner_text('#pkRoot .blinki .pk-tot')=='2' and bterms==['0 × 4','1 × 2','0 × 1'], '6: Blinki: 0 × 4 + 1 × 2 + 0 × 1 = 2')
     shot(pg, 'l6')
     foot(pg, 'Fertig'); pg.wait_for_timeout(300); next_lv(pg)
 
@@ -143,10 +151,68 @@ with sync_playwright() as p:
     shot(pg, 'l10')
     pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').click(); pg.wait_for_timeout(300)
     ok(E("()=>S.punkte.arm.join('')")=='MI' and bool(pg.query_selector('.pk-result .pk-arm')), '10: Armband „MI“ gespeichert und gezeigt')
-    ok(E("()=>Object.keys(S.punkte.done).length")==10, 'Alle 10 Entdeckungen geschafft')
+    next_lv(pg)
+
+    # 11 – großer Zaubertrick (4 Karten, 1–15)
+    nc = pg.locator('#pkRoot .pk-ncard')
+    ok(nc.count()==4 and E("()=>[...document.querySelectorAll('#pkRoot .pk-ncard')].every(b=>b.querySelectorAll('.pk-nums b').length===8)"), '11: vier Zauberkarten mit je 8 Zahlen')
+    for k in (0, 1, 3): nc.nth(k).click()
+    foot(pg, 'Fertig'); pg.wait_for_timeout(1400)
+    ok('13' in pg.inner_text('#pkRoot .pk-bubble'), '11: Blinki errät die 13 (8 + 4 + 1)')
+    shot(pg, 'l11')
+    foot(pg, 'Stimmt!'); pg.wait_for_timeout(150); foot(pg, 'Nochmal'); nc.nth(2).click(); foot(pg, 'Fertig'); pg.wait_for_timeout(1400)
+    foot(pg, 'Stimmt!'); pg.wait_for_timeout(150); foot(pg, 'Wie geht das?'); pg.wait_for_timeout(200)
+    ok(pg.locator('#pkRoot .pk-xrow').count()==4, '11: Erklärung mit vier Karten')
+    pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').last.click(); pg.wait_for_timeout(300); next_lv(pg)
+
+    # 12 – die 32 und die 64
+    set_to(pg, 31); pg.wait_for_timeout(2500)
+    ok(len(cards(pg))==6 and cards(pg)[0]['v']==32 and not cards(pg)[0]['up'], '12: nach der 31 kommt die 32-Karte (verdeckt)')
+    pg.locator('#pkRoot .pk-card').first.click(); pg.wait_for_timeout(3700)
+    ok(len(cards(pg))==7 and cards(pg)[0]['v']==64, '12: alle offen ist 63, dann kommt die 64-Karte')
+    pg.locator('#pkRoot .pk-card').first.click(); pg.wait_for_timeout(1700)
+    ok('127' in pg.inner_text('#pkRoot .pk-bubble') and '100' in pg.inner_text('#pkRoot .pk-bubble'), '12: 127 geschafft, jetzt die 100')
+    set_to(pg, 100); pg.wait_for_timeout(700)
+    ok('64 + 32 + 4 = 100' in pg.inner_text('#pkRoot .pk-bubble'), '12: 64 + 32 + 4 = 100')
+    shot(pg, 'l12')
+    foot(pg, 'Fertig'); pg.wait_for_timeout(300); next_lv(pg)
+
+    # 13 – der echte Computer-Code (ASCII)
+    ok(len(cards(pg))==7 and pg.locator('#pkRoot .pk-foot .btn').count()==0, '13: sieben Karten, erst das A bauen')
+    set_to(pg, 65); pg.wait_for_timeout(600)
+    ok('64 + 1 = 65' in pg.inner_text('#pkRoot .pk-bubble') and pg.inner_text('#pkRoot .pk-ascii b')=='A', '13: A = 64 + 1 = 65')
+    foot(pg, 'A speichern'); pg.wait_for_timeout(1700)
+    set_to(pg, 97); pg.wait_for_timeout(300)
+    ok('kleines a' in pg.inner_text('#pkRoot .pk-bubble'), '13: 97 ist ein kleines a (zusätzlich die 32)')
+    set_to(pg, 73); pg.wait_for_timeout(300); foot(pg, 'I speichern'); pg.wait_for_timeout(300)
+    shot(pg, 'l13')
+    pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').click(); pg.wait_for_timeout(300)
+    ok(E("()=>S.punkte.word.join('')")=='AI' and bool(pg.query_selector('.pk-result .pk-word')), '13: Computer-Wort „AI“ gespeichert und gezeigt')
+    shot(pg, 'result13')
+    ok(E("()=>Object.keys(S.punkte.done).length")==13, 'Alle 13 Entdeckungen geschafft')
     ok(E("()=>S.coins")==coins0, 'Keine Münzen verändert')
-    pg.locator('#pkRoot .pk-foot .btn', has_text='Zur Übersicht').click(); pg.wait_for_timeout(200)
-    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv.done').count()==10 and bool(pg.query_selector('.pk-keepcard')), 'Übersicht: alles geschafft, Armband sichtbar')
+    foot(pg, 'Zur Übersicht'); pg.wait_for_timeout(200)
+    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv.done').count()==13 and pg.locator('.pk-keepcard').count()==2, 'Übersicht: alles geschafft, Armband und Computer-Wort sichtbar')
+
+    # Tagesrätsel
+    ok(bool(pg.query_selector('.pk-tag')) and 'Drei kurze Rätsel' in pg.inner_text('.pk-tag'), 'Tagesrätsel auf der Übersicht')
+    plan = E("()=>pkTagPlan(ymd())")
+    ok(len(plan['tasks'])==3 and plan['vals']==[16,8,4,2,1] and E("()=>JSON.stringify(pkTagPlan(ymd()))==JSON.stringify(pkTagPlan(ymd()))"), 'Tagesrätsel: 3 Aufgaben, gleich für den ganzen Tag')
+    kinds = set()
+    for d in range(40): kinds |= {t['k'] for t in E(f"()=>pkTagPlan('2026-11-{d%28+1:02d}-{d}').tasks")}
+    ok(kinds=={'bau','lampen','kette','abc'}, 'Tagesrätsel: alle Rätselarten kommen vor')
+    pg.click('.pk-tag [data-act=pkLv]'); pg.wait_for_timeout(250)
+    for k, t in enumerate(plan['tasks']):
+        if t['k'] == 'kette':
+            set_to(pg, t['ns'][1]); pg.wait_for_timeout(450); set_to(pg, t['ns'][2])
+        else: set_to(pg, t['n'])
+        pg.wait_for_timeout(600)
+        if k == 0: shot(pg, 'tag')
+        foot(pg, 'Fertig' if k == 2 else 'Nächstes Rätsel'); pg.wait_for_timeout(250)
+    ok(E("()=>!!S.punkte.tag.days[ymd()]") and pg.locator('.pk-result .pk-week span.ok').count()==1, 'Tagesrätsel gelöst, Wochenleiste zeigt heute')
+    shot(pg, 'tag_done')
+    foot(pg, 'Zur Übersicht'); pg.wait_for_timeout(200)
+    ok('Heute geschafft' in pg.inner_text('.pk-tag'), 'Übersicht: Tagesrätsel heute geschafft')
     shot(pg, 'hub_done')
     pg.click('#app .top .back'); pg.wait_for_timeout(150)
     ok(E("()=>view")=='rewards', 'Zurück führt nach Meine Welt')
@@ -161,7 +227,7 @@ with sync_playwright() as p:
     # Ton-Schalter, Druckbogen, Eltern-Karte, Nacht-Thema
     s0 = E("()=>S.punkte.snd"); pg.click('[data-act=pkSnd]'); ok(E("()=>S.punkte.snd") != s0, 'Ton-Schalter in der Übersicht')
     pg.click('.pk-link[data-act=pkDruck]'); pg.wait_for_timeout(150)
-    ok(E("()=>view")=='pkDruck' and pg.locator('.pk-pcard').count()==9, 'Druckbogen: 5 Punktkarten, Hinweis, 3 Zauberkarten')
+    ok(E("()=>view")=='pkDruck' and pg.locator('.pk-pcard').count()==13, 'Druckbogen: 5 Punktkarten, Hinweis, 3 + 4 Zauberkarten')
     shot(pg, 'druck')
     E("()=>{S.pin={h:hashStr('1234'),r:'x'};UI.pinUntil=Date.now()+1e9;go('parent')}"); pg.wait_for_timeout(150)
     pg.click('.pt-tabs [data-arg=stats]'); pg.wait_for_timeout(150)
@@ -177,11 +243,17 @@ with sync_playwright() as p:
     E("()=>ACT.pkLv(10)"); pg.wait_for_timeout(300)
     ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Armband, 5 Karten)')
     shot(pg, 'phone_l10')
+    E("()=>ACT.pkLv(6)"); pg.wait_for_timeout(300)
+    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Schule und Blinki)')
+    shot(pg, 'phone_l6')
+    E("()=>ACT.pkLv(13)"); pg.wait_for_timeout(300)
+    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (7 Karten)')
+    shot(pg, 'phone_l13')
     E("()=>go('punkte')"); pg.wait_for_timeout(200); shot(pg, 'phone_hub')
 
     # Schalter aus: Daten bleiben
     E("()=>ACT.dzFlag('punkte')")
-    ok(not E("()=>flagOn('punkte')") and E("()=>Object.keys(S.punkte.done).length")==10, 'Ausblenden behält alle Entdeckungen')
+    ok(not E("()=>flagOn('punkte')") and E("()=>Object.keys(S.punkte.done).length")==13, 'Ausblenden behält alle Entdeckungen')
     ok(not errs, 'Keine JavaScript-Fehler' + ('' if not errs else ': ' + '; '.join(errs[:3])))
     b.close()
 print('\n' + ('ALLE TESTS OK' if not fails else f'{len(fails)} FEHLER'))
