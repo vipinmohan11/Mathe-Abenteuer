@@ -47,7 +47,7 @@ with sync_playwright() as p:
     ok(not pg.query_selector('.pk-rw'), 'Rätsel erst nach Entdeckung 4')
     ok('blinki' in E("()=>shopGroups()"), 'Shop: Gruppe Blinki erscheint mit dem Schalter')
     shot(pg, 'hub')
-    pg.click('.pk-hero .btn'); pg.wait_for_timeout(250)
+    pg.click('.pk-next .btn'); pg.wait_for_timeout(250)
     ok(E("()=>view")=='pkLevel' and E("()=>UI.pkLv")==1, 'Los geht’s startet Entdeckung 1')
 
     # 1 – eine Karte
@@ -416,8 +416,10 @@ with sync_playwright() as p:
     ok(not E("()=>document.getElementById('pkLes').hidden") and pg.locator('.pk-lv:visible').count()==14 and E("()=>S.punkte.les")==True, 'Entdeckungsreise: aufklappbar, 14 Entdeckungen, Zustand gemerkt')
     pg.click('.pk-acc'); pg.wait_for_timeout(100)
     ok(E("()=>document.getElementById('pkLes').hidden") and E("()=>S.punkte.les")==False, 'Entdeckungsreise: wieder zugeklappt')
-    ok(pg.locator('.pkt-tile').count()==6 and pg.locator('.pkt-lb').count()==18 and pg.locator('.pkt-lb:not(.lock)').count()==6, 'Trainingslager: 6 Übungsarten mit je 3 Leveln, nur Level 1 offen')
-    ok('Weiter üben' in pg.inner_text('.pk-hero'), 'Hero: „Weiter üben“, wenn alles entdeckt ist')
+    ys = E("()=>[...document.querySelectorAll('.pkt-t')].map(e=>Math.round(e.getBoundingClientRect().top))")
+    ok(len(ys)==6 and len(set(ys))==1, 'Trainingslager: sechs kleine Kacheln in einer Zeile')
+    ok(not any(w in pg.inner_text('.pk-hub') for w in ('Leicht','Mittel','Profi')) and all(x.endswith('|1') for x in E("()=>[...document.querySelectorAll('.pkt-t')].map(e=>e.dataset.arg)")), 'Trainingslager: keine Level-Namen, jede Kachel startet Level 1')
+    ok('weiter üben' in pg.inner_text('.pk-next').lower() and not pg.query_selector('.pk-hero') and '${' not in pg.inner_text('.pk-hub'), 'Oben eine kleine Weiter-Karte („Weiter üben“) statt Titelbild')
     shot(pg, 'lager_hub')
     def sol_of(m):
         if m == 'les':
@@ -505,6 +507,7 @@ with sync_playwright() as p:
     ok(E("()=>PKT_PICS.every(x=>pktPicRows(x,PKT_VALS[x.s===5?1:x.s===7?2:3]).every(n=>n>=0&&n<(1<<x.s)))") and E("()=>PKT_PICS.every(x=>x.g.length===x.s&&x.g.every(r=>r.length===x.s))"), 'Pixelbilder: alle Raster sind quadratisch und passen zu den Karten')
     # Blitz (kurze Uhr im Test)
     E("()=>{PKT.blitz=4}"); pg.wait_for_timeout(1000); start('blitz', 1)
+    ok('${' not in pg.inner_text('#pkRoot') and pg.inner_text('#pkRoot .pk-target b').strip()=='4', 'Blitz: „Bereit?“ zeigt die Sekunden (im Test 4), keine Platzhalter')
     foot(pg, 'Los!'); pg.wait_for_timeout(100)
     for k in range(2):
         set_to(pg, sol_of('bau')); pg.wait_for_timeout(500)
@@ -512,8 +515,20 @@ with sync_playwright() as p:
     pg.wait_for_timeout(4200)
     ok(bool(pg.query_selector('.pkt-end')) and E("()=>S.punkte.tr.lv.blitz1.hi")==2 and E("()=>S.punkte.tr.lv.blitz1.n")==1, 'Blitz: Ende nach der Zeit, 2 Zahlen als Rekord gespeichert')
     E("()=>{PKT.blitz=60}")
+    # Dunkles Thema: Armband und Pixelbild auf hellem Schild, Karten heller
+    E("()=>{S.eq.theme='nacht';go('punkte',{pkShow:'arm'})}"); pg.wait_for_timeout(200)
+    bg = E("()=>getComputedStyle(document.querySelector('.pk-popv .pk-band')).backgroundColor")
+    ok(bg.startswith('rgb(243') and E("()=>getComputedStyle(document.querySelector('.pk-root,.pk-hub')).getPropertyValue('--pk-c4').trim()")=='#3fbf6a', 'Dunkel: Armband auf hellem Schild, Kartenfarben heller')
+    shot(pg, 'lager_dunkel')
+    E("()=>{S.eq.theme='sonne';go('punkte')}")
     # Rang und Sammlung
     E("()=>{S.punkte.tr.total=19;save();go('punkte')}"); pg.wait_for_timeout(100)
+    ok(E("()=>document.querySelector('.pkt-t[data-arg^=\"bau|\"]').dataset.arg")=='bau|3' and E("()=>document.querySelector('.pkt-t[data-arg^=\"pix|\"]').dataset.arg")=='pix|2', 'Trainingslager: nach einer gespielten Runde kommt das nächste Level von selbst dazu')
+    pg.set_viewport_size({'width': 390, 'height': 844}); pg.wait_for_timeout(150)
+    ys = E("()=>[...document.querySelectorAll('.pkt-t')].map(e=>Math.round(e.getBoundingClientRect().top))")
+    ok(len(set(ys))==1 and E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Trainingslager: auch am Telefon eine Zeile ohne Seitwärtsrollen')
+    shot(pg, 'lager_phone_row')
+    pg.set_viewport_size({'width': 834, 'height': 1112})
     ok(E("()=>pktRankIdx(S.punkte.tr.total)")==0, 'Rang: bei 19 Aufgaben noch Bit-Neuling')
     start('bau', 1); st1 = E("()=>S.punkte.stars"); play_round('bau', 1); pg.wait_for_timeout(200)
     ok('Neuer Rang' in pg.inner_text('.pkt-end') and E("()=>pktRankIdx(S.punkte.tr.total)")>=1, 'Rang: Aufstieg wird gefeiert')

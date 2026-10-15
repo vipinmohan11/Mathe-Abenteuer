@@ -1438,19 +1438,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
 /* Übersicht */
 .pk-hub{display:flex;flex-direction:column;gap:14px;margin-top:8px}
-.pk-hero{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:20px;background:linear-gradient(135deg,var(--dz-hero-a),var(--dz-hero-b));border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-panel);padding:22px 26px}
-.pk-hero::after{content:"";position:absolute;right:-60px;top:-70px;width:220px;height:220px;border-radius:50%;background:var(--dz-glow);opacity:.6;filter:blur(30px);pointer-events:none}
-.pk-hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;gap:8px;align-items:flex-start;max-width:30rem}
-.pk-hero h1{margin:0;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.08;letter-spacing:-.035em;font-weight:800;color:var(--dz-ink);text-wrap:balance}
-.pk-hero p{margin:0 0 6px;font-weight:600;color:var(--dz-ink);opacity:.86}
-.pk-hart{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
-.pk-hfig svg{width:84px;height:94px}
-.pk-hcards{display:flex;gap:8px}
-.pk-hcard{--w:46px;width:46px;height:60px;box-sizing:border-box;border-radius:10px;border:3px solid var(--c);background:var(--dz-surface);display:grid;place-items:center;box-shadow:var(--dz-sh-soft)}
-.pk-hcard.down{border:var(--dz-bd-w) solid var(--dz-bd);background:repeating-linear-gradient(45deg,var(--dz-t2) 0 6px,var(--dz-surface2) 6px 12px)}
-.pk-hcard .pk-dots i{box-shadow:none}
-.pk-hcode{display:flex;gap:5px;align-items:center;font-weight:800;font-size:1.15rem}
-.pk-hcode span{color:var(--dz-ink);margin-left:2px}
 .pk-h{margin:6px 0 0;font-size:1.25rem;font-weight:800;letter-spacing:-.01em;color:var(--dz-ink)}
 .pk-lvs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--dz-gap)}
 .pk-lv{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card);color:var(--dz-ink);font:inherit;cursor:pointer;transition:transform var(--dz-t),box-shadow var(--dz-t)}
@@ -1639,8 +1626,6 @@ button.pk-seg:active{transform:scale(.97)}
   .pk-cmprow{grid-template-columns:auto 1fr;row-gap:4px}
   .pk-cmprow .pk-dg{grid-column:2}
   .pk-lk{min-width:58px}
-  .pk-hero{flex-direction:column;align-items:flex-start;padding:18px}
-  .pk-hart{flex-direction:row;align-self:center}
   .pk-hfig svg{width:64px;height:72px}
   .pk-fig,.pk-fig svg{width:54px}.pk-fig svg{height:60px}
   .pk-bubble{font-size:.98rem;padding:9px 12px}
@@ -1671,6 +1656,14 @@ button.pk-seg:active{transform:scale(.97)}
 .pk-bump{animation:pkPopK .35s ease}
 @media (prefers-reduced-motion:reduce){.pk-root *,.pk-hub *{animation:none!important;transition:none!important}}
 
+/* Oben: der nächste Schritt */
+.pk-next{display:flex;align-items:center;gap:14px;padding:10px 12px 10px 14px;border-radius:var(--dz-r-xl);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
+.pk-nfig{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--dz-t2)}
+.pk-nfig svg{width:46px;height:52px}
+.pk-ntxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.pk-ntxt b{font-size:1.25rem;font-weight:800;letter-spacing:-.015em;color:var(--dz-ink);line-height:1.15}
+.pk-ntxt small{font-size:.9rem;font-weight:600;color:var(--dz-mute)}
+
 /* Blinkis Trainingslager (feat_punkte_lager.js) */
 .pk-root,.pk-hub,.pk-print,.pk-parent{--pk-c128:#b3412c;--pk-i128:#fff}
 .pk-dots[data-v="128"]{grid-template-columns:repeat(16,1fr);gap:calc(var(--w,100px)*.012)}
@@ -1692,27 +1685,19 @@ button.pk-seg:active{transform:scale(.97)}
 .pk-acc.open .pk-accv{transform:rotate(180deg)}
 .pk-lvs[hidden]{display:none}
 
-/* Trainingslager: kleine Kacheln mit drei Leveln */
-.pkt-sub{margin:-4px 0 0;font-size:.92rem;font-weight:600;color:var(--dz-mute)}
-.pkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--dz-gap)}
-.pkt-tile{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
-.pkt-th{display:flex;align-items:center;gap:10px}
-.pkt-ic{width:40px;height:40px;flex:none;display:grid;place-items:center;font-size:1.4rem;border-radius:12px;background:var(--dz-t2)}
-.pkt-th b{display:block;font-size:1.02rem;font-weight:800;color:var(--dz-ink)}
-.pkt-th small{display:block;font-size:.82rem;font-weight:600;color:var(--dz-mute);line-height:1.25}
-.pkt-lvs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.pkt-lb{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;border-radius:12px;border:var(--dz-bd-w) solid var(--dz-line);background:var(--dz-bg);color:var(--dz-ink);font:inherit;cursor:pointer;transition:transform var(--dz-t),box-shadow var(--dz-t)}
-.pkt-lb:not([disabled]):hover{transform:translateY(-2px);box-shadow:var(--dz-sh-lift)}
-.pkt-lb:not([disabled]):active{transform:scale(.96)}
-.pkt-lb.rec{border-color:var(--dz-accent);background:var(--dz-t2)}
-.pkt-lb.gold{border-color:#e8a90c}
-.pkt-lb.lock{cursor:default;color:var(--dz-mute);background:var(--dz-t1);opacity:.75}
-.pkt-ln{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;font-weight:800;font-size:.9rem;background:var(--dz-accent);color:var(--dz-accent-ink)}
-.pkt-lb.lock .pkt-ln{background:transparent;color:var(--dz-mute)}
-.pkt-ls{display:flex;gap:0;line-height:1}
-.pkt-ls i{font-style:normal;font-size:.8rem;color:var(--dz-line)}
-.pkt-ls i.on{color:#e8a90c}
-.pkt-lb small{font-size:.7rem;font-weight:700;color:var(--dz-mute)}
+/* Trainingslager: sechs kleine Kacheln in einer Zeile */
+.pkt-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(6px,1.6vw,12px)}
+.pkt-t{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);font:inherit;cursor:pointer;transition:transform var(--dz-t),box-shadow var(--dz-t)}
+.pkt-t:hover{transform:translateY(-2px);box-shadow:var(--dz-sh-lift)}
+.pkt-t:active{transform:scale(.96)}
+.pkt-t.rec{border-color:var(--dz-accent);background:var(--dz-t2)}
+.pkt-t.gold{border-color:#e8a90c}
+.pkt-ti{font-size:clamp(1.5rem,4.4vw,2rem);line-height:1.1}
+.pkt-t b{max-width:100%;padding:0 2px;font-size:clamp(.6rem,2.2vw,.86rem);font-weight:800;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pkt-tl{position:absolute;top:5px;right:6px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;display:grid;place-items:center;border-radius:9px;font-size:.7rem;font-weight:800;background:var(--dz-accent);color:var(--dz-accent-ink)}
+.pkt-ts{display:flex;line-height:1}
+.pkt-ts i{font-style:normal;font-size:.72rem}
+.pkt-ts i.on{color:#e8a90c}
 
 /* Ribbon: Rang und Sammlung */
 .pkt-seg-e{font-size:1.2rem;line-height:1}
@@ -1772,11 +1757,20 @@ button.pk-seg:active{transform:scale(.97)}
 .pkt-trophy{display:flex;flex-direction:column;align-items:center;gap:4px;animation:pkPopIn .5s both}
 .pkt-trophy b{font-size:1.05rem;font-weight:800}
 @media (max-width:520px){
-  .pkt-grid{grid-template-columns:1fr}
   .pkt-pad{grid-template-columns:repeat(3,58px)}
   .pkt-bds span{width:84px}
 }
 @media (max-width:480px){.pk-ribbon .pk-seg small{display:none}.pk-ribbon .pk-seg{min-width:0;padding:8px 6px}}
+/* Dunkles Thema: Karten heller, Armbänder und Pixelbilder auf einem hellen Schildchen, damit Farben und Namen gut lesbar sind */
+body[data-theme="nacht"] .pk-root,body[data-theme="nacht"] .pk-hub,body[data-theme="nacht"] .pk-print,body[data-theme="nacht"] .pk-parent{--pk-c2:#5b9bff;--pk-c4:#3fbf6a;--pk-c8:#a28bff;--pk-c16:#ff9f45;--pk-c32:#d29a63;--pk-c64:#2fc7bd;--pk-c128:#ec7863;--pk-i1:#14181a;--pk-i2:#14181a;--pk-i4:#14181a;--pk-i8:#14181a;--pk-i16:#14181a;--pk-i32:#14181a;--pk-i64:#14181a;--pk-i128:#14181a}
+body[data-theme="nacht"] .pk-band:not(.dark),body[data-theme="nacht"] .pkt-pic{background:#f3efe6;border-radius:12px}
+body[data-theme="nacht"] .pk-band:not(.dark){padding:3px 4px}
+body[data-theme="nacht"] .pk-psticker .pk-band{background:none}
+body[data-theme="nacht"] .pkt-pic{padding:4%;box-sizing:border-box}
+.pk-stars i,.pkt-ts i{color:color-mix(in srgb,var(--dz-mute) 38%,transparent)}
+.pk-lk.locked .pk-lksw,.pk-lk.locked .pk-lke{opacity:.7}
+.pkt-bds small{font-size:.7rem}
+.pkt-bds span:not(.ok){opacity:.8}
 
 /* Rätsel: Sudoku (.sd-*), Venola Holmes (.vn-*), gemeinsam (.pz-*) */
 .pz-clock{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0}.pz-clock b{font-size:1.3rem;min-width:3.4ch;text-align:center}.pz-clock small{color:var(--dz-mute)}
@@ -10023,7 +10017,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = 'f0df7976';
+const APP_BUILD = 'b6ea50b4';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -13898,9 +13892,16 @@ function pkFrPrint() {
 }
 
 /* ---------- Übersicht ---------- */
-function pkHeroArt() {
-  const card = (v, up) => `<span class="pk-hcard${up ? '' : ' down'}" style="${pkCol(v)}"><span class="pk-dots" data-v="${v}">${up ? '<i></i>'.repeat(v) : ''}</span></span>`;
-  return `<div class="pk-hart"><div class="pk-hfig">${pkBotSvg('blinki', pkDoneN() ? 'happy' : 'idle')}</div><div class="pk-hcards">${card(4, 1)}${card(2, 0)}${card(1, 1)}</div><div class="pk-hcode" aria-hidden="true">${pkPill(4, 1)}${pkPill(2, '0').replace('pk-pill', 'pk-pill off')}${pkPill(1, 1)}<span>= 5</span></div></div>`;
+/* Die eine Karte oben: der nächste Schritt (Entdeckung oder Übung) – statt eines großen Titelbilds */
+function pkNextCard() {
+  const all = pkDoneN() === PK_MAX, fig = `<span class="pk-nfig" aria-hidden="true">${pkBotSvg('blinki', pkDoneN() ? 'happy' : 'idle')}</span>`;
+  let eb, t, s, act, arg, ic = '';
+  if (!all) { const L = PK_LV.find(x => x.id === pkNextLv()); eb = pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'; t = L.t; s = L.s; act = 'pkLv'; arg = L.id; }
+  else if (typeof pktRecommend === 'function' && pktOn()) {
+    const r = pktRecommend(), M = PKT_MODES.find(x => x.id === r.m), b = pktBest(r.m, r.l);
+    eb = 'Weiter üben'; ic = M.ic + ' '; t = `${M.n} · Level ${r.l}`; s = b ? `${b} von 3 Sternen – hol dir mehr` : 'Noch nicht gespielt'; act = 'pkTr'; arg = `${r.m}|${r.l}`;
+  } else { eb = 'Noch einmal'; t = 'Entdeckungsreise'; s = 'Alles entdeckt'; act = 'pkLv'; arg = 1; }
+  return `<div class="pk-next">${fig}<div class="pk-ntxt"><span class="pk-eyebrow">${eb}</span><b>${ic}${esc(t)}</b><small>${esc(s)}</small></div><button type="button" class="btn big" data-act="${act}" data-arg="${arg}">Los</button></div>`;
 }
 /* Ein ruhiges Band mit kleinen Symbolen (wie Segmente): Fortschritt · Sterne · Armband · Wort · Freunde · Ton */
 function pkRibbon() {
@@ -13941,11 +13942,8 @@ function pkHub() {
     return `<button class="pk-lv${d ? ' done' : op ? ' cur' : ' lock'}" data-act="pkLv" data-arg="${L.id}" ${op ? '' : 'disabled'} aria-label="Entdeckung ${k + 1}: ${esc(L.t)}${d ? ', geschafft' : op ? '' : ', noch zu'}">
       <span class="pk-lvn">${d ? ico('check', 18) : op ? k + 1 : ico('lock', 16)}</span><span class="pk-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="pk-lvr">Nochmal</span>' : op ? '<span class="pk-lvr go">Los</span>' : ''}</button>`;
   }).join('');
-  const rec = all && typeof pktRecommend === 'function' && pktOn() ? pktRecommend() : null;
-  const heroBtn = rec ? `<button class="btn big" data-act="pkTr" data-arg="${rec.m}|${rec.l}">Weiter üben</button>` : `<button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button>`;
   return topBar('Blinkis Punktkarten', 'rewards') + `<section class="pk-hub">
-    <div class="pk-hero"><div class="pk-hero-copy"><span class="pk-eyebrow">Punkte · Karten · Geheimcodes</span><h1>Zählen wie ein Computer</h1><p>Dreh Karten um, finde Zahlen und entdecke den Code aus 0 und 1.</p>
-      ${heroBtn}</div>${pkHeroArt()}</div>
+    ${pkNextCard()}
     ${pkRibbon()}
     ${pkRaetselW()}
     ${typeof pktHub === 'function' ? pktHub() : ''}
@@ -14042,14 +14040,14 @@ AFTER.pkLevel = () => pkMount();
    ===================================================================== */
 PK_HEX[128] = '#b3412c'; PK_NOTE[128] = 98; PK_SPECIAL.train = 'Trainingslager';
 const PKT_VALS = [null, [16, 8, 4, 2, 1], [64, 32, 16, 8, 4, 2, 1], [128, 64, 32, 16, 8, 4, 2, 1]];
-const PKT_LVN = ['', 'Leicht', 'Mittel', 'Profi'];
+const PKT_LVN = ['', 'Leicht', 'Mittel', 'Profi'];   // nur für Vorlesegeräte und Eltern, nicht sichtbar
 const PKT_MODES = [
-  { id: 'bau', n: 'Zahl bauen', ic: '🧱', d: 'Bau die Zahl mit den Karten' },
-  { id: 'les', n: 'Code lesen', ic: '🔍', d: 'Welche Zahl zeigen die Karten?' },
-  { id: 'plus', n: 'Rechnen', ic: '➕', d: 'Plus und minus – bau das Ergebnis' },
-  { id: 'dbl', n: 'Doppelt und halb', ic: '↔️', d: 'Verdoppeln und halbieren' },
-  { id: 'pix', n: 'Pixelbilder', ic: '🖼️', d: 'Jede Zeile ist eine Zahl' },
-  { id: 'blitz', n: 'Blitz', ic: '⚡', d: '60 Sekunden – wie viele schaffst du?' }
+  { id: 'bau', n: 'Zahl bauen', s: 'Bauen', ic: '🧱', d: 'Bau die Zahl mit den Karten' },
+  { id: 'les', n: 'Code lesen', s: 'Lesen', ic: '🔍', d: 'Welche Zahl zeigen die Karten?' },
+  { id: 'plus', n: 'Rechnen', s: 'Rechnen', ic: '➕', d: 'Plus und minus – bau das Ergebnis' },
+  { id: 'dbl', n: 'Doppelt und halb', s: 'Doppelt', ic: '↔️', d: 'Verdoppeln und halbieren' },
+  { id: 'pix', n: 'Pixelbilder', s: 'Bilder', ic: '🖼️', d: 'Jede Zeile ist eine Zahl' },
+  { id: 'blitz', n: 'Blitz', s: 'Blitz', ic: '⚡', d: '60 Sekunden – wie viele schaffst du?' }
 ];
 const PKT = { blitz: 60 };
 const PKT_BLITZ = { 1: [5, 8, 11], 2: [4, 6, 9], 3: [3, 5, 7] };
@@ -14121,10 +14119,11 @@ function pktOpen(m, l) {
 }
 const pktRankIdx = n => { let r = 0; PKT_RANKS.forEach((x, k) => { if (n >= x.at) r = k; }); return r; };
 const pktBest = (m, l) => (pktT().lv[m + l] || {}).best || 0;
+/* Das Level einer Kachel: immer das höchste offene – nach einer Runde kommt das nächste Level von selbst dazu */
+const pktCur = m => pktOpen(m, 3) ? 3 : pktOpen(m, 2) ? 2 : 1;
 function pktRecommend() {
-  let first = null;
-  for (const M of PKT_MODES) for (let l = 1; l <= 3; l++) if (pktOpen(M.id, l)) { if (!first) first = { m: M.id, l }; if (pktBest(M.id, l) < 3) return { m: M.id, l }; }
-  return first || { m: 'bau', l: 1 };
+  for (const M of PKT_MODES) { const l = pktCur(M.id); if (pktBest(M.id, l) < 3) return { m: M.id, l }; }
+  return { m: PKT_MODES[0].id, l: pktCur(PKT_MODES[0].id) };
 }
 function pktCount() {
   const T = pktT(); T.total++; T.streak++; if (T.streak > T.serie) T.serie = T.streak; save();
@@ -14154,7 +14153,7 @@ function pktPicSvg(pic, rows, o) {
   o = o || {}; const s = pic.s, cell = [];
   for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
     const on = y < rows && pic.g[y][x] === '#', seen = y < rows;
-    cell.push(`<rect x="${x + .06}" y="${y + .06}" width=".88" height=".88" rx=".14" fill="${on ? pic.c : seen ? 'transparent' : (o.ghost ? 'var(--dz-t1,#efece6)' : 'transparent')}" stroke="${on ? 'none' : 'var(--dz-line,#d9d4c9)'}" stroke-width=".05"/>`);
+    cell.push(`<rect x="${x + .06}" y="${y + .06}" width=".88" height=".88" rx=".14" fill="${on ? pic.c : seen ? 'transparent' : (o.ghost ? '#ebe6da' : 'transparent')}" stroke="${on ? 'none' : '#d4ccbb'}" stroke-width=".05"/>`);
   }
   return `<svg class="pkt-pic${o.big ? ' big' : ''}${o.mini ? ' mini' : ''}" viewBox="0 0 ${s} ${s}" role="img" aria-label="Pixelbild ${esc(pic.n)}">${cell.join('')}</svg>`;
 }
@@ -14195,7 +14194,7 @@ function pktEnd(api, o) {
   if (big) pkTone(1319, .5, .3, 'triangle', .06);
   const btns = [];
   const nx = l < 3 && pktOpen(m, l + 1);
-  if (nx && o.stars >= 2) btns.push({ label: `Level ${l + 1}: ${PKT_LVN[l + 1]}`, on: () => pktGo(m, l + 1) });
+  if (nx && o.stars >= 2) btns.push({ label: `Level ${l + 1}`, on: () => pktGo(m, l + 1) });
   btns.push({ label: 'Nochmal', sec: nx && o.stars >= 2, on: () => pktGo(m, l) });
   if (nx && o.stars < 2) btns.push({ label: `Level ${l + 1}`, sec: true, on: () => pktGo(m, l + 1) });
   btns.push({ label: 'Zur Übersicht', sec: true, on: () => go('punkte') });
@@ -14351,7 +14350,7 @@ function pktBlitz(api, l) {
     T.streak = 0; save();
     pktEnd(api, { m: 'blitz', l, stars: Math.max(1, stars), hi: score, rank0, line: `<b>${score}</b> Zahlen in 60 Sekunden.${stars === 0 ? ' Beim nächsten Mal mehr!' : ''} Für Sterne: ${th[0]} · ${th[1]} · ${th[2]}.`, say: score > hi0 && score > 0 ? 'Neuer Rekord!' : 'Zeit ist um!' });
   }
-  head(); target.innerHTML = '<span class="pk-label">Bereit?</span><b>${PKT.blitz}</b><small class="pk-zsub">Sekunden</small>';
+  head(); target.innerHTML = `<span class="pk-label">Bereit?</span><b>${PKT.blitz}</b><small class="pk-zsub">Sekunden</small>`;
   scene.say(`60 Sekunden: Bau so viele Zahlen wie möglich. Zahl sofort fertig – dann kommt die nächste. Für 3 Sterne: ${PKT_BLITZ[l][2]}.`);
   A.lock = true; A.build(vals, vals.map(() => 0), []);
   api.setFoot([{ label: 'Los!', on: begin }, { label: 'Aufhören', sec: true, on: stop }]);
@@ -14371,14 +14370,10 @@ function pktHub() {
   if (!pktOn()) return '<h3 class="pk-h">Trainingslager</h3><p class="pk-foot-note">Das Trainingslager öffnet nach „Mehr Karten“.</p>';
   const T = pktT(), rec = pktRecommend();
   const tiles = PKT_MODES.map(M => {
-    const lvs = [1, 2, 3].map(l => {
-      const op = pktOpen(M.id, l), e = T.lv[M.id + l] || {}, b = e.best || 0, isRec = op && rec.m === M.id && rec.l === l;
-      const sub = M.id === 'blitz' ? (e.hi ? `${e.hi}` : '') : '';
-      return `<button type="button" class="pkt-lb${op ? '' : ' lock'}${b >= 3 ? ' gold' : ''}${isRec ? ' rec' : ''}" data-act="pkTr" data-arg="${M.id}|${l}" ${op ? '' : 'disabled'} aria-label="${esc(M.n)}, Level ${l} ${PKT_LVN[l]}, ${op ? (b ? b + ' von 3 Sternen' : 'noch nicht gespielt') : 'noch zu'}"><span class="pkt-ln">${op ? l : ico('lock', 13)}</span><span class="pkt-ls" aria-hidden="true">${'<i class="on">✦</i>'.repeat(b)}${'<i>✦</i>'.repeat(3 - b)}</span><small>${op ? (sub ? '⚡ ' + sub : PKT_LVN[l]) : PKT_LVN[l]}</small></button>`;
-    }).join('');
-    return `<div class="pkt-tile"><div class="pkt-th"><span class="pkt-ic" aria-hidden="true">${M.ic}</span><span><b>${M.n}</b><small>${M.d}</small></span></div><div class="pkt-lvs">${lvs}</div></div>`;
+    const l = pktCur(M.id), b = pktBest(M.id, l), isRec = rec.m === M.id, e = T.lv[M.id + l] || {};
+    return `<button type="button" class="pkt-t${b >= 3 ? ' gold' : ''}${isRec ? ' rec' : ''}" data-act="pkTr" data-arg="${M.id}|${l}" aria-label="${esc(M.n)}, Level ${l}, ${b ? b + ' von 3 Sternen' : 'noch nicht gespielt'}${M.id === 'blitz' && e.hi ? ', Rekord ' + e.hi : ''}"><span class="pkt-tl" aria-hidden="true">${l}</span><span class="pkt-ti" aria-hidden="true">${M.ic}</span><b>${M.s}</b><span class="pkt-ts" aria-hidden="true">${'<i class="on">✦</i>'.repeat(b)}${'<i>✦</i>'.repeat(3 - b)}</span></button>`;
   }).join('');
-  return `<h3 class="pk-h">Trainingslager</h3><p class="pkt-sub">Level 1 hilft noch ein bisschen. Ab Level 2 siehst du <b>keine Summe</b> mehr – nur die Antwort zählt.</p><div class="pkt-grid">${tiles}</div>`;
+  return `<h3 class="pk-h">Trainingslager</h3><div class="pkt-row">${tiles}</div>`;
 }
 function pktSegs(seg) {
   if (!pktOn()) return [];

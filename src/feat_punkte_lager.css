@@ -19,27 +19,19 @@
 .pk-acc.open .pk-accv{transform:rotate(180deg)}
 .pk-lvs[hidden]{display:none}
 
-/* Trainingslager: kleine Kacheln mit drei Leveln */
-.pkt-sub{margin:-4px 0 0;font-size:.92rem;font-weight:600;color:var(--dz-mute)}
-.pkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--dz-gap)}
-.pkt-tile{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
-.pkt-th{display:flex;align-items:center;gap:10px}
-.pkt-ic{width:40px;height:40px;flex:none;display:grid;place-items:center;font-size:1.4rem;border-radius:12px;background:var(--dz-t2)}
-.pkt-th b{display:block;font-size:1.02rem;font-weight:800;color:var(--dz-ink)}
-.pkt-th small{display:block;font-size:.82rem;font-weight:600;color:var(--dz-mute);line-height:1.25}
-.pkt-lvs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.pkt-lb{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;border-radius:12px;border:var(--dz-bd-w) solid var(--dz-line);background:var(--dz-bg);color:var(--dz-ink);font:inherit;cursor:pointer;transition:transform var(--dz-t),box-shadow var(--dz-t)}
-.pkt-lb:not([disabled]):hover{transform:translateY(-2px);box-shadow:var(--dz-sh-lift)}
-.pkt-lb:not([disabled]):active{transform:scale(.96)}
-.pkt-lb.rec{border-color:var(--dz-accent);background:var(--dz-t2)}
-.pkt-lb.gold{border-color:#e8a90c}
-.pkt-lb.lock{cursor:default;color:var(--dz-mute);background:var(--dz-t1);opacity:.75}
-.pkt-ln{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;font-weight:800;font-size:.9rem;background:var(--dz-accent);color:var(--dz-accent-ink)}
-.pkt-lb.lock .pkt-ln{background:transparent;color:var(--dz-mute)}
-.pkt-ls{display:flex;gap:0;line-height:1}
-.pkt-ls i{font-style:normal;font-size:.8rem;color:var(--dz-line)}
-.pkt-ls i.on{color:#e8a90c}
-.pkt-lb small{font-size:.7rem;font-weight:700;color:var(--dz-mute)}
+/* Trainingslager: sechs kleine Kacheln in einer Zeile */
+.pkt-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(6px,1.6vw,12px)}
+.pkt-t{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);font:inherit;cursor:pointer;transition:transform var(--dz-t),box-shadow var(--dz-t)}
+.pkt-t:hover{transform:translateY(-2px);box-shadow:var(--dz-sh-lift)}
+.pkt-t:active{transform:scale(.96)}
+.pkt-t.rec{border-color:var(--dz-accent);background:var(--dz-t2)}
+.pkt-t.gold{border-color:#e8a90c}
+.pkt-ti{font-size:clamp(1.5rem,4.4vw,2rem);line-height:1.1}
+.pkt-t b{max-width:100%;padding:0 2px;font-size:clamp(.6rem,2.2vw,.86rem);font-weight:800;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pkt-tl{position:absolute;top:5px;right:6px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;display:grid;place-items:center;border-radius:9px;font-size:.7rem;font-weight:800;background:var(--dz-accent);color:var(--dz-accent-ink)}
+.pkt-ts{display:flex;line-height:1}
+.pkt-ts i{font-style:normal;font-size:.72rem}
+.pkt-ts i.on{color:#e8a90c}
 
 /* Ribbon: Rang und Sammlung */
 .pkt-seg-e{font-size:1.2rem;line-height:1}
@@ -99,8 +91,17 @@
 .pkt-trophy{display:flex;flex-direction:column;align-items:center;gap:4px;animation:pkPopIn .5s both}
 .pkt-trophy b{font-size:1.05rem;font-weight:800}
 @media (max-width:520px){
-  .pkt-grid{grid-template-columns:1fr}
   .pkt-pad{grid-template-columns:repeat(3,58px)}
   .pkt-bds span{width:84px}
 }
 @media (max-width:480px){.pk-ribbon .pk-seg small{display:none}.pk-ribbon .pk-seg{min-width:0;padding:8px 6px}}
+/* Dunkles Thema: Karten heller, Armbänder und Pixelbilder auf einem hellen Schildchen, damit Farben und Namen gut lesbar sind */
+body[data-theme="nacht"] .pk-root,body[data-theme="nacht"] .pk-hub,body[data-theme="nacht"] .pk-print,body[data-theme="nacht"] .pk-parent{--pk-c2:#5b9bff;--pk-c4:#3fbf6a;--pk-c8:#a28bff;--pk-c16:#ff9f45;--pk-c32:#d29a63;--pk-c64:#2fc7bd;--pk-c128:#ec7863;--pk-i1:#14181a;--pk-i2:#14181a;--pk-i4:#14181a;--pk-i8:#14181a;--pk-i16:#14181a;--pk-i32:#14181a;--pk-i64:#14181a;--pk-i128:#14181a}
+body[data-theme="nacht"] .pk-band:not(.dark),body[data-theme="nacht"] .pkt-pic{background:#f3efe6;border-radius:12px}
+body[data-theme="nacht"] .pk-band:not(.dark){padding:3px 4px}
+body[data-theme="nacht"] .pk-psticker .pk-band{background:none}
+body[data-theme="nacht"] .pkt-pic{padding:4%;box-sizing:border-box}
+.pk-stars i,.pkt-ts i{color:color-mix(in srgb,var(--dz-mute) 38%,transparent)}
+.pk-lk.locked .pk-lksw,.pk-lk.locked .pk-lke{opacity:.7}
+.pkt-bds small{font-size:.7rem}
+.pkt-bds span:not(.ok){opacity:.8}

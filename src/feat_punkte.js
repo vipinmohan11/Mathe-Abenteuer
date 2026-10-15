@@ -1223,9 +1223,16 @@ function pkFrPrint() {
 }
 
 /* ---------- Übersicht ---------- */
-function pkHeroArt() {
-  const card = (v, up) => `<span class="pk-hcard${up ? '' : ' down'}" style="${pkCol(v)}"><span class="pk-dots" data-v="${v}">${up ? '<i></i>'.repeat(v) : ''}</span></span>`;
-  return `<div class="pk-hart"><div class="pk-hfig">${pkBotSvg('blinki', pkDoneN() ? 'happy' : 'idle')}</div><div class="pk-hcards">${card(4, 1)}${card(2, 0)}${card(1, 1)}</div><div class="pk-hcode" aria-hidden="true">${pkPill(4, 1)}${pkPill(2, '0').replace('pk-pill', 'pk-pill off')}${pkPill(1, 1)}<span>= 5</span></div></div>`;
+/* Die eine Karte oben: der nächste Schritt (Entdeckung oder Übung) – statt eines großen Titelbilds */
+function pkNextCard() {
+  const all = pkDoneN() === PK_MAX, fig = `<span class="pk-nfig" aria-hidden="true">${pkBotSvg('blinki', pkDoneN() ? 'happy' : 'idle')}</span>`;
+  let eb, t, s, act, arg, ic = '';
+  if (!all) { const L = PK_LV.find(x => x.id === pkNextLv()); eb = pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'; t = L.t; s = L.s; act = 'pkLv'; arg = L.id; }
+  else if (typeof pktRecommend === 'function' && pktOn()) {
+    const r = pktRecommend(), M = PKT_MODES.find(x => x.id === r.m), b = pktBest(r.m, r.l);
+    eb = 'Weiter üben'; ic = M.ic + ' '; t = `${M.n} · Level ${r.l}`; s = b ? `${b} von 3 Sternen – hol dir mehr` : 'Noch nicht gespielt'; act = 'pkTr'; arg = `${r.m}|${r.l}`;
+  } else { eb = 'Noch einmal'; t = 'Entdeckungsreise'; s = 'Alles entdeckt'; act = 'pkLv'; arg = 1; }
+  return `<div class="pk-next">${fig}<div class="pk-ntxt"><span class="pk-eyebrow">${eb}</span><b>${ic}${esc(t)}</b><small>${esc(s)}</small></div><button type="button" class="btn big" data-act="${act}" data-arg="${arg}">Los</button></div>`;
 }
 /* Ein ruhiges Band mit kleinen Symbolen (wie Segmente): Fortschritt · Sterne · Armband · Wort · Freunde · Ton */
 function pkRibbon() {
@@ -1266,11 +1273,8 @@ function pkHub() {
     return `<button class="pk-lv${d ? ' done' : op ? ' cur' : ' lock'}" data-act="pkLv" data-arg="${L.id}" ${op ? '' : 'disabled'} aria-label="Entdeckung ${k + 1}: ${esc(L.t)}${d ? ', geschafft' : op ? '' : ', noch zu'}">
       <span class="pk-lvn">${d ? ico('check', 18) : op ? k + 1 : ico('lock', 16)}</span><span class="pk-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="pk-lvr">Nochmal</span>' : op ? '<span class="pk-lvr go">Los</span>' : ''}</button>`;
   }).join('');
-  const rec = all && typeof pktRecommend === 'function' && pktOn() ? pktRecommend() : null;
-  const heroBtn = rec ? `<button class="btn big" data-act="pkTr" data-arg="${rec.m}|${rec.l}">Weiter üben</button>` : `<button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button>`;
   return topBar('Blinkis Punktkarten', 'rewards') + `<section class="pk-hub">
-    <div class="pk-hero"><div class="pk-hero-copy"><span class="pk-eyebrow">Punkte · Karten · Geheimcodes</span><h1>Zählen wie ein Computer</h1><p>Dreh Karten um, finde Zahlen und entdecke den Code aus 0 und 1.</p>
-      ${heroBtn}</div>${pkHeroArt()}</div>
+    ${pkNextCard()}
     ${pkRibbon()}
     ${pkRaetselW()}
     ${typeof pktHub === 'function' ? pktHub() : ''}

@@ -10,14 +10,14 @@
    ===================================================================== */
 PK_HEX[128] = '#b3412c'; PK_NOTE[128] = 98; PK_SPECIAL.train = 'Trainingslager';
 const PKT_VALS = [null, [16, 8, 4, 2, 1], [64, 32, 16, 8, 4, 2, 1], [128, 64, 32, 16, 8, 4, 2, 1]];
-const PKT_LVN = ['', 'Leicht', 'Mittel', 'Profi'];
+const PKT_LVN = ['', 'Leicht', 'Mittel', 'Profi'];   // nur für Vorlesegeräte und Eltern, nicht sichtbar
 const PKT_MODES = [
-  { id: 'bau', n: 'Zahl bauen', ic: '🧱', d: 'Bau die Zahl mit den Karten' },
-  { id: 'les', n: 'Code lesen', ic: '🔍', d: 'Welche Zahl zeigen die Karten?' },
-  { id: 'plus', n: 'Rechnen', ic: '➕', d: 'Plus und minus – bau das Ergebnis' },
-  { id: 'dbl', n: 'Doppelt und halb', ic: '↔️', d: 'Verdoppeln und halbieren' },
-  { id: 'pix', n: 'Pixelbilder', ic: '🖼️', d: 'Jede Zeile ist eine Zahl' },
-  { id: 'blitz', n: 'Blitz', ic: '⚡', d: '60 Sekunden – wie viele schaffst du?' }
+  { id: 'bau', n: 'Zahl bauen', s: 'Bauen', ic: '🧱', d: 'Bau die Zahl mit den Karten' },
+  { id: 'les', n: 'Code lesen', s: 'Lesen', ic: '🔍', d: 'Welche Zahl zeigen die Karten?' },
+  { id: 'plus', n: 'Rechnen', s: 'Rechnen', ic: '➕', d: 'Plus und minus – bau das Ergebnis' },
+  { id: 'dbl', n: 'Doppelt und halb', s: 'Doppelt', ic: '↔️', d: 'Verdoppeln und halbieren' },
+  { id: 'pix', n: 'Pixelbilder', s: 'Bilder', ic: '🖼️', d: 'Jede Zeile ist eine Zahl' },
+  { id: 'blitz', n: 'Blitz', s: 'Blitz', ic: '⚡', d: '60 Sekunden – wie viele schaffst du?' }
 ];
 const PKT = { blitz: 60 };
 const PKT_BLITZ = { 1: [5, 8, 11], 2: [4, 6, 9], 3: [3, 5, 7] };
@@ -89,10 +89,11 @@ function pktOpen(m, l) {
 }
 const pktRankIdx = n => { let r = 0; PKT_RANKS.forEach((x, k) => { if (n >= x.at) r = k; }); return r; };
 const pktBest = (m, l) => (pktT().lv[m + l] || {}).best || 0;
+/* Das Level einer Kachel: immer das höchste offene – nach einer Runde kommt das nächste Level von selbst dazu */
+const pktCur = m => pktOpen(m, 3) ? 3 : pktOpen(m, 2) ? 2 : 1;
 function pktRecommend() {
-  let first = null;
-  for (const M of PKT_MODES) for (let l = 1; l <= 3; l++) if (pktOpen(M.id, l)) { if (!first) first = { m: M.id, l }; if (pktBest(M.id, l) < 3) return { m: M.id, l }; }
-  return first || { m: 'bau', l: 1 };
+  for (const M of PKT_MODES) { const l = pktCur(M.id); if (pktBest(M.id, l) < 3) return { m: M.id, l }; }
+  return { m: PKT_MODES[0].id, l: pktCur(PKT_MODES[0].id) };
 }
 function pktCount() {
   const T = pktT(); T.total++; T.streak++; if (T.streak > T.serie) T.serie = T.streak; save();
@@ -122,7 +123,7 @@ function pktPicSvg(pic, rows, o) {
   o = o || {}; const s = pic.s, cell = [];
   for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
     const on = y < rows && pic.g[y][x] === '#', seen = y < rows;
-    cell.push(`<rect x="${x + .06}" y="${y + .06}" width=".88" height=".88" rx=".14" fill="${on ? pic.c : seen ? 'transparent' : (o.ghost ? 'var(--dz-t1,#efece6)' : 'transparent')}" stroke="${on ? 'none' : 'var(--dz-line,#d9d4c9)'}" stroke-width=".05"/>`);
+    cell.push(`<rect x="${x + .06}" y="${y + .06}" width=".88" height=".88" rx=".14" fill="${on ? pic.c : seen ? 'transparent' : (o.ghost ? '#ebe6da' : 'transparent')}" stroke="${on ? 'none' : '#d4ccbb'}" stroke-width=".05"/>`);
   }
   return `<svg class="pkt-pic${o.big ? ' big' : ''}${o.mini ? ' mini' : ''}" viewBox="0 0 ${s} ${s}" role="img" aria-label="Pixelbild ${esc(pic.n)}">${cell.join('')}</svg>`;
 }
@@ -163,7 +164,7 @@ function pktEnd(api, o) {
   if (big) pkTone(1319, .5, .3, 'triangle', .06);
   const btns = [];
   const nx = l < 3 && pktOpen(m, l + 1);
-  if (nx && o.stars >= 2) btns.push({ label: `Level ${l + 1}: ${PKT_LVN[l + 1]}`, on: () => pktGo(m, l + 1) });
+  if (nx && o.stars >= 2) btns.push({ label: `Level ${l + 1}`, on: () => pktGo(m, l + 1) });
   btns.push({ label: 'Nochmal', sec: nx && o.stars >= 2, on: () => pktGo(m, l) });
   if (nx && o.stars < 2) btns.push({ label: `Level ${l + 1}`, sec: true, on: () => pktGo(m, l + 1) });
   btns.push({ label: 'Zur Übersicht', sec: true, on: () => go('punkte') });
@@ -319,7 +320,7 @@ function pktBlitz(api, l) {
     T.streak = 0; save();
     pktEnd(api, { m: 'blitz', l, stars: Math.max(1, stars), hi: score, rank0, line: `<b>${score}</b> Zahlen in 60 Sekunden.${stars === 0 ? ' Beim nächsten Mal mehr!' : ''} Für Sterne: ${th[0]} · ${th[1]} · ${th[2]}.`, say: score > hi0 && score > 0 ? 'Neuer Rekord!' : 'Zeit ist um!' });
   }
-  head(); target.innerHTML = '<span class="pk-label">Bereit?</span><b>${PKT.blitz}</b><small class="pk-zsub">Sekunden</small>';
+  head(); target.innerHTML = `<span class="pk-label">Bereit?</span><b>${PKT.blitz}</b><small class="pk-zsub">Sekunden</small>`;
   scene.say(`60 Sekunden: Bau so viele Zahlen wie möglich. Zahl sofort fertig – dann kommt die nächste. Für 3 Sterne: ${PKT_BLITZ[l][2]}.`);
   A.lock = true; A.build(vals, vals.map(() => 0), []);
   api.setFoot([{ label: 'Los!', on: begin }, { label: 'Aufhören', sec: true, on: stop }]);
@@ -339,14 +340,10 @@ function pktHub() {
   if (!pktOn()) return '<h3 class="pk-h">Trainingslager</h3><p class="pk-foot-note">Das Trainingslager öffnet nach „Mehr Karten“.</p>';
   const T = pktT(), rec = pktRecommend();
   const tiles = PKT_MODES.map(M => {
-    const lvs = [1, 2, 3].map(l => {
-      const op = pktOpen(M.id, l), e = T.lv[M.id + l] || {}, b = e.best || 0, isRec = op && rec.m === M.id && rec.l === l;
-      const sub = M.id === 'blitz' ? (e.hi ? `${e.hi}` : '') : '';
-      return `<button type="button" class="pkt-lb${op ? '' : ' lock'}${b >= 3 ? ' gold' : ''}${isRec ? ' rec' : ''}" data-act="pkTr" data-arg="${M.id}|${l}" ${op ? '' : 'disabled'} aria-label="${esc(M.n)}, Level ${l} ${PKT_LVN[l]}, ${op ? (b ? b + ' von 3 Sternen' : 'noch nicht gespielt') : 'noch zu'}"><span class="pkt-ln">${op ? l : ico('lock', 13)}</span><span class="pkt-ls" aria-hidden="true">${'<i class="on">✦</i>'.repeat(b)}${'<i>✦</i>'.repeat(3 - b)}</span><small>${op ? (sub ? '⚡ ' + sub : PKT_LVN[l]) : PKT_LVN[l]}</small></button>`;
-    }).join('');
-    return `<div class="pkt-tile"><div class="pkt-th"><span class="pkt-ic" aria-hidden="true">${M.ic}</span><span><b>${M.n}</b><small>${M.d}</small></span></div><div class="pkt-lvs">${lvs}</div></div>`;
+    const l = pktCur(M.id), b = pktBest(M.id, l), isRec = rec.m === M.id, e = T.lv[M.id + l] || {};
+    return `<button type="button" class="pkt-t${b >= 3 ? ' gold' : ''}${isRec ? ' rec' : ''}" data-act="pkTr" data-arg="${M.id}|${l}" aria-label="${esc(M.n)}, Level ${l}, ${b ? b + ' von 3 Sternen' : 'noch nicht gespielt'}${M.id === 'blitz' && e.hi ? ', Rekord ' + e.hi : ''}"><span class="pkt-tl" aria-hidden="true">${l}</span><span class="pkt-ti" aria-hidden="true">${M.ic}</span><b>${M.s}</b><span class="pkt-ts" aria-hidden="true">${'<i class="on">✦</i>'.repeat(b)}${'<i>✦</i>'.repeat(3 - b)}</span></button>`;
   }).join('');
-  return `<h3 class="pk-h">Trainingslager</h3><p class="pkt-sub">Level 1 hilft noch ein bisschen. Ab Level 2 siehst du <b>keine Summe</b> mehr – nur die Antwort zählt.</p><div class="pkt-grid">${tiles}</div>`;
+  return `<h3 class="pk-h">Trainingslager</h3><div class="pkt-row">${tiles}</div>`;
 }
 function pktSegs(seg) {
   if (!pktOn()) return [];
