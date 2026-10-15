@@ -1,4 +1,4 @@
-"""Blinkis Punktkarten (Entdeckungen 1–13, Tagesrätsel): Schalter (Standard aus), alle Entdeckungen über die Oberfläche durchspielen,
+"""Blinkis Punktkarten (Entdeckungen 1–14, Tagesrätsel, Freundes-Armbänder) und Venola-Symbole: Schalter (Standard aus), alle Entdeckungen über die Oberfläche durchspielen,
 Zaubertrick, Lumi, Armband, Druckbogen, Eltern-Karte, keine Münzen.
 Aufruf: python3 punkte_test.py /abs/pfad/Mathe-Abenteuer_Klasse4.html [screenshot-ordner]"""
 import sys, re
@@ -41,8 +41,8 @@ with sync_playwright() as p:
     E("()=>go('rewards')"); pg.wait_for_timeout(80)
     ok(bool(pg.query_selector('[data-act=punkte]')), 'Meine Welt: Kachel erscheint')
     pg.click('[data-act=punkte]'); pg.wait_for_timeout(150)
-    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv').count()==13, 'Übersicht mit 13 Entdeckungen')
-    ok(pg.locator('.pk-lv.lock').count()==12, 'Nur die erste Entdeckung ist offen')
+    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv').count()==14, 'Übersicht mit 14 Entdeckungen')
+    ok(pg.locator('.pk-lv.lock').count()==13, 'Nur die erste Entdeckung ist offen')
     ok(not pg.query_selector('.pk-tag'), 'Tagesrätsel erst nach Entdeckung 4')
     shot(pg, 'hub')
     pg.click('.pk-hero .btn'); pg.wait_for_timeout(250)
@@ -122,6 +122,23 @@ with sync_playwright() as p:
     shot(pg, 'l7')
     foot(pg, 'Fertig'); pg.wait_for_timeout(300); next_lv(pg)
 
+    # Wenigste Züge (steht direkt nach „Mehr Karten“)
+    ok(E("()=>UI.pkLv")==14 and 'Blinki schafft es mit' in pg.inner_text('#pkRoot .pk-bubble'), 'Wenigste Züge kommt direkt nach Mehr Karten')
+    for r in range(3):
+        t = int(pg.inner_text('#pkRoot .pk-target b')); s0 = total(pg); mn = int(re.search(r'Blinki: (\d+)', pg.inner_text('#pkRoot .pk-moves')).group(1))
+        ok(bin(s0 ^ t).count('1') == mn == r + 2, f'Züge {r + 1}: von {s0} zur {t}, Blinki braucht {mn}')
+        if r == 1:
+            for _ in range(2): pg.locator('#pkRoot .pk-card').nth(4).click(); pg.wait_for_timeout(60)
+            set_to(pg, t); pg.wait_for_timeout(700)
+            ok('Es geht in' in pg.inner_text('#pkRoot .pk-bubble') and pg.locator('#pkRoot .pk-slot.mark').count() == mn, 'Züge: zu viele Züge – die nötigen Karten werden markiert')
+            shot(pg, 'l14')
+            foot(pg, 'Nochmal'); pg.wait_for_timeout(250); set_to(pg, t); pg.wait_for_timeout(700)
+        else:
+            set_to(pg, t); pg.wait_for_timeout(700)
+        ok('Perfekt' in pg.inner_text('#pkRoot .pk-bubble'), f'Züge {r + 1}: perfekt gelöst')
+        foot(pg, 'Fertig' if r == 2 else 'Nächstes Rätsel'); pg.wait_for_timeout(300)
+    next_lv(pg)
+
     # 8 – Lumi bestellt (einmal falsch: Lampen werden verglichen)
     def lumi_want():
         return E("()=>[...document.querySelectorAll('#pkRoot .pk-mlamps .pk-lamp')].reduce((s,l,i)=>s+(l.classList.contains('on')?[4,2,1][i]:0),0)")
@@ -143,8 +160,10 @@ with sync_playwright() as p:
     next_lv(pg)
 
     # 10 – Armband
-    set_to(pg, 27); pg.wait_for_timeout(150)
-    ok(pg.locator('#pkRoot .pk-foot .btn').first.is_disabled(), '10: 27 hat keinen Buchstaben (Auffädeln gesperrt)')
+    set_to(pg, 28); pg.wait_for_timeout(150)
+    ok(pg.inner_text('#pkRoot .pk-foot .btn >> nth=0')=='Ö auffädeln', '10: 28 ist das Ö')
+    set_to(pg, 31); pg.wait_for_timeout(150)
+    ok(pg.locator('#pkRoot .pk-foot .btn').first.is_disabled(), '10: 31 hat keinen Buchstaben (Auffädeln gesperrt)')
     set_to(pg, 13); pg.wait_for_timeout(150); foot(pg, 'M auffädeln'); pg.wait_for_timeout(1700)
     ok(total(pg)==0, '10: nach dem Auffädeln sind die Karten wieder zu')
     set_to(pg, 9); pg.wait_for_timeout(150); foot(pg, 'I auffädeln'); pg.wait_for_timeout(300)
@@ -189,10 +208,15 @@ with sync_playwright() as p:
     pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').click(); pg.wait_for_timeout(300)
     ok(E("()=>S.punkte.word.join('')")=='AI' and bool(pg.query_selector('.pk-result .pk-word')), '13: Computer-Wort „AI“ gespeichert und gezeigt')
     shot(pg, 'result13')
-    ok(E("()=>Object.keys(S.punkte.done).length")==13, 'Alle 13 Entdeckungen geschafft')
+    ok(E("()=>Object.keys(S.punkte.done).length")==14, 'Alle 14 Entdeckungen geschafft')
     ok(E("()=>S.coins")==coins0, 'Keine Münzen verändert')
     foot(pg, 'Zur Übersicht'); pg.wait_for_timeout(200)
-    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv.done').count()==13 and pg.locator('.pk-keepcard').count()==2, 'Übersicht: alles geschafft, Armband und Computer-Wort sichtbar')
+    ok(E("()=>view")=='punkte' and pg.locator('.pk-lv.done').count()==14, 'Übersicht: alles geschafft')
+    ok(pg.locator('.pk-mine .pk-ic').count()==3 and not pg.query_selector('.pk-keepcard'), 'Armband, Computer-Wort und Freunde als kleine Symbole, keine breiten Flächen')
+    pg.click('.pk-ic[data-arg=arm]'); pg.wait_for_timeout(100)
+    ok(bool(pg.query_selector('.pk-pop .pk-arm')), 'Symbol Armband öffnet das Armband')
+    shot(pg, 'hub_icons')
+    pg.click('.pk-ic[data-arg=arm]'); pg.wait_for_timeout(100)
 
     # Tagesrätsel
     ok(bool(pg.query_selector('.pk-tag')) and 'Drei kurze Rätsel' in pg.inner_text('.pk-tag'), 'Tagesrätsel auf der Übersicht')
@@ -200,7 +224,7 @@ with sync_playwright() as p:
     ok(len(plan['tasks'])==3 and plan['vals']==[16,8,4,2,1] and E("()=>JSON.stringify(pkTagPlan(ymd()))==JSON.stringify(pkTagPlan(ymd()))"), 'Tagesrätsel: 3 Aufgaben, gleich für den ganzen Tag')
     kinds = set()
     for d in range(40): kinds |= {t['k'] for t in E(f"()=>pkTagPlan('2026-11-{d%28+1:02d}-{d}').tasks")}
-    ok(kinds=={'bau','lampen','kette','abc'}, 'Tagesrätsel: alle Rätselarten kommen vor')
+    ok(kinds=={'bau','lampen','kette','abc','zuege'}, 'Tagesrätsel: alle Rätselarten kommen vor (auch Wenigste Züge)')
     pg.click('.pk-tag [data-act=pkLv]'); pg.wait_for_timeout(250)
     for k, t in enumerate(plan['tasks']):
         if t['k'] == 'kette':
@@ -213,6 +237,68 @@ with sync_playwright() as p:
     shot(pg, 'tag_done')
     foot(pg, 'Zur Übersicht'); pg.wait_for_timeout(200)
     ok('Heute geschafft' in pg.inner_text('.pk-tag'), 'Übersicht: Tagesrätsel heute geschafft')
+
+    # Freundes-Armbänder: Name selbst schreiben, Buchstaben mit den Karten bauen (Ä, Ö, Ü, ß sind 27–30)
+    ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß'
+    pg.click('.pk-ic[data-act=pkFreunde]'); pg.wait_for_timeout(200)
+    ok(E("()=>view")=='pkFreunde' and pg.locator('[data-act=pkLv][data-arg=wem]').is_disabled(), 'Freunde: Seite offen, Ratespiel erst ab 3 Armbändern')
+    def make(name, typed, wrong=None, col=None):
+        pg.click('[data-act=pkLv][data-arg=freund]'); pg.wait_for_timeout(250)
+        pg.fill('#pkName', typed); pg.wait_for_timeout(80)
+        ok(pg.input_value('#pkName') == name, f'Freunde: „{typed}“ wird zu {name}')
+        foot(pg, 'Weiter'); pg.wait_for_timeout(200)
+        for k, ch in enumerate(name):
+            if wrong and k == 0:
+                set_to(pg, wrong); pg.wait_for_timeout(80); pg.locator('#pkRoot .pk-foot .btn').first.click(); pg.wait_for_timeout(150)
+                ok(f'du brauchst ein {ch}' in pg.inner_text('#pkRoot .pk-bubble'), f'Freunde: falscher Buchstabe – „du brauchst ein {ch}“')
+            set_to(pg, ABC.index(ch) + 1); pg.wait_for_timeout(80)
+            ok(pg.inner_text('#pkRoot .pk-foot .btn >> nth=0') == f'{ch} auffädeln', f'Freunde: {ch} = {ABC.index(ch) + 1}')
+            pg.locator('#pkRoot .pk-foot .btn').first.click(); pg.wait_for_timeout(1400)
+        pg.wait_for_timeout(300)
+        if col: pg.click(f'#pkRoot .pk-sw[data-v="{col}"]'); pg.wait_for_timeout(80)
+        if name == 'JÖRG': shot(pg, 'fr_colour')
+        foot(pg, 'Speichern'); pg.wait_for_timeout(250)
+    make('MIA', 'mia', wrong=11, col=4)
+    ok(E("()=>view")=='pkFreunde' and E("()=>S.punkte.friends[0].n")=='MIA', 'Freunde: Armband für MIA gespeichert')
+    need = ' '.join(pg.inner_text('.pk-need').split())
+    ok('6 × Grün' in need and '9 × Weiß' in need and '2 × Dunkel' in need, 'Perlen-Plan: 6 grüne, 9 weiße, 2 dunkle Perlen für MIA')
+    shot(pg, 'fr_plan')
+    make('JÖRG', 'Jörg')
+    make('BEN', 'Ben')
+    pg.click('[data-act=pkLv][data-arg=freund]'); pg.wait_for_timeout(200); pg.fill('#pkName', 'mia'); pg.wait_for_timeout(80)
+    ok(pg.locator('#pkRoot .pk-foot .btn').first.is_disabled() and 'schon ein Armband' in pg.inner_text('#pkRoot .pk-bubble'), 'Freunde: gleicher Name geht nicht zweimal')
+    pg.click('#app .top .back'); pg.wait_for_timeout(200)
+    ok(E("()=>view")=='pkFreunde' and pg.locator('.pk-stk').count()==3, 'Zurück führt zu den Freundes-Armbändern, 3 Sticker')
+    shot(pg, 'fr_list')
+    pg.click('[data-act=pkLv][data-arg=wem]'); pg.wait_for_timeout(250)
+    DEC = "()=>[...document.querySelectorAll('#pkRoot .pk-arm .pk-bead')].map(b=>{const n=[...b.querySelectorAll('.pk-beads i')].reduce((s,i,k)=>s+(i.classList.contains('on')?[16,8,4,2,1][k]:0),0);return 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß'[n-1]}).join('')"
+    ok('Armband ohne Namen' == pg.get_attribute('#pkRoot .pk-arm', 'aria-label') and not pg.query_selector('#pkRoot .pk-bead b'), 'Ratespiel: Armband ohne Namen')
+    for r in range(3):
+        nm = E(DEC)
+        if r == 0:
+            pg.locator('#pkRoot .pk-opt:not([data-n="%s"])' % nm).first.click(); pg.wait_for_timeout(150)
+            ok('Das ist nicht' in pg.inner_text('#pkRoot .pk-bubble'), 'Ratespiel: falscher Name gibt einen Hinweis zum ersten Buchstaben')
+            shot(pg, 'fr_wem')
+        pg.click('#pkRoot .pk-opt[data-n="%s"]' % nm); pg.wait_for_timeout(150)
+        ok(nm in pg.inner_text('#pkRoot .pk-bubble'), f'Ratespiel: {nm} erkannt')
+        foot(pg, 'Fertig' if r == 2 else 'Nächstes Armband'); pg.wait_for_timeout(250)
+    ok(E("()=>view")=='pkFreunde', 'Ratespiel fertig: zurück zu den Freunden')
+    pg.click('.pk-link[data-act=pkFrDruck]'); pg.wait_for_timeout(150)
+    ok(E("()=>view")=='pkFrDruck' and pg.locator('.pk-psticker').count()==3 and pg.locator('.pk-decoder span').count()==30, 'Sticker-Bogen: 3 Sticker und Entschlüssel-Tafel auf einer Seite')
+    shot(pg, 'fr_print')
+    pg.click('#app .top .back'); pg.wait_for_timeout(150)
+    pg.click('.pk-stk >> nth=2'); pg.click('[data-act=pkFrDel][data-arg=ask]'); pg.click('[data-act=pkFrDel][data-arg=yes]'); pg.wait_for_timeout(100)
+    ok(pg.locator('.pk-stk').count()==2 and E("()=>S.punkte.friends.map(f=>f.n).join()")=='MIA,JÖRG', 'Freunde: Armband löschen (mit Nachfrage)')
+    E("()=>go('punkte')"); pg.wait_for_timeout(150)
+    ok('Freunde 2' in pg.inner_text('.pk-mine'), 'Übersicht: Freunde-Symbol zeigt die Anzahl')
+
+    # Venola Holmes: Rang, Koffer, Akten und Regeln als kleine Symbole
+    E("()=>{S.flags.venola=true;vnS().vnRulesV=1;ACT.venola()}"); pg.wait_for_timeout(200)
+    ok(pg.locator('.vn-icons .vn-ic').count()==4 and not pg.query_selector('.vn-rankc'), 'Venola: Rang, Koffer, Akten, Regeln als kleine Symbole')
+    pg.click('.vn-ic[data-act=vnPop]'); pg.wait_for_timeout(100)
+    ok(bool(pg.query_selector('.vn-pop .bar')), 'Venola: Rang-Symbol öffnet den Fortschritt')
+    shot(pg, 'venola')
+    E("()=>{S.flags.venola=false;go('punkte')}"); pg.wait_for_timeout(150)
     shot(pg, 'hub_done')
     pg.click('#app .top .back'); pg.wait_for_timeout(150)
     ok(E("()=>view")=='rewards', 'Zurück führt nach Meine Welt')
@@ -249,11 +335,17 @@ with sync_playwright() as p:
     E("()=>ACT.pkLv(13)"); pg.wait_for_timeout(300)
     ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (7 Karten)')
     shot(pg, 'phone_l13')
+    E("()=>ACT.pkLv(14)"); pg.wait_for_timeout(300)
+    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Wenigste Züge)')
+    shot(pg, 'phone_l14')
+    E("()=>go('pkFreunde',{pkFr:0})"); pg.wait_for_timeout(300)
+    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Freundes-Armbänder)')
+    shot(pg, 'phone_fr')
     E("()=>go('punkte')"); pg.wait_for_timeout(200); shot(pg, 'phone_hub')
 
     # Schalter aus: Daten bleiben
     E("()=>ACT.dzFlag('punkte')")
-    ok(not E("()=>flagOn('punkte')") and E("()=>Object.keys(S.punkte.done).length")==13, 'Ausblenden behält alle Entdeckungen')
+    ok(not E("()=>flagOn('punkte')") and E("()=>Object.keys(S.punkte.done).length")==14, 'Ausblenden behält alle Entdeckungen')
     ok(not errs, 'Keine JavaScript-Fehler' + ('' if not errs else ': ' + '; '.join(errs[:3])))
     b.close()
 print('\n' + ('ALLE TESTS OK' if not fails else f'{len(fails)} FEHLER'))

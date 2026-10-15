@@ -267,13 +267,17 @@ function vnSetup() {
   const quick = (p.vnQuick[u.game] || 0) >= 3 && u.lv < top ? `<p class="vn-sug">⚡ Drei schnelle Siege ohne Hinweis! Magst du <b>Stufe ${u.lv + 1}</b> probieren? <button class="btn sm" data-act="vnLvl" data-arg="${u.lv + 1}">Stufe ${u.lv + 1} wählen</button></p>` : '';
   const next = top < 5 ? `<p class="small mute">Löse eine Akte auf Stufe ${top}, dann öffnet sich Stufe ${top + 1}.</p>` : '';
   const rep = Object.keys(p.vnRep).filter(t => p.vnRep[t]).length ? '<p class="small mute">Du kennst schon alles von mindestens einer Rätselart – sie kommen jetzt in neuer Mischung wieder.</p>' : '';
-  return vnTop() + `<div class="vn-hero">${vnTitle()}<p class="small mute">Löse Akten, sammle Beweismarken und werde Meisterdetektiv.</p></div>
-    <section class="card vn-rankc"><span class="vn-ri">${rk.ic}</span><div><b>${esc(rk.name)}</b><br><small class="mute">${p.venWins} ${p.venWins === 1 ? 'Akte' : 'Akten'} gelöst${rk.next ? ` · noch ${rk.need} bis „${esc(rk.next)}“` : ' · höchster Rang!'}</small><div class="bar" style="margin-top:6px"><i style="width:${rk.pct}%"></i></div></div><button class="btn sec vn-kb2" data-act="vnKoffer">🧳 Koffer<small>${p.vnMk} 🔎</small></button></section>${cont}
+  // Rang, Koffer, Akten und Regeln als kleine Symbole – die große Fläche gehört dem Rätseln
+  const nAkten = p.hist.filter(e => e.g === 'ven').length, pop = UI.vnPop === 'rank';
+  const icons = `<div class="vn-icons"><button class="vn-ic${pop ? ' on' : ''}" data-act="vnPop" data-arg="rank" aria-expanded="${pop}" aria-label="Dein Rang: ${esc(rk.name)}"><span aria-hidden="true">${rk.ic}</span><small>${esc(rk.name)}</small></button><button class="vn-ic" data-act="vnKoffer" aria-label="Detektivkoffer, ${p.vnMk} Beweismarken"><span aria-hidden="true">🧳</span><small>${p.vnMk} 🔎</small></button><button class="vn-ic" data-act="vnHist" aria-label="Meine Akten (${nAkten})"><span aria-hidden="true">📁</span><small>Akten ${nAkten}</small></button><button class="vn-ic" data-act="vnRules" aria-label="Regeln"><span aria-hidden="true">📜</span><small>Regeln</small></button></div>`
+    + (pop ? `<div class="vn-pop" role="status"><b>${rk.ic} ${esc(rk.name)}</b><small class="mute">${p.venWins} ${p.venWins === 1 ? 'Akte' : 'Akten'} gelöst${rk.next ? ` · noch ${rk.need} bis „${esc(rk.next)}“` : ' · höchster Rang!'}</small><div class="bar"><i style="width:${rk.pct}%"></i></div></div>` : '');
+  return vnTop() + `<div class="vn-hero">${vnTitle()}<p class="small mute">Löse Akten, sammle Beweismarken und werde Meisterdetektiv.</p>${icons}</div>
+    ${cont}
     <section class="card sd-week"><h3>Der Große Fall der Woche</h3><p class="small mute">Fünf Logik-Rätsel in einer Akte, schwer. Neu am Montag. Bonus: +12 🔎, +10 🪙 und ein Beweisstück für den Koffer.</p>${wk}</section>
     <section class="card sd-setup"><h3>Neue Akte</h3><div class="vn-games"><button class="vn-g${u.game === 'case' ? ' on' : ''}" data-act="vnGame" data-arg="case">🔍<b>Kriminalfall</b><small>Logik · Stufe ${p.vnCaseLvl} von 5 offen</small></button><button class="vn-g${u.game === 'code' ? ' on' : ''}" data-act="vnGame" data-arg="code">🗝️<b>Geheimakte</b><small>Wörter · Stufe ${p.vnCodeLvl} von 5 offen</small></button></div>
     <p class="small mute" style="margin:8px 0 0">${u.game === 'case' ? 'Wer lügt? · Alibi-Gitter · Zeitleiste · Widerspruch · Einstein-Rätsel' : 'Silbenrätsel · Wortleiter · Wörterkette · Analogien · Versteckte Wörter · Kreuzworträtsel · Lückentext'}</p>
     <h3>Stufe</h3><div class="sd-lvrow vn-lvrow">${lvs}</div>${next}${quick}<h3>Zeit</h3>${pzTimeChips('vnTime', u.tm)}<p class="small mute">Wenn die Zeit um ist, kannst du ohne Zeit weiterspielen.</p>
-    <div class="center" style="margin-top:12px"><button class="btn big" data-act="vnStart">Los geht’s</button></div><div class="center" style="margin-top:10px"><button class="btn sec" data-act="vnHist">Meine Akten (${p.hist.filter(e => e.g === 'ven').length})</button> <button class="btn sec" data-act="vnRules">📜 Regeln</button></div>${rep}</section>`;
+    <div class="center" style="margin-top:12px"><button class="btn big" data-act="vnStart">Los geht’s</button></div>${rep}</section>`;
 }
 function vnPlay(m) {
   const p = vnPz(m), a = m.ans || (m.ans = vnAnsNew(p)), solved = !!m.sv[m.si], last = m.si === m.stages.length - 1, kindK = m.kind === 'code' ? 'vg' : 'vc';
@@ -374,7 +378,8 @@ registerFeature({
   leave: () => { vnStop(); UI.vn = null; UI.vnV = null; UI.vnAsk = false; UI.vnRulesNext = null; UI.noClock = null; try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) { } },
   check: () => { vnS(); vnRewardsCheck(false); },
   acts: {
-    venola: () => { vnStop(); UI.vn = null; UI.vnSet = null; UI.vnV = null; UI.vnAsk = false; go('venola'); },
+    venola: () => { vnStop(); UI.vn = null; UI.vnSet = null; UI.vnV = null; UI.vnAsk = false; UI.vnPop = null; go('venola'); },
+    vnPop: k => { UI.vnPop = UI.vnPop === k ? null : k; render(); },
     vnGame: g => { const p = vnS(); UI.vnSet.game = g; UI.vnSet.lv = p.vnLast[g] || 1; render(); },
     vnLvl: l => { const p = vnS(); if (+l <= p[UI.vnSet.game === 'code' ? 'vnCodeLvl' : 'vnCaseLvl']) { UI.vnSet.lv = +l; p.vnQuick[UI.vnSet.game] = 0; } render(); },
     vnTime: t => { UI.vnSet.tm = +t; render(); },

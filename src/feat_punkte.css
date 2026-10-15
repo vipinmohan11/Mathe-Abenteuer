@@ -240,6 +240,73 @@
 .pk-week span.today i{border-color:var(--dz-gold)}
 .pk-result .pk-week{margin:2px 0 4px}
 
+/* Wenigste Züge */
+.pk-zrow{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
+.pk-zrow .pk-counter{min-width:150px;align-self:auto}
+.pk-moves{display:inline-flex;align-items:center;padding:6px 14px;border-radius:var(--dz-r-pill);border:2px solid var(--dz-gold);background:var(--dz-surface);font-weight:800;box-shadow:var(--dz-sh-soft)}
+.pk-slot.mark .pk-card{outline:3px dashed var(--dz-gold);outline-offset:5px;border-radius:22px}
+.pk-zsub{font-weight:800;color:var(--dz-mute);font-size:.85rem}
+
+/* Meine Sachen: kleine Symbole statt breiter Flächen */
+.pk-mine{display:flex;gap:6px;flex-wrap:wrap}
+.pk-ic{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:58px;height:52px;padding:4px 8px;box-sizing:border-box;border-radius:var(--dz-r-m);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);cursor:pointer;font:inherit;transition:transform var(--dz-t)}
+.pk-ic small{font-size:.7rem;font-weight:800;color:var(--dz-mute);white-space:nowrap}
+.pk-ic.on{border-color:var(--dz-accent);box-shadow:0 0 0 2px var(--dz-accent)}
+.pk-ic:active{transform:scale(.96)}
+.pk-icg{display:flex;align-items:baseline;gap:3px;font-size:1.05rem;line-height:1.1}
+.pk-icg i{font-style:normal;font-size:.68rem;color:var(--pk-c64)}
+.pk-pop{display:flex;flex-direction:column;align-items:center;gap:8px;align-self:center;max-width:100%;padding:10px 14px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
+.pk-tag{padding:10px 14px}
+
+/* Freundes-Armbänder */
+.pk-frintro{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.pk-frintro p{margin:0;font-weight:700}
+.pk-frbtn{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.pk-hint{font-weight:700;color:var(--dz-mute)}
+.pk-stks{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.pk-stk{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 14px 10px;border-radius:999px 999px var(--dz-r-m) var(--dz-r-m);background:var(--dz-surface);border:2px solid var(--dz-bd);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);cursor:pointer;font:inherit;transition:transform var(--dz-t)}
+.pk-stk b{font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:1.15rem;line-height:1}
+.pk-stk.on{border-color:var(--dz-accent);box-shadow:0 0 0 2px var(--dz-accent)}
+.pk-stk:active{transform:scale(.97)}
+.pk-stkb{display:flex;gap:4px}
+.pk-stkb span{display:flex;gap:1px}
+.pk-stkb i{width:5px;height:5px;border-radius:50%;background:var(--dz-surface2);border:1px solid var(--dz-line)}
+.pk-stkb i.on{background:var(--c);border-color:var(--c)}
+.pk-frdet{display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:var(--dz-r-xl);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
+.pk-frhead{display:flex;align-items:center;justify-content:space-between}
+.pk-frhead h3{margin:0;font-size:1.3rem;font-weight:800}
+.pk-close{width:40px;height:40px;border-radius:50%;border:var(--dz-bd-w) solid var(--dz-bd);background:var(--dz-surface);color:var(--dz-ink);display:grid;place-items:center;cursor:pointer}
+.pk-plan{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.pk-plan p{margin:0;max-width:52ch;font-weight:700}
+.pk-need{list-style:none;margin:0;padding:0;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-weight:700}
+.pk-need li{display:flex;align-items:center;gap:6px}
+.pk-need i{width:16px;height:16px;border-radius:50%;display:inline-block;box-sizing:border-box}
+.pk-need i.c{background:var(--c)}
+.pk-need i.w{background:#fff;border:2px solid var(--dz-line)}
+.pk-need i.d{background:#2b2233}
+.pk-namebox{align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;width:min(100%,420px)}
+.pk-name{width:100%;box-sizing:border-box;min-height:60px;border-radius:var(--dz-r-s);border:2px solid var(--dz-line);background:var(--dz-surface);color:var(--dz-ink);font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:2rem;text-align:center;letter-spacing:.12em;padding:4px 12px}
+.pk-name:focus{outline:3px solid var(--dz-accent);outline-offset:2px}
+.pk-fname{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.pk-fname span{min-width:40px;height:48px;box-sizing:border-box;border-radius:12px;display:grid;place-items:center;font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:1.6rem;border:2px dashed var(--dz-line);color:var(--dz-mute);background:var(--dz-surface)}
+.pk-fname span.cur{border:2px solid var(--dz-gold);color:var(--dz-ink)}
+.pk-fname span.ok{border:2px solid var(--dz-ok);background:var(--dz-ok-bg);color:var(--dz-ok)}
+.pk-colpick{display:flex;flex-direction:column;align-items:center;gap:14px}
+.pk-swatches{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pk-sw{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 8px;border-radius:var(--dz-r-m);border:2px solid transparent;background:none;color:var(--dz-ink);cursor:pointer;font:inherit}
+.pk-sw i{width:34px;height:34px;border-radius:50%;background:var(--c)}
+.pk-sw small{font-weight:800;font-size:.8rem}
+.pk-sw.on{border-color:var(--dz-accent);background:var(--dz-surface)}
+.pk-opts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.pk-opt.pk-right{background:var(--dz-ok-bg);border-color:var(--dz-ok);color:var(--dz-ok)}
+.pk-bead.hint .pk-beads{outline:3px dashed var(--dz-gold);outline-offset:3px}
+.pk-sgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.pk-psticker{border:1.5px dashed #9aa0ad;border-radius:12px;padding:6px;display:flex;justify-content:center;break-inside:avoid}
+.pk-psticker .pk-arm{box-shadow:none;border-width:2px;padding:6px 8px;gap:6px 8px}
+.pk-psticker .pk-beads i{width:9px;height:9px}
+.pk-decoder{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.8rem;color:#333}
+.pk-decoder b{margin-right:2px}
+
 /* Ergebnis */
 .pk-result{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;background:linear-gradient(135deg,var(--dz-hero-a),var(--dz-hero-b));border-radius:var(--dz-r-xl);box-shadow:var(--dz-sh-panel);padding:22px var(--dz-pad) 18px}
 .pk-result-fig svg{width:100px;height:112px}
@@ -310,6 +377,9 @@
 
 /* Telefon */
 @media(max-width:560px){
+  .pk-hubbar{gap:8px}
+  .pk-mine{order:3;width:100%;justify-content:center}
+  .pk-sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pk-hero{flex-direction:column;align-items:flex-start;padding:18px}
   .pk-hart{flex-direction:row;align-self:center}
   .pk-hfig svg{width:64px;height:72px}

@@ -34,6 +34,14 @@
 .sd-key:disabled{opacity:.3}
 /* Venola Holmes */
 .vn-hero{text-align:center;margin:6px 0 12px}
+.vn-icons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.vn-ic{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:62px;max-width:96px;padding:6px 8px;border-radius:var(--dz-r-m);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);cursor:pointer;transition:transform var(--dz-t)}
+.vn-ic span{font-size:1.45rem;line-height:1.1}
+.vn-ic small{font-size:.72rem;font-weight:800;color:var(--dz-mute);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vn-ic.on{border-color:var(--dz-accent);box-shadow:0 0 0 2px var(--dz-accent)}
+.vn-ic:active{transform:scale(.96)}
+.vn-pop{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:340px;margin:8px auto 0;padding:10px 14px;border-radius:var(--dz-r-m);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
+.vn-pop .bar{width:100%}
 .vn-title{margin:0 0 4px;font-size:clamp(1.5rem,7vw,2.4rem);letter-spacing:.04em;line-height:1.1}
 .vn-title span{display:inline-block}
 .vn-title span:nth-child(odd){font-family:'Venola Bodoni','Libre Bodoni',serif;font-weight:700}
