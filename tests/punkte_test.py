@@ -256,14 +256,14 @@ with sync_playwright() as p:
     ok(E("()=>view")=='punkte' and pg.locator('.pk-lv.done').count()==14, 'Übersicht: alles geschafft')
 
     # Übersicht: ein Band mit kleinen Segmenten, Popover darunter
-    ok(pg.locator('.pk-ribbon .pk-seg').count()==6 and not pg.query_selector('.pk-mine') and not pg.query_selector('.pk-hubbar'), 'Übersicht: Fortschritt, Sterne, Armband, Wort, Freunde, Ton in einem Band')
+    ok(pg.locator('.pk-ribbon .pk-seg').count()==8 and not pg.query_selector('.pk-mine') and not pg.query_selector('.pk-hubbar'), 'Übersicht: Fortschritt, Sterne, Armband, Wort, Freunde, Rang, Sammlung, Ton in einem Band')
     ok('14/14' in pg.inner_text('.pk-segring'), 'Band: Fortschritt 14/14')
     pg.click('.pk-seg[data-arg=stars]'); pg.wait_for_timeout(100)
     ok(bool(pg.query_selector('.pk-popv .pk-unl')), 'Band: Sterne öffnen die Freischalt-Liste')
     stars = E("()=>S.punkte.stars")
     ok(stars == 21 and E("()=>hasItem('pkd.regenbogen')&&hasItem('pkd.glitzer')&&hasItem('pkc.blinki')&&hasItem('pkc.klee')&&!hasItem('pkd.ozean')"), f'Sterne ({stars}) schalten Regenbogen, Glitzer, Blinki, Kleeblatt frei – Ozean noch nicht')
     pg.click('.pk-seg[data-arg=arm]'); pg.wait_for_timeout(100)
-    ok(bool(pg.query_selector('.pk-popv svg.pk-band')) and pg.locator('.pk-popv .pk-lk[data-act=pkLook]').count()==8, 'Armband-Symbol: Armband und 8 Muster')
+    ok(bool(pg.query_selector('.pk-popv svg.pk-band')) and pg.locator('.pk-popv .pk-lk[data-act=pkLook]').count()==11, 'Armband-Symbol: Armband und 11 Muster')
     pg.click('.pk-popv [data-act=pkLook][data-arg="me|glitzer"]'); pg.wait_for_timeout(100)
     pg.click('.pk-popv [data-act=pkCharm][data-arg="me|klee"]'); pg.wait_for_timeout(100)
     ok(E("()=>S.punkte.armD")=='glitzer' and E("()=>S.punkte.armCh")=='klee' and '🍀' in pg.inner_html('.pk-popv svg.pk-band'), 'Muster Glitzer und Anhänger Kleeblatt gewählt')
@@ -406,6 +406,132 @@ with sync_playwright() as p:
     ok(bool(pg.query_selector('.pk-parent')) and 'Warum gibt es keine Karte mit 3 Punkten' in pg.inner_text('.pk-parent') and 'Leuchtsterne' in pg.inner_text('.pk-parent'), 'Eltern: Stand, Leuchtsterne und offene Fragen')
     E("()=>{S.eq.theme='nacht';go('punkte',{pkShow:'arm'})}"); pg.wait_for_timeout(150); shot(pg, 'hub_nacht')
     E("()=>ACT.pkLv(8)"); pg.wait_for_timeout(200); shot(pg, 'l8_nacht')
+
+
+    # ---------- Trainingslager ----------
+    E("()=>{S.daily.free=-99999;S.eq.theme='sonne';PK.pause=0;go('punkte')}"); pg.wait_for_timeout(150)   # die freie Zeit der App (4 Minuten) soll den Test nicht stoppen
+    ok(pg.locator('.pk-acc').count()==1 and E("()=>document.getElementById('pkLes').hidden"), 'Entdeckungsreise: eingeklappt, wenn alles entdeckt ist')
+    ok('14/14' in pg.inner_text('.pk-acc') and E("()=>S.punkte.les")==None, 'Entdeckungsreise: Kopf zeigt 14/14')
+    pg.click('.pk-acc'); pg.wait_for_timeout(100)
+    ok(not E("()=>document.getElementById('pkLes').hidden") and pg.locator('.pk-lv:visible').count()==14 and E("()=>S.punkte.les")==True, 'Entdeckungsreise: aufklappbar, 14 Entdeckungen, Zustand gemerkt')
+    pg.click('.pk-acc'); pg.wait_for_timeout(100)
+    ok(E("()=>document.getElementById('pkLes').hidden") and E("()=>S.punkte.les")==False, 'Entdeckungsreise: wieder zugeklappt')
+    ok(pg.locator('.pkt-tile').count()==6 and pg.locator('.pkt-lb').count()==18 and pg.locator('.pkt-lb:not(.lock)').count()==6, 'Trainingslager: 6 Übungsarten mit je 3 Leveln, nur Level 1 offen')
+    ok('Weiter üben' in pg.inner_text('.pk-hero'), 'Hero: „Weiter üben“, wenn alles entdeckt ist')
+    shot(pg, 'lager_hub')
+    def sol_of(m):
+        if m == 'les':
+            return total(pg)
+        lab = pg.inner_text('#pkRoot .pk-target .pk-label').lower(); big = pg.inner_text('#pkRoot .pk-target b').strip()
+        if m in ('bau', 'pix'): return int(big)
+        if m == 'plus':
+            import re as _re
+            a, op, b = _re.split(r'\s*([+−])\s*', big); return int(a) + int(b) if op == '+' else int(a) - int(b)
+        a = int(big)
+        return a * 2 if 'doppelt' in lab else a // 2 if 'hälfte' in lab else a * 4 if 'viermal' in lab else a // 4
+    def type_num(n):
+        for ch in str(n): pg.locator('#pkRoot .pkt-key', has_text=ch).first.click()
+        pg.locator('#pkRoot .pkt-key.ok').click(); pg.wait_for_timeout(60)
+    def play_round(m, l, wrong_once=False):
+        cnt = 6
+        for i in range(cnt):
+            sol = sol_of(m)
+            if m == 'les':
+                if wrong_once and i == 0: type_num(sol + 1 if sol < 31 else sol - 1); ok('Noch nicht' in pg.inner_text('#pkRoot .pk-bubble'), f'{m}{l}: falsche Antwort bekommt nur „Noch nicht ganz“')
+                type_num(sol)
+            else:
+                if wrong_once and i == 0:
+                    set_to(pg, sol ^ 1); foot(pg, 'Prüfen'); pg.wait_for_timeout(60)
+                    ok('Noch nicht' in pg.inner_text('#pkRoot .pk-bubble') and pg.locator('#pkRoot .pkt-pips i.ok').count()==0, f'{m}{l}: falsche Antwort zählt nicht, Aufgabe bleibt')
+                set_to(pg, sol); foot(pg, 'Prüfen'); pg.wait_for_timeout(60)
+            ok(pg.locator('#pkRoot .pkt-pips i.ok').count()==i+1, f'{m}{l}: Aufgabe {i+1} gelöst, Punkt gefüllt') if i in (0, 5) else None
+            try: foot(pg, 'Ergebnis' if i == cnt-1 else 'Weiter', timeout=2500)
+            except Exception as ex:
+                shot(pg, f'dbg_{m}{l}_{i}'); print('DBG', m, l, i, pg.inner_text('#pkRoot')[:300].replace('\n', ' | '), E("()=>JSON.stringify(UI.pkTr)")); raise
+            pg.wait_for_timeout(60)
+    def start(m, l): E("(a)=>ACT.pkTr(a)", f'{m}|{l}'); pg.wait_for_timeout(200)
+    st0 = E("()=>S.punkte.stars")
+    # Zahl bauen: Level 1 mit Zähler, ein Fehler = 2 Sterne
+    start('bau', 1)
+    ok(E("()=>view")=='pkLevel' and bool(pg.query_selector('#pkRoot .pk-counter')), 'bau 1: Level 1 zeigt die Zahl live (kleine Hilfe)')
+    play_round('bau', 1, wrong_once=True); pg.wait_for_timeout(200)
+    ok(bool(pg.query_selector('.pkt-end')) and pg.locator('.pkt-end .pk-stars i.on').count()==2, 'bau 1: Ergebnis mit 2 Sternen (ein Fehler)')
+    ok(E("()=>S.punkte.tr.lv.bau1.best")==2 and E("()=>S.punkte.tr.total")==6 and E("()=>S.punkte.stars")>=st0+2, 'bau 1: Sterne, Aufgabenzähler (nur Erfolge) und Leuchtsterne gespeichert')
+    ok('Erste Runde' in pg.inner_text('.pkt-end') and E("()=>!!S.punkte.tr.badge.erst"), 'Erstes Abzeichen „Erste Runde“')
+    shot(pg, 'lager_end')
+    ok(E("()=>pktOpen('bau',2)") and not E("()=>pktOpen('bau',3)"), 'bau: Level 2 geht auf, Level 3 noch nicht')
+    # Level 2 und 3: nur die Antwort – keine Summe, keine Ziffern, kein Zähler
+    pg.wait_for_timeout(1000); foot(pg, 'Level 2'); pg.wait_for_timeout(250)
+    ok(E("()=>UI.pkTr.l")==2 and not pg.query_selector('#pkRoot .pk-counter') and not pg.query_selector('#pkRoot .pk-code') and pg.locator('#pkRoot .pk-slot').count()==7, 'bau 2: sieben Karten, kein Zähler, keine Code-Ziffern')
+    set_to(pg, 85); ok(not pg.query_selector('#pkRoot .pk-counter') and pg.locator('#pkRoot .pk-bit:visible').count()==0 and '85' not in pg.inner_text('#pkRoot .pk-body').replace(pg.inner_text('#pkRoot .pk-target'),''), 'bau 2: beim Umdrehen erscheint keine Summe')
+    shot(pg, 'lager_bau2')
+    play_round('bau', 2); pg.wait_for_timeout(200)
+    ok(pg.locator('.pkt-end .pk-stars i.on').count()>=2, 'bau 2: Runde ohne Zähler geschafft')
+    pg.wait_for_timeout(1000); start('bau', 3)
+    ok(pg.locator('#pkRoot .pk-slot').count()==8 and pg.query_selector('#pkRoot .pk-slot[data-v="128"]') is not None, 'bau 3: acht Karten mit der 128')
+    pg.set_viewport_size({'width': 390, 'height': 844}); pg.wait_for_timeout(150)
+    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'bau 3: Telefon, acht Karten passen')
+    shot(pg, 'lager_bau3_phone')
+    pg.set_viewport_size({'width': 834, 'height': 1112})
+    play_round('bau', 3); pg.wait_for_timeout(200)
+    ok(E("()=>!!S.punkte.tr.badge.byte"), 'Abzeichen „Byte-Held“ nach einer Runde mit 8 Karten')
+    # Code lesen: Zahlenfeld, Level 1 mit Ziffern, Level 2 ohne
+    pg.wait_for_timeout(1000); start('les', 1)
+    ok(pg.locator('#pkRoot .pk-bit:visible').count()==5 and bool(pg.query_selector('#pkRoot .pkt-pad')) and not pg.query_selector('#pkRoot .pk-counter'), 'les 1: Karten mit Ziffern, Zahlenfeld, kein Zähler')
+    shot(pg, 'lager_les1')
+    play_round('les', 1, wrong_once=True); pg.wait_for_timeout(200)
+    ok(E("()=>S.punkte.tr.lv.les1.best")>=2, 'les 1: Runde geschafft')
+    pg.wait_for_timeout(1000); E("()=>ACT.pkTr('les|2')"); pg.wait_for_timeout(200)
+    ok(pg.locator('#pkRoot .pk-bit:visible').count()==0 and pg.locator('#pkRoot .pk-slot').count()==7, 'les 2: nur die Karten, keine Ziffern')
+    play_round('les', 2); pg.wait_for_timeout(200)
+    # Rechnen, Doppelt und halb
+    for m in ('plus', 'dbl'):
+        pg.wait_for_timeout(1000); start(m, 1); play_round(m, 1); pg.wait_for_timeout(200)
+        ok(E("(m)=>S.punkte.tr.lv[m+'1'].n", m)==1, f'{m} 1: Runde geschafft')
+        pg.wait_for_timeout(1000); start(m, 2); play_round(m, 2); pg.wait_for_timeout(200)
+    pg.wait_for_timeout(1000); start('dbl', 1); ok(bool(pg.query_selector('#pkRoot .pkt-code')), 'dbl 1: der gegebene Code als kleine Hilfe'); shot(pg, 'lager_dbl1')
+    set_to(pg, sol_of('dbl')); foot(pg, 'Prüfen'); pg.wait_for_timeout(100)
+    ok(bool(pg.query_selector('#pkRoot .pkt-shift')), 'dbl: nach dem Lösen zeigt das Schieben (Code vorher → nachher)')
+    # Pixelbilder
+    pg.wait_for_timeout(500); start('pix', 1)
+    ok(bool(pg.query_selector('#pkRoot .pkt-view svg')) and pg.locator('#pkRoot .pkt-pips i').count()==5, 'pix 1: Bild versteckt, fünf Zeilen')
+    for r in range(5):
+        set_to(pg, sol_of('pix')); foot(pg, 'Prüfen'); pg.wait_for_timeout(120)
+        if r < 4: shot(pg, f'lager_pix_r{r}') if r == 2 else None; foot(pg, 'Nächste Zeile'); pg.wait_for_timeout(80)
+    pg.wait_for_timeout(1200)
+    ok(bool(pg.query_selector('.pkt-end .pkt-trophy')) and E("()=>S.punkte.tr.pix.length")==1, 'pix 1: Bild fertig und in der Sammlung')
+    ok('Neu in deiner Sammlung' in pg.inner_text('.pkt-end') and E("()=>!!S.punkte.tr.badge.bild"), 'pix 1: „Neu in deiner Sammlung“ und Abzeichen Pixelkünstler')
+    shot(pg, 'lager_pix_end')
+    ok(E("()=>PKT_PICS.every(x=>pktPicRows(x,PKT_VALS[x.s===5?1:x.s===7?2:3]).every(n=>n>=0&&n<(1<<x.s)))") and E("()=>PKT_PICS.every(x=>x.g.length===x.s&&x.g.every(r=>r.length===x.s))"), 'Pixelbilder: alle Raster sind quadratisch und passen zu den Karten')
+    # Blitz (kurze Uhr im Test)
+    E("()=>{PKT.blitz=4}"); pg.wait_for_timeout(1000); start('blitz', 1)
+    foot(pg, 'Los!'); pg.wait_for_timeout(100)
+    for k in range(2):
+        set_to(pg, sol_of('bau')); pg.wait_for_timeout(500)
+    ok(bool(pg.query_selector('#pkRoot .pkt-time')) and not pg.query_selector('#pkRoot .pk-counter'), 'Blitz: Uhr, kein Zähler')
+    pg.wait_for_timeout(4200)
+    ok(bool(pg.query_selector('.pkt-end')) and E("()=>S.punkte.tr.lv.blitz1.hi")==2 and E("()=>S.punkte.tr.lv.blitz1.n")==1, 'Blitz: Ende nach der Zeit, 2 Zahlen als Rekord gespeichert')
+    E("()=>{PKT.blitz=60}")
+    # Rang und Sammlung
+    E("()=>{S.punkte.tr.total=19;save();go('punkte')}"); pg.wait_for_timeout(100)
+    ok(E("()=>pktRankIdx(S.punkte.tr.total)")==0, 'Rang: bei 19 Aufgaben noch Bit-Neuling')
+    start('bau', 1); st1 = E("()=>S.punkte.stars"); play_round('bau', 1); pg.wait_for_timeout(200)
+    ok('Neuer Rang' in pg.inner_text('.pkt-end') and E("()=>pktRankIdx(S.punkte.tr.total)")>=1, 'Rang: Aufstieg wird gefeiert')
+    E("()=>go('punkte')"); pg.wait_for_timeout(100)
+    pg.click('.pk-seg[data-arg=rang]'); pg.wait_for_timeout(100)
+    ok(pg.locator('.pk-popv .pkt-ranks span').count()==7, 'Rang: Ränge als kleine Symbole in der Leiste')
+    pg.click('.pk-seg[data-arg=sam]'); pg.wait_for_timeout(100)
+    ok(pg.locator('.pk-popv .pkt-bds span').count()==13 and pg.locator('.pk-popv .pkt-pics span').count()==12 and pg.locator('.pk-popv .pkt-bds span.ok').count()>=3, 'Sammlung: 13 Abzeichen und 12 Pixelbilder als kleine Symbole')
+    shot(pg, 'lager_sammlung')
+    pg.click('.pk-seg[data-arg=sam]')
+    E("()=>{S.pin={h:hashStr('1234'),r:'x'};UI.pinUntil=Date.now()+1e9;S.cfg.plang='de';go('parent')}"); pg.wait_for_timeout(200)
+    ok(bool(pg.query_selector('.pk-parent')) and 'Trainingslager' in pg.inner_text('.pk-parent') and 'Aufgaben gelöst' in pg.inner_text('.pk-parent'), 'Eltern: Trainingslager mit Rang, Aufgaben, Abzeichen')
+    # neue Armband-Belohnungen
+    E("()=>{S.punkte.stars=100;pkStarUnlocks()}")
+    ok(E("()=>['pkd.feuer','pkd.wald','pkd.galaxie','pkc.blitz','pkc.diamant','pkc.pokal','pkc.krone'].every(hasItem)"), 'Leuchtsterne: neue Muster und Anhänger werden freigeschaltet')
+    ok(E("()=>['feuer','wald','galaxie'].every(d=>pkBand(['L','U','M'],{d,ch:'krone'}).length>300 && !/undefined|NaN/.test(pkBand(['L','U','M'],{d})))"), 'Neue Muster zeichnen ein Armband ohne Fehler')
+    ok('Eule' in str(E("()=>Object.values(CATALOG).filter(i=>i.kind==='pkcharm').map(i=>i.name)")) and E("()=>CATALOG['pkc.drache'].src.t")=='shop', 'Shop: Eule und Drache als Anhänger')
+    E("(n)=>{S.punkte.stars=n;save();go('punkte')}", st1)
 
     # Telefonbreite: nichts läuft seitlich aus dem Bild
     pg.set_viewport_size({'width': 390, 'height': 844})

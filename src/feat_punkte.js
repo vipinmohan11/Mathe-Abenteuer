@@ -7,6 +7,7 @@
    Die Entdeckung ist die Belohnung. Klein daneben: Sterne für perfekte Züge (Wenigste Züge, Erklär es Lumi, Rätsel) –
    sie schalten Armband-Muster und Anhänger frei; einige Muster/Anhänger gibt es auch im Shop (Gruppe „Blinki“, nur wenn eingeschaltet).
    Karten: nach jedem Umdrehen eine kurze Pause (PK.pause = 0,5 s), damit das Kind schaut statt wild zu tippen.
+   Trainingslager (feat_punkte_lager.js): S.punkte.tr, S.punkte.les (Entdeckungsreise offen/zu; ohne Wert: offen, bis alles entdeckt ist).
    Gespeichert: S.punkte = { done{n:ts}, snd (Kartentöne, Standard AN; „Töne aus“ der App gilt immer), trick{guess,show}, lumi, stars,
      arm[], armD (Muster), armC (Farbe bei Einfarbig), armCh (Anhänger), word[], tag{days{ymd:Anzahl}, total}, friends[{n,c,d,ch,ts}] }
    Freundes-Armbänder (ab Entdeckung 10): Name selbst schreiben, Buchstaben mit den Karten bauen, Sammlung, „Wem gehört das Armband?“, Perlen-Plan.
@@ -293,6 +294,7 @@ function pkStart(n) {
   if (n === 'tag') { if (!pkTagOpen()) return; }
   else if (n === 'freund') { if (!pkFrOpen() || pkS().friends.length >= 24) return; }
   else if (n === 'wem') { if (pkS().friends.length < 3) return; }
+  else if (n === 'train') { if (!UI.pkTr || !pktOpen(UI.pkTr.m, UI.pkTr.l)) return; }
   else { n = +n; if (!PK_RUN[n] || !pkOpen(n)) return; }
   if (view === 'pkLevel') { UI.pkLv = n; UI.pkRes = false; render(); window.scrollTo(0, 0); }
   else go('pkLevel', { pkLv: n, pkRes: false });
@@ -1233,7 +1235,7 @@ function pkRibbon() {
   const ring = `<svg viewBox="0 0 36 36" width="22" height="22" aria-hidden="true"><circle cx="18" cy="18" r="14" fill="none" stroke="var(--dz-line)" stroke-width="5"/><circle cx="18" cy="18" r="14" fill="none" stroke="var(--dz-accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${(n / PK_MAX * 87.96).toFixed(1)} 88" transform="rotate(-90 18 18)"/></svg>`;
   const seg = (k, ic, val, lbl, aria) => `<button type="button" class="pk-seg${sh === k ? ' on' : ''}" data-act="pkShow" data-arg="${k}" aria-expanded="${sh === k}" aria-label="${aria}"><span class="pk-segtop">${ic}${val != null ? `<b>${val}</b>` : ''}</span><small>${lbl}</small></button>`;
   const segs = [`<div class="pk-seg pk-segring" role="img" aria-label="${n} von ${PK_MAX} entdeckt"><span class="pk-segtop">${ring}<b>${n}/${PK_MAX}</b></span><small>entdeckt</small></div>`,
-    seg('stars', '<span class="pk-segst" aria-hidden="true">✦</span>', p.stars, 'Leuchtsterne', `${p.stars} Leuchtsterne`)];
+    seg('stars', '<span class="pk-segst" aria-hidden="true">✦</span>', p.stars, 'Leuchtsterne', `${p.stars} Leuchtsterne`)].concat(typeof pktSegs === 'function' ? pktSegs(seg) : []);
   if (p.arm.length) segs.push(seg('arm', beadIc([0, 1, 1, 0, 1], myCol), null, 'Armband', 'Dein Armband'));
   if (p.word.length) segs.push(seg('word', `<span class="pk-icg" aria-hidden="true">${esc(p.word[0])}<i>${p.word[0].charCodeAt(0)}</i></span>`, null, 'Wort', 'Dein Computer-Wort'));
   if (pkFrOpen()) segs.push(`<button type="button" class="pk-seg" data-act="pkFreunde" aria-label="Freundes-Armbänder${p.friends.length ? ': ' + p.friends.length : ''}"><span class="pk-segtop">${beadIc([1, 0, 1, 1, 0], () => PK_HEX[4])}${p.friends.length ? `<b>${p.friends.length}</b>` : ''}</span><small>Freunde</small></button>`);
@@ -1248,6 +1250,7 @@ function pkPopHtml() {
   }
   if (k === 'arm' && p.arm.length) h = `<span class="pk-eyebrow">Dein Licht-Armband</span><div class="pk-armwrap">${pkBand(p.arm, pkMyLook())}</div>${pkLookHtml('me')}`;
   if (k === 'word' && p.word.length) h = `<span class="pk-eyebrow">Dein Computer-Wort</span>${pkWordHtml(p.word)}`;
+  if (!h && typeof pktPop === 'function') h = pktPop(k);
   const an = UI.pkPopAnim; UI.pkPopAnim = false;
   return h ? `<div class="pk-popv${an ? ' anim' : ''}" role="dialog" aria-label="Details"><button type="button" class="pk-popx" data-act="pkShow" data-arg="${k}" aria-label="Schließen">✕</button>${h}</div>` : '';
 }
@@ -1257,18 +1260,22 @@ function pkRaetselW() {
   return `<button type="button" class="pk-rw" data-act="pkLv" data-arg="tag" aria-label="Blinkis Rätsel: heute ${td}, insgesamt ${tot}"><span class="pk-rwic" aria-hidden="true">🧩</span><span class="pk-rwt"><b>Blinkis Rätsel</b><small>Heute ${td} · Gesamt ${tot} · Ziel ${pkNextMile(tot)}</small></span>${pkWeekHtml(true)}<span class="pk-lvr go">Los</span></button>`;
 }
 function pkHub() {
-  const p = pkS(), nx = pkNextLv(), all = pkDoneN() === PK_MAX;
+  const p = pkS(), nx = pkNextLv(), all = pkDoneN() === PK_MAX, open = p.les === undefined ? !all : !!p.les;
   const list = PK_LV.map((L, k) => {
-    const d = p.done[L.id], open = pkOpen(L.id);
-    return `<button class="pk-lv${d ? ' done' : open ? ' cur' : ' lock'}" data-act="pkLv" data-arg="${L.id}" ${open ? '' : 'disabled'} aria-label="Entdeckung ${k + 1}: ${esc(L.t)}${d ? ', geschafft' : open ? '' : ', noch zu'}">
-      <span class="pk-lvn">${d ? ico('check', 18) : open ? k + 1 : ico('lock', 16)}</span><span class="pk-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="pk-lvr">Nochmal</span>' : open ? '<span class="pk-lvr go">Los</span>' : ''}</button>`;
+    const d = p.done[L.id], op = pkOpen(L.id);
+    return `<button class="pk-lv${d ? ' done' : op ? ' cur' : ' lock'}" data-act="pkLv" data-arg="${L.id}" ${op ? '' : 'disabled'} aria-label="Entdeckung ${k + 1}: ${esc(L.t)}${d ? ', geschafft' : op ? '' : ', noch zu'}">
+      <span class="pk-lvn">${d ? ico('check', 18) : op ? k + 1 : ico('lock', 16)}</span><span class="pk-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="pk-lvr">Nochmal</span>' : op ? '<span class="pk-lvr go">Los</span>' : ''}</button>`;
   }).join('');
+  const rec = all && typeof pktRecommend === 'function' && pktOn() ? pktRecommend() : null;
+  const heroBtn = rec ? `<button class="btn big" data-act="pkTr" data-arg="${rec.m}|${rec.l}">Weiter üben</button>` : `<button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button>`;
   return topBar('Blinkis Punktkarten', 'rewards') + `<section class="pk-hub">
     <div class="pk-hero"><div class="pk-hero-copy"><span class="pk-eyebrow">Punkte · Karten · Geheimcodes</span><h1>Zählen wie ein Computer</h1><p>Dreh Karten um, finde Zahlen und entdecke den Code aus 0 und 1.</p>
-      <button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button></div>${pkHeroArt()}</div>
+      ${heroBtn}</div>${pkHeroArt()}</div>
     ${pkRibbon()}
     ${pkRaetselW()}
-    <h3 class="pk-h">Deine Entdeckungsreise</h3><div class="pk-lvs">${list}</div>
+    ${typeof pktHub === 'function' ? pktHub() : ''}
+    <button type="button" class="pk-acc${open ? ' open' : ''}" data-act="pkLes" aria-expanded="${open}" aria-controls="pkLes"><span class="pk-acct">Deine Entdeckungsreise</span><span class="pk-accn">${all ? ico('check', 14) + ' ' : ''}${pkDoneN()}/${PK_MAX}</span><svg class="pk-accv" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="pk-lvs" id="pkLes"${open ? '' : ' hidden'}>${list}</div>
     <p class="pk-foot-note">Eine Karte nach der anderen. In deinem Tempo.</p>
     <p class="pk-foot-note"><button class="pk-link" data-act="pkDruck">${ico('print', 16)} Karten zum Ausdrucken (für Eltern)</button></p></section>`;
 }
@@ -1298,6 +1305,7 @@ function pkParentCard() {
     ${p.arm.length ? `<div class="cfg"><div><b>${P('Armband', 'Bracelet')}</b><br><span class="small mute">${esc(p.arm.join(''))}</span></div></div>` : ''}
     ${p.friends.length ? `<div class="cfg"><div><b>${P('Freundes-Armbänder', 'Friends’ bracelets')}</b><br><span class="small mute">${p.friends.length}: ${esc(p.friends.map(f => f.n).join(', '))}</span></div></div>` : ''}
     ${p.word.length ? `<div class="cfg"><div><b>${P('Computer-Wort (ASCII)', 'Computer word (ASCII)')}</b><br><span class="small mute">${esc(p.word.join(''))}</span></div></div>` : ''}
+    ${typeof pktParent === 'function' ? pktParent() : ''}
     <div class="pk-q"><b>${P('Nach dem Spielen fragen (nicht prüfen):', 'Ask after playing (do not test):')}</b><ol>
       <li>${P('Warum gibt es keine Karte mit 3 Punkten?', 'Why is there no card with 3 dots?')}</li>
       <li>${P('Wie viele Karten brauchst du für die 10? Welche?', 'How many cards do you need for 10? Which ones?')}</li>

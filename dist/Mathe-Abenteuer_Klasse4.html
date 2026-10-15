@@ -1667,6 +1667,113 @@ button.pk-seg:active{transform:scale(.97)}
 .pk-bump{animation:pkPopK .35s ease}
 @media (prefers-reduced-motion:reduce){.pk-root *,.pk-hub *{animation:none!important;transition:none!important}}
 
+/* Blinkis Trainingslager (feat_punkte_lager.js) */
+.pk-root,.pk-hub,.pk-print,.pk-parent{--pk-c128:#b3412c;--pk-i128:#fff}
+.pk-dots[data-v="128"]{grid-template-columns:repeat(16,1fr);gap:calc(var(--w,100px)*.012)}
+.pk-dots[data-v="128"] i{width:calc(var(--w,100px)*.04);box-shadow:none}
+.pk-cards.n8{gap:clamp(3px,1vw,12px)}
+.pk-cards.n8 .pk-card{--w:clamp(31px,9.6vw,86px)}
+.pk-cards.n8 .pk-bit{min-width:24px;height:32px;font-size:1rem}
+.pk-cards.n8 .pk-face{border-radius:14px}
+/* Kartenwert klein unter jeder Karte (Level 2 und 3 haben sonst keine Zahl) */
+.pk-train .pk-slot::after{content:attr(data-v);font-size:.78rem;font-weight:800;color:var(--dz-mute);line-height:1}
+.pk-train .pk-cards{min-height:120px}
+
+/* Einklappbare Entdeckungsreise */
+.pk-acc{display:flex;align-items:center;gap:10px;width:100%;margin-top:6px;padding:10px 14px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);font:inherit;cursor:pointer;text-align:left}
+.pk-acc:hover{box-shadow:var(--dz-sh-card)}
+.pk-acct{flex:1;font-size:1.1rem;font-weight:800;letter-spacing:-.01em}
+.pk-accn{display:inline-flex;align-items:center;gap:3px;font-size:.84rem;font-weight:800;color:var(--dz-ok);background:var(--dz-ok-bg);border-radius:var(--dz-r-pill);padding:3px 10px}
+.pk-accv{flex:none;color:var(--dz-mute);transition:transform var(--dz-t)}
+.pk-acc.open .pk-accv{transform:rotate(180deg)}
+.pk-lvs[hidden]{display:none}
+
+/* Trainingslager: kleine Kacheln mit drei Leveln */
+.pkt-sub{margin:-4px 0 0;font-size:.92rem;font-weight:600;color:var(--dz-mute)}
+.pkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--dz-gap)}
+.pkt-tile{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
+.pkt-th{display:flex;align-items:center;gap:10px}
+.pkt-ic{width:40px;height:40px;flex:none;display:grid;place-items:center;font-size:1.4rem;border-radius:12px;background:var(--dz-t2)}
+.pkt-th b{display:block;font-size:1.02rem;font-weight:800;color:var(--dz-ink)}
+.pkt-th small{display:block;font-size:.82rem;font-weight:600;color:var(--dz-mute);line-height:1.25}
+.pkt-lvs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pkt-lb{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 5px;border-radius:12px;border:var(--dz-bd-w) solid var(--dz-line);background:var(--dz-bg);color:var(--dz-ink);font:inherit;cursor:pointer;transition:transform var(--dz-t),box-shadow var(--dz-t)}
+.pkt-lb:not([disabled]):hover{transform:translateY(-2px);box-shadow:var(--dz-sh-lift)}
+.pkt-lb:not([disabled]):active{transform:scale(.96)}
+.pkt-lb.rec{border-color:var(--dz-accent);background:var(--dz-t2)}
+.pkt-lb.gold{border-color:#e8a90c}
+.pkt-lb.lock{cursor:default;color:var(--dz-mute);background:var(--dz-t1);opacity:.75}
+.pkt-ln{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;font-weight:800;font-size:.9rem;background:var(--dz-accent);color:var(--dz-accent-ink)}
+.pkt-lb.lock .pkt-ln{background:transparent;color:var(--dz-mute)}
+.pkt-ls{display:flex;gap:0;line-height:1}
+.pkt-ls i{font-style:normal;font-size:.8rem;color:var(--dz-line)}
+.pkt-ls i.on{color:#e8a90c}
+.pkt-lb small{font-size:.7rem;font-weight:700;color:var(--dz-mute)}
+
+/* Ribbon: Rang und Sammlung */
+.pkt-seg-e{font-size:1.2rem;line-height:1}
+.pk-seg small{white-space:nowrap}
+.pkt-ranks{display:flex;flex-wrap:wrap;gap:8px}
+.pkt-ranks span{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:76px;padding:6px 8px;border-radius:12px;background:var(--dz-t1);color:var(--dz-mute);opacity:.6}
+.pkt-ranks span.ok{opacity:1;background:var(--dz-ok-bg);color:var(--dz-ink)}
+.pkt-ranks span.now{outline:2px solid var(--dz-accent);opacity:1}
+.pkt-ranks i{font-style:normal;font-size:1.3rem}
+.pkt-ranks b{font-size:.78rem;font-weight:800}
+.pkt-ranks small{font-size:.68rem;font-weight:700}
+.pkt-bds,.pkt-pics{display:flex;flex-wrap:wrap;gap:8px}
+.pkt-bds span{display:flex;flex-direction:column;align-items:center;gap:1px;width:92px;padding:6px 4px;border-radius:12px;background:var(--dz-t1);text-align:center;opacity:.55}
+.pkt-bds span.ok{opacity:1;background:var(--dz-surface);border:1px solid var(--dz-line)}
+.pkt-bds i{font-style:normal;font-size:1.5rem;line-height:1.1}
+.pkt-bds b{font-size:.74rem;font-weight:800;color:var(--dz-ink);line-height:1.15}
+.pkt-bds small{font-size:.64rem;font-weight:600;color:var(--dz-mute);line-height:1.15}
+.pkt-pics span{display:flex;flex-direction:column;align-items:center;gap:2px;width:62px;opacity:.7}
+.pkt-pics span.ok{opacity:1}
+.pkt-pics small{font-size:.68rem;font-weight:700;color:var(--dz-mute)}
+.pkt-pic{display:block;width:100%;height:auto;aspect-ratio:1}
+.pkt-pic.mini{width:46px;height:46px}
+.pkt-pic.big{width:min(46vw,200px);height:auto}
+
+/* Runde */
+.pkt-pips{display:inline-flex;gap:6px;align-items:center}
+.pkt-pips i{width:12px;height:12px;border-radius:50%;background:var(--dz-line);transition:transform var(--dz-t),background var(--dz-t)}
+.pkt-pips i.cur{background:var(--dz-gold);transform:scale(1.2)}
+.pkt-pips i.ok{background:var(--dz-ok)}
+.pkt-code{display:flex;gap:4px;margin-top:4px}
+.pkt-code i,.pkt-shift i{font-style:normal;min-width:22px;height:28px;padding:0 4px;display:inline-grid;place-items:center;border-radius:8px;font-weight:800;font-size:.95rem;background:var(--dz-bg);color:var(--dz-mute);border:1px solid var(--dz-line)}
+.pkt-code i.on,.pkt-shift i.on{background:var(--c);color:var(--ci);border-color:transparent}
+.pkt-shift{display:inline-flex;align-items:center;gap:3px;margin-top:4px;flex-wrap:wrap}
+.pkt-shift b{margin:0 5px;font-weight:800}
+.pk-target>b.sm{font-size:2.1rem}
+.pk-target.hit{animation:pkPopIn .28s both}
+.pkt-time.low{color:#b3412c;border-color:#b3412c}
+.pkt-view{align-self:center;width:min(46vw,190px)}
+.pkt-view .pkt-pic{width:100%;height:auto}
+.pkt-padw{align-self:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+.pkt-disp{min-width:140px;text-align:center;padding:4px 18px;border-radius:var(--dz-r-l);background:var(--dz-surface);border:2px solid var(--dz-gold);font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-size:2.2rem;font-weight:800;line-height:1.2;color:var(--dz-ink)}
+.pkt-disp.empty{color:var(--dz-mute)}
+.pkt-pad{display:grid;grid-template-columns:repeat(3,64px);gap:8px}
+.pkt-key{height:48px;border-radius:14px;border:var(--dz-bd-w) solid var(--dz-bd);background:var(--dz-surface);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);font:inherit;font-size:1.3rem;font-weight:800;cursor:pointer;display:grid;place-items:center;touch-action:manipulation}
+.pkt-key:active{transform:scale(.94)}
+.pkt-key.ok{background:var(--dz-accent);color:var(--dz-accent-ink);border-color:transparent}
+.pkt-key.del{color:var(--dz-mute)}
+
+/* Ende der Runde */
+.pkt-end{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:6px 0}
+.pkt-big .pk-stars{font-size:2.1rem;gap:6px}
+.pkt-line{margin:0;font-size:1.02rem;font-weight:700;color:var(--dz-ink);max-width:36ch}
+.pkt-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.pkt-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:var(--dz-r-pill);background:var(--dz-t2);font-size:.84rem;font-weight:800;color:var(--dz-ink)}
+.pkt-chip.up{background:var(--dz-ok-bg);color:var(--dz-ok)}
+.pkt-chip.bd i{font-style:normal}
+.pkt-trophy{display:flex;flex-direction:column;align-items:center;gap:4px;animation:pkPopIn .5s both}
+.pkt-trophy b{font-size:1.05rem;font-weight:800}
+@media (max-width:520px){
+  .pkt-grid{grid-template-columns:1fr}
+  .pkt-pad{grid-template-columns:repeat(3,58px)}
+  .pkt-bds span{width:84px}
+}
+@media (max-width:480px){.pk-ribbon .pk-seg small{display:none}.pk-ribbon .pk-seg{min-width:0;padding:8px 6px}}
+
 /* Rätsel: Sudoku (.sd-*), Venola Holmes (.vn-*), gemeinsam (.pz-*) */
 .pz-clock{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0}.pz-clock b{font-size:1.3rem;min-width:3.4ch;text-align:center}.pz-clock small{color:var(--dz-mute)}
 .pz-bar{flex:1;max-width:260px;height:10px;border-radius:99px;background:var(--dz-t2);overflow:hidden}.pz-bar i{display:block;height:100%;background:var(--dz-accent);transition:width .25s linear}
@@ -9912,7 +10019,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = 'cfa3633a';
+const APP_BUILD = 'f0df7976';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -12571,6 +12678,7 @@ window.addEventListener('load', nzBubble);
    Die Entdeckung ist die Belohnung. Klein daneben: Sterne für perfekte Züge (Wenigste Züge, Erklär es Lumi, Rätsel) –
    sie schalten Armband-Muster und Anhänger frei; einige Muster/Anhänger gibt es auch im Shop (Gruppe „Blinki“, nur wenn eingeschaltet).
    Karten: nach jedem Umdrehen eine kurze Pause (PK.pause = 0,5 s), damit das Kind schaut statt wild zu tippen.
+   Trainingslager (feat_punkte_lager.js): S.punkte.tr, S.punkte.les (Entdeckungsreise offen/zu; ohne Wert: offen, bis alles entdeckt ist).
    Gespeichert: S.punkte = { done{n:ts}, snd (Kartentöne, Standard AN; „Töne aus“ der App gilt immer), trick{guess,show}, lumi, stars,
      arm[], armD (Muster), armC (Farbe bei Einfarbig), armCh (Anhänger), word[], tag{days{ymd:Anzahl}, total}, friends[{n,c,d,ch,ts}] }
    Freundes-Armbänder (ab Entdeckung 10): Name selbst schreiben, Buchstaben mit den Karten bauen, Sammlung, „Wem gehört das Armband?“, Perlen-Plan.
@@ -12857,6 +12965,7 @@ function pkStart(n) {
   if (n === 'tag') { if (!pkTagOpen()) return; }
   else if (n === 'freund') { if (!pkFrOpen() || pkS().friends.length >= 24) return; }
   else if (n === 'wem') { if (pkS().friends.length < 3) return; }
+  else if (n === 'train') { if (!UI.pkTr || !pktOpen(UI.pkTr.m, UI.pkTr.l)) return; }
   else { n = +n; if (!PK_RUN[n] || !pkOpen(n)) return; }
   if (view === 'pkLevel') { UI.pkLv = n; UI.pkRes = false; render(); window.scrollTo(0, 0); }
   else go('pkLevel', { pkLv: n, pkRes: false });
@@ -13797,7 +13906,7 @@ function pkRibbon() {
   const ring = `<svg viewBox="0 0 36 36" width="22" height="22" aria-hidden="true"><circle cx="18" cy="18" r="14" fill="none" stroke="var(--dz-line)" stroke-width="5"/><circle cx="18" cy="18" r="14" fill="none" stroke="var(--dz-accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${(n / PK_MAX * 87.96).toFixed(1)} 88" transform="rotate(-90 18 18)"/></svg>`;
   const seg = (k, ic, val, lbl, aria) => `<button type="button" class="pk-seg${sh === k ? ' on' : ''}" data-act="pkShow" data-arg="${k}" aria-expanded="${sh === k}" aria-label="${aria}"><span class="pk-segtop">${ic}${val != null ? `<b>${val}</b>` : ''}</span><small>${lbl}</small></button>`;
   const segs = [`<div class="pk-seg pk-segring" role="img" aria-label="${n} von ${PK_MAX} entdeckt"><span class="pk-segtop">${ring}<b>${n}/${PK_MAX}</b></span><small>entdeckt</small></div>`,
-    seg('stars', '<span class="pk-segst" aria-hidden="true">✦</span>', p.stars, 'Leuchtsterne', `${p.stars} Leuchtsterne`)];
+    seg('stars', '<span class="pk-segst" aria-hidden="true">✦</span>', p.stars, 'Leuchtsterne', `${p.stars} Leuchtsterne`)].concat(typeof pktSegs === 'function' ? pktSegs(seg) : []);
   if (p.arm.length) segs.push(seg('arm', beadIc([0, 1, 1, 0, 1], myCol), null, 'Armband', 'Dein Armband'));
   if (p.word.length) segs.push(seg('word', `<span class="pk-icg" aria-hidden="true">${esc(p.word[0])}<i>${p.word[0].charCodeAt(0)}</i></span>`, null, 'Wort', 'Dein Computer-Wort'));
   if (pkFrOpen()) segs.push(`<button type="button" class="pk-seg" data-act="pkFreunde" aria-label="Freundes-Armbänder${p.friends.length ? ': ' + p.friends.length : ''}"><span class="pk-segtop">${beadIc([1, 0, 1, 1, 0], () => PK_HEX[4])}${p.friends.length ? `<b>${p.friends.length}</b>` : ''}</span><small>Freunde</small></button>`);
@@ -13812,6 +13921,7 @@ function pkPopHtml() {
   }
   if (k === 'arm' && p.arm.length) h = `<span class="pk-eyebrow">Dein Licht-Armband</span><div class="pk-armwrap">${pkBand(p.arm, pkMyLook())}</div>${pkLookHtml('me')}`;
   if (k === 'word' && p.word.length) h = `<span class="pk-eyebrow">Dein Computer-Wort</span>${pkWordHtml(p.word)}`;
+  if (!h && typeof pktPop === 'function') h = pktPop(k);
   const an = UI.pkPopAnim; UI.pkPopAnim = false;
   return h ? `<div class="pk-popv${an ? ' anim' : ''}" role="dialog" aria-label="Details"><button type="button" class="pk-popx" data-act="pkShow" data-arg="${k}" aria-label="Schließen">✕</button>${h}</div>` : '';
 }
@@ -13821,18 +13931,22 @@ function pkRaetselW() {
   return `<button type="button" class="pk-rw" data-act="pkLv" data-arg="tag" aria-label="Blinkis Rätsel: heute ${td}, insgesamt ${tot}"><span class="pk-rwic" aria-hidden="true">🧩</span><span class="pk-rwt"><b>Blinkis Rätsel</b><small>Heute ${td} · Gesamt ${tot} · Ziel ${pkNextMile(tot)}</small></span>${pkWeekHtml(true)}<span class="pk-lvr go">Los</span></button>`;
 }
 function pkHub() {
-  const p = pkS(), nx = pkNextLv(), all = pkDoneN() === PK_MAX;
+  const p = pkS(), nx = pkNextLv(), all = pkDoneN() === PK_MAX, open = p.les === undefined ? !all : !!p.les;
   const list = PK_LV.map((L, k) => {
-    const d = p.done[L.id], open = pkOpen(L.id);
-    return `<button class="pk-lv${d ? ' done' : open ? ' cur' : ' lock'}" data-act="pkLv" data-arg="${L.id}" ${open ? '' : 'disabled'} aria-label="Entdeckung ${k + 1}: ${esc(L.t)}${d ? ', geschafft' : open ? '' : ', noch zu'}">
-      <span class="pk-lvn">${d ? ico('check', 18) : open ? k + 1 : ico('lock', 16)}</span><span class="pk-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="pk-lvr">Nochmal</span>' : open ? '<span class="pk-lvr go">Los</span>' : ''}</button>`;
+    const d = p.done[L.id], op = pkOpen(L.id);
+    return `<button class="pk-lv${d ? ' done' : op ? ' cur' : ' lock'}" data-act="pkLv" data-arg="${L.id}" ${op ? '' : 'disabled'} aria-label="Entdeckung ${k + 1}: ${esc(L.t)}${d ? ', geschafft' : op ? '' : ', noch zu'}">
+      <span class="pk-lvn">${d ? ico('check', 18) : op ? k + 1 : ico('lock', 16)}</span><span class="pk-lvt"><b>${esc(L.t)}</b><small>${esc(L.s)}</small></span>${d ? '<span class="pk-lvr">Nochmal</span>' : op ? '<span class="pk-lvr go">Los</span>' : ''}</button>`;
   }).join('');
+  const rec = all && typeof pktRecommend === 'function' && pktOn() ? pktRecommend() : null;
+  const heroBtn = rec ? `<button class="btn big" data-act="pkTr" data-arg="${rec.m}|${rec.l}">Weiter üben</button>` : `<button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button>`;
   return topBar('Blinkis Punktkarten', 'rewards') + `<section class="pk-hub">
     <div class="pk-hero"><div class="pk-hero-copy"><span class="pk-eyebrow">Punkte · Karten · Geheimcodes</span><h1>Zählen wie ein Computer</h1><p>Dreh Karten um, finde Zahlen und entdecke den Code aus 0 und 1.</p>
-      <button class="btn big" data-act="pkLv" data-arg="${nx}">${all ? 'Noch einmal entdecken' : pkDoneN() ? 'Weiter entdecken' : 'Los geht’s'}</button></div>${pkHeroArt()}</div>
+      ${heroBtn}</div>${pkHeroArt()}</div>
     ${pkRibbon()}
     ${pkRaetselW()}
-    <h3 class="pk-h">Deine Entdeckungsreise</h3><div class="pk-lvs">${list}</div>
+    ${typeof pktHub === 'function' ? pktHub() : ''}
+    <button type="button" class="pk-acc${open ? ' open' : ''}" data-act="pkLes" aria-expanded="${open}" aria-controls="pkLes"><span class="pk-acct">Deine Entdeckungsreise</span><span class="pk-accn">${all ? ico('check', 14) + ' ' : ''}${pkDoneN()}/${PK_MAX}</span><svg class="pk-accv" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="pk-lvs" id="pkLes"${open ? '' : ' hidden'}>${list}</div>
     <p class="pk-foot-note">Eine Karte nach der anderen. In deinem Tempo.</p>
     <p class="pk-foot-note"><button class="pk-link" data-act="pkDruck">${ico('print', 16)} Karten zum Ausdrucken (für Eltern)</button></p></section>`;
 }
@@ -13862,6 +13976,7 @@ function pkParentCard() {
     ${p.arm.length ? `<div class="cfg"><div><b>${P('Armband', 'Bracelet')}</b><br><span class="small mute">${esc(p.arm.join(''))}</span></div></div>` : ''}
     ${p.friends.length ? `<div class="cfg"><div><b>${P('Freundes-Armbänder', 'Friends’ bracelets')}</b><br><span class="small mute">${p.friends.length}: ${esc(p.friends.map(f => f.n).join(', '))}</span></div></div>` : ''}
     ${p.word.length ? `<div class="cfg"><div><b>${P('Computer-Wort (ASCII)', 'Computer word (ASCII)')}</b><br><span class="small mute">${esc(p.word.join(''))}</span></div></div>` : ''}
+    ${typeof pktParent === 'function' ? pktParent() : ''}
     <div class="pk-q"><b>${P('Nach dem Spielen fragen (nicht prüfen):', 'Ask after playing (do not test):')}</b><ol>
       <li>${P('Warum gibt es keine Karte mit 3 Punkten?', 'Why is there no card with 3 dots?')}</li>
       <li>${P('Wie viele Karten brauchst du für die 10? Welche?', 'How many cards do you need for 10? Which ones?')}</li>
@@ -13910,6 +14025,385 @@ registerFeature({
   }
 });
 AFTER.pkLevel = () => pkMount();
+
+/* =====================================================================
+   BLINKIS TRAININGSLAGER (Teil von Blinkis Punktkarten; Standard: ausgeblendet mit den Punktkarten)
+   Mehr Übung nach den 14 Entdeckungen – ohne Rechenhilfe:
+     Zahl bauen · Code lesen · Rechnen · Doppelt und halb · Pixelbilder · Blitz
+   Jede Übungsart hat 3 Level (5 · 7 · 8 Karten). Level 1 hat noch eine kleine Hilfe (die Zahl zählt live),
+   Level 2 und 3 nicht: keine Summe, keine 0/1-Ziffern, keine Anzeige der offenen Karten – nur „Prüfen“ und die Antwort.
+   Fehler zählen nie als Aufgabe; gezählt wird nur, was gelingt. Belohnung klein und sichtbar:
+   Sterne pro Runde (1–3), Leuchtsterne, Abzeichen, Ränge, gesammelte Pixelbilder – alles als kleine Symbole.
+   Gespeichert: S.punkte.tr = { lv{ 'bau1'…: {best, n, hi} }, total, rounds, serie, streak, pix[ids], badge{id:ts}, days{ymd:1} }
+   ===================================================================== */
+PK_HEX[128] = '#b3412c'; PK_NOTE[128] = 98; PK_SPECIAL.train = 'Trainingslager';
+const PKT_VALS = [null, [16, 8, 4, 2, 1], [64, 32, 16, 8, 4, 2, 1], [128, 64, 32, 16, 8, 4, 2, 1]];
+const PKT_LVN = ['', 'Leicht', 'Mittel', 'Profi'];
+const PKT_MODES = [
+  { id: 'bau', n: 'Zahl bauen', ic: '🧱', d: 'Bau die Zahl mit den Karten' },
+  { id: 'les', n: 'Code lesen', ic: '🔍', d: 'Welche Zahl zeigen die Karten?' },
+  { id: 'plus', n: 'Rechnen', ic: '➕', d: 'Plus und minus – bau das Ergebnis' },
+  { id: 'dbl', n: 'Doppelt und halb', ic: '↔️', d: 'Verdoppeln und halbieren' },
+  { id: 'pix', n: 'Pixelbilder', ic: '🖼️', d: 'Jede Zeile ist eine Zahl' },
+  { id: 'blitz', n: 'Blitz', ic: '⚡', d: '60 Sekunden – wie viele schaffst du?' }
+];
+const PKT = { blitz: 60 };
+const PKT_BLITZ = { 1: [5, 8, 11], 2: [4, 6, 9], 3: [3, 5, 7] };
+const PKT_RANKS = [
+  { n: 'Bit-Neuling', e: '🥚', at: 0 }, { n: 'Bit-Lehrling', e: '🐣', at: 20 }, { n: 'Karten-Kenner', e: '🃏', at: 60 },
+  { n: 'Code-Knacker', e: '🔑', at: 140 }, { n: 'Byte-Meister', e: '🧙', at: 280 }, { n: 'Binär-Profi', e: '🚀', at: 500 }, { n: 'Blinkis Chef', e: '👑', at: 900 }
+];
+/* Pixelbilder: Spalte = Karte (links die größte). Jede Zeile ist eine Zahl: # = Karte offen. */
+const PKT_PICS = [
+  { id: 'herz5', s: 5, n: 'Herz', c: '#d62828', g: ['.#.#.', '#####', '#####', '.###.', '..#..'] },
+  { id: 'stern5', s: 5, n: 'Stern', c: '#e8a90c', g: ['..#..', '.###.', '#####', '.###.', '.#.#.'] },
+  { id: 'haus5', s: 5, n: 'Haus', c: '#1764d5', g: ['..#..', '.###.', '#####', '##.##', '##.##'] },
+  { id: 'baum5', s: 5, n: 'Baum', c: '#1f8443', g: ['..#..', '.###.', '#####', '..#..', '..#..'] },
+  { id: 'smiley5', s: 5, n: 'Smiley', c: '#F28C28', g: ['.#.#.', '.#.#.', '.....', '#...#', '.###.'] },
+  { id: 'rakete7', s: 7, n: 'Rakete', c: '#7b5cd6', g: ['...#...', '..###..', '..#.#..', '..###..', '.#####.', '#.###.#', '...#...'] },
+  { id: 'krone7', s: 7, n: 'Krone', c: '#c99a06', g: ['#..#..#', '#..#..#', '##.#.##', '#######', '#######', '#.###.#', '#######'] },
+  { id: 'pilz7', s: 7, n: 'Pilz', c: '#b3412c', g: ['..###..', '.#.#.#.', '#######', '#######', '..###..', '..###..', '..###..'] },
+  { id: 'boot7', s: 7, n: 'Segelboot', c: '#14817a', g: ['...#...', '...##..', '...###.', '...#...', '#######', '.#####.', '..###..'] },
+  { id: 'robo8', s: 8, n: 'Roboter', c: '#526a70', g: ['...##...', '.######.', '########', '##.##.##', '########', '.##..##.', '.######.', '.##..##.'] },
+  { id: 'katze8', s: 8, n: 'Katze', c: '#94582a', g: ['#......#', '##....##', '########', '#.#..#.#', '########', '##.##.##', '.######.', '..####..'] },
+  { id: 'burg8', s: 8, n: 'Burg', c: '#7a4a22', g: ['#.#..#.#', '########', '.######.', '.#.##.#.', '.######.', '.##..##.', '.##..##.', '########'] }
+];
+const PKT_BADGES = [
+  { id: 'erst', n: 'Erste Runde', e: '🎒', d: 'Eine Runde im Trainingslager', f: T => T.rounds >= 1 },
+  { id: 'alle', n: 'Allrounder', e: '🎓', d: 'Jede Übungsart gespielt', f: T => PKT_MODES.every(M => [1, 2, 3].some(l => (T.lv[M.id + l] || {}).n)) },
+  { id: 'stern3', n: 'Dreifach-Stern', e: '🌟', d: 'Eine Runde mit 3 Sternen', f: T => Object.values(T.lv).some(x => x.best >= 3) },
+  { id: 'serie', n: 'Serie 10', e: '🔥', d: '10 Aufgaben ohne Fehler hintereinander', f: T => T.serie >= 10 },
+  { id: 'a100', n: 'Hundert!', e: '💯', d: '100 Aufgaben gelöst', f: T => T.total >= 100 },
+  { id: 'a500', n: 'Zahlen-Ass', e: '🏅', d: '500 Aufgaben gelöst', f: T => T.total >= 500 },
+  { id: 'blitz', n: 'Blitzmerker', e: '⚡', d: '10 Zahlen in einer Blitz-Runde', f: T => Object.keys(T.lv).some(k => k.startsWith('blitz') && (T.lv[k].hi || 0) >= 10) },
+  { id: 'byte', n: 'Byte-Held', e: '💾', d: 'Eine Runde mit 8 Karten (bis 255)', f: T => PKT_MODES.some(M => (T.lv[M.id + 3] || {}).n) },
+  { id: 'bild', n: 'Pixelkünstler', e: '🎨', d: 'Das erste Pixelbild', f: T => T.pix.length >= 1 },
+  { id: 'galerie', n: 'Galerie', e: '🖼️', d: '6 Pixelbilder gesammelt', f: T => T.pix.length >= 6 },
+  { id: 'komplett', n: 'Alle Bilder', e: '🏛️', d: 'Alle Pixelbilder gesammelt', f: T => T.pix.length >= PKT_PICS.length },
+  { id: 'tage', n: 'Dranbleiber', e: '📅', d: 'An 3 Tagen trainiert', f: T => Object.keys(T.days).length >= 3 },
+  { id: 'meister', n: 'Meister', e: '🏆', d: 'In 5 Levels 3 Sterne', f: T => Object.values(T.lv).filter(x => x.best >= 3).length >= 5 }
+];
+
+/* Neue Armband-Muster und Anhänger für die vielen neuen Leuchtsterne */
+PK_DES.push(
+  { id: 'feuer', n: 'Feuer', stars: 45, on: v => ({ 16: ['#b71c1c', 'Dunkelrot'], 8: ['#e53935', 'Rot'], 4: ['#fb8c00', 'Orange'], 2: ['#fdd835', 'Gelb'], 1: ['#fff59d', 'Hellgelb'] })[v], off: ['#3b2a26', 'Kohle'], cord: '#6d4c41', sw: ['#b71c1c', '#fb8c00', '#fff59d'] },
+  { id: 'wald', n: 'Wald', stars: 60, on: v => ({ 16: ['#1b5e20', 'Tannengrün'], 8: ['#2e7d32', 'Grün'], 4: ['#66bb6a', 'Hellgrün'], 2: ['#a1887f', 'Rinde'], 1: ['#d7ccc8', 'Birke'] })[v], off: ['#f1f8e9', 'Moos hell'], cord: '#4e342e', sw: ['#1b5e20', '#66bb6a', '#a1887f'] },
+  { id: 'galaxie', n: 'Galaxie', stars: 80, on: (v, li) => [['#7ef9ff', 'Cyan'], ['#ffd54f', 'Sonnengelb'], ['#b39ddb', 'Lila'], ['#80cbc4', 'Türkis'], ['#ffffff', 'Weiß']][(li + Math.log2(v)) % 5], off: ['#2a2552', 'Nachtviolett'], cord: '#9b95d6', sep: '#d8d4ff', bg: '#120f33', glow: true, ink: '#eeeaff', sw: ['#120f33', '#ffd54f', '#7ef9ff'] }
+);
+PK_CHARMS.push(
+  { id: 'blitz', n: 'Blitz', e: '⚡', stars: 35 }, { id: 'diamant', n: 'Diamant', e: '💎', stars: 55 }, { id: 'pokal', n: 'Pokal', e: '🏆', stars: 75 }, { id: 'krone', n: 'Krone', e: '👑', stars: 100 },
+  { id: 'eule', n: 'Eule', e: '🦉', price: 30 }, { id: 'drache', n: 'Drache', e: '🐉', price: 60 }
+);
+regItems(PK_DES.filter(x => ['feuer', 'wald', 'galaxie'].includes(x.id)).map(x => ({ id: 'pkd.' + x.id, kind: 'pkband', name: x.n, d: x.id, stars: x.stars || 0, src: pkSrc(x) })));
+regItems(PK_CHARMS.filter(x => ['blitz', 'diamant', 'pokal', 'krone', 'eule', 'drache'].includes(x.id)).map(x => ({ id: 'pkc.' + x.id, kind: 'pkcharm', name: x.n, e: x.e, stars: x.stars || 0, src: pkSrc(x) })));
+
+/* ---------- Stand ---------- */
+function pktT() {
+  const p = pkS(); let t = p.tr;
+  if (!t || typeof t !== 'object' || Array.isArray(t)) t = p.tr = {};
+  const obj = k => { if (!t[k] || typeof t[k] !== 'object' || Array.isArray(t[k])) t[k] = {}; };
+  obj('lv'); obj('badge'); obj('days');
+  if (!(t.total >= 0)) t.total = 0; if (!(t.rounds >= 0)) t.rounds = 0; if (!(t.serie >= 0)) t.serie = 0; if (!(t.streak >= 0)) t.streak = 0;
+  if (!Array.isArray(t.pix)) t.pix = [];
+  return t;
+}
+const pktOn = () => !!pkS().done[7];
+function pktOpen(m, l) {
+  if (!pktOn()) return false;
+  const d = pkS().done, T = pktT();
+  if (l === 1) return true;
+  if (l === 2) return !!d[12] && !!(T.lv[m + 1] && T.lv[m + 1].n);
+  return !!(T.lv[m + 2] && T.lv[m + 2].n);
+}
+const pktRankIdx = n => { let r = 0; PKT_RANKS.forEach((x, k) => { if (n >= x.at) r = k; }); return r; };
+const pktBest = (m, l) => (pktT().lv[m + l] || {}).best || 0;
+function pktRecommend() {
+  let first = null;
+  for (const M of PKT_MODES) for (let l = 1; l <= 3; l++) if (pktOpen(M.id, l)) { if (!first) first = { m: M.id, l }; if (pktBest(M.id, l) < 3) return { m: M.id, l }; }
+  return first || { m: 'bau', l: 1 };
+}
+function pktCount() {
+  const T = pktT(); T.total++; T.streak++; if (T.streak > T.serie) T.serie = T.streak; save();
+}
+function pktAwardBadges() {
+  const T = pktT(), out = [];
+  PKT_BADGES.forEach(b => { if (!T.badge[b.id] && b.f(T)) { T.badge[b.id] = Date.now(); out.push(b); } });
+  if (out.length) { save(); pkGiveStars(out.length); }
+  return out;
+}
+function pktRecord(key, stars, hi) {
+  const T = pktT(), e = T.lv[key] || (T.lv[key] = { best: 0, n: 0 });
+  T.rounds++; e.n++;
+  const gain = Math.max(0, stars - e.best); e.best = Math.max(e.best, stars);
+  let nb = false; if (hi != null && hi > (e.hi || 0)) { e.hi = hi; nb = true; }
+  T.days[ymd()] = 1; const ks = Object.keys(T.days).sort(); while (ks.length > 90) delete T.days[ks.shift()];
+  save(); if (gain) pkGiveStars(gain);
+  return { gain, nb };
+}
+
+/* ---------- kleine Helfer ---------- */
+const pktR = n => Math.floor(Math.random() * n), pktRR = (a, b) => a + pktR(b - a + 1);
+const pktPc = n => { let c = 0; while (n) { c += n & 1; n >>= 1; } return c; };
+const pktBits = (n, vals) => vals.map(v => `<i class="${n & v ? 'on' : ''}" style="${pkCol(v)}">${n & v ? 1 : 0}</i>`).join('');
+const pktStarsFor = mist => mist === 0 ? 3 : mist <= 2 ? 2 : 1;
+function pktPicSvg(pic, rows, o) {
+  o = o || {}; const s = pic.s, cell = [];
+  for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
+    const on = y < rows && pic.g[y][x] === '#', seen = y < rows;
+    cell.push(`<rect x="${x + .06}" y="${y + .06}" width=".88" height=".88" rx=".14" fill="${on ? pic.c : seen ? 'transparent' : (o.ghost ? 'var(--dz-t1,#efece6)' : 'transparent')}" stroke="${on ? 'none' : 'var(--dz-line,#d9d4c9)'}" stroke-width=".05"/>`);
+  }
+  return `<svg class="pkt-pic${o.big ? ' big' : ''}${o.mini ? ' mini' : ''}" viewBox="0 0 ${s} ${s}" role="img" aria-label="Pixelbild ${esc(pic.n)}">${cell.join('')}</svg>`;
+}
+const pktPicRows = (pic, vals) => pic.g.map(r => [...r].reduce((a, ch, i) => a + (ch === '#' ? vals[i] : 0), 0));
+function pktPad(host, onOk) {
+  let v = '';
+  const disp = pkEl('div', 'pkt-disp', '<span>…</span>'), pad = pkEl('div', 'pkt-pad'), wrap = pkEl('div', 'pkt-padw');
+  const show = () => { disp.innerHTML = `<span>${v || '…'}</span>`; disp.classList.toggle('empty', !v); };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '⌫', '0', 'OK'].forEach(k => {
+    const b = pkEl('button', 'pkt-key' + (k === 'OK' ? ' ok' : k === '⌫' ? ' del' : ''), k === 'OK' ? ico('check', 22) : k); b.type = 'button';
+    b.setAttribute('aria-label', k === 'OK' ? 'Antwort prüfen' : k === '⌫' ? 'Eine Ziffer löschen' : k);
+    b.addEventListener('click', () => {
+      if (k === '⌫') v = v.slice(0, -1);
+      else if (k === 'OK') { if (v) { const n = +v; onOk(n); } return; }
+      else if (v.length < 3) v += k;
+      pkTick(); show();
+    });
+    pad.append(b);
+  });
+  wrap.append(disp, pad); host.append(wrap); show();
+  return { clear() { v = ''; show(); }, el: wrap };
+}
+
+/* ---------- Ende einer Runde: Sterne, Belohnungen, wie weiter ---------- */
+function pktEnd(api, o) {
+  const { scene, body } = api, T = pktT(), m = o.m, l = o.l;
+  const rec = pktRecord(m + l, o.stars, o.hi);
+  const bd = pktAwardBadges(), r1 = pktRankIdx(T.total), up = r1 > o.rank0; if (up) pkGiveStars(2);
+  const chips = [];
+  if (rec.gain) chips.push(`<span class="pkt-chip">✦ +${rec.gain}</span>`);
+  if (o.newPic) chips.push('<span class="pkt-chip up">🖼️ Neu in deiner Sammlung</span>');
+  if (rec.nb && o.hi > 0) chips.push('<span class="pkt-chip up">🎉 Neuer Rekord</span>');
+  if (up) chips.push(`<span class="pkt-chip up">${PKT_RANKS[r1].e} Neuer Rang: ${PKT_RANKS[r1].n} · ✦ +2</span>`);
+  bd.forEach(b => chips.push(`<span class="pkt-chip bd"><i aria-hidden="true">${b.e}</i>${esc(b.n)} · ✦ +1</span>`));
+  body.innerHTML = `<div class="pkt-end">${o.pic || ''}<div class="pkt-big">${pkStarsHtml(o.stars)}</div><p class="pkt-line">${o.line}</p>${chips.length ? `<div class="pkt-chips">${chips.join('')}</div>` : ''}</div>`;
+  const big = o.stars === 3 || up || bd.length > 0 || !!o.newPic;
+  scene.mood('happy'); scene.say(o.say); pkCelebrate(scene, big);
+  if (big) pkTone(1319, .5, .3, 'triangle', .06);
+  const btns = [];
+  const nx = l < 3 && pktOpen(m, l + 1);
+  if (nx && o.stars >= 2) btns.push({ label: `Level ${l + 1}: ${PKT_LVN[l + 1]}`, on: () => pktGo(m, l + 1) });
+  btns.push({ label: 'Nochmal', sec: nx && o.stars >= 2, on: () => pktGo(m, l) });
+  if (nx && o.stars < 2) btns.push({ label: `Level ${l + 1}`, sec: true, on: () => pktGo(m, l + 1) });
+  btns.push({ label: 'Zur Übersicht', sec: true, on: () => go('punkte') });
+  pkLater(900, () => api.setFoot(btns));
+  api.setFoot([]);
+  window.scrollTo(0, 0);
+}
+function pktGo(m, l) { UI.pkTr = { m, l }; pkStart('train'); }
+
+/* ---------- Eine Runde mit 6 Aufgaben: Bauen · Lesen · Rechnen · Doppelt/Halb ---------- */
+function pktGen(m, l, vals, max, used, last) {
+  const pickN = (lo, hi) => { let n, k = 0; do { n = pktRR(lo, hi); k++; } while ((used.has(n) || pktPc(n) < 2) && k < 60); used.add(n); return n; };
+  if (m === 'bau') { const n = pickN(3, max); return { sol: n, label: 'Bau die Zahl', big: n }; }
+  if (m === 'les') { const n = pickN(3, max); return { sol: n, ups: vals.map(v => n & v ? 1 : 0), label: 'Welche Zahl zeigen die Karten?', big: '?' }; }
+  if (m === 'plus') {
+    if (Math.random() < .6) { const sol = pickN(6, max), a = pktRR(2, sol - 2), b = sol - a; return { sol, label: 'Rechne und bau das Ergebnis', big: `${a} + ${b}`, txt: `${a} + ${b}` }; }
+    const a = pickN(8, max), b = pktRR(2, a - 2); return { sol: a - b, label: 'Rechne und bau das Ergebnis', big: `${a} − ${b}`, txt: `${a} − ${b}` };
+  }
+  const kinds = l === 1 ? ['x2'] : l === 2 ? ['x2', 'h2'] : ['x2', 'h2', 'x4', 'd4'];
+  let k = kinds[pktR(kinds.length)]; if (k === last && kinds.length > 1) k = kinds[(kinds.indexOf(k) + 1) % kinds.length];
+  const h = Math.floor(max / 2), q = Math.floor(max / 4); let a, sol, label;
+  if (k === 'x2') { a = pktRR(3, h); sol = 2 * a; label = 'Doppelt so viel wie'; }
+  if (k === 'h2') { sol = pktRR(2, h); a = 2 * sol; label = 'Die Hälfte von'; }
+  if (k === 'x4') { a = pktRR(2, q); sol = 4 * a; label = 'Viermal so viel wie'; }
+  if (k === 'd4') { sol = pktRR(2, q); a = 4 * sol; label = 'Ein Viertel von'; }
+  return { sol, a, kind: k, label, big: a };
+}
+function pktRound(api, m, l) {
+  const { scene, body } = api, vals = PKT_VALS[l], max = vals.reduce((a, b) => a + b, 0), T = pktT(), N = 6, M = PKT_MODES.find(x => x.id === m);
+  const reading = m === 'les', used = new Set(), rank0 = pktRankIdx(T.total);
+  let i = 0, mist = 0, tm = 0, cur = null, solved = false, lastKind = '';
+  const bar = pkEl('div', 'pk-tagbar'), target = pkEl('div', 'pk-target');
+  body.append(bar, target);
+  const A = pkStage(body, { noCounter: l > 1 || reading, code: reading && l === 1 });
+  const pad = reading ? pktPad(body, n => check(n)) : null;
+  const stop = () => go('punkte');
+  const mark = () => A.slots.forEach((s, k) => s.classList.toggle('mark', !!(cur.sol & vals[k])));
+  function head() {
+    bar.innerHTML = `<span class="pk-chip">${M.ic} ${M.n} · Level ${l}</span><span class="pkt-pips" role="img" aria-label="Aufgabe ${Math.min(i + 1, N)} von ${N}">${Array.from({ length: N }, (_, k) => `<i class="${k < i || (k === i && solved) ? 'ok' : k === i ? 'cur' : ''}"></i>`).join('')}</span>`;
+  }
+  function next() {
+    cur = pktGen(m, l, vals, max, used, lastKind); lastKind = cur.kind || ''; tm = 0; solved = false;
+    A.lock = false; A.build(vals, cur.ups || vals.map(() => 0), []); A.taps = 0;
+    if (reading) { A.lock = true; pad.clear(); }
+    A.slots.forEach(s => s.classList.remove('mark'));
+    head(); scene.mood('idle');
+    const sup = (m === 'dbl' && l === 1) ? `<span class="pkt-code">${pktBits(cur.a, vals)}</span>` : '';
+    target.innerHTML = `<span class="pk-label">${cur.label}</span><b${String(cur.big).length > 5 ? ' class="sm"' : ''}>${cur.big}</b>${sup}`;
+    scene.say(i === 0 ? (reading ? 'Lies die Karten – und tippe die Zahl ein.' : (m === 'plus' || m === 'dbl') ? 'Rechne im Kopf – und bau das Ergebnis mit den Karten. Dann Prüfen.' : l === 1 ? 'Bau die Zahl. Wenn du fertig bist: Prüfen.' : 'Jetzt ohne Hilfe: Du siehst keine Summe. Bau die Zahl – dann Prüfen.') : 'Die nächste Aufgabe.');
+    api.setFoot(reading ? [{ label: 'Aufhören', sec: true, on: stop }] : [{ label: 'Prüfen', on: () => check(A.total()) }, { label: 'Aufhören', sec: true, on: stop }]);
+  }
+  function wrong() {
+    mist++; tm++; T.streak = 0; save(); pkNope(); scene.mood('confused'); scene.shake();
+    if (reading) { pad.clear(); if (tm >= 2) { A.code = true; A.refresh(false); } }
+    if (tm === 1) scene.say('Noch nicht ganz. Versuch es noch einmal.');
+    else if (tm === 2) scene.say(reading ? 'Tipp: Jede offene Karte hat Punkte. Die Ziffern 1 und 0 zeige ich dir jetzt.' : 'Tipp: Fang bei der größten Karte an, die noch hineinpasst.');
+    else if (!reading) { mark(); scene.say('Die markierten Karten gehören dazu.'); }
+    else scene.say('Zähl die Karten zusammen, die offen (1) sind.');
+  }
+  function good() {
+    solved = true; pktCount(); head(); A.lock = true;
+    const parts = vals.filter(v => cur.sol & v).join(' + ');
+    let say;
+    if (m === 'bau') say = `${parts} = ${cur.sol}. Richtig gebaut!`;
+    else if (m === 'les') say = `${parts} = ${cur.sol}. Genau!`;
+    else if (m === 'plus') say = `${cur.txt} = ${cur.sol}. In Karten: ${vals.map(v => cur.sol & v ? 1 : 0).join('')}.`;
+    else say = `${cur.a} → ${cur.sol}.<br><span class="pkt-shift">${pktBits(cur.a, vals)}<b>→</b>${pktBits(cur.sol, vals)}</span>`;
+    scene.mood('happy'); scene.hop(); A.song(.05); pkTone(1047, .1, .12, 'triangle', .06);
+    if (!reading) A.slots.forEach(s => s.classList.remove('mark'));
+    scene.say(tm ? `Geschafft! ${say}` : say);
+    const last = i === N - 1;
+    api.setFoot([{ label: last ? 'Ergebnis' : 'Weiter', on: () => { if (last) fin(); else { i++; next(); } } }, { label: 'Aufhören', sec: true, on: stop }]);
+  }
+  function check(n) { if (solved) return; if (n === cur.sol) good(); else wrong(); }
+  function fin() {
+    const stars = pktStarsFor(mist);
+    const ins = m === 'dbl' ? '<br>Merk dir: <b>Doppelt</b> = jede 1 rutscht eine Karte nach <b>links</b>. <b>Halb</b> = nach rechts.' : m === 'les' ? '' : '';
+    pktEnd(api, { m, l, stars, rank0, line: mist === 0 ? 'Alle sechs ohne Fehler!' : mist <= 2 ? `Sechs geschafft – nur ${mist} ${mist === 1 ? 'Fehler' : 'Fehler'}.` : 'Alle sechs geschafft – dranbleiben lohnt sich!', say: stars === 3 ? `Perfekt!${ins}` : `Gut gemacht!${ins}` });
+  }
+  next();
+}
+
+/* ---------- Pixelbilder: jede Zeile ist eine Zahl ---------- */
+function pktPix(api, l) {
+  const { scene, body } = api, vals = PKT_VALS[l], T = pktT(), s = vals.length, rank0 = pktRankIdx(T.total);
+  const pool = PKT_PICS.filter(x => x.s === s), fresh = pool.filter(x => !T.pix.includes(x.id)), pic = (fresh.length ? fresh : pool)[pktR((fresh.length ? fresh : pool).length)];
+  const rows = pktPicRows(pic, vals);
+  let r = 0, mist = 0, tm = 0, solved = false;
+  const bar = pkEl('div', 'pk-tagbar'), view = pkEl('div', 'pkt-view'), target = pkEl('div', 'pk-target');
+  body.append(bar, view, target);
+  const A = pkStage(body, { noCounter: l > 1 });
+  const stop = () => go('punkte');
+  const draw = () => {
+    bar.innerHTML = `<span class="pk-chip">🖼️ Pixelbilder · Level ${l}</span><span class="pkt-pips" role="img" aria-label="Zeile ${Math.min(r + 1, s)} von ${s}">${rows.map((_, k) => `<i class="${k < r ? 'ok' : k === r ? 'cur' : ''}"></i>`).join('')}</span>`;
+    view.innerHTML = pktPicSvg(pic, r, { ghost: true });
+  };
+  function nextRow() {
+    tm = 0; solved = false; A.lock = false; A.build(vals, vals.map(() => 0), []); A.taps = 0; A.slots.forEach(x => x.classList.remove('mark'));
+    draw(); scene.mood('idle');
+    target.innerHTML = `<span class="pk-label">Zeile ${r + 1} von ${s} · Bau die Zahl</span><b>${rows[r]}</b>`;
+    scene.say(r === 0 ? 'Ein Bild versteckt sich! Jede Zeile ist eine Zahl. Bau sie – dann zeigt sich die Zeile.' : 'Die nächste Zeile.');
+    api.setFoot([{ label: 'Prüfen', on: check }, { label: 'Aufhören', sec: true, on: stop }]);
+  }
+  function check() {
+    if (solved) return;
+    if (A.total() !== rows[r]) {
+      mist++; tm++; T.streak = 0; save(); pkNope(); scene.mood('confused'); scene.shake();
+      if (tm === 1) scene.say('Noch nicht ganz. Versuch es noch einmal.');
+      else if (tm === 2) scene.say('Tipp: Fang bei der größten Karte an, die noch hineinpasst.');
+      else { A.slots.forEach((x, k) => x.classList.toggle('mark', !!(rows[r] & vals[k]))); scene.say('Die markierten Karten gehören dazu.'); }
+      return;
+    }
+    solved = true; pktCount(); r++; draw(); A.lock = true;
+    const row = view.querySelector('svg'); if (row) pkAnim(row, 'pop');
+    scene.mood('happy'); scene.hop(); pkTone(880 + r * 60, 0, .12, 'triangle', .06); pkTone(1175 + r * 60, .1, .14, 'triangle', .05);
+    if (r < s) { scene.say(`Zeile ${r}: ${rows[r - 1]} – das Bild wächst!`); api.setFoot([{ label: 'Nächste Zeile', on: nextRow }, { label: 'Aufhören', sec: true, on: stop }]); return; }
+    // fertig
+    const stars = pktStarsFor(mist), isNew = !T.pix.includes(pic.id);
+    if (isNew) { T.pix.push(pic.id); save(); pkGiveStars(1); }
+    pkLater(700, () => pktEnd(api, {
+      m: 'pix', l, stars, rank0, newPic: isNew, pic: `<div class="pkt-trophy">${pktPicSvg(pic, s, { big: true })}<b>${esc(pic.n)}</b></div>`,
+      line: isNew ? `Ein ${esc(pic.n)} aus ${s} Zahlen! Das Bild liegt jetzt in deiner Sammlung.` : `Das ${esc(pic.n)} noch einmal – ${T.pix.length} von ${PKT_PICS.length} Bildern gesammelt.`,
+      say: `Computer speichern Bilder genau so: Zeile für Zeile als Zahlen.`
+    }));
+  }
+  nextRow();
+}
+
+/* ---------- Blitz: 60 Sekunden, so viele Zahlen wie möglich ---------- */
+function pktBlitz(api, l) {
+  const { scene, body } = api, vals = PKT_VALS[l], max = vals.reduce((a, b) => a + b, 0), T = pktT(), rank0 = pktRankIdx(T.total), hi0 = (T.lv['blitz' + l] || {}).hi || 0;
+  let left = PKT.blitz, score = 0, running = false, ended = false, tg = 0, lastTg = 0;
+  const bar = pkEl('div', 'pk-tagbar'), target = pkEl('div', 'pk-target');
+  body.append(bar, target);
+  const A = pkStage(body, { noCounter: true, onChange(t, o) { if (running && o.byTap && t === tg) hit(); } });
+  const stop = () => go('punkte');
+  const head = () => { bar.innerHTML = `<span class="pk-chip">⚡ Blitz · Level ${l}</span><span class="pk-chip pkt-time${left <= 10 && running ? ' low' : ''}">⏱ <b>${left}</b> s</span><span class="pk-chip">Geschafft <b>${score}</b></span><span class="pk-chip">Rekord <b>${Math.max(hi0, score)}</b></span>`; };
+  function pick() { let n, k = 0; do { n = pktRR(3, max); k++; } while ((n === lastTg || pktPc(n) < 2) && k < 60); lastTg = n; return n; }
+  function show() { tg = pick(); A.lock = false; A.build(vals, vals.map(() => 0), []); A.taps = 0; target.innerHTML = `<span class="pk-label">Bau die Zahl</span><b>${tg}</b>`; head(); }
+  function hit() {
+    score++; pktCount(); scene.mood('happy'); scene.hop(); pkTone(1047, 0, .1, 'triangle', .06); pkTone(1319, .08, .12, 'triangle', .05);
+    A.lock = true; target.classList.add('hit'); pkLater(280, () => { target.classList.remove('hit'); if (running) show(); });
+  }
+  function tick() { if (!running) return; left--; head(); if (left <= 0) return end(); if (left <= 5) pkTone(660, 0, .06, 'square', .03); pkLater(1000, tick); }
+  function begin() {
+    running = true; left = PKT.blitz; score = 0; scene.say('Los! So viele Zahlen wie möglich.'); show();
+    api.setFoot([{ label: 'Andere Zahl', sec: true, on: () => { if (running) show(); } }, { label: 'Aufhören', sec: true, on: stop }]);
+    pkLater(1000, tick);
+  }
+  function end() {
+    if (ended) return; ended = true; running = false; A.lock = true;
+    const th = PKT_BLITZ[l], stars = score >= th[2] ? 3 : score >= th[1] ? 2 : score >= th[0] ? 1 : 0;
+    T.streak = 0; save();
+    pktEnd(api, { m: 'blitz', l, stars: Math.max(1, stars), hi: score, rank0, line: `<b>${score}</b> Zahlen in 60 Sekunden.${stars === 0 ? ' Beim nächsten Mal mehr!' : ''} Für Sterne: ${th[0]} · ${th[1]} · ${th[2]}.`, say: score > hi0 && score > 0 ? 'Neuer Rekord!' : 'Zeit ist um!' });
+  }
+  head(); target.innerHTML = '<span class="pk-label">Bereit?</span><b>${PKT.blitz}</b><small class="pk-zsub">Sekunden</small>';
+  scene.say(`60 Sekunden: Bau so viele Zahlen wie möglich. Zahl sofort fertig – dann kommt die nächste. Für 3 Sterne: ${PKT_BLITZ[l][2]}.`);
+  A.lock = true; A.build(vals, vals.map(() => 0), []);
+  api.setFoot([{ label: 'Los!', on: begin }, { label: 'Aufhören', sec: true, on: stop }]);
+}
+
+PK_RUN.train = {
+  run(api) {
+    const t = UI.pkTr || { m: 'bau', l: 1 }, m = t.m, l = t.l;
+    api.body.classList.add('pk-train');
+    if (m === 'pix') pktPix(api, l); else if (m === 'blitz') pktBlitz(api, l); else pktRound(api, m, l);
+  }
+};
+
+/* ---------- Übersicht: Trainingslager, Rang, Sammlung ---------- */
+function pktHub() {
+  if (!pkS().done[4]) return '';
+  if (!pktOn()) return '<h3 class="pk-h">Trainingslager</h3><p class="pk-foot-note">Das Trainingslager öffnet nach „Mehr Karten“.</p>';
+  const T = pktT(), rec = pktRecommend();
+  const tiles = PKT_MODES.map(M => {
+    const lvs = [1, 2, 3].map(l => {
+      const op = pktOpen(M.id, l), e = T.lv[M.id + l] || {}, b = e.best || 0, isRec = op && rec.m === M.id && rec.l === l;
+      const sub = M.id === 'blitz' ? (e.hi ? `${e.hi}` : '') : '';
+      return `<button type="button" class="pkt-lb${op ? '' : ' lock'}${b >= 3 ? ' gold' : ''}${isRec ? ' rec' : ''}" data-act="pkTr" data-arg="${M.id}|${l}" ${op ? '' : 'disabled'} aria-label="${esc(M.n)}, Level ${l} ${PKT_LVN[l]}, ${op ? (b ? b + ' von 3 Sternen' : 'noch nicht gespielt') : 'noch zu'}"><span class="pkt-ln">${op ? l : ico('lock', 13)}</span><span class="pkt-ls" aria-hidden="true">${'<i class="on">✦</i>'.repeat(b)}${'<i>✦</i>'.repeat(3 - b)}</span><small>${op ? (sub ? '⚡ ' + sub : PKT_LVN[l]) : PKT_LVN[l]}</small></button>`;
+    }).join('');
+    return `<div class="pkt-tile"><div class="pkt-th"><span class="pkt-ic" aria-hidden="true">${M.ic}</span><span><b>${M.n}</b><small>${M.d}</small></span></div><div class="pkt-lvs">${lvs}</div></div>`;
+  }).join('');
+  return `<h3 class="pk-h">Trainingslager</h3><p class="pkt-sub">Level 1 hilft noch ein bisschen. Ab Level 2 siehst du <b>keine Summe</b> mehr – nur die Antwort zählt.</p><div class="pkt-grid">${tiles}</div>`;
+}
+function pktSegs(seg) {
+  if (!pktOn()) return [];
+  const T = pktT(), r = PKT_RANKS[pktRankIdx(T.total)], nb = Object.keys(T.badge).length + T.pix.length;
+  return [seg('rang', `<span class="pkt-seg-e" aria-hidden="true">${r.e}</span>`, null, r.n, `Rang: ${r.n}`), seg('sam', '<span class="pkt-seg-e" aria-hidden="true">🏅</span>', nb, 'Sammlung', `Sammlung: ${nb} Stück`)];
+}
+function pktPop(k) {
+  const T = pktT();
+  if (k === 'rang') {
+    const ri = pktRankIdx(T.total), nx = PKT_RANKS[ri + 1];
+    return `<span class="pk-eyebrow">${PKT_RANKS[ri].e} ${PKT_RANKS[ri].n}</span><p class="pk-popp"><b>${T.total}</b> Aufgaben gelöst – gezählt wird nur, was gelingt.${nx ? ` Noch <b>${nx.at - T.total}</b> bis <b>${nx.n}</b>.` : ' Höchster Rang!'}</p>
+      <div class="pkt-ranks">${PKT_RANKS.map((x, i) => `<span class="${i <= ri ? 'ok' : ''}${i === ri ? ' now' : ''}"><i aria-hidden="true">${x.e}</i><b>${x.n}</b><small>${x.at ? 'ab ' + x.at : 'Start'}</small></span>`).join('')}</div>`;
+  }
+  if (k === 'sam') {
+    return `<span class="pk-eyebrow">Abzeichen ${Object.keys(T.badge).length}/${PKT_BADGES.length}</span><div class="pkt-bds">${PKT_BADGES.map(b => { const on = !!T.badge[b.id]; return `<span class="${on ? 'ok' : ''}" title="${esc(b.d)}"><i aria-hidden="true">${on ? b.e : '🔒'}</i><b>${esc(b.n)}</b><small>${esc(b.d)}</small></span>`; }).join('')}</div>
+      <span class="pk-eyebrow">Pixelbilder ${T.pix.length}/${PKT_PICS.length}</span><div class="pkt-pics">${PKT_PICS.map(x => { const on = T.pix.includes(x.id); return `<span class="${on ? 'ok' : ''}" title="${on ? esc(x.n) : 'Noch nicht entdeckt'}">${on ? pktPicSvg(x, x.s, { mini: true }) : `<svg class="pkt-pic mini" viewBox="0 0 ${x.s} ${x.s}" aria-hidden="true"><rect x=".2" y=".2" width="${x.s - .4}" height="${x.s - .4}" rx=".5" fill="none" stroke="var(--dz-line)" stroke-width=".18" stroke-dasharray=".5 .4"/></svg>`}<small>${on ? esc(x.n) : x.s + '×' + x.s}</small></span>`; }).join('')}</div>`;
+  }
+  return '';
+}
+function pktParent() {
+  const T = pktT(), P = typeof PT === 'function' ? PT : (de => de), r = PKT_RANKS[pktRankIdx(T.total)];
+  if (!pktOn()) return '';
+  const lv = PKT_MODES.map(M => `${M.n}: ${[1, 2, 3].map(l => (T.lv[M.id + l] || {}).best || '–').join(' · ')}`).join('<br>');
+  return `<div class="cfg"><div><b>${P('Trainingslager', 'Practice camp')}</b><br><span class="small mute">${r.e} ${r.n} · ${T.total} ${P('Aufgaben gelöst', 'tasks solved')} · ${Object.keys(T.badge).length}/${PKT_BADGES.length} ${P('Abzeichen', 'badges')} · ${T.pix.length}/${PKT_PICS.length} ${P('Pixelbilder', 'pixel pictures')}</span><br><span class="small mute">${P('Sterne je Level (1 · 2 · 3):', 'Stars per level (1 · 2 · 3):')}<br>${lv}</span></div></div>`;
+}
+Object.assign(ACT, {
+  pkTr: a => { const [m, l] = String(a).split('|'); if (!PKT_MODES.some(x => x.id === m) || !(+l >= 1 && +l <= 3) || !pktOpen(m, +l)) return; pktGo(m, +l); },
+  pkLes: () => { const p = pkS(), cur = p.les === undefined ? pkDoneN() !== PK_MAX : !!p.les; p.les = !cur; save(); render(); }
+});
 
 /* =====================================================================
    RÄTSEL-GRUNDLAGEN für Sudoku (feat_sudoku.js) und Venola Holmes (feat_venola.js), beide in Meine Welt.
