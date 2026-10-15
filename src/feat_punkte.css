@@ -340,7 +340,7 @@
 .pk-card{transition:opacity .2s,filter .2s}
 .pk-cards.cool .pk-card{cursor:progress}
 .pk-cards.cool .pk-slot:not(.just) .pk-card{opacity:.55;filter:saturate(.75)}
-.pk-slot.just::before{content:"";position:absolute;left:22%;right:22%;top:-9px;height:4px;border-radius:2px;background:var(--dz-accent);transform-origin:left;animation:pkCool 1.2s linear both;z-index:2}
+.pk-slot.just::before{content:"";position:absolute;left:22%;right:22%;top:-9px;height:4px;border-radius:2px;background:var(--dz-accent);transform-origin:left;animation:pkCool .5s linear both;z-index:2}
 
 /* Sterne und kleines Fest */
 .pk-stars{display:inline-flex;gap:1px;vertical-align:-.12em;margin:0 2px}

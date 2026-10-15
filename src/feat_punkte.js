@@ -6,7 +6,7 @@
    Eine Idee pro Entdeckung. Die Karten sind das einzige Werkzeug: antippen = umdrehen (offen / zu).
    Die Entdeckung ist die Belohnung. Klein daneben: Sterne für perfekte Züge (Wenigste Züge, Erklär es Lumi, Rätsel) –
    sie schalten Armband-Muster und Anhänger frei; einige Muster/Anhänger gibt es auch im Shop (Gruppe „Blinki“, nur wenn eingeschaltet).
-   Karten: nach jedem Umdrehen eine kurze Pause (PK.pause = 1,2 s), damit das Kind schaut statt wild zu tippen.
+   Karten: nach jedem Umdrehen eine kurze Pause (PK.pause = 0,5 s), damit das Kind schaut statt wild zu tippen.
    Gespeichert: S.punkte = { done{n:ts}, snd (Kartentöne, Standard AN; „Töne aus“ der App gilt immer), trick{guess,show}, lumi, stars,
      arm[], armD (Muster), armC (Farbe bei Einfarbig), armCh (Anhänger), word[], tag{days{ymd:Anzahl}, total}, friends[{n,c,d,ch,ts}] }
    Freundes-Armbänder (ab Entdeckung 10): Name selbst schreiben, Buchstaben mit den Karten bauen, Sammlung, „Wem gehört das Armband?“, Perlen-Plan.
@@ -78,7 +78,7 @@ const pkAsk = () => { pkTone(523, 0, .14, 'triangle', .09); pkTone(784, .16, .3,
 const pkTick = () => pkTone(660, 0, .05, 'triangle', .05);
 
 /* ---------- Laufzeit (Zeitgeber werden beim Verlassen und Neuaufbau gestoppt) ---------- */
-const PK = { fx: [], pause: 1200, bid: 0 };
+const PK = { fx: [], pause: 500, bid: 0 };
 function pkLater(ms, fn) { PK.fx.push(setTimeout(() => { try { fn(); } catch (e) { console.error(e); } }, ms)); }
 function pkClear() { PK.fx.forEach(clearTimeout); PK.fx = []; }
 function pkEl(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }

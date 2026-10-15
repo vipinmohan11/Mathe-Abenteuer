@@ -370,11 +370,11 @@ with sync_playwright() as p:
     ok('2' in pg.inner_text('.pk-seg[data-act=pkFreunde]'), 'Übersicht: Freunde-Segment zeigt die Anzahl')
 
     # Pause nach dem Umdrehen
-    E("()=>{PK.pause=1200;ACT.pkLv(3)}"); pg.wait_for_timeout(250)
+    E("()=>{PK.pause=500;ACT.pkLv(3)}"); pg.wait_for_timeout(250)
     c0 = cards(pg)[2]['up']; pg.locator('#pkRoot .pk-card').nth(2).click(); pg.wait_for_timeout(60); pg.locator('#pkRoot .pk-card').nth(1).click(); pg.wait_for_timeout(60)
     ok(cards(pg)[2]['up'] != c0 and cards(pg)[1]['up'] == True and bool(pg.query_selector('#pkRoot .pk-cards.cool')), 'Pause: direkt nach dem Umdrehen wartet die nächste Karte')
-    pg.wait_for_timeout(1300); pg.locator('#pkRoot .pk-card').nth(1).click(); pg.wait_for_timeout(60)
-    ok(cards(pg)[1]['up'] == False, 'Pause: nach 1,2 s geht es weiter')
+    pg.wait_for_timeout(600); pg.locator('#pkRoot .pk-card').nth(1).click(); pg.wait_for_timeout(60)
+    ok(cards(pg)[1]['up'] == False, 'Pause: nach 0,5 s geht es weiter')
     E("()=>{PK.pause=0;go('punkte')}"); pg.wait_for_timeout(150)
 
     # Venola Holmes: Rang, Koffer, Akten und Regeln als ein Band
