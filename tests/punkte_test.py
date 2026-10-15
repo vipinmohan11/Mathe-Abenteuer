@@ -486,7 +486,16 @@ with sync_playwright() as p:
     ok(E("()=>S.punkte.tr.lv.les1.best")>=2, 'les 1: Runde geschafft')
     pg.wait_for_timeout(1000); E("()=>ACT.pkTr('les|2')"); pg.wait_for_timeout(200)
     ok(pg.locator('#pkRoot .pk-bit:visible').count()==0 and pg.locator('#pkRoot .pk-slot').count()==7, 'les 2: nur die Karten, keine Ziffern')
+    ok(E("()=>{const b=document.querySelector('#pkRoot .pk-body');return b.classList.contains('pkt-hide')&&!b.classList.contains('pkt-noval')}") and E("()=>getComputedStyle(document.querySelector('#pkRoot .pk-front .pk-dots')).display")=='none', 'les 2: offene Karten zeigen „1“ statt Punkte, Werte bleiben')
+    ok(pg.locator("#pkRoot .pk-foot .btn", has_text='Tipp').count()==1, 'les 2: Tipp-Knopf')
+    pg.locator("#pkRoot .pk-foot .btn", has_text='Tipp').click(); pg.wait_for_timeout(100)
+    ok(not E("()=>document.querySelector('#pkRoot .pk-body').classList.contains('pkt-hide')") and pg.locator("#pkRoot .pk-foot .btn", has_text='Tipp').count()==0, 'les 2: Tipp zeigt Punkte und Werte')
     play_round('les', 2); pg.wait_for_timeout(200)
+    ok(E("()=>S.punkte.tr.lv.les2.best")<=2, 'les 2: mit Tipp höchstens 2 Sterne')
+    pg.wait_for_timeout(1000); E("()=>{S.punkte.tr.lv.les2.n=Math.max(1,S.punkte.tr.lv.les2.n);pktGo('les',3)}"); pg.wait_for_timeout(300)
+    ok(E("()=>document.querySelector('#pkRoot .pk-body').classList.contains('pkt-noval')") and E("()=>getComputedStyle(document.querySelector('#pkRoot .pk-slot'),'::after').visibility")=='hidden', 'les 3: nur der Code, keine Kartenwerte')
+    shot(pg, 'lager_les3')
+    E("()=>go('punkte')"); pg.wait_for_timeout(100)
     # Rechnen, Doppelt und halb
     for m in ('plus', 'dbl'):
         pg.wait_for_timeout(1000); start(m, 1); play_round(m, 1); pg.wait_for_timeout(200)

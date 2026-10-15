@@ -110,3 +110,9 @@ body[data-theme="nacht"] .pkt-pic{padding:4%;box-sizing:border-box}
 .pk-ptrs{gap:8px}
 .pk-ptr{display:inline-flex;align-items:center;gap:3px}
 .pk-ptr i{font-style:normal;margin-right:2px}
+/* Code lesen ab Level 2: offene Karte = „1“ (keine Punkte), zugeklappte = „0“; Level 3 ohne Kartenwerte */
+.pk-train.pkt-hide .pk-front .pk-dots{display:none}
+.pk-train.pkt-hide .pk-front::after,.pk-train.pkt-hide .pk-back::before{content:"1";font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-weight:800;font-size:calc(var(--w,100px)*.5);line-height:1;color:var(--dz-ink)}
+.pk-train.pkt-hide .pk-back::before{content:"0";position:relative;z-index:1;color:var(--dz-mute)}
+.pk-train.pkt-noval .pk-slot::after{visibility:hidden}
+.pk-train.pkt-noval .pk-front{border-color:var(--dz-ink);box-shadow:var(--dz-sh-card)}

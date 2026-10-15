@@ -1783,6 +1783,12 @@ body[data-theme="nacht"] .pkt-pic{padding:4%;box-sizing:border-box}
 .pk-ptrs{gap:8px}
 .pk-ptr{display:inline-flex;align-items:center;gap:3px}
 .pk-ptr i{font-style:normal;margin-right:2px}
+/* Code lesen ab Level 2: offene Karte = „1“ (keine Punkte), zugeklappte = „0“; Level 3 ohne Kartenwerte */
+.pk-train.pkt-hide .pk-front .pk-dots{display:none}
+.pk-train.pkt-hide .pk-front::after,.pk-train.pkt-hide .pk-back::before{content:"1";font-family:"Adventure Baloo","Baloo 2",system-ui,sans-serif;font-weight:800;font-size:calc(var(--w,100px)*.5);line-height:1;color:var(--dz-ink)}
+.pk-train.pkt-hide .pk-back::before{content:"0";position:relative;z-index:1;color:var(--dz-mute)}
+.pk-train.pkt-noval .pk-slot::after{visibility:hidden}
+.pk-train.pkt-noval .pk-front{border-color:var(--dz-ink);box-shadow:var(--dz-sh-card)}
 
 /* Rätsel: Sudoku (.sd-*), Venola Holmes (.vn-*), gemeinsam (.pz-*) */
 .pz-clock{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0}.pz-clock b{font-size:1.3rem;min-width:3.4ch;text-align:center}.pz-clock small{color:var(--dz-mute)}
@@ -10029,7 +10035,7 @@ registerFeature({
   goals: () => []
 });
 
-const APP_BUILD = 'c0e35571';
+const APP_BUILD = 'ec404938';
 /* =====================================================================
    ELTERN-BEREICH (PIN-geschützt) – zweisprachig: Deutsch / English (nur dieser Bereich; die App für das Kind bleibt Deutsch)
    S.cfg.plang = 'de' | 'en'. Texte: PT('deutsch', 'english').
@@ -14242,37 +14248,42 @@ function pktGen(m, l, vals, max, used, last) {
 function pktRound(api, m, l) {
   const { scene, body } = api, vals = PKT_VALS[l], max = vals.reduce((a, b) => a + b, 0), T = pktT(), N = 6, M = PKT_MODES.find(x => x.id === m);
   const reading = m === 'les', used = new Set(), rank0 = pktRankIdx(T.total);
-  let i = 0, mist = 0, tm = 0, cur = null, solved = false, lastKind = '';
+  let i = 0, mist = 0, tm = 0, cur = null, solved = false, lastKind = '', hinted = false;
+  /* Code lesen ab Level 2: offene Karten zeigen nur „1“, zugeklappte „0“ – keine Punkte. Level 3: auch keine Kartenwerte. Der Tipp zeigt beides (zählt wie ein Fehler). */
+  const hide = reading && l > 1;
   const bar = pkEl('div', 'pk-tagbar'), target = pkEl('div', 'pk-target');
   body.append(bar, target);
   const A = pkStage(body, { noCounter: l > 1 || reading, code: reading && l === 1 });
   const pad = reading ? pktPad(body, n => check(n)) : null;
   const stop = () => go('punkte');
   const mark = () => A.slots.forEach((s, k) => s.classList.toggle('mark', !!(cur.sol & vals[k])));
+  const reveal = () => body.classList.remove('pkt-hide', 'pkt-noval');
+  const readFoot = () => api.setFoot((hide && !hinted && body.classList.contains('pkt-hide') ? [{ label: 'Tipp', sec: true, on: tip }] : []).concat([{ label: 'Aufhören', sec: true, on: stop }]));
+  function tip() { if (solved) return; if (!hinted) { hinted = true; mist++; T.streak = 0; save(); } reveal(); scene.say('Hier sind die Punkte und die Werte. Zähl die offenen Karten zusammen.'); readFoot(); }
   function head() {
     bar.innerHTML = `<span class="pk-chip">${M.ic} ${M.n} · Level ${l}</span><span class="pkt-pips" role="img" aria-label="Aufgabe ${Math.min(i + 1, N)} von ${N}">${Array.from({ length: N }, (_, k) => `<i class="${k < i || (k === i && solved) ? 'ok' : k === i ? 'cur' : ''}"></i>`).join('')}</span>`;
   }
   function next() {
     cur = pktGen(m, l, vals, max, used, lastKind); lastKind = cur.kind || ''; tm = 0; solved = false;
     A.lock = false; A.build(vals, cur.ups || vals.map(() => 0), []); A.taps = 0;
-    if (reading) { A.lock = true; pad.clear(); }
+    if (reading) { A.lock = true; pad.clear(); hinted = false; if (hide) { body.classList.add('pkt-hide'); body.classList.toggle('pkt-noval', l === 3); } }
     A.slots.forEach(s => s.classList.remove('mark'));
     head(); scene.mood('idle');
     const sup = (m === 'dbl' && l === 1) ? `<span class="pkt-code">${pktBits(cur.a, vals)}</span>` : '';
     target.innerHTML = `<span class="pk-label">${cur.label}</span><b${String(cur.big).length > 5 ? ' class="sm"' : ''}>${cur.big}</b>${sup}`;
-    scene.say(i === 0 ? (reading ? 'Lies die Karten – und tippe die Zahl ein.' : (m === 'plus' || m === 'dbl') ? 'Rechne im Kopf – und bau das Ergebnis mit den Karten. Dann Prüfen.' : l === 1 ? 'Bau die Zahl. Wenn du fertig bist: Prüfen.' : 'Jetzt ohne Hilfe: Du siehst keine Summe. Bau die Zahl – dann Prüfen.') : 'Die nächste Aufgabe.');
-    api.setFoot(reading ? [{ label: 'Aufhören', sec: true, on: stop }] : [{ label: 'Prüfen', on: () => check(A.total()) }, { label: 'Aufhören', sec: true, on: stop }]);
+    scene.say(i === 0 ? (reading ? (l === 3 ? 'Nur der Code: 1 = offen, 0 = zu. Welche Zahl ist das? Die Werte weißt du selbst.' : l === 2 ? 'Jetzt ohne Punkte: 1 = offen, 0 = zu. Lies den Code und tippe die Zahl ein.' : 'Lies die Karten – und tippe die Zahl ein.') : (m === 'plus' || m === 'dbl') ? 'Rechne im Kopf – und bau das Ergebnis mit den Karten. Dann Prüfen.' : l === 1 ? 'Bau die Zahl. Wenn du fertig bist: Prüfen.' : 'Jetzt ohne Hilfe: Du siehst keine Summe. Bau die Zahl – dann Prüfen.') : 'Die nächste Aufgabe.');
+    if (reading) readFoot(); else api.setFoot( [{ label: 'Prüfen', on: () => check(A.total()) }, { label: 'Aufhören', sec: true, on: stop }]);
   }
   function wrong() {
     mist++; tm++; T.streak = 0; save(); pkNope(); scene.mood('confused'); scene.shake();
-    if (reading) { pad.clear(); if (tm >= 2) { A.code = true; A.refresh(false); } }
+    if (reading) { pad.clear(); if (tm >= 2) { A.code = true; A.refresh(false); } if (hide && tm === 2) { body.classList.remove('pkt-noval'); readFoot(); } if (hide && tm >= 3) { reveal(); readFoot(); } }
     if (tm === 1) scene.say('Noch nicht ganz. Versuch es noch einmal.');
-    else if (tm === 2) scene.say(reading ? 'Tipp: Jede offene Karte hat Punkte. Die Ziffern 1 und 0 zeige ich dir jetzt.' : 'Tipp: Fang bei der größten Karte an, die noch hineinpasst.');
+    else if (tm === 2) scene.say(reading ? (hide ? 'Tipp: Unter jeder Karte steht jetzt ihr Wert. Zähl die Werte der Karten mit 1 zusammen.' : 'Tipp: Jede offene Karte hat Punkte. Die Ziffern 1 und 0 zeige ich dir jetzt.') : 'Tipp: Fang bei der größten Karte an, die noch hineinpasst.');
     else if (!reading) { mark(); scene.say('Die markierten Karten gehören dazu.'); }
     else scene.say('Zähl die Karten zusammen, die offen (1) sind.');
   }
   function good() {
-    solved = true; pktCount(); head(); A.lock = true;
+    solved = true; pktCount(); head(); A.lock = true; if (hide) reveal();
     const parts = vals.filter(v => cur.sol & v).join(' + ');
     let say;
     if (m === 'bau') say = `${parts} = ${cur.sol}. Richtig gebaut!`;
