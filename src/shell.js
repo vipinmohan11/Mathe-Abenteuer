@@ -247,6 +247,7 @@ function worldTile(id, i) {
   if (id === 'memory') return dzTile({ cls, art: 'memory', title: 'Memory', sub: (typeof mmSub === 'function') ? mmSub() : 'Paare finden', act: 'memory' });
   if (id === 'sudoku') return dzTile({ cls, art: 'sudoku', title: 'Sudoku', sub: (typeof sdSub === 'function') ? sdSub() : 'Zahlenrätsel', act: 'sudoku' });
   if (id === 'licht') return dzTile({ cls, art: 'licht', title: 'Blinkis Lichterturm', sub: (typeof ltSub === 'function') ? ltSub() : 'Sprechen mit Licht', act: 'licht' });
+  if (id === 'punkte') return dzTile({ cls, art: 'punkte', title: 'Blinkis Punktkarten', sub: (typeof pkSub === 'function') ? pkSub() : 'Zählen wie ein Computer', act: 'punkte' });
   if (id === 'venola') return dzTile({ cls, art: 'venola', title: 'Venola Holmes', sub: (typeof vnSub === 'function') ? vnSub() : 'Codes und Fälle', act: 'venola' });
   if (id === 'welt') return dzTile({ cls, html: dzPassport(), title: 'Meine Weltreise', sub: (typeof wList === 'function') ? `${wList().filter(p => WA.isOpen(p.id)).length} Länder offen` : 'Entdeckerpass', act: 'welt' });
   const nm = { wesen: 'Meine Wesen', buch: 'Mein Buch', insel: 'Meine Insel' }[id];

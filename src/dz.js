@@ -4,7 +4,7 @@
    Navigation   NAV.stack (Verlauf), dzBack(fallback), Android-Zurück
    Bausteine    dzTile · dzGrid · dzSlot · dzAcc · dzHero · dzSec · dzChip · dzHead · dzTree · dzIc · dzArt · dzPassport
    Namen        dzPoss(name) · Fino-Name wird überall automatisch ersetzt (auch „Finos“ → „Blitz’ “ / „Mias“)
-   Schalter     flagOn(id) · DZ_FLAGS (Wesen, Buch, Insel, Sudoku, Venola, Lichterturm: ausgeblendet, Eltern können sie einschalten)
+   Schalter     flagOn(id) · DZ_FLAGS (Wesen, Buch, Insel, Sudoku, Venola, Lichterturm, Punktkarten: ausgeblendet, Eltern können sie einschalten)
    ===================================================================== */
 
 /* ---------- Schalter für ausgeblendete Funktionen (Daten bleiben unangetastet) ---------- */
@@ -14,7 +14,8 @@ const DZ_FLAGS = [
   { id: 'insel', label: 'Meine Insel', sub: 'Eine eigene Insel gestalten' },
   { id: 'sudoku', label: 'Sudoku', sub: 'Zahlenrätsel mit Wochenrätsel' },
   { id: 'venola', label: 'Venola Holmes', sub: 'Geheimschriften und Kriminalfälle' },
-  { id: 'licht', label: 'Blinkis Lichterturm', sub: 'Mit Lampen sprechen: wie Computer mit 0 und 1 zählen' }
+  { id: 'licht', label: 'Blinkis Lichterturm', sub: 'Mit Lampen sprechen: wie Computer mit 0 und 1 zählen' },
+  { id: 'punkte', label: 'Blinkis Punktkarten', sub: 'Mit Punktkarten entdecken, wie Computer mit 0 und 1 zählen' }
 ];
 const flagOn = id => !!(S.flags && S.flags[id]);
 

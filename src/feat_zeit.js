@@ -117,7 +117,7 @@ const SEC_TREE = () => [
   { id: 'm_geo', de: 'Europa Entdecker', en: 'Europe Explorer', free: true, subs: [['geoPlay', 'Spiele (Quiz, Flaggen …)', 'Games (quiz, flags …)'], ['geoCards', 'Länderkarten', 'Country cards'], ['geoFacts', 'Wusstest du?', 'Did you know?'], ['geoPass', 'Stempelpass', 'Stamp passport']] },
   { id: 'm_kreativ', de: 'Ideenwerkstatt', en: 'Idea workshop', free: true, subs: [['musik', 'Meine Musik', 'My music'], ['story', 'Geschichte', 'Story'], ['noten', 'Notenheft', 'Music book']] },
   { id: 'm_welt', de: 'Meine Welt', en: 'My World', subs: [['shop', 'Shop', 'Shop'], ['welt', 'Meine Weltreise', 'My world trip'], ['memory', 'Memory', 'Memory']]
-      .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island', sudoku: 'Sudoku', venola: 'Venola Holmes', licht: 'Blinki’s light tower' })[f.id] || f.label])) },
+      .concat(DZ_FLAGS.filter(f => flagOn(f.id)).map(f => [f.id, f.label, ({ wesen: 'My creatures', buch: 'My book', insel: 'My island', sudoku: 'Sudoku', venola: 'Venola Holmes', licht: 'Blinki’s light tower', punkte: 'Blinki’s dot cards' })[f.id] || f.label])) },
   { id: 'm_profil', de: 'Mein Profil', en: 'My profile', subs: [['profile', 'Profilseite & Farben', 'Profile page & colours'], ['avatar', 'Das bin ich (Avatar)', 'Avatar'], ['trophies', 'Pokale', 'Trophies'], ['schatz', 'Lustige Karten', 'Fun cards']] }
 ];
 function secName(id) {
