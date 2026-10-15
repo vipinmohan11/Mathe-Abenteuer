@@ -1,4 +1,4 @@
-"""Blinkis Punktkarten (Entdeckungen 1–14, Tagesrätsel, Freundes-Armbänder) und Venola-Symbole: Schalter (Standard aus), alle Entdeckungen über die Oberfläche durchspielen,
+"""Blinkis Punktkarten (Entdeckungen 1–14, Blinkis Rätsel, Sterne, Armband-Muster, Freundes-Armbänder) und Venola-Band: Schalter (Standard aus), alle Entdeckungen über die Oberfläche durchspielen,
 Zaubertrick, Lumi, Armband, Druckbogen, Eltern-Karte, keine Münzen.
 Aufruf: python3 punkte_test.py /abs/pfad/Mathe-Abenteuer_Klasse4.html [screenshot-ordner]"""
 import sys, re
@@ -29,6 +29,7 @@ with sync_playwright() as p:
     errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.goto('file://' + html); pg.wait_for_timeout(300)
     E = pg.evaluate
+    E("()=>{PK.pause=0}")
     E("()=>{S.name='Mia';S.coins=40;save()}")
     coins0 = E("()=>S.coins")
     ok(E("()=>DZ_FLAGS.some(f=>f.id==='punkte')") and not E("()=>flagOn('punkte')"), 'Schalter vorhanden, Standard: ausgeblendet')
@@ -43,7 +44,8 @@ with sync_playwright() as p:
     pg.click('[data-act=punkte]'); pg.wait_for_timeout(150)
     ok(E("()=>view")=='punkte' and pg.locator('.pk-lv').count()==14, 'Übersicht mit 14 Entdeckungen')
     ok(pg.locator('.pk-lv.lock').count()==13, 'Nur die erste Entdeckung ist offen')
-    ok(not pg.query_selector('.pk-tag'), 'Tagesrätsel erst nach Entdeckung 4')
+    ok(not pg.query_selector('.pk-rw'), 'Rätsel erst nach Entdeckung 4')
+    ok('blinki' in E("()=>shopGroups()"), 'Shop: Gruppe Blinki erscheint mit dem Schalter')
     shot(pg, 'hub')
     pg.click('.pk-hero .btn'); pg.wait_for_timeout(250)
     ok(E("()=>view")=='pkLevel' and E("()=>UI.pkLv")==1, 'Los geht’s startet Entdeckung 1')
@@ -81,6 +83,26 @@ with sync_playwright() as p:
     shot(pg, 'l4')
     foot(pg, 'Fertig'); pg.wait_for_timeout(300); next_lv(pg)
 
+    # Wenigste Züge: direkt nach dem Geheimcode, drei Karten, Ziel mit Code, Sterne
+    ok(E("()=>UI.pkLv")==14 and len(cards(pg))==3 and pg.locator('#pkRoot .pk-target .pk-tcode i').count()==3, 'Wenigste Züge kommt nach dem Geheimcode: 3 Karten, Ziel mit Code')
+    for r in range(3):
+        t = int(pg.inner_text('#pkRoot .pk-target b')); s0 = total(pg); mn = int(re.search(r'Blinki: (\d+)', pg.inner_text('#pkRoot .pk-moves')).group(1))
+        tc = pg.inner_text('#pkRoot .pk-tcode').replace('\n','')
+        ok(bin(s0 ^ t).count('1') == mn == [2, 2, 3][r] and tc == format(t, '03b'), f'Züge {r + 1}: von {s0} zur {t} (Code {tc}), Blinki braucht {mn}')
+        if r == 1:
+            for _ in range(2): pg.locator('#pkRoot .pk-card').nth(2).click(); pg.wait_for_timeout(60)
+            set_to(pg, t); pg.wait_for_timeout(700)
+            ok('Nochmal perfekt' in pg.inner_text('#pkRoot .pk-foot') and pg.locator('#pkRoot .pk-slot.mark').count() == mn and pg.locator('#pkRoot .pk-bubble .pk-stars i.on').count()==2, 'Züge: zu viele Züge – 2 Sterne, die nötigen Karten markiert, „Nochmal perfekt“')
+            shot(pg, 'l14')
+            foot(pg, 'Nochmal perfekt'); pg.wait_for_timeout(250); set_to(pg, t); pg.wait_for_timeout(700)
+        else:
+            set_to(pg, t); pg.wait_for_timeout(700)
+        ok('Perfekt' in pg.inner_text('#pkRoot .pk-bubble') and pg.locator('#pkRoot .pk-bubble .pk-stars i.on').count()==3 and bool(pg.query_selector('#pkRoot .pk-burst')), f'Züge {r + 1}: perfekt – 3 Sterne und kleines Fest')
+        foot(pg, 'Fertig' if r == 2 else 'Nächstes Rätsel'); pg.wait_for_timeout(300)
+    ok(E("()=>S.punkte.stars")==9, 'Sterne: pro Rätsel zählt der beste Versuch (3 × 3 = 9)')
+    next_lv(pg)
+
+
     # 5 – Zaubertrick
     nc = pg.locator('#pkRoot .pk-ncard')
     nc.nth(0).click(); nc.nth(2).click(); shot(pg, 'l5a')
@@ -101,15 +123,24 @@ with sync_playwright() as p:
     ok('4' in pg.inner_text('#pkRoot .pk-bubble') and E("()=>S.punkte.trick.show")==1 and E("()=>S.punkte.trick.guess")==2, '5: Vorführen und Zähler (2× erraten, 1× vorgeführt)')
     pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').last.click(); pg.wait_for_timeout(300); next_lv(pg)
 
-    # 6 – Schule und Blinki
-    for i in (0, 0, 1, 2, 2, 2, 2, 2): pg.locator('#pkRoot .pk-scard').nth(i).click(); pg.wait_for_timeout(40)
-    ok(pg.inner_text('#pkRoot .school .pk-tot')=='215', '6: Schulkarten 2×100, 1×10, 5×1 = 215')
+    # 6 – Schule und Blinki: erst eine Zahl mit Hundertern, Zehnern, Einern bauen (mit Minus), dann bei Blinki, dann vergleichen
+    ok('10-mal' not in pg.inner_text('#pkRoot') and pg.locator('#pkRoot .pk-minus').count()==3, '6: kein „10-mal“, Minus-Knöpfe da')
+    pg.locator('#pkRoot .pk-card').first.click(); pg.wait_for_timeout(100)
+    ok(total(pg)==0, '6: Blinkis Karten warten, bis die Schulzahl gebaut ist')
+    tS = int(pg.inner_text('#pkRoot .school .pk-goal b')); dg = [tS // 100, tS // 10 % 10, tS % 10]
+    pg.locator('#pkRoot .pk-scard').nth(0).click(); pg.locator('#pkRoot .pk-scard').nth(0).click(); pg.wait_for_timeout(40)
+    pg.locator('#pkRoot .pk-minus').nth(0).click(); pg.wait_for_timeout(40)
+    ok(pg.inner_text('#pkRoot .school .pk-tot')=='100', '6: Minus nimmt eine Karte wieder weg (2 → 1 Hunderter)')
+    for i in range(3):
+        for _ in range(dg[i] - (1 if i == 0 else 0)): pg.locator('#pkRoot .pk-scard').nth(i).click(); pg.wait_for_timeout(30)
+    pg.wait_for_timeout(200)
     terms = E("()=>[...document.querySelectorAll('#pkRoot .school .pk-term')].map(e=>e.textContent)")
-    ok(terms==['2 × 100','1 × 10','5 × 1'] and pg.locator('#pkRoot .school .pk-plus').count()==3, '6: Rechnung 2 × 100 + 1 × 10 + 5 × 1 = 215 mit Plus und Gleich')
-    ok(not pg.query_selector('#pkRoot .pk-x') and pg.locator('#pkRoot .pk-rel').count()==4, '6: kein „×10“ zwischen den Karten, Wert-Pfeile oben')
-    for i in (1, 0, 2): pg.locator('#pkRoot .pk-card').nth(i).click(); pg.wait_for_timeout(200)
-    bterms = E("()=>[...document.querySelectorAll('#pkRoot .blinki .pk-term')].map(e=>e.textContent)")
-    ok(pg.inner_text('#pkRoot .blinki .pk-tot')=='2' and bterms==['0 × 4','1 × 2','0 × 1'], '6: Blinki: 0 × 4 + 1 × 2 + 0 × 1 = 2')
+    ok(pg.inner_text('#pkRoot .school .pk-tot')==str(tS) and terms==[f'{dg[0]} × 100', f'{dg[1]} × 10', f'{dg[2]} × 1'], f'6: {tS} = {dg[0]} × 100 + {dg[1]} × 10 + {dg[2]} × 1')
+    names = E("()=>[...document.querySelectorAll('#pkRoot .blinki .pk-sval')].map(e=>e.textContent)")
+    ok(names==['Vierer','Zweier','Einer'] and 'Vierer' in pg.inner_text('#pkRoot .pk-bubble'), '6: Blinkis Karten heißen Vierer, Zweier, Einer')
+    tB = int(pg.inner_text('#pkRoot .blinki .pk-goal b')); set_to(pg, tB); pg.wait_for_timeout(700)
+    cmp = pg.inner_text('#pkRoot .pk-cmpres')
+    ok('Ziffern 0 bis 9' in cmp and 'nur 0 oder 1' in cmp and f'= {tB}' in ' '.join(cmp.split()), f'6: Vergleich – Schule 0 bis 9, Blinki nur 0 oder 1 ({tB})')
     shot(pg, 'l6')
     foot(pg, 'Fertig'); pg.wait_for_timeout(300); next_lv(pg)
 
@@ -122,41 +153,36 @@ with sync_playwright() as p:
     shot(pg, 'l7')
     foot(pg, 'Fertig'); pg.wait_for_timeout(300); next_lv(pg)
 
-    # Wenigste Züge (steht direkt nach „Mehr Karten“)
-    ok(E("()=>UI.pkLv")==14 and 'Blinki schafft es mit' in pg.inner_text('#pkRoot .pk-bubble'), 'Wenigste Züge kommt direkt nach Mehr Karten')
-    for r in range(3):
-        t = int(pg.inner_text('#pkRoot .pk-target b')); s0 = total(pg); mn = int(re.search(r'Blinki: (\d+)', pg.inner_text('#pkRoot .pk-moves')).group(1))
-        ok(bin(s0 ^ t).count('1') == mn == r + 2, f'Züge {r + 1}: von {s0} zur {t}, Blinki braucht {mn}')
-        if r == 1:
-            for _ in range(2): pg.locator('#pkRoot .pk-card').nth(4).click(); pg.wait_for_timeout(60)
-            set_to(pg, t); pg.wait_for_timeout(700)
-            ok('Es geht in' in pg.inner_text('#pkRoot .pk-bubble') and pg.locator('#pkRoot .pk-slot.mark').count() == mn, 'Züge: zu viele Züge – die nötigen Karten werden markiert')
-            shot(pg, 'l14')
-            foot(pg, 'Nochmal'); pg.wait_for_timeout(250); set_to(pg, t); pg.wait_for_timeout(700)
-        else:
-            set_to(pg, t); pg.wait_for_timeout(700)
-        ok('Perfekt' in pg.inner_text('#pkRoot .pk-bubble'), f'Züge {r + 1}: perfekt gelöst')
-        foot(pg, 'Fertig' if r == 2 else 'Nächstes Rätsel'); pg.wait_for_timeout(300)
-    next_lv(pg)
-
-    # 8 – Lumi bestellt (einmal falsch: Lampen werden verglichen)
-    def lumi_want():
-        return E("()=>[...document.querySelectorAll('#pkRoot .pk-mlamps .pk-lamp')].reduce((s,l,i)=>s+(l.classList.contains('on')?[4,2,1][i]:0),0)")
-    w = lumi_want(); set_to(pg, 7 if w != 7 else 1); foot(pg, 'Schicken'); pg.wait_for_timeout(200)
-    ok(pg.locator('#pkRoot .pk-lamp.diff').count() >= 1 and 'Vergleich' in pg.inner_text('#pkRoot .pk-bubble'), '8: falscher Snack zeigt, welche Lampen anders sind')
+    # 8 – Lumis Paketpost: Ware → Code aus 1 und 0 (keine Lampen zum Abmalen)
+    def want8():
+        nm = pg.inner_text('#pkRoot .pk-order b')
+        return E("(nm)=>+[...document.querySelectorAll('#pkRoot .pk-snack')].find(e=>e.querySelector('span:not(.pk-emo)').textContent===nm).dataset.n", nm)
+    ok(not pg.query_selector('#pkRoot .pk-mlamps') and E("()=>[...document.querySelectorAll('#pkRoot .pk-sc')].every(e=>/^[01]{3}$/.test(e.textContent))"), '8: Liste mit Codes aus 1 und 0, keine Lampen')
+    w = want8(); set_to(pg, 7 if w != 7 else 1); foot(pg, 'Abschicken'); pg.wait_for_timeout(200)
+    ok('geschickt' in pg.inner_text('#pkRoot .pk-bubble'), '8: falsches Paket – Lumi sagt, was geschickt wurde')
     shot(pg, 'l8')
     for r in range(4):
-        w = lumi_want(); set_to(pg, w); pg.wait_for_timeout(100); foot(pg, 'Schicken'); pg.wait_for_timeout(1900)
-    ok(bool(pg.query_selector('.pk-result')) and E("()=>!!S.punkte.done[8]"), '8: vier Bestellungen geliefert')
+        if r == 2: ok(E("()=>[...document.querySelectorAll('#pkRoot .pk-sc')].every(e=>/^[1-7]$/.test(e.textContent))"), '8: ab dem 3. Paket steht nur die Zahl in der Liste')
+        w = want8(); set_to(pg, w); pg.wait_for_timeout(100); foot(pg, 'Abschicken'); pg.wait_for_timeout(1900)
+    ok(bool(pg.query_selector('.pk-result')) and E("()=>!!S.punkte.done[8]"), '8: vier Pakete verschickt')
     next_lv(pg)
 
-    # 9 – Erklär es Lumi
+    # 9 – Erklär es Lumi: erst lösen; nicht perfekt → „Nochmal perfekt“ mit Zug-Zähler; perfekt = 3 Sterne
+    st0 = E("()=>S.punkte.stars")
     for r in range(4):
         m = re.search(r'die (\d+)', pg.inner_text('#pkRoot .pk-bubble')); want = int(m.group(1)) if m else -1
-        set_to(pg, want); pg.wait_for_timeout(500)
-        ok('Ach so' in pg.inner_text('#pkRoot .pk-bubble'), f'9: Lumi versteht die {want}')
-        if r == 3: shot(pg, 'l9')
+        ok(not pg.is_visible('#pkRoot .pk-moves'), f'9: erster Versuch ohne Zug-Zähler ({want})')
+        if r == 1:
+            for _ in range(2): pg.locator('#pkRoot .pk-card').last.click(); pg.wait_for_timeout(60)
+            set_to(pg, want); pg.wait_for_timeout(600)
+            ok('Ach so' in pg.inner_text('#pkRoot .pk-bubble') and 'Nochmal perfekt' in pg.inner_text('#pkRoot .pk-foot'), '9: nicht perfekt – Frage nach einem perfekten Versuch')
+            foot(pg, 'Nochmal perfekt'); pg.wait_for_timeout(200)
+            ok(pg.is_visible('#pkRoot .pk-moves'), '9: beim perfekten Versuch zählt der Zug-Zähler mit')
+        set_to(pg, want); pg.wait_for_timeout(600)
+        ok('Perfekt' in pg.inner_text('#pkRoot .pk-bubble') and pg.locator('#pkRoot .pk-bubble .pk-stars i.on').count()==3, f'9: Lumi versteht die {want} – perfekt, 3 Sterne')
+        if r == 1: shot(pg, 'l9')
         foot(pg, 'Fertig' if r == 3 else 'Nächste'); pg.wait_for_timeout(250)
+    ok(E("()=>S.punkte.stars")==st0 + 12, '9: 4 × 3 Sterne')
     next_lv(pg)
 
     # 10 – Armband
@@ -167,9 +193,10 @@ with sync_playwright() as p:
     set_to(pg, 13); pg.wait_for_timeout(150); foot(pg, 'M auffädeln'); pg.wait_for_timeout(1700)
     ok(total(pg)==0, '10: nach dem Auffädeln sind die Karten wieder zu')
     set_to(pg, 9); pg.wait_for_timeout(150); foot(pg, 'I auffädeln'); pg.wait_for_timeout(300)
+    ok(pg.locator('#pkRoot svg.pk-band g.pk-bg').count()==2 and pg.locator('#pkRoot svg.pk-band .b.on').count()==5, '10: Armband als Bild – 2 Buchstaben, 5 leuchtende Perlen (M = 8+4+1, I = 8+1)')
     shot(pg, 'l10')
     pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').click(); pg.wait_for_timeout(300)
-    ok(E("()=>S.punkte.arm.join('')")=='MI' and bool(pg.query_selector('.pk-result .pk-arm')), '10: Armband „MI“ gespeichert und gezeigt')
+    ok(E("()=>S.punkte.arm.join('')")=='MI' and bool(pg.query_selector('.pk-result svg.pk-band')), '10: Armband „MI“ gespeichert und gezeigt')
     next_lv(pg)
 
     # 11 – großer Zaubertrick (4 Karten, 1–15)
@@ -178,69 +205,114 @@ with sync_playwright() as p:
     for k in (0, 1, 3): nc.nth(k).click()
     foot(pg, 'Fertig'); pg.wait_for_timeout(1400)
     ok('13' in pg.inner_text('#pkRoot .pk-bubble'), '11: Blinki errät die 13 (8 + 4 + 1)')
-    shot(pg, 'l11')
     foot(pg, 'Stimmt!'); pg.wait_for_timeout(150); foot(pg, 'Nochmal'); nc.nth(2).click(); foot(pg, 'Fertig'); pg.wait_for_timeout(1400)
     foot(pg, 'Stimmt!'); pg.wait_for_timeout(150); foot(pg, 'Wie geht das?'); pg.wait_for_timeout(200)
     ok(pg.locator('#pkRoot .pk-xrow').count()==4, '11: Erklärung mit vier Karten')
     pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').last.click(); pg.wait_for_timeout(300); next_lv(pg)
 
-    # 12 – die 32 und die 64
+    # 12 – die 32 und die 64, dann 100 und drei Profi-Zahlen
     set_to(pg, 31); pg.wait_for_timeout(2500)
     ok(len(cards(pg))==6 and cards(pg)[0]['v']==32 and not cards(pg)[0]['up'], '12: nach der 31 kommt die 32-Karte (verdeckt)')
     pg.locator('#pkRoot .pk-card').first.click(); pg.wait_for_timeout(3700)
     ok(len(cards(pg))==7 and cards(pg)[0]['v']==64, '12: alle offen ist 63, dann kommt die 64-Karte')
     pg.locator('#pkRoot .pk-card').first.click(); pg.wait_for_timeout(1700)
-    ok('127' in pg.inner_text('#pkRoot .pk-bubble') and '100' in pg.inner_text('#pkRoot .pk-bubble'), '12: 127 geschafft, jetzt die 100')
+    ok('127' in pg.inner_text('#pkRoot .pk-bubble') and pg.inner_text('#pkRoot .pk-target b')=='100', '12: 127 geschafft, jetzt die 100')
     set_to(pg, 100); pg.wait_for_timeout(700)
     ok('64 + 32 + 4 = 100' in pg.inner_text('#pkRoot .pk-bubble'), '12: 64 + 32 + 4 = 100')
-    shot(pg, 'l12')
+    goals = []
+    for g in range(3):
+        t = int(pg.inner_text('#pkRoot .pk-target b')); goals.append(t)
+        if g == 1: shot(pg, 'l12')
+        set_to(pg, t); pg.wait_for_timeout(700)
+    ok(33 <= goals[0] <= 63 and 64 <= goals[1] <= 95 and 96 <= goals[2] <= 126 and 'bis 127' in pg.inner_text('#pkRoot .pk-bubble'), f'12: drei Profi-Zahlen {goals} gebaut')
     foot(pg, 'Fertig'); pg.wait_for_timeout(300); next_lv(pg)
 
-    # 13 – der echte Computer-Code (ASCII)
+    # 13 – der echte Computer-Code: nur Großbuchstaben, Name aussuchen
     ok(len(cards(pg))==7 and pg.locator('#pkRoot .pk-foot .btn').count()==0, '13: sieben Karten, erst das A bauen')
-    set_to(pg, 65); pg.wait_for_timeout(600)
-    ok('64 + 1 = 65' in pg.inner_text('#pkRoot .pk-bubble') and pg.inner_text('#pkRoot .pk-ascii b')=='A', '13: A = 64 + 1 = 65')
-    foot(pg, 'A speichern'); pg.wait_for_timeout(1700)
-    set_to(pg, 97); pg.wait_for_timeout(300)
-    ok('kleines a' in pg.inner_text('#pkRoot .pk-bubble'), '13: 97 ist ein kleines a (zusätzlich die 32)')
-    set_to(pg, 73); pg.wait_for_timeout(300); foot(pg, 'I speichern'); pg.wait_for_timeout(300)
-    shot(pg, 'l13')
+    set_to(pg, 65); pg.wait_for_timeout(700)
+    ok('64 + 1 = 65' in pg.inner_text('#pkRoot .pk-bubble') and pg.is_visible('#pkRoot .pk-npick') and not pg.is_visible('#pkRoot .pk-cards'), '13: A = 64 + 1 = 65, dann Name aussuchen')
+    pg.click('#pkRoot .pk-nopt[data-k=rnd]'); pg.wait_for_timeout(100)
+    r1 = pg.inner_text('#pkRoot .pk-nrnd b'); pg.click('#pkRoot .pk-reroll'); pg.wait_for_timeout(100); r2 = pg.inner_text('#pkRoot .pk-nrnd b')
+    ok(r1 != r2 and E("(a)=>PK_NAMES.includes(a[0])&&PK_NAMES.includes(a[1])", [r1, r2]), f'13: Zufallsnamen {r1}, {r2}')
+    shot(pg, 'l13pick')
+    pg.click('#pkRoot .pk-nopt[data-k=me]'); pg.fill('#pkMe', 'Jörg'); pg.wait_for_timeout(100)
+    ok('JOERG' in pg.inner_text('#pkRoot .pk-conv'), '13: Ö wird im Computer-Code zu OE')
+    foot(pg, 'Weiter'); pg.wait_for_timeout(200)
+    ok(cards(pg)[0]['up'] and total(pg)==64, '13: die 64 bleibt an')
+    set_to(pg, 112); pg.wait_for_timeout(150)
+    ok(pg.inner_text('#pkRoot .pk-ascii b')=='–' and pg.locator('#pkRoot .pk-foot .btn').first.is_disabled(), '13: 112 ist hier kein Buchstabe (nur Großbuchstaben)')
+    set_to(pg, 75); pg.wait_for_timeout(100); pg.locator('#pkRoot .pk-foot .btn').first.click(); pg.wait_for_timeout(150)
+    ok('du brauchst ein J' in pg.inner_text('#pkRoot .pk-bubble'), '13: falscher Buchstabe – „du brauchst ein J“')
+    for ch in 'JOERG':
+        set_to(pg, ord(ch)); pg.wait_for_timeout(100)
+        ok(pg.inner_text('#pkRoot .pk-foot .btn >> nth=0') == f'{ch} speichern', f'13: {ch} = {ord(ch)}')
+        pg.locator('#pkRoot .pk-foot .btn').first.click(); pg.wait_for_timeout(1350)
+    pg.wait_for_timeout(300); shot(pg, 'l13')
     pg.locator('#pkRoot .pk-foot .btn', has_text='Fertig').click(); pg.wait_for_timeout(300)
-    ok(E("()=>S.punkte.word.join('')")=='AI' and bool(pg.query_selector('.pk-result .pk-word')), '13: Computer-Wort „AI“ gespeichert und gezeigt')
-    shot(pg, 'result13')
+    ok(E("()=>S.punkte.word.join('')")=='JOERG' and bool(pg.query_selector('.pk-result .pk-word')), '13: Computer-Wort „JOERG“ gespeichert und gezeigt')
     ok(E("()=>Object.keys(S.punkte.done).length")==14, 'Alle 14 Entdeckungen geschafft')
     ok(E("()=>S.coins")==coins0, 'Keine Münzen verändert')
     foot(pg, 'Zur Übersicht'); pg.wait_for_timeout(200)
     ok(E("()=>view")=='punkte' and pg.locator('.pk-lv.done').count()==14, 'Übersicht: alles geschafft')
-    ok(pg.locator('.pk-mine .pk-ic').count()==3 and not pg.query_selector('.pk-keepcard'), 'Armband, Computer-Wort und Freunde als kleine Symbole, keine breiten Flächen')
-    pg.click('.pk-ic[data-arg=arm]'); pg.wait_for_timeout(100)
-    ok(bool(pg.query_selector('.pk-pop .pk-arm')), 'Symbol Armband öffnet das Armband')
-    shot(pg, 'hub_icons')
-    pg.click('.pk-ic[data-arg=arm]'); pg.wait_for_timeout(100)
 
-    # Tagesrätsel
-    ok(bool(pg.query_selector('.pk-tag')) and 'Drei kurze Rätsel' in pg.inner_text('.pk-tag'), 'Tagesrätsel auf der Übersicht')
-    plan = E("()=>pkTagPlan(ymd())")
-    ok(len(plan['tasks'])==3 and plan['vals']==[16,8,4,2,1] and E("()=>JSON.stringify(pkTagPlan(ymd()))==JSON.stringify(pkTagPlan(ymd()))"), 'Tagesrätsel: 3 Aufgaben, gleich für den ganzen Tag')
-    kinds = set()
-    for d in range(40): kinds |= {t['k'] for t in E(f"()=>pkTagPlan('2026-11-{d%28+1:02d}-{d}').tasks")}
-    ok(kinds=={'bau','lampen','kette','abc','zuege'}, 'Tagesrätsel: alle Rätselarten kommen vor (auch Wenigste Züge)')
-    pg.click('.pk-tag [data-act=pkLv]'); pg.wait_for_timeout(250)
-    for k, t in enumerate(plan['tasks']):
-        if t['k'] == 'kette':
-            set_to(pg, t['ns'][1]); pg.wait_for_timeout(450); set_to(pg, t['ns'][2])
-        else: set_to(pg, t['n'])
-        pg.wait_for_timeout(600)
+    # Übersicht: ein Band mit kleinen Segmenten, Popover darunter
+    ok(pg.locator('.pk-ribbon .pk-seg').count()==6 and not pg.query_selector('.pk-mine') and not pg.query_selector('.pk-hubbar'), 'Übersicht: Fortschritt, Sterne, Armband, Wort, Freunde, Ton in einem Band')
+    ok('14/14' in pg.inner_text('.pk-segring'), 'Band: Fortschritt 14/14')
+    pg.click('.pk-seg[data-arg=stars]'); pg.wait_for_timeout(100)
+    ok(bool(pg.query_selector('.pk-popv .pk-unl')), 'Band: Sterne öffnen die Freischalt-Liste')
+    stars = E("()=>S.punkte.stars")
+    ok(stars == 21 and E("()=>hasItem('pkd.regenbogen')&&hasItem('pkd.glitzer')&&hasItem('pkc.blinki')&&hasItem('pkc.klee')&&!hasItem('pkd.ozean')"), f'Sterne ({stars}) schalten Regenbogen, Glitzer, Blinki, Kleeblatt frei – Ozean noch nicht')
+    pg.click('.pk-seg[data-arg=arm]'); pg.wait_for_timeout(100)
+    ok(bool(pg.query_selector('.pk-popv svg.pk-band')) and pg.locator('.pk-popv .pk-lk[data-act=pkLook]').count()==8, 'Armband-Symbol: Armband und 8 Muster')
+    pg.click('.pk-popv [data-act=pkLook][data-arg="me|glitzer"]'); pg.wait_for_timeout(100)
+    pg.click('.pk-popv [data-act=pkCharm][data-arg="me|klee"]'); pg.wait_for_timeout(100)
+    ok(E("()=>S.punkte.armD")=='glitzer' and E("()=>S.punkte.armCh")=='klee' and '🍀' in pg.inner_html('.pk-popv svg.pk-band'), 'Muster Glitzer und Anhänger Kleeblatt gewählt')
+    shot(pg, 'hub_look')
+    pg.click('.pk-popv [data-act=pkLook][data-arg="me|holz"]'); pg.wait_for_timeout(200)
+    ok(E("()=>view")=='shop' and E("()=>UI.shopGrp")=='blinki' and pg.locator('.itile').count()==3, 'Gesperrtes Shop-Muster führt in den Shop (Gruppe Blinki)')
+    shot(pg, 'shop_blinki')
+    E("()=>{unlock('pkd.holz',true);save();go('punkte',{pkShow:'arm'})}"); pg.wait_for_timeout(150)
+    pg.click('.pk-popv [data-act=pkLook][data-arg="me|holz"]'); pg.wait_for_timeout(100)
+    ok(E("()=>S.punkte.armD")=='holz' and pg.locator('.pk-popv svg.pk-band rect.b').count()==10, 'Holz gekauft und gewählt (eckige Holzperlen)')
+    E("()=>{S.coins=40;save()}"); coins0 = 40
+    pg.click('.pk-popx'); pg.wait_for_timeout(100)
+
+    # Blinkis Rätsel: beliebig viele, nur Erfolge zählen, Meilenstein bei 5
+    ok(bool(pg.query_selector('.pk-rw')) and 'Gesamt 0' in pg.inner_text('.pk-rw'), 'Rätsel als kompakte Zeile auf der Übersicht')
+    pg.click('.pk-rw'); pg.wait_for_timeout(250)
+    st0 = E("()=>S.punkte.stars")
+    def solve_tag():
+        lbl = E("()=>document.querySelector('#pkRoot .pk-target .pk-label').textContent")
+        if 'Weiterzählen' in lbl:
+            ns = [int(x) for x in E("()=>[...document.querySelectorAll('#pkRoot .pk-chain span')].map(e=>e.textContent)")]
+            set_to(pg, ns[1]); pg.wait_for_timeout(450); set_to(pg, ns[2])
+        elif 'Geheimcode' in lbl:
+            set_to(pg, int(pg.inner_text('#pkRoot .pk-dcode').replace('\n',''), 2))
+        elif 'Buchstabe' in lbl:
+            set_to(pg, 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß'.index(pg.inner_text('#pkRoot .pk-target b')) + 1)
+        else: set_to(pg, int(pg.inner_text('#pkRoot .pk-target b')))
+        pg.wait_for_timeout(650)
+        return lbl
+    seen = set()
+    for k in range(6):
+        seen.add(solve_tag())
+        if k == 4:
+            ok('5 Rätsel gelöst' in pg.inner_text('#pkRoot .pk-bubble') and E("()=>S.punkte.stars")>=st0 + 2, 'Meilenstein: 5 Rätsel – Fest und 2 Sterne')
+            shot(pg, 'tag_mile')
         if k == 0: shot(pg, 'tag')
-        foot(pg, 'Fertig' if k == 2 else 'Nächstes Rätsel'); pg.wait_for_timeout(250)
-    ok(E("()=>!!S.punkte.tag.days[ymd()]") and pg.locator('.pk-result .pk-week span.ok').count()==1, 'Tagesrätsel gelöst, Wochenleiste zeigt heute')
-    shot(pg, 'tag_done')
-    foot(pg, 'Zur Übersicht'); pg.wait_for_timeout(200)
-    ok('Heute geschafft' in pg.inner_text('.pk-tag'), 'Übersicht: Tagesrätsel heute geschafft')
+        foot(pg, 'Nächstes Rätsel'); pg.wait_for_timeout(250)
+    ok(E("()=>S.punkte.tag.total")==6 and E("()=>S.punkte.tag.days[ymd()]")==6, 'Rätsel: 6 gelöst, heute 6 (nur Erfolge)')
+    ok(E("()=>!document.querySelector('#pkRoot .pk-mlamps')"), 'Rätsel: keine Lampen mehr')
+    foot(pg, 'Aufhören'); pg.wait_for_timeout(200)
+    ok(E("()=>view")=='punkte' and 'Gesamt 6' in pg.inner_text('.pk-rw') and 'Ziel 10' in pg.inner_text('.pk-rw'), 'Aufhören: Übersicht zeigt Gesamt 6, nächstes Ziel 10')
+    kinds = set()
+    for _ in range(4): kinds |= set(E("()=>{const out=[];ACT.pkLv('tag');for(let i=0;i<30;i++){const l=document.querySelector('#pkRoot .pk-target .pk-label').textContent;out.push(l);[...document.querySelectorAll('#pkRoot .pk-foot .btn')].find(b=>b.textContent==='Aufhören');ACT.pkLv('tag')}return out}"))
+    ok(kinds >= {'Bau die Zahl', 'Geheimcode', 'Weiterzählen', 'Buchstabe', 'Wenigste Züge'}, 'Rätsel: alle Arten kommen vor')
+    E("()=>go('punkte')"); pg.wait_for_timeout(150)
 
     # Freundes-Armbänder: Name selbst schreiben, Buchstaben mit den Karten bauen (Ä, Ö, Ü, ß sind 27–30)
     ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß'
-    pg.click('.pk-ic[data-act=pkFreunde]'); pg.wait_for_timeout(200)
+    pg.click('.pk-seg[data-act=pkFreunde]'); pg.wait_for_timeout(200)
     ok(E("()=>view")=='pkFreunde' and pg.locator('[data-act=pkLv][data-arg=wem]').is_disabled(), 'Freunde: Seite offen, Ratespiel erst ab 3 Armbändern')
     def make(name, typed, wrong=None, col=None):
         pg.click('[data-act=pkLv][data-arg=freund]'); pg.wait_for_timeout(250)
@@ -259,46 +331,60 @@ with sync_playwright() as p:
         if name == 'JÖRG': shot(pg, 'fr_colour')
         foot(pg, 'Speichern'); pg.wait_for_timeout(250)
     make('MIA', 'mia', wrong=11, col=4)
-    ok(E("()=>view")=='pkFreunde' and E("()=>S.punkte.friends[0].n")=='MIA', 'Freunde: Armband für MIA gespeichert')
+    ok(E("()=>view")=='pkFreunde' and E("()=>S.punkte.friends[0].n")=='MIA' and E("()=>S.punkte.friends[0].d")=='eins', 'Freunde: Armband für MIA gespeichert (einfarbig)')
     need = ' '.join(pg.inner_text('.pk-need').split())
     ok('6 × Grün' in need and '9 × Weiß' in need and '2 × Dunkel' in need, 'Perlen-Plan: 6 grüne, 9 weiße, 2 dunkle Perlen für MIA')
+    pg.click('.pk-frdet [data-act=pkLook][data-arg="0|bunt"]'); pg.wait_for_timeout(120)
+    need = ' '.join(pg.inner_text('.pk-need').split())
+    ok(E("()=>S.punkte.friends[0].d")=='bunt' and '3 × Gelb' in need and '2 × Violett' in need and '1 × Grün' in need, 'Perlen-Plan zählt pro Farbe des Musters (Bunt: 3 Gelb, 2 Violett, 1 Grün)')
+    pg.click('.pk-frdet [data-act=pkCharm][data-arg="0|stern"]'); pg.wait_for_timeout(120)
+    ok(E("()=>S.punkte.friends[0].ch")=='stern', 'Freund bekommt einen Anhänger')
     shot(pg, 'fr_plan')
     make('JÖRG', 'Jörg')
     make('BEN', 'Ben')
     pg.click('[data-act=pkLv][data-arg=freund]'); pg.wait_for_timeout(200); pg.fill('#pkName', 'mia'); pg.wait_for_timeout(80)
     ok(pg.locator('#pkRoot .pk-foot .btn').first.is_disabled() and 'schon ein Armband' in pg.inner_text('#pkRoot .pk-bubble'), 'Freunde: gleicher Name geht nicht zweimal')
     pg.click('#app .top .back'); pg.wait_for_timeout(200)
-    ok(E("()=>view")=='pkFreunde' and pg.locator('.pk-stk').count()==3, 'Zurück führt zu den Freundes-Armbändern, 3 Sticker')
+    ok(E("()=>view")=='pkFreunde' and pg.locator('.pk-stk').count()==3 and pg.locator('.pk-stk svg.pk-band').count()==3, 'Zurück führt zu den Freundes-Armbändern, 3 Sticker mit Armband-Bild')
     shot(pg, 'fr_list')
     pg.click('[data-act=pkLv][data-arg=wem]'); pg.wait_for_timeout(250)
-    DEC = "()=>[...document.querySelectorAll('#pkRoot .pk-arm .pk-bead')].map(b=>{const n=[...b.querySelectorAll('.pk-beads i')].reduce((s,i,k)=>s+(i.classList.contains('on')?[16,8,4,2,1][k]:0),0);return 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß'[n-1]}).join('')"
-    ok('Armband ohne Namen' == pg.get_attribute('#pkRoot .pk-arm', 'aria-label') and not pg.query_selector('#pkRoot .pk-bead b'), 'Ratespiel: Armband ohne Namen')
+    DEC = "()=>[...document.querySelectorAll('#pkRoot svg.pk-band g.pk-bg')].map(g=>{const n=[...g.querySelectorAll('.b')].reduce((s,e,k)=>s+(e.classList.contains('on')?[16,8,4,2,1][k]:0),0);return 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß'[n-1]}).join('')"
+    ok('Armband ohne Namen' == pg.get_attribute('#pkRoot svg.pk-band', 'aria-label') and not pg.query_selector('#pkRoot svg.pk-band text.lt'), 'Ratespiel: Armband ohne Namen')
     for r in range(3):
         nm = E(DEC)
         if r == 0:
             pg.locator('#pkRoot .pk-opt:not([data-n="%s"])' % nm).first.click(); pg.wait_for_timeout(150)
-            ok('Das ist nicht' in pg.inner_text('#pkRoot .pk-bubble'), 'Ratespiel: falscher Name gibt einen Hinweis zum ersten Buchstaben')
+            ok('Das ist nicht' in pg.inner_text('#pkRoot .pk-bubble') and bool(pg.query_selector('#pkRoot g.pk-bg.hint')), 'Ratespiel: falscher Name gibt einen Hinweis zum ersten Buchstaben')
             shot(pg, 'fr_wem')
         pg.click('#pkRoot .pk-opt[data-n="%s"]' % nm); pg.wait_for_timeout(150)
         ok(nm in pg.inner_text('#pkRoot .pk-bubble'), f'Ratespiel: {nm} erkannt')
         foot(pg, 'Fertig' if r == 2 else 'Nächstes Armband'); pg.wait_for_timeout(250)
     ok(E("()=>view")=='pkFreunde', 'Ratespiel fertig: zurück zu den Freunden')
     pg.click('.pk-link[data-act=pkFrDruck]'); pg.wait_for_timeout(150)
-    ok(E("()=>view")=='pkFrDruck' and pg.locator('.pk-psticker').count()==3 and pg.locator('.pk-decoder span').count()==30, 'Sticker-Bogen: 3 Sticker und Entschlüssel-Tafel auf einer Seite')
+    ok(E("()=>view")=='pkFrDruck' and pg.locator('.pk-psticker svg.pk-band').count()==3 and pg.locator('.pk-decoder span').count()==30, 'Sticker-Bogen: 3 Sticker und Entschlüssel-Tafel auf einer Seite')
     shot(pg, 'fr_print')
     pg.click('#app .top .back'); pg.wait_for_timeout(150)
     pg.click('.pk-stk >> nth=2'); pg.click('[data-act=pkFrDel][data-arg=ask]'); pg.click('[data-act=pkFrDel][data-arg=yes]'); pg.wait_for_timeout(100)
     ok(pg.locator('.pk-stk').count()==2 and E("()=>S.punkte.friends.map(f=>f.n).join()")=='MIA,JÖRG', 'Freunde: Armband löschen (mit Nachfrage)')
     E("()=>go('punkte')"); pg.wait_for_timeout(150)
-    ok('Freunde 2' in pg.inner_text('.pk-mine'), 'Übersicht: Freunde-Symbol zeigt die Anzahl')
+    ok('2' in pg.inner_text('.pk-seg[data-act=pkFreunde]'), 'Übersicht: Freunde-Segment zeigt die Anzahl')
 
-    # Venola Holmes: Rang, Koffer, Akten und Regeln als kleine Symbole
+    # Pause nach dem Umdrehen
+    E("()=>{PK.pause=1200;ACT.pkLv(3)}"); pg.wait_for_timeout(250)
+    c0 = cards(pg)[2]['up']; pg.locator('#pkRoot .pk-card').nth(2).click(); pg.wait_for_timeout(60); pg.locator('#pkRoot .pk-card').nth(1).click(); pg.wait_for_timeout(60)
+    ok(cards(pg)[2]['up'] != c0 and cards(pg)[1]['up'] == True and bool(pg.query_selector('#pkRoot .pk-cards.cool')), 'Pause: direkt nach dem Umdrehen wartet die nächste Karte')
+    pg.wait_for_timeout(1300); pg.locator('#pkRoot .pk-card').nth(1).click(); pg.wait_for_timeout(60)
+    ok(cards(pg)[1]['up'] == False, 'Pause: nach 1,2 s geht es weiter')
+    E("()=>{PK.pause=0;go('punkte')}"); pg.wait_for_timeout(150)
+
+    # Venola Holmes: Rang, Koffer, Akten und Regeln als ein Band
     E("()=>{S.flags.venola=true;vnS().vnRulesV=1;ACT.venola()}"); pg.wait_for_timeout(200)
-    ok(pg.locator('.vn-icons .vn-ic').count()==4 and not pg.query_selector('.vn-rankc'), 'Venola: Rang, Koffer, Akten, Regeln als kleine Symbole')
-    pg.click('.vn-ic[data-act=vnPop]'); pg.wait_for_timeout(100)
-    ok(bool(pg.query_selector('.vn-pop .bar')), 'Venola: Rang-Symbol öffnet den Fortschritt')
+    ok(pg.locator('.vn-ribbon .vn-seg').count()==4 and not pg.query_selector('.vn-icons') and not pg.query_selector('.vn-pop') and 'Löse Akten' not in pg.inner_text('.vn-hero'), 'Venola: ein Band mit 4 Segmenten, ohne Untertitel und Popover')
+    ok(pg.inner_text('.vn-segrank b')=='Lehrling' and bool(pg.query_selector('.vn-segrank .vn-mbar')), 'Venola: kurzer Rang-Name mit kleinem Balken')
     shot(pg, 'venola')
-    E("()=>{S.flags.venola=false;go('punkte')}"); pg.wait_for_timeout(150)
+    pg.click('.vn-seg[data-act=vnRules]'); pg.wait_for_timeout(100)
+    ok(E("()=>UI.vnV")=='rules', 'Venola: Regeln aus dem Band')
+    E("()=>{UI.vnV=null;S.flags.venola=false;go('punkte')}"); pg.wait_for_timeout(150)
     shot(pg, 'hub_done')
     pg.click('#app .top .back'); pg.wait_for_timeout(150)
     ok(E("()=>view")=='rewards', 'Zurück führt nach Meine Welt')
@@ -311,41 +397,37 @@ with sync_playwright() as p:
     ok(E("()=>view")=='punkte', 'Zurück aus einer Entdeckung: Übersicht')
 
     # Ton-Schalter, Druckbogen, Eltern-Karte, Nacht-Thema
-    s0 = E("()=>S.punkte.snd"); pg.click('[data-act=pkSnd]'); ok(E("()=>S.punkte.snd") != s0, 'Ton-Schalter in der Übersicht')
+    s0 = E("()=>S.punkte.snd"); pg.click('[data-act=pkSnd]'); ok(E("()=>S.punkte.snd") != s0, 'Ton-Schalter im Band')
     pg.click('.pk-link[data-act=pkDruck]'); pg.wait_for_timeout(150)
     ok(E("()=>view")=='pkDruck' and pg.locator('.pk-pcard').count()==13, 'Druckbogen: 5 Punktkarten, Hinweis, 3 + 4 Zauberkarten')
-    shot(pg, 'druck')
     E("()=>{S.pin={h:hashStr('1234'),r:'x'};UI.pinUntil=Date.now()+1e9;go('parent')}"); pg.wait_for_timeout(150)
     pg.click('.pt-tabs [data-arg=stats]'); pg.wait_for_timeout(150)
     shot(pg, 'eltern')
-    ok(bool(pg.query_selector('.pk-parent')) and 'Warum gibt es keine Karte mit 3 Punkten' in pg.inner_text('.pk-parent'), 'Eltern: Stand und offene Fragen')
-    E("()=>{S.eq.theme='nacht';go('punkte')}"); pg.wait_for_timeout(150); shot(pg, 'hub_nacht')
-    E("()=>ACT.pkLv(5)"); pg.wait_for_timeout(200); shot(pg, 'l5_nacht')
+    ok(bool(pg.query_selector('.pk-parent')) and 'Warum gibt es keine Karte mit 3 Punkten' in pg.inner_text('.pk-parent') and 'Leuchtsterne' in pg.inner_text('.pk-parent'), 'Eltern: Stand, Leuchtsterne und offene Fragen')
+    E("()=>{S.eq.theme='nacht';go('punkte',{pkShow:'arm'})}"); pg.wait_for_timeout(150); shot(pg, 'hub_nacht')
+    E("()=>ACT.pkLv(8)"); pg.wait_for_timeout(200); shot(pg, 'l8_nacht')
 
     # Telefonbreite: nichts läuft seitlich aus dem Bild
-    pg.set_viewport_size({'width': 390, 'height': 844}); E("()=>{S.eq.theme='sonne';ACT.pkLv(7)}"); pg.wait_for_timeout(300)
-    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Entdeckung 7, 4 Karten)')
-    shot(pg, 'phone_l7')
-    E("()=>ACT.pkLv(10)"); pg.wait_for_timeout(300)
-    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Armband, 5 Karten)')
-    shot(pg, 'phone_l10')
-    E("()=>ACT.pkLv(6)"); pg.wait_for_timeout(300)
-    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Schule und Blinki)')
-    shot(pg, 'phone_l6')
-    E("()=>ACT.pkLv(13)"); pg.wait_for_timeout(300)
-    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (7 Karten)')
-    shot(pg, 'phone_l13')
-    E("()=>ACT.pkLv(14)"); pg.wait_for_timeout(300)
-    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Wenigste Züge)')
-    shot(pg, 'phone_l14')
+    pg.set_viewport_size({'width': 390, 'height': 844})
+    for lv, nm in ((7, '4 Karten'), (10, 'Armband, 5 Karten'), (6, 'Schule und Blinki'), (8, 'Paketpost'), (13, '7 Karten'), (14, 'Wenigste Züge'), ('tag', 'Rätsel')):
+        E("(n)=>{S.eq.theme='sonne';ACT.pkLv(n)}", lv); pg.wait_for_timeout(300)
+        ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), f'Telefon: keine waagrechte Scrollleiste ({nm})')
+        shot(pg, f'phone_l{lv}')
     E("()=>go('pkFreunde',{pkFr:0})"); pg.wait_for_timeout(300)
     ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Freundes-Armbänder)')
     shot(pg, 'phone_fr')
-    E("()=>go('punkte')"); pg.wait_for_timeout(200); shot(pg, 'phone_hub')
+    E("()=>go('punkte',{pkShow:'arm'})"); pg.wait_for_timeout(200)
+    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: keine waagrechte Scrollleiste (Übersicht mit Armband-Auswahl)')
+    shot(pg, 'phone_hub')
+    E("()=>{S.flags.venola=true;UI.pkShow=null;ACT.venola()}"); pg.wait_for_timeout(200); shot(pg, 'phone_venola')
+    ok(E("()=>document.documentElement.scrollWidth<=window.innerWidth+1"), 'Telefon: Venola-Band passt')
+    E("()=>{S.flags.venola=false;go('punkte')}")
 
-    # Schalter aus: Daten bleiben
+    # Schalter aus: Daten bleiben, Shop-Gruppe verschwindet
+    ok('blinki' in E("()=>shopGroups()"), 'Shop: Gruppe Blinki bei eingeschalteten Punktkarten')
     E("()=>ACT.dzFlag('punkte')")
     ok(not E("()=>flagOn('punkte')") and E("()=>Object.keys(S.punkte.done).length")==14, 'Ausblenden behält alle Entdeckungen')
+    ok('blinki' not in E("()=>shopGroups()"), 'Shop: Gruppe Blinki ausgeblendet, wenn die Punktkarten aus sind')
     ok(not errs, 'Keine JavaScript-Fehler' + ('' if not errs else ': ' + '; '.join(errs[:3])))
     b.close()
 print('\n' + ('ALLE TESTS OK' if not fails else f'{len(fails)} FEHLER'))

@@ -481,7 +481,7 @@ function itemPreview(slot, it) {
   if (slot === 'bg') return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, bg: it.id }, 112);
   return avatarHTML({ skin: e.skin, hat: e.hat, extra: e.extra, frame: it.id }, 112);
 }
-const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (k.group !== 'buch' && !g.includes(k.group)) g.push(k.group); }); if (typeof wShopTickets === 'function') g.push('reisen'); return g; };
+const shopGroups = () => { const g = ['fino']; Object.values(KIND).forEach(k => { if (k.group !== 'buch' && !(k.flag && typeof flagOn === 'function' && !flagOn(k.flag)) && !g.includes(k.group)) g.push(k.group); }); if (typeof wShopTickets === 'function') g.push('reisen'); return g; };
 const shopTimeHTML = () => { const L = shopLeft(); return L === Infinity ? '' : `<span class="mute small">Shop-Zeit heute: <b id="shopT">${fmtT(L)}</b> übrig</span>`; };
 function goalItem() { return S.goal && CATALOG[S.goal] && !hasItem(S.goal) ? CATALOG[S.goal] : null; }
 const goalCard = () => {
@@ -490,7 +490,7 @@ const goalCard = () => {
   return `<div class="goalcard"><span class="gth">${(KIND[g.kind] || { thumb: x => x.e }).thumb(g)}</span><div style="flex:1;min-width:0"><b>Dein Sparziel: ${esc(g.name)}</b><div class="bar"><i style="width:${p}%"></i></div><span class="small mute">${left ? `noch ${left} 🪙 (${g.src.price} 🪙 insgesamt)` : 'Du hast genug Münzen!'}</span></div></div>`;
 };
 VIEWS.shop = () => {
-  const grp = UI.shopGrp || 'fino', groups = shopGroups(), lock = shopLeft() <= 0;
+  const groups = shopGroups(), grp = groups.includes(UI.shopGrp) ? UI.shopGrp : 'fino', lock = shopLeft() <= 0;
   const gtabs = `<div class="tabs">${groups.map(g => `<button class="${g === grp ? 'on' : ''}" data-act="shopGrp" data-arg="${g}">${ico((SHOP_GROUPS[g] || {}).ic || 'sparkle', 18)} ${(SHOP_GROUPS[g] || { label: g }).label}</button>`).join('')}</div>`;
   const head = `${topBar(ico('bag', 26) + ' Shop')}<div class="shophead">${goalCard()}${typeof giftCard === 'function' ? giftCard() : ''}${shopTimeHTML()}${lock ? '<div class="fb sp" style="margin-top:8px">Die Shop-Zeit für heute ist vorbei. Ansehen geht weiter – eingekauft wird morgen wieder.</div>' : ''}</div>`;
   if (grp === 'reisen' && typeof wShopTickets === 'function') return head + gtabs + wShopTickets();

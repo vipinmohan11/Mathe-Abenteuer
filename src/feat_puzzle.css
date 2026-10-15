@@ -33,15 +33,21 @@
 .sd-key{padding:10px 0;border-radius:12px;border:2px solid var(--dz-line);background:var(--dz-surface);font:inherit;font-weight:800;font-size:1.2rem;color:inherit;cursor:pointer}
 .sd-key:disabled{opacity:.3}
 /* Venola Holmes */
+/* Venola: Rang · Koffer · Akten · Regeln als ein ruhiges Band (Segmente mit Trennlinien) */
+.vn-ribbon{display:flex;align-items:stretch;max-width:520px;margin:10px auto 0;padding:4px;border-radius:var(--dz-r-pill);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-soft)}
+.vn-seg{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:6px 8px;border:0;border-radius:var(--dz-r-pill);background:none;color:var(--dz-ink);font:inherit;cursor:pointer;position:relative;transition:background var(--dz-t)}
+.vn-seg+.vn-seg::before{content:"";position:absolute;left:0;top:22%;bottom:22%;width:1px;background:var(--dz-line)}
+button.vn-seg:hover{background:var(--dz-t1)}
+button.vn-seg:active{transform:scale(.97)}
+.vn-segrank{flex-grow:1.5;cursor:default}
+.vn-sic{font-size:1.25rem;line-height:1}
+.vn-st{display:flex;flex-direction:column;align-items:flex-start;min-width:0;line-height:1.1}
+.vn-st b{font-size:.92rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.vn-st small{font-size:.68rem;font-weight:800;color:var(--dz-mute);letter-spacing:.02em}
+.vn-mbar{display:block;width:100%;min-width:44px;height:4px;margin-top:3px;border-radius:2px;background:var(--dz-line);overflow:hidden}
+.vn-mbar i{display:block;height:100%;border-radius:2px;background:var(--dz-accent)}
+@media(max-width:420px){.vn-seg{flex-direction:column;gap:2px;padding:6px 4px}.vn-st{align-items:center}.vn-st b{font-size:.8rem}}
 .vn-hero{text-align:center;margin:6px 0 12px}
-.vn-icons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px}
-.vn-ic{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:62px;max-width:96px;padding:6px 8px;border-radius:var(--dz-r-m);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-soft);color:var(--dz-ink);cursor:pointer;transition:transform var(--dz-t)}
-.vn-ic span{font-size:1.45rem;line-height:1.1}
-.vn-ic small{font-size:.72rem;font-weight:800;color:var(--dz-mute);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vn-ic.on{border-color:var(--dz-accent);box-shadow:0 0 0 2px var(--dz-accent)}
-.vn-ic:active{transform:scale(.96)}
-.vn-pop{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:340px;margin:8px auto 0;padding:10px 14px;border-radius:var(--dz-r-m);background:var(--dz-surface);border:var(--dz-bd-w) solid var(--dz-bd);box-shadow:var(--dz-sh-card)}
-.vn-pop .bar{width:100%}
 .vn-title{margin:0 0 4px;font-size:clamp(1.5rem,7vw,2.4rem);letter-spacing:.04em;line-height:1.1}
 .vn-title span{display:inline-block}
 .vn-title span:nth-child(odd){font-family:'Venola Bodoni','Libre Bodoni',serif;font-weight:700}
