@@ -549,7 +549,9 @@ VIEWS.limit = () => `<div class="card result"><div style="margin:auto;width:170p
 
 /* ----- Eltern: siehe feat_eltern.js ----- */
 function exportData() {
+  if (typeof syMark === 'function') syMark(S);                       // Stand-Punkt für späteres genaues Zusammenführen (feat_sync.js)
   const j = JSON.stringify(S, null, 1);
+  if (typeof syPutBase === 'function') syPutBase(S.syncId, JSON.stringify(S));
   try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([j], { type: 'application/json' })); a.download = 'denkzauber-sicherung-' + ymd() + '.json'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) { }
   S.lastBackup = Date.now(); save();
   const t = $('#expTxt'); if (t) { t.value = j; t.classList.remove('hide'); }
@@ -577,6 +579,7 @@ function importData(txt, force) {
   }
   try { localStorage.setItem(PREIMPORT_KEY, JSON.stringify(S)); } catch (e) { }
   S = mergeState(o); save();
+  if (o.syncId && typeof syPutBase === 'function') syPutBase(o.syncId, JSON.stringify(o));   // geladener Stand = gemeinsamer Stand mit dem Gerät, das ihn gespeichert hat
   /* Prüfen: Münzen = Datei (+ einmalig 3 je alter Flamme), alles andere gleich (Besitz darf nur mehr werden) */
   const now = saveSummary(S), exp = Object.assign({}, file, { coins: file.coins + (o.mig3 ? 0 : (o.flames || 0) * 3) });
   const bad = SUM_LABELS.map(x => x[0]).filter(k => k === 'items' ? now[k] < exp[k] : now[k] !== exp[k]);

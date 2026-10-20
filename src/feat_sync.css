@@ -1,0 +1,14 @@
+/* Geräte abgleichen (feat_sync.js) */
+.sy-modal .card{max-width:520px;width:calc(100% - 24px);max-height:calc(100vh - 24px);overflow:auto;text-align:center}
+.sy-qr{display:block;width:min(78vw,340px);height:auto;margin:10px auto;border-radius:10px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.sy-vid{display:block;width:100%;max-height:52vh;object-fit:cover;border-radius:12px;background:#000;margin:8px 0}
+.sy-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.sy-pick .btn{white-space:normal;line-height:1.25;min-height:76px}
+.sy-pick small{font-weight:600;opacity:.85}
+@media(max-width:420px){.sy-pick{grid-template-columns:1fr}}
+.sy-txt{text-align:left;margin-top:8px}.sy-txt summary{cursor:pointer;font-size:.9rem;color:var(--dz-mute,#667)}
+.sy-txt textarea{width:100%;font-size:.75rem;word-break:break-all;margin:6px 0}
+.sy-steps{display:flex;gap:8px;justify-content:center;margin:0 0 8px}
+.sy-steps i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#e8edf5;color:#8a93a6}
+.sy-steps i.cur{background:var(--dz-accent,#1764d5);color:#fff}.sy-steps i.done{background:#5ED3A8;color:#fff}
+.sy-wait{font-size:1.1rem;margin:18px 0}

@@ -13,7 +13,7 @@ An **offline maths practice app** for a 4th-grader (German school, *Klasse 4*) w
 - **Europa Entdecker** and **Meine Weltreise:** geography quiz and a travel passport.
 - **Parents' area (PIN):** daily homework gate, time limits, per-area lock/unlock, backup and restore.
 
-Progress is stored only on the device (`localStorage`); export a backup from the parents' area.
+Progress is stored only on the device (`localStorage`); export a backup from the parents' area. Two devices can be synced directly over Wi-Fi by scanning two QR codes (WebRTC, no server) or by merging a backup file.
 
 ## Develop
 
@@ -28,5 +28,6 @@ Source lives in `src/`; `build.py` concatenates it into one HTML file.
 
 ## Notes
 
+- QR codes: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) (MIT) and [jsQR](https://github.com/cozmo/jsQR) (Apache-2.0), bundled unchanged in `src/vendor_qr.js`.
 - All artwork (mascot "Fino") is drawn in code. Fonts are embedded (OFL, see `src/fonts/`).
 - Personal side project; not affiliated with any school or publisher.
