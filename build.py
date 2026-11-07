@@ -78,7 +78,9 @@ self.addEventListener('fetch', e => {{
   if (e.request.method !== 'GET') return;
   const u = new URL(e.request.url);
   if (e.request.mode === 'navigate' || /\\/(index\\.html)?$/.test(u.pathname)) {{      // Startseite: erst Netz (immer neueste Version), ohne Netz der Zwischenspeicher
-    e.respondWith(fetch(e.request, {{ cache: 'no-cache' }}).then(res => {{ const cp = res.clone(); caches.open(C).then(c => c.put('./index.html', cp)); return res; }}).catch(() => caches.match('./index.html')));
+    const net = fetch(e.request, {{ cache: 'no-cache' }}).then(res => {{ const cp = res.clone(); caches.open(C).then(c => c.put('./index.html', cp)); return res; }});
+    const lim = new Promise((_, no) => setTimeout(no, 2500));      // Netz hängt (WLAN ohne Internet)? Nach 2,5 s den Zwischenspeicher nehmen
+    e.respondWith(Promise.race([net, lim]).catch(() => caches.match('./index.html').then(r => r || net)));
     return;
   }}
   e.respondWith(caches.match(e.request, {{ ignoreSearch: true }}).then(r => r || fetch(e.request).then(res => {{ const cp = res.clone(); caches.open(C).then(c => c.put(e.request, cp)); return res; }}).catch(() => caches.match('./index.html'))));
